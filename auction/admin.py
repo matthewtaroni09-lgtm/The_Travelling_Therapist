@@ -2,9 +2,12 @@ from tabnanny import verbose
 from unicodedata import category
 from django import forms
 from django.contrib import admin
-from .models import Auction, Bid, Account, PayFrequency, PracticeArea, PracticeAreaType, UserType, Demographic, DemographicType
+from .models import Auction, Bid, Account, PayFrequency, PracticeArea, PracticeAreaType, ProMember, UserType, Demographic, DemographicType, ProMember
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
+
+class BidInline(admin.TabularInline):
+    model = Bid
 
 @admin.register(Auction)
 class AuctionAdmin(admin.ModelAdmin):
@@ -12,6 +15,7 @@ class AuctionAdmin(admin.ModelAdmin):
     # Reverse alpahbetical order -name
     ordering = ('auctionID', )
     search_fields = ('auctionID', 'clinic')
+    inlines = [BidInline]
 
 @admin.register(Bid)
 class BidAdmin(admin.ModelAdmin):
@@ -30,7 +34,7 @@ class AccountInline(admin.StackedInline):
     #     if db_field.name == "demographic":
     #         print(request.user)
     #         # print("tttt" + str(self.get_fields('username')))
-    #         print(request.resolver_match.kwargs['object_id'])
+    #         #print(request.resolver_match.kwargs['object_id'])
     #         kwargs["queryset"] = Demographic.objects.filter(clinic=request.resolver_match.kwargs['object_id'])
     #     return super(AccountInline, self).formfield_for_manytomany(db_field, request, **kwargs)
 
@@ -46,3 +50,4 @@ admin.site.register(DemographicType)
 admin.site.register(PayFrequency)
 admin.site.register(PracticeArea)
 admin.site.register(PracticeAreaType)
+admin.site.register(ProMember)

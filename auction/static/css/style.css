@@ -1,0 +1,37 @@
+* {
+    font-family: 'Roboto', sans-serif;
+}
+
+/* .container {
+  max-width: 992px !important;
+} */
+
+.text-weight-thin {
+    font-weight: 100;
+}
+
+.text-weight-light {
+    font-weight: 300;
+}
+
+.text-weight-bold {
+    font-weight: 700;
+}
+
+.text-weight-xl-bold {
+    font-weight: 900;
+}
+
+.clock {
+    width: 20px;
+}
+
+input[type="time"] {
+    padding: 6px;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem !important;
+}
+
+.svg {
+    max-width: 60px;
+}

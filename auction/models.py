@@ -14,12 +14,13 @@ class Account(models.Model):
     imageTwo = models.ImageField(verbose_name='Clinic Image Two', upload_to='images/', blank=True, null=True, help_text='Upload an image (optional).')
     imageThree = models.ImageField(verbose_name='Clinic Image Three', upload_to='images/', blank=True, null=True, help_text='Upload an image (optional).')
     imageFour = models.ImageField(verbose_name='Clinic Image Four', upload_to='images/', blank=True, null=True, help_text='Upload an image (optional).')
-    city = models.CharField(verbose_name='City', blank=True, max_length=120, null=True, help_text='Enter the city your clinic is in.')
+    city = models.CharField(verbose_name='City', max_length=120, blank=True, null=True, help_text='Enter the city your clinic is in.')
     # province = models.CAProvinceField('Province')
-    country = models.CharField(verbose_name='Conutry', max_length=100, help_text='Enter the country your clinic is in.')
+    country = models.CharField(verbose_name='Conutry', max_length=100, blank=True, null=True, help_text='Enter the country your clinic is in.')
     about = models.TextField(verbose_name='About', blank=True, null=True, help_text='Tell us about your clinic.')
     practiceArea = models.ManyToManyField('PracticeArea', blank=True)
     demographic = models.ManyToManyField('Demographic', blank=True)
+    pro = models.BooleanField(verbose_name='Pro Member', blank=True)
 
     def __str__(self):
         return str(self.user)
@@ -27,10 +28,10 @@ class Account(models.Model):
 class Auction(models.Model):
     auctionID = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     clinic = models.ForeignKey(Account, related_name='auction_clinic', on_delete=models.CASCADE)  
-    auctionStart = models.DateTimeField(verbose_name='Auction Start', null=True, blank=True, help_text='Enter the start date of the auction.')
-    auctionEnd = models.DateTimeField(verbose_name='Auction End', null=True, blank=True, help_text='Enter the end date of the auction.')
-    placementStart = models.DateField(verbose_name='Auction End', null=True, blank=True, help_text='Enter the start date of the placement.')
-    placementEnd = models.DateField(verbose_name='Auction End', null=True, blank=True, help_text='Enter the end date of the placement.')
+    auctionStart = models.DateTimeField(verbose_name='Auction Start', help_text='Enter the start date of the auction.')
+    auctionEnd = models.DateTimeField(verbose_name='Auction End', help_text='Enter the end date of the auction.')
+    placementStart = models.DateField(verbose_name='Placement Start', null=True, blank=True, help_text='Enter the start date of the placement.')
+    placementEnd = models.DateField(verbose_name='Placement End', null=True, blank=True, help_text='Enter the end date of the placement.')
     mondayStart = models.TimeField(verbose_name='Monday Start Time', null=True, blank=True, help_text='Enter the start of the workday on Mondays.')
     mondayEnd = models.TimeField(verbose_name='Monday End Time', null=True, blank=True, help_text='Enter the end of the workday on Mondays.')
     tuesdayStart = models.TimeField(verbose_name='Tuesday Start Time', null=True, blank=True, help_text='Enter the start of the workday on Tuesdays.')
@@ -60,7 +61,7 @@ class Auction(models.Model):
     modifiedBy = models.ForeignKey(User, related_name='auction_modified_by', blank=True, null=True, on_delete=models.CASCADE)
 
     def __str__(self):
-        return str(self.clinic) + ": " + str(self.auctionStart.strftime("%m/%d/%Y"))
+        return str(self.clinic.clinicName) + ": " + str(self.auctionStart.strftime("%m/%d/%Y"))
 
 class Bid(models.Model):
     bidID = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -83,7 +84,7 @@ class Demographic(models.Model):
     percetnage = models.IntegerField(verbose_name='Percentage', help_text='Enter the percentage your clinic works with the given demographic.')  
 
     def __str__(self):
-        return str(self.clinic.name) + " - " + str(self.category) + ": " + str(self.percetnage) + "%"
+        return str(self.clinic.clinicName) + " - " + str(self.category) + ": " + str(self.percetnage) + "%"
 
 class DemographicType(models.Model):
     name = models.CharField(verbose_name='Demographic', max_length=200, help_text='Select a demographic type.')
@@ -110,6 +111,14 @@ class PracticeAreaType(models.Model):
 
     def __str__(self):
         return str(self.name)
+
+class ProMember(models.Model):
+    clinic = models.ForeignKey(Account, related_name='pro_member_clinic', on_delete=models.CASCADE)  
+    proStart = models.DateTimeField(verbose_name='Start of Pro Membership')
+    proEnd = models.DateTimeField(verbose_name='End of Pro Membership', null=True, blank=True)
+
+    def __str__(self):
+        return str(self.clinic)
 
 class UserType(models.Model):
     name = models.CharField(verbose_name='User Type', max_length=200, help_text='Select a user type')
