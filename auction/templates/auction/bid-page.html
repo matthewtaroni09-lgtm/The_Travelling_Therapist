@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+  <title>The Travelling Therapist</title>
+</head>
+<body>
+  <!-- Nav Start -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
+    <div class="container">
+      <a class="navbar-brand" href="#">LOGO</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <!-- <ul class="navbar-nav me-auto mb-2 mb-lg-0"> -->
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="index.html">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="about-us.html">About/ FAQ</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="profile-therapist.html">Therapist Profile</a>
+          </li>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="profile-clinic.html">Clinic Profile</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="register.html">Register</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="login.html">Login</a>
+          </li>
+        </ul>
+        <!-- <form class="d-flex">
+          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+          <button class="btn btn-outline-success" type="submit">Search</button>
+        </form> -->
+      </div>
+    </div>
+  </nav>
+  <!-- Nav End -->
+
+  <!-- Content Start -->
+  <div class="container mt-3 mb-5">
+    <h1>Mike's Fancy Clinic, Aurora, ONTARIO</h1>
+    <h2 class="text-weight-light">Temporary Physiotherapist</h2>
+
+    <!-- Image Section Start -->
+    <!-- Carousel -->
+    <!-- <div id="carouselExampleIndicators" class="carousel slide my-3" data-bs-ride="carousel" data-bs-interval="false"> -->
+    <div id="carouselExampleIndicators" class="carousel slide my-3 d-sm-none" data-bs-ride="carousel">
+      <div class="carousel-indicators">
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+      </div>
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <img src="images/benyamin-bohlouli-e7MJLM5VGjY-unsplash.jpg" class="d-block w-100" alt="Clinic 1">
+        </div>
+        <div class="carousel-item">
+          <img src="images/johny-georgiadis-9Wa1HgE1XlA-unsplash.jpg" class="d-block w-100" alt="Clinic 2">
+        </div>
+        <div class="carousel-item">
+          <img src="images/maxim-tirdea-xayCTz6N2nM-unsplash.jpg" class="d-block w-100" alt="Clinic 3">
+        </div>
+      </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+
+    <!-- Static Images -->
+    <div class="row d-none d-sm-inline-flex my-3">
+      <div class="col-9">
+        <img src="./images/benyamin-bohlouli-e7MJLM5VGjY-unsplash.jpg" class="img-fluid pt-3" alt="Image of Clinic">
+      </div>
+      <div class="col-3">
+        <img src="./images/johny-georgiadis-9Wa1HgE1XlA-unsplash.jpg" class="img-fluid pt-3" alt="Image of Clinic">
+        <img src="./images/maxim-tirdea-xayCTz6N2nM-unsplash.jpg" class="img-fluid pt-3" alt="Image of Clinic">
+        <img src="./images/petr-magera-HuWm7malJ18-unsplash.jpg" class="img-fluid pt-3" alt="Image of Clinic">
+      </div>
+    </div>
+    <!-- Image Section End -->
+
+    <div class="d-flex justify-content-between">
+      <section class="d-inline-flex text-white bg-dark py-2 px-3 rounded">
+        <time class="m-0 d-flex me-4"><img class="clock me-2" src="./images/clock.svg" alt="clock">00:04:57</time>
+        <p class="m-0">Low Bid:<span class="ms-2">$8,000</span></p>
+        <p class="m-0 mx-4 d-none d-md-block"># Bids:<span class="ms-2">11</span></p>
+        <p class="m-0 me-4 d-none d-md-block"># of Therapists Bidding:<span class="ms-2">2</span></p>
+      </section>
+      <a href="#" class="btn btn-primary">Bid</a>
+    </div>
+
+    <div class="row w-100 mx-auto mt-3">
+      <p class="col-4 col-lg-2 text-weight-bold border mb-0 py-2 bg-light">Clinic Name</p>
+      <p class="col-8 col-lg-4 text-weight-light border mb-0 py-2">Mike's Fancy Clinic</p>
+      <p class="col-4 col-lg-2 text-weight-bold border mb-0 py-2 bg-light">Dates of Coverage</p>
+      <p class="col-8 col-lg-4 text-weight-light border mb-0 py-2">Dec 3, 2022 - Feb 4, 2023</p>
+      <p class="col-4 col-lg-2 col-lg-2 text-weight-bold border mb-0 py-2 bg-light">Town/ City</p>
+      <p class="col-8 col-lg-4 text-weight-light border mb-0 py-2">Aurora</p>
+      <p class="col-4 col-lg-2 text-weight-bold border mb-0 py-2 bg-light">Province</p>
+      <p class="col-8 col-lg-4 text-weight-light border mb-0 py-2">ONTARIO</p>
+      <p class="col-4 col-lg-2 text-weight-bold border mb-0 py-2 bg-light">Days Working</p>
+      <div class="col-8 col-lg-4 border py-2">
+        <p class="text-weight-light mb-0">M: 0900-1700</p>
+        <p class="text-weight-light mb-0">T: 0900-1700</p>
+        <p class="text-weight-light mb-0">W: 0900-1700</p>
+        <p class="text-weight-light mb-0">T: 0900-1700</p>
+        <p class="text-weight-light mb-0">F: 0900-1700</p>
+      </div>
+      <p class="col-4 col-lg-2 text-weight-bold border mb-0 py-2 bg-light">Pay Frequency</p>
+      <p class="col-8 col-lg-4 text-weight-light border mb-0 py-2">Every 2nd Friday</p>
+      <p class="col-4 col-lg-2 text-weight-bold border mb-0 py-2 bg-light">Area of Practice</p>
+      <p class="col-8 col-lg-4 text-weight-light border mb-0 py-2">Pie Chart - how do we want this to work?</p>
+      <p class="col-4 col-lg-2 text-weight-bold border mb-0 py-2 bg-light">Client Demographic</p>
+      <p class="col-8 col-lg-4 text-weight-light border mb-0 py-2">Pie Chart - how do we want this to work?</p>
+    </div>
+
+    <h3 class="mt-3">About the Clinic</h3>
+    <p class="text-weight-light">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Facere, nostrum vel quidem nihil laudantium atque, numquam ipsa laboriosam enim, esse eligendi molestias eum amet aliquam at mollitia nam quod aspernatur dolores placeat consequatur suscipit ex nisi! Modi, non est corrupti ullam temporibus vel quos eos alias autem deserunt debitis hic consectetur distinctio reprehenderit veritatis architecto animi ipsam nostrum, ad officia sint asperiores facere ab voluptatum. Officiis ipsa consequuntur ex enim nostrum eligendi repudiandae, voluptatum eos officia ullam consectetur delectus corporis pariatur, laboriosam a excepturi maxime voluptatibus qui esse corrupti harum suscipit atque? Perferendis enim laboriosam quibusdam deserunt aut dolorem tempora?</p>
+  </div>
+  <!-- Content End -->
+
+  <!-- Footer Start -->
+  <footer class="p-3 pt-5 bg-light text-center">
+    <h5>Quick Links</h5>
+    <div class="d-flex flex-column gap-2">
+      <a href="#" class="link-dark text-decoration-none">How it Works</a>
+      <a href="#" class="link-dark text-decoration-none">Contact?</a>
+      <a href="#"class="link-dark text-decoration-none">Terms & Conditions</a>
+    </div>
+
+    <p class="mt-4 text-weight-light">&copy; <span id="current-year"></span> | The Travelling Therapist</p>
+  </footer>
+  <!-- Footer End -->
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+  <script src="app.js"></script>
+</body>
+</html>

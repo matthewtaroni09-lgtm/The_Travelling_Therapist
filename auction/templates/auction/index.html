@@ -1,0 +1,183 @@
+{% extends 'auction/base.html' %}
+{% block content %}
+<!-- Nav Start -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
+  <div class="container">
+    <a class="navbar-brand" href="#">LOGO</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02"
+      aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <!-- <ul class="navbar-nav me-auto mb-2 mb-lg-0"> -->
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="index.html">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="about-us.html">About/ FAQ</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="profile-therapist.html">Therapist Profile</a>
+        </li>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="profile-clinic.html">Clinic Profile</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="register.html">Register</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="login.html">Login</a>
+        </li>
+      </ul>
+      <!-- <form class="d-flex">
+          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+          <button class="btn btn-outline-success" type="submit">Search</button>
+        </form> -->
+    </div>
+  </div>
+</nav>
+<!-- Nav End -->
+
+<!-- Content Start -->
+<main class="container">
+  <div class="mt-3 row">
+    <div class="col-8">
+      <h1>The Travelling Therapist</h1>
+    </div>
+    <div class="col-4 text-end">
+      <a href="#" class="btn btn-primary">Sign Up</a>
+    </div>
+  </div>
+  <!-- Search Box Start -->
+  <div class="row">
+    <div class="mt-3 d-flex gap-2 col-lg-6">
+      <select name="location" id="location" class="form-select form-select-md mb-3">
+        <option value="0">Location</option>
+        <option value="1">Southern Ontario</option>
+        <option value="2">Central Ontario</option>
+        <option value="3">Northern Ontario</option>
+      </select>
+      <select name="speciality" id="speciality" class="form-select form-select-md mb-3">
+        <option value="0">Type of Therapist</option>
+        <option value="1">Physiotherapist</option>
+        <option value="2">Massage Therapist</option>
+        <option value="3">Occupational Therapist</option>
+        <option value="3">Speech Language Therapist</option>
+      </select>
+    </div>
+    <div class="mt-lg-3 col-lg-6">
+      <div class="input-group mb-3">
+        <input type="text" class="form-control" placeholder="Search Auctions..." aria-label="Search Auctions"
+          aria-describedby="button-addon2">
+        <button class="btn btn-outline-secondary" type="button" id="button-addon2">Search</button>
+      </div>
+    </div>
+  </div>
+  <!-- Search Box End -->
+
+  <!-- Start of auction loops  -->
+  <div class="row mb-5">
+    <div class="col-sm-6 col-lg-4">
+      <a class="card mt-4 text-decoration-none text-dark" href="bid-page-2.html">
+        <div class="position-relative">
+          <img src="./images/benyamin-bohlouli-e7MJLM5VGjY-unsplash.jpg" class="card-img-top" alt="Image of Clinic">
+          <div class="d-inline-flex text-white bg-dark p-2 rounded position-absolute bottom-0 start-0">
+            <time class="m-0 d-flex me-4"><img class="clock me-2" src="./images/clock.svg" alt="clock">00:04:57</time>
+            <p class="m-0">Bid:<span class="ms-2">$8,000</span></p>
+          </div>
+        </div>
+        <div class="card-body">
+          <h2 class="card-title">Mike's Fancy Clinic</h2>
+          <p class="text-weight-thin mb-0">Dec 3, 2022 - Feb 4, 2023</p>
+          <p class="text-weight-thin mb-0">Physiotherapist</p>
+          <p class="text-weight-thin">Aurora, ON</p>
+          <p class="card-text">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Minima esse rem, illo porro
+            dolore, iusto voluptatibus sapiente laudantium ullam magni a, aliquid molestiae non vitae placeat commodi
+            animi sunt dolores.</p>
+        </div>
+      </a>
+    </div>
+
+    <div class="col-sm-6 col-lg-4">
+      <a class="card mt-4 text-decoration-none text-dark" href="bid-page-2.html">
+        <div class="position-relative">
+          <img src="./images/petr-magera-HuWm7malJ18-unsplash.jpg" class="card-img-top" alt="Image of Clinic">
+          <div class="d-inline-flex text-white bg-dark p-2 rounded position-absolute bottom-0 start-0">
+            <time class="m-0 d-flex me-4"><img class="clock me-2" src="./images/clock.svg" alt="clock">18:04:44</time>
+            <p class="m-0">Bid:<span class="ms-2">$28,000</span></p>
+          </div>
+        </div>
+        <div class="card-body">
+          <h2 class="card-title">Luke's Fancy Clinic</h2>
+          <p class="text-weight-thin mb-0">Apr 4 - Jun 3, 2022</p>
+          <p class="text-weight-thin mb-0">Physiotherapist</p>
+          <p class="text-weight-thin">Burlington, ON</p>
+          <p class="card-text">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Minima esse rem, illo porro
+            dolore, iusto voluptatibus sapiente laudantium ullam magni a, aliquid molestiae non vitae placeat commodi
+            animi sunt dolores.</p>
+        </div>
+      </a>
+    </div>
+
+    <div class="col-sm-6 col-lg-4">
+      <a class="card mt-4 text-decoration-none text-dark" href="bid-page.html">
+        <div class="position-relative">
+          <img src="./images/maxim-tirdea-xayCTz6N2nM-unsplash.jpg" class="card-img-top" alt="Image of Clinic">
+          <div class="d-inline-flex text-white bg-dark p-2 rounded position-absolute bottom-0 start-0">
+            <time class="m-0 d-flex me-4"><img class="clock me-2" src="./images/clock.svg" alt="clock">2 days</time>
+            <p class="m-0">Bid:<span class="ms-2">$49,000</span></p>
+          </div>
+        </div>
+        <div class="card-body">
+          <h2 class="card-title">Another Fancy Clinic With a Really Long Name</h2>
+          <p class="text-weight-thin mb-0">Mar 22 - Apr 17, 2022</p>
+          <p class="text-weight-thin mb-0">Physiotherapist</p>
+          <p class="text-weight-thin">Barrie, ON</p>
+          <p class="card-text">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Minima esse rem, illo porro
+            dolore, iusto voluptatibus sapiente laudantium ullam magni a, aliquid molestiae non vitae placeat commodi
+            animi sunt dolores.</p>
+        </div>
+      </a>
+    </div>
+
+    <div class="col-sm-6 col-lg-4">
+      <a class="card mt-4 text-decoration-none text-dark" href="#">
+        <div class="position-relative">
+          <img src="./images/johny-georgiadis-9Wa1HgE1XlA-unsplash.jpg" class="card-img-top" alt="Image of Clinic">
+          <div class="d-inline-flex text-white bg-dark p-2 rounded position-absolute bottom-0 start-0">
+            <time class="m-0 d-flex me-4"><img class="clock me-2" src="./images/clock.svg" alt="clock">4 days</time>
+            <p class="m-0">Bid:<span class="ms-2">$49,000</span></p>
+          </div>
+        </div>
+        <div class="card-body">
+          <h2 class="card-title">Nick's Fancy Clinic</h2>
+          <p class="text-weight-thin mb-0">July 4 - Dec 17, 2022</p>
+          <p class="text-weight-thin mb-0">Physiotherapist</p>
+          <p class="text-weight-thin">Hamilton, ON</p>
+          <p class="card-text">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Minima esse rem, illo porro
+            dolore, iusto voluptatibus sapiente laudantium ullam magni a, aliquid molestiae non vitae placeat commodi
+            animi sunt dolores.</p>
+        </div>
+      </a>
+    </div>
+  </div>
+  <!-- End of auction loops -->
+
+</main>
+<!-- Content End -->
+
+<!-- Footer Start -->
+<footer class="p-3 pt-5 bg-light text-center">
+  <h5>Quick Links</h5>
+  <div class="d-flex flex-column gap-2">
+    <a href="#" class="link-dark text-decoration-none">How it Works</a>
+    <a href="#" class="link-dark text-decoration-none">Contact?</a>
+    <a href="#" class="link-dark text-decoration-none">Terms & Conditions</a>
+  </div>
+
+  <p class="mt-4 text-weight-light">&copy; <span id="current-year"></span> | The Travelling Therapist</p>
+</footer>
+
+{% endblock %}

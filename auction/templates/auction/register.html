@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+  <title>The Travelling Therapist</title>
+</head>
+<body>
+  <!-- Nav Start -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
+    <div class="container">
+      <a class="navbar-brand" href="#">LOGO</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <!-- <ul class="navbar-nav me-auto mb-2 mb-lg-0"> -->
+          <li class="nav-item">
+            <a class="nav-link" aria-current="page" href="index.html">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="about-us.html">About/ FAQ</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="profile-therapist.html">Therapist Profile</a>
+          </li>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="profile-clinic.html">Clinic Profile</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="register.html">Register</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="login.html">Login</a>
+          </li>
+        </ul>
+        <!-- <form class="d-flex">
+          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+          <button class="btn btn-outline-success" type="submit">Search</button>
+        </form> -->
+      </div>
+    </div>
+  </nav>
+  <!-- Nav End -->
+
+  <!-- Content Start -->
+  <div class="container mt-3 mb-5">
+    <h1 class="text-center p-5">Register to Get Started With The Travelling Therapist!</h1>
+
+    <!-- Register Box Start -->
+    <div class="row">
+      <div class="col-md-6 offset-md-3">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="btn-lg nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#register-therapist" type="button" role="tab" aria-controls="register-therapist" aria-selected="true">Therapist Sign Up</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="btn-lg nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#register-clinic" type="button" role="tab" aria-controls="register-clinic" aria-selected="false">Clinic Sign Up</button>
+          </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+          <!-- Physio Sign Up End -->
+          <div class="tab-pane fade show active bg-danger p-3" id="register-therapist" role="tabpanel" aria-labelledby="home-tab">
+            <form class="p-3 p-md-5">
+              <h2 class="text-center mb-5">Register to find bid on open positions.</h2>
+              <div class="mb-3">
+                <label for="name" class="form-label">Name</label>
+                <input type="text" class="form-control" id="name">
+              </div>
+              <div class="mb-3">
+                <label for="type" class="form-label">Type of Therapist:</label>
+                <select name="type" id="type" class="form-select">
+                  <option value="physio">Physiotherapist</option>
+                  <option value="ot">Occupational Therapist</option>
+                  <option value="slp">Speech Language Therapist</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label for="license" class="form-label">Physio License Number</label>
+                <input type="text" class="form-control" id="license">
+              </div>
+              <div class="mb-3">
+                <label for="phone" class="form-label">Phone Number</label>
+                <input type="text" class="form-control" id="phone">
+              </div>
+              <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="text" class="form-control" id="email" aria-describedby="emailHelp">
+                <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+              </div>
+              <div class="mb-3">
+                <label for="exampleInputPassword1" class="form-label">Password</label>
+                <input type="password" class="form-control" id="exampleInputPassword1">
+              </div>
+              <button type="submit" class="btn btn-primary">Register</button>
+            </form>
+          </div>
+          <!-- Physio Sign Up End -->
+          <!-- Clinic Sign Up Start -->
+          <div class="tab-pane fade" id="register-clinic" role="tabpanel" aria-labelledby="profile-tab">
+            <div class="tab-pane fade show active bg-success p-3" id="register-clinic" role="tabpanel" aria-labelledby="home-tab">
+              <form class="p-3 p-md-5">
+                <h2 class="text-center mb-5">Register to find a Physiotherapist.</h2>
+                <div class="mb-3">
+                  <label for="clinicName" class="form-label">Clinic Name</label>
+                  <input type="text" class="form-control" id="clinicName">
+                </div>
+                <div class="mb-3">
+                  <label for="license" class="form-label">Address</label>
+                  <input type="text" class="form-control" id="license">
+                </div>
+                <div class="mb-3">
+                  <label for="name" class="form-label">Contact Name</label>
+                  <input type="text" class="form-control" id="name">
+                </div>
+                <div class="mb-3">
+                  <label for="phone" class="form-label">Phone Number</label>
+                  <input type="text" class="form-control" id="phone">
+                </div>
+                <div class="mb-3">
+                  <label for="email" class="form-label">Email</label>
+                  <input type="text" class="form-control" id="email" aria-describedby="emailHelp">
+                  <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+                </div>
+                <div class="mb-3">
+                  <label for="exampleInputPassword1" class="form-label">Password</label>
+                  <input type="password" class="form-control" id="exampleInputPassword1">
+                </div>
+                <button type="submit" class="btn btn-primary">Register</button>
+              </form>
+            </div>
+          </div>
+          <!-- Clinic Sign Up End -->
+        </div>
+      </div>
+    </div>
+    <!-- Register Box End -->
+  </div>
+  <!-- Content End -->
+
+  <!-- Footer Start -->
+  <footer class="p-3 pt-5 bg-light text-center">
+    <h5>Quick Links</h5>
+    <div class="d-flex flex-column gap-2">
+      <a href="#" class="link-dark text-decoration-none">How it Works</a>
+      <a href="#" class="link-dark text-decoration-none">Contact?</a>
+      <a href="#"class="link-dark text-decoration-none">Terms & Conditions</a>
+    </div>
+
+    <p class="mt-4 text-weight-light">&copy; <span id="current-year"></span> | The Travelling Therapist</p>
+  </footer>
+  <!-- Footer End -->
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+  <script src="app.js"></script>
+</body>
+</html>
