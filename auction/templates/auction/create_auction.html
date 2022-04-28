@@ -1,0 +1,12 @@
+{% extends 'auction/base.html' %}
+{% load static %}
+{% block content %}
+
+
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit" class="btn btn-outline-secondary btn-sm">Sign up</button>
+</form>
+<!-- Content End -->
+{% endblock %}

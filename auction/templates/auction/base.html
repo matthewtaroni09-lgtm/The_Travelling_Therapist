@@ -13,7 +13,7 @@
     <!-- Custom css -->
     <link rel="stylesheet" href="{% static 'auction/style.css' %}">
 
-    <title>Hello, world!</title>
+    <title>The Travelling Thearipst</title>
 </head>
 
 <body>
@@ -27,8 +27,67 @@
 
     <!-- Jquery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <!-- Nav Start -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">LOGO</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02"
+                aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <!-- <ul class="navbar-nav me-auto mb-2 mb-lg-0"> -->
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="{% url 'index' %}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'about' %}">About/ FAQ</a>
+                    </li>
+                    {% if user.is_authenticated %}
+                    {% if user.account.get_split_user_type == 'Clinic' %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="profile-clinic.html">Profile</a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="profile-therapist.html">Profile</a>
+                    </li>
+                    {% endif %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'register-therapist' %}">Register</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'login' %}">Login</a>
+                    </li>
+                    {% endif %}
+                </ul>
+                <!-- <form class="d-flex">
+              <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+              <button class="btn btn-outline-success" type="submit">Search</button>
+            </form> -->
+            </div>
+        </div>
+    </nav>
+    <!-- Nav End -->
+
     {% block content %}
     {% endblock %}
+    <!-- Footer Start -->
+    <footer class="p-3 pt-5 bg-light text-center">
+        <h5>Quick Links</h5>
+        <div class="d-flex flex-column gap-2">
+            <a href="#" class="link-dark text-decoration-none">How it Works</a>
+            <a href="#" class="link-dark text-decoration-none">Contact?</a>
+            <a href="#" class="link-dark text-decoration-none">Terms & Conditions</a>
+        </div>
+
+        <p class="mt-4 text-weight-light">&copy; <span id="current-year"></span> | The Travelling Therapist</p>
+    </footer>
 </body>
 
 
