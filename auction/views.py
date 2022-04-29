@@ -1,4 +1,5 @@
-from django.http import HttpResponseRedirect
+from unicodedata import category
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
@@ -8,7 +9,7 @@ from django.urls import reverse_lazy
 import datetime
 from datetime import datetime
 
-from .models import Account, Auction, Bid, User, Account
+from .models import Account, Auction, Bid, PracticeArea, User, Account
 
 # Page Links
 def index(request):
@@ -61,10 +62,51 @@ def create_auction(request):
 def view_auction(request, auction_id):
     auction = Auction.objects.get(pk=auction_id)
     form = BidForm(request.POST)
+
+    num_bids = Bid.objects.filter(auction=auction_id).count()
+    num_biders = Bid.objects.values('user').filter(auction=auction_id).distinct().count()
+
     return render(request, 'auction/bid-page-2.html',{
         'auction': auction,
         'form': form,
+        'num_bids': num_bids,
+        'num_biders': num_biders
     })
+
+def get_auction_end(request, auction_id):
+    auction = Auction.objects.get(pk=auction_id)
+    demogrpahics = {}
+    practiceAreas = {}
+    for demogrpahic in auction.clinic.demographic.all():
+        # JS cannot get a value that starts with a number or has spaces so convert 18 - 65 to words and remove spaces from other categroies
+        category = ""
+        if demogrpahic.get_category() == "18 - 65":
+            category = "eighteenToSixtyFive"
+        else:
+            category = demogrpahic.get_category().replace(" ", "")
+        demogrpahics.update({category: demogrpahic.get_percentage()})
+
+    for practiceArea in auction.clinic.practiceArea.all():
+        # JS cannot get a value that has spaces so remove spaces from categroies
+        # print(11111 + practiceArea.get_percentage())
+        practiceAreas.update({practiceArea.get_category().replace(" ", ""): practiceArea.get_percentage()})
+
+    data = {
+        'auctionStart': auction.auctionStart,
+        'auctionEnd': auction.auctionEnd,
+        'currentLowBid': auction.currentLowBid,
+        'clinic': auction.clinic.clinicName,
+        'demogrpahics': demogrpahics,
+        'practiceAreas': practiceAreas
+    }
+    return JsonResponse({'data': data})
+
+def get_demogrpahics(request, clinic_id):
+    account = Account.objects.get(pk=clinic_id)
+    data = {}
+    # data.update({})
+    print(account.demographic)
+    return JsonResponse({'data': data})
 
 def register_therapist(request):
     if request.method == 'POST':

@@ -95,6 +95,12 @@ class Demographic(models.Model):
     def __str__(self):
         return str(self.clinic.clinicName) + " - " + str(self.category) + ": " + str(self.percetnage) + "%"
 
+    def get_category(self):
+        return str(self.category)
+
+    def get_percentage(self):
+        return str(self.percetnage)
+
 class DemographicType(models.Model):
     name = models.CharField(verbose_name='Demographic', max_length=200, help_text='Select a demographic type.')
 
@@ -113,7 +119,13 @@ class PracticeArea(models.Model):
     percetnage = models.IntegerField(verbose_name='Percentage', help_text='Enter the percentage your clinic works with the given demographic.')  
 
     def __str__(self):
-        return str(self.clinic.name) + " - " + str(self.category) + ": " + str(self.percetnage) + "%"
+        return str(self.clinic.clinicName) + " - " + str(self.category) + ": " + str(self.percetnage) + "%"
+
+    def get_category(self):
+        return str(self.category)
+
+    def get_percentage(self):
+        return str(self.percetnage)
 
 class PracticeAreaType(models.Model):
     name = models.CharField(verbose_name='Practice Area', max_length=200, help_text='Select a practice area.')

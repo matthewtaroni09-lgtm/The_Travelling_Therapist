@@ -15,7 +15,13 @@ urlpatterns = [
     path("login", views.login_user, name="login"),
     path('logout_user', views.logout_user, name="logout"),
     path('auction/<auction_id>', views.view_auction, name="auction"),
-    
+
+    # AJAX Calls
+    path('auction/data/auction/<auction_id>', views.get_auction_end, name="get-auction-end"),
+    path('auction/data/clinic/<clinic_id>', views.get_demogrpahics, name="get-demogrpahics"),
+    # path('auction/create_bid/<auction_id>', views.create_bid, name="create-bid"),
+    # path('auction/send_email_message/', views.send_email_message, name="send-email_message"),
+    # path("auction/datas/", views.index_info, name="index_info"), 
     
 ]
 

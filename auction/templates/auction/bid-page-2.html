@@ -9,7 +9,7 @@
   <!-- Image Section Start -->
   <!-- Carousel -->
   <!-- <div id="carouselExampleIndicators" class="carousel slide my-3" data-bs-ride="carousel" data-bs-interval="false"> -->
-  <div id="carouselExampleIndicators" class="carousel slide my-3 d-sm-none" data-bs-ride="carousel">
+  <!-- <div id="carouselExampleIndicators" class="carousel slide my-3 d-sm-none" data-bs-ride="carousel">
     <div class="carousel-indicators">
       <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active"
         aria-current="true" aria-label="Slide 1"></button>
@@ -39,28 +39,31 @@
       <span class="carousel-control-next-icon" aria-hidden="true"></span>
       <span class="visually-hidden">Next</span>
     </button>
-  </div>
+  </div> -->
 
   <!-- Static Images -->
   <div class="row d-none d-sm-inline-flex my-3">
     <div class="col-9">
-      <img src="./images/petr-magera-HuWm7malJ18-unsplash.jpg" class="img-fluid pt-3" alt="Image of Clinic">
+      <img src="/media/{{ auction.clinic.imageOne }}" class="img-fluid pt-3" alt="Image of Clinic">
     </div>
     <div class="col-3">
-      <img src="./images/johny-georgiadis-9Wa1HgE1XlA-unsplash.jpg" class="img-fluid pt-3" alt="Image of Clinic">
-      <img src="./images/maxim-tirdea-xayCTz6N2nM-unsplash.jpg" class="img-fluid pt-3" alt="Image of Clinic">
-      <img src="./images/benyamin-bohlouli-e7MJLM5VGjY-unsplash.jpg" class="img-fluid pt-3" alt="Image of Clinic">
+      <img src="/media/{{ auction.clinic.imageTwo }}" class="img-fluid pt-3" alt="Image of Clinic">
+      <img src="/media/{{ auction.clinic.imageThree }}" class="img-fluid pt-3" alt="Image of Clinic">
+      <img src="/media/{{ auction.clinic.imageFour }}" class="img-fluid pt-3" alt="Image of Clinic">
     </div>
   </div>
   <!-- Image Section End -->
 
   <div class="d-flex">
     <section class="d-inline-flex align-items-center text-white bg-dark py-2 px-3 me-3 rounded">
-      <time class="m-0 d-flex me-4"><img class="clock me-2" src="./images/clock.svg" alt="clock">18:04:44</time>
-      <p class="m-0">Low Bid:<span class="ms-2">$28,000</span></p>
-      <p class="m-0 mx-4 d-none d-lg-block"># Bids:<span class="ms-2">4</span></p>
-      <p class="m-0 me-4 d-none d-lg-block"># of Therapists Bidding:<span class="ms-2">2</span></p>
+      <time id="auctionTimer" class="m-0 d-flex me-4"><img class="clock me-2" src="{% static 'auction/clock.svg' %}"
+          alt="clock">--</time>
+      <p class="m-0">Low Bid:<span class="ms-2">${{ auction.get_low_bid }}</span></p>
+      <p class="m-0 mx-4 d-none d-lg-block"># Bids:<span class="ms-2">{{ num_bids }}</span></p>
+      <p class="m-0 me-4 d-none d-lg-block"># of Therapists Bidding:<span class="ms-2">{{ num_biders }}</span></p>
     </section>
+
+    {% if user.is_authenticated %}
     <button type="button" class="btn-lg btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
       data-bs-whatever="@mdo">Bid</button>
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -72,7 +75,7 @@
           </div>
           <div class="modal-body">
             <form>
-              <p>Current Bid: $28,000</p>
+              <p>Current Bid: ${{ auction.get_low_bid }}</p>
               <div class="mb-3">
                 <label for="recipient-name" class="col-form-label">Your Bid Amount:</label>
                 <input type="number" class="form-control" id="recipient-name">
@@ -86,15 +89,17 @@
         </div>
       </div>
     </div>
+    {% endif %}
+
   </div>
 
   <div class="row w-100 mx-auto mt-3">
     <p class="col-4 text-weight-bold border mb-0 py-2 bg-light">Clinic Name</p>
-    <p class="col-8 text-weight-light border mb-0 py-2">Luke's Fancy Clinic</p>
+    <p class="col-8 text-weight-light border mb-0 py-2">{{ auction.clinic.clinicName }}</p>
   </div>
   <div class="row w-100 mx-auto">
     <p class="col-4 text-weight-bold border mb-0 py-2 bg-light">Town/ City</p>
-    <p class="col-8 text-weight-light border mb-0 py-2">Burlington</p>
+    <p class="col-8 text-weight-light border mb-0 py-2">{{ auction.clinic.city }}</p>
   </div>
   <div class="row w-100 mx-auto">
     <p class="col-4 text-weight-bold border mb-0 py-2 bg-light">Province</p>
@@ -102,7 +107,7 @@
   </div>
   <div class="row w-100 mx-auto">
     <p class="col-4 text-weight-bold border mb-0 py-2 bg-light">Dates of Coverage</p>
-    <p class="col-8 text-weight-light border mb-0 py-2">Apr 4 - Jun 3, 2022</p>
+    <p class="col-8 text-weight-light border mb-0 py-2">{{ auction.placementStart }} - {{ auction.placementEnd }}</p>
   </div>
   <div class="row w-100 mx-auto">
     <p class="col-4 text-weight-bold border mb-0 py-2 bg-light">Days Working</p>
@@ -111,23 +116,23 @@
         <tbody>
           <tr>
             <th class="pe-3">MON:</th>
-            <td class="text-weight-light">0900 - 1700</td>
+            <td class="text-weight-light">{{ auction.mondayStart }} - {{ auction.mondayEnd }}</td>
           </tr>
           <tr>
             <th class="pe-3">TUES:</th>
-            <td class="text-weight-light">0900 - 1700</td>
+            <td class="text-weight-light">{{ auction.tuesdayStart }} - {{ auction.tuesdayEnd }}</td>
           </tr>
           <tr>
             <th class="pe-3">WED:</th>
-            <td class="text-weight-light">0900 - 1700</td>
+            <td class="text-weight-light">{{ auction.wednesdayStart }} - {{ auction.wednesdayEnd }}</td>
           </tr>
           <tr>
             <th class="pe-3">THURS:</th>
-            <td class="text-weight-light">0900 - 1700</td>
+            <td class="text-weight-light">{{ auction.thursdayStart }} - {{ auction.thursdayEnd }}</td>
           </tr>
           <tr>
             <th class="pe-3">FRI:</th>
-            <td class="text-weight-light">0900 - 1700</td>
+            <td class="text-weight-light">{{ auction.fridayStart }} - {{ auction.fridayEnd }}</td>
           </tr>
         </tbody>
       </table>
@@ -135,7 +140,7 @@
   </div>
   <div class="row w-100 mx-auto">
     <p class="col-4 text-weight-bold border mb-0 py-2 bg-light">Pay Frequency</p>
-    <p class="col-8 text-weight-light border mb-0 py-2">Once a month</p>
+    <p class="col-8 text-weight-light border mb-0 py-2">{{ auction.payFrequency }}</p>
   </div>
   <!-- <div class="row w-100 mx-auto">
       <p class="col-4 text-weight-bold border mb-0 py-2 bg-light">Area of Practice</p>
@@ -155,14 +160,9 @@
   </div>
 
   <h3 class="mt-3">About the Clinic</h3>
-  <p class="text-weight-light">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Facere, nostrum vel quidem
-    nihil laudantium atque, numquam ipsa laboriosam enim, esse eligendi molestias eum amet aliquam at mollitia nam quod
-    aspernatur dolores placeat consequatur suscipit ex nisi! Modi, non est corrupti ullam temporibus vel quos eos alias
-    autem deserunt debitis hic consectetur distinctio reprehenderit veritatis architecto animi ipsam nostrum, ad officia
-    sint asperiores facere ab voluptatum. Officiis ipsa consequuntur ex enim nostrum eligendi repudiandae, voluptatum
-    eos officia ullam consectetur delectus corporis pariatur, laboriosam a excepturi maxime voluptatibus qui esse
-    corrupti harum suscipit atque? Perferendis enim laboriosam quibusdam deserunt aut dolorem tempora?</p>
+  <p class="text-weight-light">{{ auction.clinic.about }}</p>
 </div>
-
+<!-- <script src="{% static 'auction/app.js' %}"></script> -->
+<script src="{% static 'auction/auction.js' %}"></script>
 <!-- Content End -->
 {% endblock %}
