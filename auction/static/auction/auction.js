@@ -7,6 +7,7 @@ const email = document.getElementById("email");
 const csrf = document.getElementsByName('csrfmiddlewaretoken');
 const URL = window.location.href;
 const auctionID = URL.substring(URL.lastIndexOf('/') + 1);
+console.log("auctionID = " + auctionID);
 
 const auction_list = document.getElementById("auction_list");
 
@@ -32,148 +33,171 @@ const getCookie = (name) => {
 }
 const csrftoken = getCookie('csrftoken');
 
+// const getAuction = () => {
+//     $.ajax({
+//         type: "GET",
+//         url: "/auction/data/auction/" + auctionID,
+//         success: function (response) {
+//             console.log(response);
+//             auctionStartDateTime = response.data.auctionStart;
+//             auctionEndDateTime = response.data.auctionEnd;
+//             currentLowBid = response.data.currentLowBid;
+//             countDown(auctionEndDateTime);
+//             // spinnerBox.classList.add('not-visible');
+
+//             //Update time this because it could change
+//             // auction_list.innerHTML += `
+//             // <ul>
+//             //     Auction Start Date: ` + auctionStartDateTime + ` <br>
+//             //     Auction End Date: ` + auctionEndDateTime + `<br>
+//             //     Current Bid: $` + currentLowBid + `<br>
+//             // </ul>`;
+
+//             //Demographics Chart
+//             const demographicsLabels = [
+//                 'Under 18',
+//                 '18 - 65',
+//                 'Over 65',
+//             ];
+
+//             const data = {
+//                 labels: demographicsLabels,
+//                 datasets: [{
+//                     label: 'Client Demographics',
+//                     backgroundColor: [
+//                         'rgb(255, 99, 132)',
+//                         'rgb(54, 162, 235)',
+//                         'rgb(255, 205, 86)'
+//                     ],
+//                     borderColor: [
+//                         'rgb(255, 99, 132)',
+//                         'rgb(54, 162, 235)',
+//                         'rgb(255, 205, 86)'
+//                     ],
+//                     data: [response.data.demogrpahics.Under18, response.data.demogrpahics.eighteenToSixtyFive, response.data.demogrpahics.Over65],
+//                 }]
+//             };
+
+//             const config = {
+//                 type: 'doughnut',
+//                 data: data,
+//                 options: {
+//                     responsive: true,
+//                     layout: {
+//                         padding: 20
+//                     },
+//                     plugins: {
+//                         title: {
+//                             display: true,
+//                             text: 'Client Demographics',
+//                             font: {
+//                                 size: 16
+//                             },
+//                             color: '#000',
+//                             padding: {
+//                                 bottom: 30
+//                             }
+//                         },
+//                         legend: {
+//                             display: true,
+//                             position: 'bottom',
+//                         }
+//                     }
+//                 }
+//             };
+
+//             const demographics = new Chart(
+//                 document.getElementById('demographics'),
+//                 config
+//             );
+
+
+//             // Area of Practice Chart
+//             const areasOfPracticeLabels = [
+//                 'MSK',
+//                 'Neuro',
+//                 'CardioResp',
+//             ];
+
+//             const areasOfPracticeData = {
+//                 labels: areasOfPracticeLabels,
+//                 datasets: [{
+//                     label: 'Area of Practice',
+//                     backgroundColor: [
+//                         'rgb(255, 99, 132)',
+//                         'rgb(54, 162, 235)',
+//                         'rgb(255, 205, 86)'
+//                     ],
+//                     borderColor: [
+//                         'rgb(255, 99, 132)',
+//                         'rgb(54, 162, 235)',
+//                         'rgb(255, 205, 86)'
+//                     ],
+//                     data: [response.data.practiceAreas.MSK, response.data.practiceAreas.Neuro, response.data.practiceAreas.CardioResp],
+//                 }]
+//             };
+
+//             const areasOfPracticeConfig = {
+//                 type: 'doughnut',
+//                 data: areasOfPracticeData,
+//                 options: {
+//                     responsive: true,
+//                     layout: {
+//                         padding: 20
+//                     },
+//                     plugins: {
+//                         title: {
+//                             display: true,
+//                             text: 'Area of Practice',
+//                             font: {
+//                                 size: 16
+//                             },
+//                             color: '#000',
+//                             padding: {
+//                                 bottom: 30
+//                             }
+//                         },
+//                         legend: {
+//                             display: true,
+//                             position: 'bottom'
+//                         }
+//                     }
+//                 }
+//             };
+
+//             const areasOfPracticeChart = new Chart(
+//                 document.getElementById('areaOfPractice'),
+//                 areasOfPracticeConfig
+//             );
+//         },
+//         error: function (error) {
+//             console.log('error: ', error);
+//         }
+//     })
+// }
+
+
 const getAuction = () => {
     $.ajax({
         type: "GET",
-        url: "/auction/data/auction/" + auctionID,
+        url: "/auction/data/all_auctions",
         success: function (response) {
             console.log(response);
-            auctionStartDateTime = response.data.auctionStart;
+            auctionStartDateTime = response.data[0].auctionStart;
             auctionEndDateTime = response.data.auctionEnd;
             currentLowBid = response.data.currentLowBid;
-            countDown(auctionEndDateTime);
-            // spinnerBox.classList.add('not-visible');
 
-            //Update time this because it could change
-            // auction_list.innerHTML += `
-            // <ul>
-            //     Auction Start Date: ` + auctionStartDateTime + ` <br>
-            //     Auction End Date: ` + auctionEndDateTime + `<br>
-            //     Current Bid: $` + currentLowBid + `<br>
-            // </ul>`;
+            response.data.forEach(element => {
+                countDown(element.auctionEnd, element.auctionID);
+            })
 
-            //Demographics Chart
-            const demographicsLabels = [
-                'Under 18',
-                '18 - 65',
-                'Over 65',
-            ];
-
-            const data = {
-                labels: demographicsLabels,
-                datasets: [{
-                    label: 'Client Demographics',
-                    backgroundColor: [
-                        'rgb(255, 99, 132)',
-                        'rgb(54, 162, 235)',
-                        'rgb(255, 205, 86)'
-                    ],
-                    borderColor: [
-                        'rgb(255, 99, 132)',
-                        'rgb(54, 162, 235)',
-                        'rgb(255, 205, 86)'
-                    ],
-                    data: [response.data.demogrpahics.Under18, response.data.demogrpahics.eighteenToSixtyFive, response.data.demogrpahics.Over65],
-                }]
-            };
-
-            const config = {
-                type: 'doughnut',
-                data: data,
-                options: {
-                    responsive: true,
-                    layout: {
-                        padding: 20
-                    },
-                    plugins: {
-                        title: {
-                            display: true,
-                            text: 'Client Demographics',
-                            font: {
-                                size: 16
-                            },
-                            color: '#000',
-                            padding: {
-                                bottom: 30
-                            }
-                        },
-                        legend: {
-                            display: true,
-                            position: 'bottom',
-                        }
-                    }
-                }
-            };
-
-            const demographics = new Chart(
-                document.getElementById('demographics'),
-                config
-            );
-
-
-            // Area of Practice Chart
-            const areasOfPracticeLabels = [
-                'MSK',
-                'Neuro',
-                'CardioResp',
-            ];
-
-            const areasOfPracticeData = {
-                labels: areasOfPracticeLabels,
-                datasets: [{
-                    label: 'Area of Practice',
-                    backgroundColor: [
-                        'rgb(255, 99, 132)',
-                        'rgb(54, 162, 235)',
-                        'rgb(255, 205, 86)'
-                    ],
-                    borderColor: [
-                        'rgb(255, 99, 132)',
-                        'rgb(54, 162, 235)',
-                        'rgb(255, 205, 86)'
-                    ],
-                    data: [response.data.practiceAreas.MSK, response.data.practiceAreas.Neuro, response.data.practiceAreas.CardioResp],
-                }]
-            };
-
-            const areasOfPracticeConfig = {
-                type: 'doughnut',
-                data: areasOfPracticeData,
-                options: {
-                    responsive: true,
-                    layout: {
-                        padding: 20
-                    },
-                    plugins: {
-                        title: {
-                            display: true,
-                            text: 'Area of Practice',
-                            font: {
-                                size: 16
-                            },
-                            color: '#000',
-                            padding: {
-                                bottom: 30
-                            }
-                        },
-                        legend: {
-                            display: true,
-                            position: 'bottom'
-                        }
-                    }
-                }
-            };
-
-            const areasOfPracticeChart = new Chart(
-                document.getElementById('areaOfPractice'),
-                areasOfPracticeConfig
-            );
         },
         error: function (error) {
             console.log('error: ', error);
         }
     })
 }
+getAuction();
 
 // const getDemographics = () => {
 //     $.ajax({
@@ -199,7 +223,7 @@ const getAuction = () => {
 //     })
 // }
 
-getAuction();
+
 
 // bidForm.addEventListener('submit', e => {
 //     console.log("submitted");
@@ -253,7 +277,7 @@ getAuction();
 //     })
 // });
 
-function countDown(date) {
+function countDown(date, auctionID) {
     // Update the count down every 1 second
     timer = setInterval(function () {
 
@@ -275,16 +299,16 @@ function countDown(date) {
             }
 
             // Output the result in an element with id="demo"
-            document.getElementById("auctionTimer").innerHTML = timeLeft + minutes + "m " + seconds + "s";
+            document.getElementById("auctionTimer-" + auctionID).innerHTML = timeLeft + minutes + "m " + seconds + "s";
 
             // If the count down is over, write some text 
             if (distance < 0) {
                 clearInterval(x);
-                document.getElementById("auctionTimer").innerHTML = "Auction Closed";
+                document.getElementById("auctionTimer-" + auctionID).innerHTML = "Auction Closed";
             }
         }
         else {
-            document.getElementById("auctionTimer").innerHTML = "Auction Closed";
+            document.getElementById("auctionTimer-" + auctionID).innerHTML = "Auction Closed";
         }
     }, 1000);
 }

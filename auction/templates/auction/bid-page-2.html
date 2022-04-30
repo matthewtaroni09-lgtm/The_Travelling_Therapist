@@ -47,17 +47,23 @@
       <img src="/media/{{ auction.clinic.imageOne }}" class="img-fluid pt-3" alt="Image of Clinic">
     </div>
     <div class="col-3">
+      {% if auction.clinic.imageTwo %}
       <img src="/media/{{ auction.clinic.imageTwo }}" class="img-fluid pt-3" alt="Image of Clinic">
+      {% endif %}
+      {% if auction.clinic.imageThree %}
       <img src="/media/{{ auction.clinic.imageThree }}" class="img-fluid pt-3" alt="Image of Clinic">
+      {% endif %}
+      {% if auction.clinic.imageFour %}
       <img src="/media/{{ auction.clinic.imageFour }}" class="img-fluid pt-3" alt="Image of Clinic">
+      {% endif %}
     </div>
   </div>
   <!-- Image Section End -->
 
   <div class="d-flex">
     <section class="d-inline-flex align-items-center text-white bg-dark py-2 px-3 me-3 rounded">
-      <time id="auctionTimer" class="m-0 d-flex me-4"><img class="clock me-2" src="{% static 'auction/clock.svg' %}"
-          alt="clock">--</time>
+      <time id="auctiontimer-{{ auction.auctionID }}" class="m-0 d-flex me-4"><img class="clock me-2"
+          src="{% static 'auction/clock.svg' %}" alt="clock">--</time>
       <p class="m-0">Low Bid:<span class="ms-2">${{ auction.get_low_bid }}</span></p>
       <p class="m-0 mx-4 d-none d-lg-block"># Bids:<span class="ms-2">{{ num_bids }}</span></p>
       <p class="m-0 me-4 d-none d-lg-block"># of Therapists Bidding:<span class="ms-2">{{ num_biders }}</span></p>

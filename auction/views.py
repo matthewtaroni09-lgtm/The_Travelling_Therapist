@@ -14,8 +14,19 @@ from .models import Account, Auction, Bid, PracticeArea, User, Account
 # Page Links
 def index(request):
     auctions_list = Auction.objects.filter(active=True)
+    location_list = []
+    therapist_list = []
+    for auction in auctions_list:
+        if auction.clinic.city not in location_list:
+            location_list.append(auction.clinic.city)
+
+        if auction.clinic.userType not in therapist_list:
+            therapist_list.append(auction.clinic.userType)
+
     return render(request, 'auction/index.html', {
         'auctions_list': auctions_list,
+        'location_list': location_list,
+        'therapist_list': therapist_list
     })
 
 def about(request):
@@ -100,6 +111,10 @@ def get_auction_end(request, auction_id):
         'practiceAreas': practiceAreas
     }
     return JsonResponse({'data': data})
+
+def get_all_auctions(request):
+    auction_list = list(Auction.objects.filter(active=True).values())
+    return JsonResponse({'data': auction_list})
 
 def get_demogrpahics(request, clinic_id):
     account = Account.objects.get(pk=clinic_id)
