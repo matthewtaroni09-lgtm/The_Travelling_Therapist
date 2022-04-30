@@ -3,13 +3,33 @@ from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
-from django.views.generic import ListView, CreateView  # new
+from django.views.generic import ListView, CreateView
+
+from .filters import AuctionFilter
 from .forms import RegisterTherapist, AuctionForm, BidForm
 from django.urls import reverse_lazy
 import datetime
 from datetime import datetime
 
 from .models import Account, Auction, Bid, PracticeArea, User, Account
+
+class AuctionListView(ListView):
+    model = Auction
+    template_name = 'auction/filter.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['filter'] = AuctionFilter(self.request.GET, queryset=self.get_queryset())
+        return context
+
+class AuctionListView2(ListView):
+    model = Auction
+    template_name = 'auction/index.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['filter'] = AuctionFilter(self.request.GET, queryset=self.get_queryset())
+        return context
 
 # Page Links
 def index(request):

@@ -14,35 +14,16 @@
     {% endif %}
   </div>
   <!-- Search Box Start -->
-  <div class="row">
-    <div class="mt-3 d-flex gap-2 col-lg-6">
-      <select name="location" id="location" class="form-select form-select-md mb-3">
-        <option value="0">Location</option>
-        {% for location in location_list %}
-        <option value="1">{{ location }}</option>
-        {% endfor %}
-      </select>
-      <select name="speciality" id="speciality" class="form-select form-select-md mb-3">
-        <option value="0">Type of Therapist</option>
-        {% for therapist in therapist_list %}
-        <option value="1">{{ therapist }}</option>
-        {% endfor %}
-      </select>
-    </div>
-    <div class="mt-lg-3 col-lg-6">
-      <div class="input-group mb-3">
-        <input type="text" class="form-control" placeholder="Search Auctions..." aria-label="Search Auctions"
-          aria-describedby="button-addon2">
-        <button class="btn btn-outline-secondary" type="button" id="button-addon2">Search</button>
-      </div>
-    </div>
-  </div>
+  <form method="GET">
+    {{filter.form}}
+    <button type="submit" class="btn btn-primary">Search</button>
+  </form>
   <!-- Search Box End -->
 
   <!-- Start of auction loops  -->
 
   <div class="row mb-5">
-    {% for auction in auctions_list %}
+    {% for auction in filter.qs %}
     <div class="col-sm-6 col-lg-4">
       <a class="card mt-4 text-decoration-none text-dark" href="{% url 'auction' auction.auctionID %}">
         <div class="position-relative">

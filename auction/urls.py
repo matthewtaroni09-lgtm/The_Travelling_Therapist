@@ -6,7 +6,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     # Page Links
-    path('', views.index, name="index"),
+    path('', views.AuctionListView2.as_view(), name="index"),
     path("about", views.about, name="about"),
     path("profile", views.login_user, name="profile"),
     # path("register", views.register, name="register"),
@@ -23,6 +23,8 @@ urlpatterns = [
     # path('auction/send_email_message/', views.send_email_message, name="send-email_message"),
     path("auction/data/all_auctions", views.get_all_auctions, name="get-all-auctions"), 
     
+    path("filter", views.AuctionListView.as_view(), name="list"), 
+
 ]
 
 if settings.DEBUG: 

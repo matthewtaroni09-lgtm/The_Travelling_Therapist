@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'auction',
     'localflavor',
-    'crispy_forms'
+    'crispy_forms',
+    'django_filters'
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'

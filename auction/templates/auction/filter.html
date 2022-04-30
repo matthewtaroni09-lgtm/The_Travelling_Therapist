@@ -1,0 +1,22 @@
+{% extends 'auction/base.html' %}
+
+
+{% block content %}
+
+<div class="container">
+
+    <form method="GET">
+        {{filter.form}}
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+    <ul>
+        {% for auction in filter.qs %}
+        <li>
+            <p>{{ auction.clinic.clinicName }} {{ auction.clinic.city }} {{ auction.reservePrice }}
+                {{auction.clinic.userType }}</p>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+
+{% endblock content %}
