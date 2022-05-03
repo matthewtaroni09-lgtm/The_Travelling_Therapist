@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.views.generic import ListView, CreateView
 
 from .filters import AuctionFilter
-from .forms import RegisterTherapist, AuctionForm, BidForm
+from .forms import RegisterTherapist, AuctionForm, BidForm, UserForm, ProfileForm
 from django.urls import reverse_lazy
 import datetime
 from datetime import datetime
@@ -181,32 +181,35 @@ def get_demogrpahics(request, clinic_id):
     print(account.demographic)
     return JsonResponse({'data': data})
 
-def register_therapist(request):
-    if request.method == 'POST':
-        form = RegisterTherapist(request.POST)
+# @login_required
+# @transaction.atomic
+def register(response):
+    print(response.method)
+    if response.method == 'POST':
+        form = RegisterTherapist(response.POST)
         if form.is_valid():
-            user = form.save(commit=False)
-            
-            id_number = form.cleaned_data['license_number']
-
-            
-
-            id_model = Account(user.id)
-            id_model.user = user
-            id_model.licenseNumber = id_number
-
-            id_model.save()
+            print("inside register")
+            user = form.save()
+            user.refresh_from_db()
+            user.account.licenseNumber = form.cleaned_data.get('license_number')
+            user.account.city = form.cleaned_data.get('city')
+            user.account.userType = form.cleaned_data.get('user_type')
             user.save()
+            # username = form.cleaned_data.get('username')
+            # password = form.cleaned_data.get('password1')
+            # user = authenticate(username=username, password=password)
+            # login(response, user)
 
-            return HttpResponseRedirect('some_url')
+            return redirect('index')
 
         else:
-            return render(request, 'auction/register.html', {'form': form})
-
+            print("invalid")
+            print(form.errors)
+            form = RegisterTherapist()
     else:
         form = RegisterTherapist()
 
-    return render(request, 'auction/register.html', {'form': form})
+    return render(response, 'auction/register.html', {'form': form})
 
     # if request.method == 'POST':
     #     form = RegisterTherapist(request.POST)

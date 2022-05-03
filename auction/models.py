@@ -2,13 +2,16 @@ from tabnanny import verbose
 from unicodedata import category
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models.signals import post_save
 # from localflavor.ca.models import CAProvinceField
 import uuid
+
+from django.dispatch import receiver
 
 class Account(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     clinicName = models.CharField(verbose_name='Clinic Name', max_length=200, blank=True, null=True, help_text='Enter the clinic name.')
-    userType = models.ForeignKey('UserType', verbose_name='User Type', related_name='usertypes', on_delete=models.CASCADE)  
+    userType = models.ForeignKey('UserType', verbose_name='User Type', blank=True, null=True, related_name='usertypes', on_delete=models.CASCADE)  
     licenseNumber = models.CharField(verbose_name='License Number', max_length=120, null=True, blank=True, help_text='Enter you license number.')
     imageOne = models.ImageField(verbose_name='Clinic Image One', upload_to='images/', blank=True, null=True, help_text='Upload an image (optional).')
     imageTwo = models.ImageField(verbose_name='Clinic Image Two', upload_to='images/', blank=True, null=True, help_text='Upload an image (optional).')
@@ -20,10 +23,17 @@ class Account(models.Model):
     about = models.TextField(verbose_name='About', blank=True, null=True, help_text='Tell us about your clinic.')
     practiceArea = models.ManyToManyField('PracticeArea', blank=True)
     demographic = models.ManyToManyField('Demographic', blank=True)
-    pro = models.BooleanField(verbose_name='Pro Member', blank=True)
+    pro = models.BooleanField(verbose_name='Pro Member', null=True, blank=True)
 
     def __str__(self):
         return str(self.user)
+
+    @receiver(post_save, sender=User)
+    def update_profile_signal(sender, instance, created, **kwargs):
+        print("inside update profile")
+        if created:
+            Account.objects.create(user=instance)
+        instance.account.save()
 
     def get_split_user_type(self):
         return str(self.userType).split(' ')[-1]

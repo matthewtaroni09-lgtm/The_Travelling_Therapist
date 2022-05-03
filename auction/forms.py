@@ -1,5 +1,5 @@
 from django import forms
-from .models import Auction, Bid, Account, User
+from .models import Auction, Bid, Account, User, UserType
 from django.contrib.auth.forms import UserCreationForm
 
 class AuctionForm(forms.ModelForm):
@@ -64,9 +64,21 @@ class RegisterTherapist(UserCreationForm):
     first_name = forms.CharField()
     last_name = forms.CharField()
     license_number = forms.CharField()
+    city = forms.CharField()
+    # user_type = forms.ModelChoiceField(queryset=UserType.objects.filter())
+    user_type = forms.ModelChoiceField(queryset=UserType.objects.exclude(name__endswith='Clinic'))
 
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'license_number', 'username', 'password1' ,'password2' )
+        fields = ('first_name', 'last_name', 'license_number', 'username', 'city', 'user_type', 'password1' ,'password2' )
         labels = {'username': 'Email'}
 
+class UserForm(UserCreationForm):
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name', 'email', 'username', 'password1' ,'password2')
+
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = Account
+        fields = ('licenseNumber', 'city')
