@@ -51,10 +51,18 @@ class Auction(models.Model):
     sundayEnd = models.TimeField(verbose_name='Sunday End Time', null=True, blank=True, help_text='Enter the end of the workday on Sundays.')
     payFrequency = models.ForeignKey('PayFrequency', related_name='pay_frequency', on_delete=models.CASCADE) 
     reservePrice = models.IntegerField(verbose_name='Reserve Price', help_text='Reserve bid is the maximum price the clinic is willing to offer.')
+    startingBid = models.IntegerField(verbose_name='Starting Bid', help_text='The intial bid amount.')
     minimumBidIncrement = models.IntegerField(verbose_name='Minimum Bid Increment', help_text='All bids must decrease by the minimum bid increment.')
     currentLowBid = models.IntegerField(verbose_name='Current Low Bid', blank=True, null=True)
     winner = models.ForeignKey(User, related_name='auction_winner', blank=True, null=True, on_delete=models.CASCADE)
     winningPrice = models.IntegerField(verbose_name='Winning Price', blank=True, null=True)
+    underEightteen = models.IntegerField(verbose_name='Under 18', blank=True, null=True)
+    eightteenToSixtyFive = models.IntegerField(verbose_name='18 - 65', blank=True, null=True)
+    overSixtyFive = models.IntegerField(verbose_name='Over 65', blank=True, null=True)
+    MSK = models.IntegerField(verbose_name='MSK', blank=True, null=True)
+    neuro = models.IntegerField(verbose_name='Neuro', blank=True, null=True)
+    cardioResp = models.IntegerField(verbose_name='CardioResp', blank=True, null=True)
+    comments = models.TextField(verbose_name='Information about the Auction', blank=True, null=True, help_text='Tell us about your auction.')
     active = models.BooleanField(verbose_name='Active Auction')
     closed = models.BooleanField(verbose_name='Closed Auction')
     deleted = models.BooleanField(verbose_name='Deleted Auction')
@@ -90,16 +98,16 @@ class Bid(models.Model):
 class Demographic(models.Model):
     clinic = models.ForeignKey(Account, related_name='demogrpahic_clinic', on_delete=models.CASCADE)
     category = models.ForeignKey('DemographicType', related_name='category', on_delete=models.CASCADE)
-    percetnage = models.IntegerField(verbose_name='Percentage', help_text='Enter the percentage your clinic works with the given demographic.')  
+    percentage = models.IntegerField(verbose_name='Percentage', help_text='Enter the percentage your clinic works with the given demographic.')  
 
     def __str__(self):
-        return str(self.clinic.clinicName) + " - " + str(self.category) + ": " + str(self.percetnage) + "%"
+        return str(self.clinic.clinicName) + " - " + str(self.category) + ": " + str(self.percentage) + "%"
 
     def get_category(self):
         return str(self.category)
 
     def get_percentage(self):
-        return str(self.percetnage)
+        return str(self.percentage)
 
 class DemographicType(models.Model):
     name = models.CharField(verbose_name='Demographic', max_length=200, help_text='Select a demographic type.')

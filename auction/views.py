@@ -53,7 +53,45 @@ def about(request):
     return render(request, 'auction/about.html', {})
 
 def profile(request):
-    return render(request, 'auction/profile.html', {})
+    active_auctions_list = Auction.objects.filter(active=True, clinic=request.user.account)
+    past_auctions_list = Auction.objects.filter(active=False, deleted=False, clinic=request.user.account)
+
+    submitted = False
+    if request.method == "POST":
+        form = AuctionForm(request.POST, request.FILES)
+        if form.is_valid():
+            auction = form.save(commit=False)
+            auction.clinic = request.user.account
+            if form.cleaned_data.get('reservePrice') < 10000:
+                auction.minimumBidIncrement = 100
+            elif form.cleaned_data.get('reservePrice') > 10000 and form.cleaned_data.get('reservePrice') < 25000:
+                auction.minimumBidIncrement = 250
+            else:
+                auction.minimumBidIncrement = 500
+            auction.currentLowBid = form.cleaned_data.get('reservePrice')
+            auction.closed = False
+            auction.active = True
+            auction.deleted = False
+            auction.createdBy = request.user
+            auction.modifiedBy = request.user
+            auction.save()
+            print(str(auction.auctionEnd.year) + ", " + str(auction.auctionEnd.month) + ", " + str(auction.auctionEnd.day) + ", " + str(auction.auctionEnd.hour) + ", " + str(auction.auctionEnd.minute))
+            print(auction.auctionID)
+            # updater.start(auction.auctionEnd.year, auction.auctionEnd.month, auction.auctionEnd.day, auction.auctionEnd.hour, auction.auctionEnd.minute, str(auction.auctionID))
+            # return HttpResponseRedirect('/add_auction?submitted=True')
+        else:
+            form = AuctionForm
+            if 'submitted' in request.GET:
+                submitted = True
+
+    form = AuctionForm
+
+    return render(request, 'auction/profile.html', {
+        'active_auctions_list': active_auctions_list,
+        'past_auctions_list': past_auctions_list,
+        'form': form,
+        'submitted': submitted
+    })
 
 # def register(request):
 #     return render(request, 'auction/register.html', {})

@@ -8,7 +8,7 @@ urlpatterns = [
     # Page Links
     path('', views.AuctionListView2.as_view(), name="index"),
     path("about", views.about, name="about"),
-    path("profile", views.login_user, name="profile"),
+    path("profile", views.profile, name="profile"),
     # path("register", views.register, name="register"),
     path("register", views.register_therapist, name="register-therapist"),  # new
     path('create_auction', views.create_auction, name="create-auction"),

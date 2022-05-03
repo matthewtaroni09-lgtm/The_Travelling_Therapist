@@ -45,15 +45,9 @@
                         <a class="nav-link" href="{% url 'about' %}">About/ FAQ</a>
                     </li>
                     {% if user.is_authenticated %}
-                    {% if user.account.get_split_user_type == 'Clinic' %}
                     <li class="nav-item">
-                        <a class="nav-link" href="profile-clinic.html">Profile</a>
+                        <a class="nav-link" href="{% url 'profile' %}">Profile</a>
                     </li>
-                    {% else %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="profile-therapist.html">Profile</a>
-                    </li>
-                    {% endif %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'logout' %}">Logout</a>
                     </li>
