@@ -58,7 +58,7 @@ class BidForm(forms.ModelForm):
         labels = {}
         widgets = {
             'amount': forms.TextInput(attrs={'class':'form-control', 'placeholder': 'Bid Amount'})
-            }
+        }
 
 class RegisterTherapist(UserCreationForm):
     first_name = forms.CharField()

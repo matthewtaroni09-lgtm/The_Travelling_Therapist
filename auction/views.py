@@ -130,14 +130,32 @@ def create_auction(request):
 
 def view_auction(request, auction_id):
     auction = Auction.objects.get(pk=auction_id)
-    form = BidForm(request.POST)
-
     num_bids = Bid.objects.filter(auction=auction_id).count()
     num_biders = Bid.objects.values('user').filter(auction=auction_id).distinct().count()
+
+    submitted = False
+    form = BidForm(request.POST)
+    if form.is_valid():
+        bid = form.save(commit=False)
+        bid.auction = auction
+        bid.user = request.user
+        bid.active = True
+        bid.createdBy = request.user
+        bid.save()
+        if bid.amount < auction.currentLowBid:
+            auction.currentLowBid = bid.amount
+            auction.save()
+    else:
+        form = BidForm
+        if 'submitted' in request.GET:
+            submitted = True
+
+    form = BidForm
 
     return render(request, 'auction/bid-page-2.html',{
         'auction': auction,
         'form': form,
+        'submitted': submitted,
         'num_bids': num_bids,
         'num_biders': num_biders
     })

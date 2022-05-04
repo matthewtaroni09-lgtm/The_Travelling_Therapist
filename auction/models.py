@@ -96,7 +96,7 @@ class Bid(models.Model):
     user = models.ForeignKey(User, related_name='user', blank=True, null=True, on_delete=models.CASCADE) 
     amount = models.IntegerField(verbose_name='Amount', help_text='Enter the amount you would like to bid.')
     active = models.BooleanField(verbose_name='Active Bid')
-    created = models.DateTimeField(verbose_name='Created Time')
+    created = models.DateTimeField(verbose_name='Created Time', auto_now_add=True)
     createdBy = models.ForeignKey(User, related_name='bid_created_by', blank=True, null=True, on_delete=models.CASCADE)
     modified = models.DateTimeField(verbose_name='Modified Time', null=True, blank=True)
     modifiedBy = models.ForeignKey(User, related_name='bid_modified_by', blank=True, null=True, on_delete=models.CASCADE)
