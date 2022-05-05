@@ -53,44 +53,48 @@ def about(request):
     return render(request, 'auction/about.html', {})
 
 def profile(request):
-    active_auctions_list = Auction.objects.filter(active=True, clinic=request.user.account)
-    past_auctions_list = Auction.objects.filter(active=False, deleted=False, clinic=request.user.account)
-
-    submitted = False
-    if request.method == "POST":
-        form = AuctionForm(request.POST, request.FILES)
-        if form.is_valid():
-            auction = form.save(commit=False)
-            auction.clinic = request.user.account
-            if form.cleaned_data.get('reservePrice') < 10000:
-                auction.minimumBidIncrement = 100
-            elif form.cleaned_data.get('reservePrice') > 10000 and form.cleaned_data.get('reservePrice') < 25000:
-                auction.minimumBidIncrement = 250
+    if str(request.user.account.userType).split(' ')[-1] == "Clinic":
+        active_auctions_list = Auction.objects.filter(active=True, clinic=request.user.account)
+        past_auctions_list = Auction.objects.filter(active=False, deleted=False, clinic=request.user.account)
+        submitted = False
+        if request.method == "POST":
+            form = AuctionForm(request.POST, request.FILES)
+            if form.is_valid():
+                auction = form.save(commit=False)
+                auction.clinic = request.user.account
+                if form.cleaned_data.get('reservePrice') < 10000:
+                    auction.minimumBidIncrement = 100
+                elif form.cleaned_data.get('reservePrice') > 10000 and form.cleaned_data.get('reservePrice') < 25000:
+                    auction.minimumBidIncrement = 250
+                else:
+                    auction.minimumBidIncrement = 500
+                auction.currentLowBid = form.cleaned_data.get('reservePrice')
+                auction.closed = False
+                auction.active = True
+                auction.deleted = False
+                auction.createdBy = request.user
+                auction.modifiedBy = request.user
+                auction.save()
+                print(str(auction.auctionEnd.year) + ", " + str(auction.auctionEnd.month) + ", " + str(auction.auctionEnd.day) + ", " + str(auction.auctionEnd.hour) + ", " + str(auction.auctionEnd.minute))
+                print(auction.auctionID)
+                # updater.start(auction.auctionEnd.year, auction.auctionEnd.month, auction.auctionEnd.day, auction.auctionEnd.hour, auction.auctionEnd.minute, str(auction.auctionID))
+                # return HttpResponseRedirect('/add_auction?submitted=True')
             else:
-                auction.minimumBidIncrement = 500
-            auction.currentLowBid = form.cleaned_data.get('reservePrice')
-            auction.closed = False
-            auction.active = True
-            auction.deleted = False
-            auction.createdBy = request.user
-            auction.modifiedBy = request.user
-            auction.save()
-            print(str(auction.auctionEnd.year) + ", " + str(auction.auctionEnd.month) + ", " + str(auction.auctionEnd.day) + ", " + str(auction.auctionEnd.hour) + ", " + str(auction.auctionEnd.minute))
-            print(auction.auctionID)
-            # updater.start(auction.auctionEnd.year, auction.auctionEnd.month, auction.auctionEnd.day, auction.auctionEnd.hour, auction.auctionEnd.minute, str(auction.auctionID))
-            # return HttpResponseRedirect('/add_auction?submitted=True')
-        else:
-            form = AuctionForm
-            if 'submitted' in request.GET:
-                submitted = True
+                form = AuctionForm
+                if 'submitted' in request.GET:
+                    submitted = True
 
-    form = AuctionForm
+        form = AuctionForm
+    else:
+        user_id = str(request.user.id)
+        active_auctions_list = Bid.objects.raw('SELECT DISTINCT AA.auctionID, AB.bidID, AA.placementStart, AA.placementEnd, AC.clinicName, AC.city, AC.about, AC.imageOne, AC.imageTwo, UT.name "userType" FROM auction_auction AA JOIN auction_bid AB ON AA.auctionID = AB.auction_id JOIN auction_account AC ON AA.clinic_id = AC.user_id JOIN auction_usertype UT ON AC.userType_id = UT.id WHERE AB.user_id = ' + user_id + ' AND AA.active = 1 AND AA.closed = 0 AND AA.deleted = 0 GROUP BY auctionID;')
+        past_auctions_list = Bid.objects.raw('SELECT DISTINCT AA.auctionID, AB.bidID, AA.placementStart, AA.placementEnd, AC.clinicName, AC.city, AC.about, AC.imageOne, AC.imageTwo, UT.name "userType" FROM auction_auction AA JOIN auction_bid AB ON AA.auctionID = AB.auction_id JOIN auction_account AC ON AA.clinic_id = AC.user_id JOIN auction_usertype UT ON AC.userType_id = UT.id WHERE AB.user_id = ' + user_id + ' AND AA.active = 0 AND AA.closed = 1 AND AA.deleted = 0 GROUP BY auctionID;')
 
     return render(request, 'auction/profile.html', {
         'active_auctions_list': active_auctions_list,
         'past_auctions_list': past_auctions_list,
-        'form': form,
-        'submitted': submitted
+        # 'form': form,
+        # 'submitted': submitted
     })
 
 # def register(request):
