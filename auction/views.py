@@ -85,17 +85,24 @@ def profile(request):
                     submitted = True
 
         form = AuctionForm
+        return render(request, 'auction/profile.html', {
+            'active_auctions_list': active_auctions_list,
+            'past_auctions_list': past_auctions_list,
+            'form': form,
+            'submitted': submitted
+        })
+
     else:
         user_id = str(request.user.id)
         active_auctions_list = Bid.objects.raw('SELECT DISTINCT AA.auctionID, AB.bidID, AA.placementStart, AA.placementEnd, AC.clinicName, AC.city, AC.about, AC.imageOne, AC.imageTwo, UT.name "userType" FROM auction_auction AA JOIN auction_bid AB ON AA.auctionID = AB.auction_id JOIN auction_account AC ON AA.clinic_id = AC.user_id JOIN auction_usertype UT ON AC.userType_id = UT.id WHERE AB.user_id = ' + user_id + ' AND AA.active = 1 AND AA.closed = 0 AND AA.deleted = 0 GROUP BY auctionID;')
         past_auctions_list = Bid.objects.raw('SELECT DISTINCT AA.auctionID, AB.bidID, AA.placementStart, AA.placementEnd, AC.clinicName, AC.city, AC.about, AC.imageOne, AC.imageTwo, UT.name "userType" FROM auction_auction AA JOIN auction_bid AB ON AA.auctionID = AB.auction_id JOIN auction_account AC ON AA.clinic_id = AC.user_id JOIN auction_usertype UT ON AC.userType_id = UT.id WHERE AB.user_id = ' + user_id + ' AND AA.active = 0 AND AA.closed = 1 AND AA.deleted = 0 GROUP BY auctionID;')
-
-    return render(request, 'auction/profile.html', {
-        'active_auctions_list': active_auctions_list,
-        'past_auctions_list': past_auctions_list,
-        # 'form': form,
-        # 'submitted': submitted
-    })
+        
+        return render(request, 'auction/profile.html', {
+            'active_auctions_list': active_auctions_list,
+            'past_auctions_list': past_auctions_list,
+            # 'form': form,
+            # 'submitted': submitted
+        })
 
 # def register(request):
 #     return render(request, 'auction/register.html', {})
@@ -195,6 +202,15 @@ def get_auction_end(request, auction_id):
 def get_all_auctions(request):
     auction_list = list(Auction.objects.filter(active=True).values())
     return JsonResponse({'data': auction_list})
+
+def get_active_auctions_clinic(request):
+    active_auctions_list = list(Auction.objects.filter(active=True, clinic=request.user.account).values())
+    return JsonResponse({'data': active_auctions_list})
+
+def get_active_auctions_theraipist(request):
+    user_id = str(request.user.id)
+    active_auctions_list = list(Bid.objects.raw('SELECT DISTINCT AA.auctionID, AB.bidID, AA.placementStart, AA.placementEnd, AC.clinicName, AC.city, AC.about, AC.imageOne, AC.imageTwo, UT.name "userType" FROM auction_auction AA JOIN auction_bid AB ON AA.auctionID = AB.auction_id JOIN auction_account AC ON AA.clinic_id = AC.user_id JOIN auction_usertype UT ON AC.userType_id = UT.id WHERE AB.user_id = ' + user_id + ' AND AA.active = 1 AND AA.closed = 0 AND AA.deleted = 0 GROUP BY auctionID;').values())
+    return JsonResponse({'data': active_auctions_list})
 
 def get_demogrpahics(request, clinic_id):
     account = Account.objects.get(pk=clinic_id)
