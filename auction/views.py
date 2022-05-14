@@ -10,7 +10,7 @@ from .forms import RegisterTherapist, AuctionForm, BidForm, UserForm, ProfileFor
 from django.urls import reverse_lazy
 import datetime
 from datetime import datetime
-
+from . import scheduled_tasks
 from .models import Account, Auction, Bid, PracticeArea, User, Account
 
 class AuctionListView(ListView):
@@ -50,6 +50,8 @@ def index(request):
     })
 
 def about(request):
+    print("index")
+    scheduled_tasks.update_something('2a1c24fb-6959-4d76-8b82-fc35d67a1a7b')
     return render(request, 'auction/about.html', {})
 
 def profile(request):
@@ -77,7 +79,8 @@ def profile(request):
                 auction.save()
                 print(str(auction.auctionEnd.year) + ", " + str(auction.auctionEnd.month) + ", " + str(auction.auctionEnd.day) + ", " + str(auction.auctionEnd.hour) + ", " + str(auction.auctionEnd.minute))
                 print(auction.auctionID)
-                # updater.start(auction.auctionEnd.year, auction.auctionEnd.month, auction.auctionEnd.day, auction.auctionEnd.hour, auction.auctionEnd.minute, str(auction.auctionID))
+                # scheduled_tasks.start(auction.auctionEnd.year, auction.auctionEnd.month, auction.auctionEnd.day, auction.auctionEnd.hour, auction.auctionEnd.minute, str(auction.auctionID))
+                scheduled_tasks.start(auction.auctionEnd.year, auction.auctionEnd.month, auction.auctionEnd.day, 8, 27, str(auction.auctionID))
                 # return HttpResponseRedirect('/add_auction?submitted=True')
             else:
                 form = AuctionForm
