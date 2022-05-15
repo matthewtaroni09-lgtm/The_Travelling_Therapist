@@ -325,6 +325,7 @@ def password_reset_request(request):
 				for user in associated_users:
 					subject = "Password Reset Requested"
 					email_template_name = "auction/password/password_reset_email.txt"
+					email_template_name_html = "auction/password/password_reset_email.html"
 					c = {
 					"email":user.email,
 					'domain':'127.0.0.1:8000',
@@ -334,9 +335,11 @@ def password_reset_request(request):
 					'token': default_token_generator.make_token(user),
 					'protocol': 'http',
 					}
+                   
 					email = render_to_string(email_template_name, c)
+					html_email = render_to_string(email_template_name_html, c)
 					try:
-						send_mail(subject, email, 'admin@example.com' , [user.email], fail_silently=False)
+						send_mail(subject, email, 'admin@example.com' , [user.email], html_message=html_email, fail_silently=False)
 					except BadHeaderError:
 						return HttpResponse('Invalid header found.')
 					return redirect ("password_reset/done/")
