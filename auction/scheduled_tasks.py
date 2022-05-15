@@ -9,6 +9,7 @@ from django.db.models import Min
 # Global variable
 scheduler = BackgroundScheduler()
 scheduler.start()
+scheduler.shutdown()
 
 def start(year, month, day, hour, minute, id):
     # scheduler.add_job(update_something, 'interval', seconds=3)
@@ -39,7 +40,7 @@ def update_something(id):
         auction.save()
         send_mail(
                 subject = "Auction Ended",
-                message = "Your auction ended at: " + dt_string + ". The winning bid was: " + str(winningBid.amount) + ".",
+                message = "<h1>Your auction ended at:</h1> " + dt_string + ". The winning bid was: " + str(winningBid.amount) + ".",
                 from_email = settings.EMAIL_HOST_USER,
                 recipient_list = [winningBid.user.email]
             )
@@ -47,7 +48,7 @@ def update_something(id):
         print("no winner")
         send_mail(
                 subject = "Auction Ended",
-                message = "Your auction ended with no winner.",
+                message = "<h1>Your auction ended at:</h1>Your auction ended with no winner.",
                 from_email = settings.EMAIL_HOST_USER,
                 recipient_list = [auction.clinic.user.email]
             )

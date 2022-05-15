@@ -12,6 +12,16 @@ import datetime
 from datetime import datetime
 from . import scheduled_tasks
 from .models import Account, Auction, Bid, PracticeArea, User, Account
+from django.contrib.auth.forms import PasswordResetForm
+from django.utils.http import urlsafe_base64_encode
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.encoding import force_bytes
+from django.core.mail import send_mail, BadHeaderError
+from django.http import HttpResponse
+from django.contrib.auth.forms import PasswordResetForm
+from django.contrib.auth.models import User
+from django.template.loader import render_to_string
+from django.db.models.query_utils import Q
 
 class AuctionListView(ListView):
     model = Auction
@@ -51,7 +61,7 @@ def index(request):
 
 def about(request):
     print("index")
-    scheduled_tasks.update_something('2a1c24fb-6959-4d76-8b82-fc35d67a1a7b')
+    scheduled_tasks.update_something('00c0ddbb-505b-4358-872f-315abb1b0db4')
     return render(request, 'auction/about.html', {})
 
 def profile(request):
@@ -59,41 +69,53 @@ def profile(request):
         active_auctions_list = Auction.objects.filter(active=True, clinic=request.user.account)
         past_auctions_list = Auction.objects.filter(active=False, deleted=False, clinic=request.user.account)
         submitted = False
-        if request.method == "POST":
-            form = AuctionForm(request.POST, request.FILES)
-            if form.is_valid():
-                auction = form.save(commit=False)
-                auction.clinic = request.user.account
-                if form.cleaned_data.get('reservePrice') < 10000:
-                    auction.minimumBidIncrement = 100
-                elif form.cleaned_data.get('reservePrice') > 10000 and form.cleaned_data.get('reservePrice') < 25000:
-                    auction.minimumBidIncrement = 250
+        parameter = {}
+        if active_auctions_list.count() <= 3:
+            if request.method == "POST":
+                form = AuctionForm(request.POST, request.FILES)
+                if form.is_valid():
+                    auction = form.save(commit=False)
+                    auction.clinic = request.user.account
+                    if form.cleaned_data.get('reservePrice') < 10000:
+                        auction.minimumBidIncrement = 100
+                    elif form.cleaned_data.get('reservePrice') > 10000 and form.cleaned_data.get('reservePrice') < 25000:
+                        auction.minimumBidIncrement = 250
+                    else:
+                        auction.minimumBidIncrement = 500
+                    auction.currentLowBid = form.cleaned_data.get('reservePrice')
+                    auction.closed = False
+                    auction.active = True
+                    auction.deleted = False
+                    auction.createdBy = request.user
+                    auction.modifiedBy = request.user
+                    auction.save()
+                    print(str(auction.auctionEnd.year) + ", " + str(auction.auctionEnd.month) + ", " + str(auction.auctionEnd.day) + ", " + str(auction.auctionEnd.hour) + ", " + str(auction.auctionEnd.minute))
+                    print(auction.auctionID)
+                    # scheduled_tasks.start(auction.auctionEnd.year, auction.auctionEnd.month, auction.auctionEnd.day, auction.auctionEnd.hour, auction.auctionEnd.minute, str(auction.auctionID))
+                    # scheduled_tasks.start(auction.auctionEnd.year, auction.auctionEnd.month, auction.auctionEnd.day, 8, 27, str(auction.auctionID))
+                    return HttpResponseRedirect('/profile?submitted=True')
                 else:
-                    auction.minimumBidIncrement = 500
-                auction.currentLowBid = form.cleaned_data.get('reservePrice')
-                auction.closed = False
-                auction.active = True
-                auction.deleted = False
-                auction.createdBy = request.user
-                auction.modifiedBy = request.user
-                auction.save()
-                print(str(auction.auctionEnd.year) + ", " + str(auction.auctionEnd.month) + ", " + str(auction.auctionEnd.day) + ", " + str(auction.auctionEnd.hour) + ", " + str(auction.auctionEnd.minute))
-                print(auction.auctionID)
-                # scheduled_tasks.start(auction.auctionEnd.year, auction.auctionEnd.month, auction.auctionEnd.day, auction.auctionEnd.hour, auction.auctionEnd.minute, str(auction.auctionID))
-                scheduled_tasks.start(auction.auctionEnd.year, auction.auctionEnd.month, auction.auctionEnd.day, 8, 27, str(auction.auctionID))
-                # return HttpResponseRedirect('/add_auction?submitted=True')
-            else:
-                form = AuctionForm
-                if 'submitted' in request.GET:
-                    submitted = True
+                    form = AuctionForm
+                    if 'submitted' in request.GET:
+                        submitted = True
 
-        form = AuctionForm
-        return render(request, 'auction/profile.html', {
-            'active_auctions_list': active_auctions_list,
-            'past_auctions_list': past_auctions_list,
-            'form': form,
-            'submitted': submitted
-        })
+            form = AuctionForm
+            parameter.update({
+                'active_auctions_list': active_auctions_list,
+                'past_auctions_list': past_auctions_list,
+                'form': form,
+                'submitted': submitted,
+                'show_form': True
+            })
+        else:
+            parameter.update({
+                'active_auctions_list': active_auctions_list,
+                'past_auctions_list': past_auctions_list,
+                'show_form': False
+            })
+
+
+        return render(request, 'auction/profile.html', parameter)
 
     else:
         user_id = str(request.user.id)
@@ -292,3 +314,31 @@ def logout_user(request):
     logout(request)
     messages.success(request, ("Logged out"))
     return redirect('index')
+
+def password_reset_request(request):
+	if request.method == "POST":
+		password_reset_form = PasswordResetForm(request.POST)
+		if password_reset_form.is_valid():
+			data = password_reset_form.cleaned_data['email']
+			associated_users = User.objects.filter(Q(email=data))
+			if associated_users.exists():
+				for user in associated_users:
+					subject = "Password Reset Requested"
+					email_template_name = "auction/password/password_reset_email.txt"
+					c = {
+					"email":user.email,
+					'domain':'127.0.0.1:8000',
+					'site_name': 'Website',
+					"uid": urlsafe_base64_encode(force_bytes(user.pk)),
+					"user": user,
+					'token': default_token_generator.make_token(user),
+					'protocol': 'http',
+					}
+					email = render_to_string(email_template_name, c)
+					try:
+						send_mail(subject, email, 'admin@example.com' , [user.email], fail_silently=False)
+					except BadHeaderError:
+						return HttpResponse('Invalid header found.')
+					return redirect ("password_reset/done/")
+	password_reset_form = PasswordResetForm()
+	return render(request=request, template_name="auction/password/password_reset.html", context={"password_reset_form":password_reset_form})
