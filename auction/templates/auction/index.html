@@ -28,7 +28,7 @@
       <a class="card mt-4 text-decoration-none text-dark" href="{% url 'auction' auction.auctionID %}">
         <div class="position-relative">
           {% if auction.clinic.imageOne %}
-          <img src="/media/{{ auction.clinic.imageOne }}" class="card-img-top" alt="Image of Clinic">
+          <img src="/media/{{ auction.clinic.imageOne }}" class="card-img-top" style="height: 270px; object-fit: cover;" alt="Image of Clinic">
           {% else %}
           <img src="/media/images/no-image.jpg" class="card-img-top" alt="Image of Clinic">
           {% endif %}
@@ -37,12 +37,12 @@
             <p class="m-0">Bid:<span class="ms-2">${{ auction.get_low_bid }}</span></p>
           </div>
         </div>
-        <div class="card-body">
+        <div class="card-body" style="border-top: 1px solid rgba(0,0,0,.125);">
           <h2 class="card-title">{{ auction.clinic.clinicName }}</h2>
           <p class="text-weight-thin mb-0">{{ auction.placementStart }} - {{ auction.placementEnd }}</p>
           <p class="text-weight-thin mb-0">{{ auction.clinic.userType }}</p>
           <p class="text-weight-thin">{{ auction.clinic.city }}, ON</p>
-          <p class="card-text">{{ auction.clinic.about }}</p>
+          <!-- <p class="card-text">{{ auction.clinic.about }}</p> -->
         </div>
       </a>
     </div>
