@@ -1,0 +1,20 @@
+{% extends 'auction/base_email_template.html' %}
+{% load static %}
+{% block content %}
+{% autoescape off %}
+
+<section style="font-size: 16px; margin-bottom: 4rem;">
+  <p>Hello <span class="text-weight-bold">{{ auction.clinic.first_name }}</span>,</p>
+  
+  <p>Your auction has reached an end, and no therapist bid low enough to reach your reserve value. As such there will be no match made at this time.</p>
+
+  <p>Feel free to re-create your auction with no reserve price or a higher reserve price if you'd like to try to fill this position again. Auctions with no reserve price generally receive more attention and bids than those with reserve prices set, but of course this decision is entirely yours.</p>
+
+  <p>Re-created auctions will still need to be approved by us like any other auction.</p>
+
+  <p>Thanks for using our service - we hope to see you again soon,</p>
+  <p style="font-weight: 700; padding-top: 0rem; margin-top: 0; line-height: 0;">The Traveling Therapist Team</p>
+</section>
+
+{% endautoescape %}
+{% endblock %}
