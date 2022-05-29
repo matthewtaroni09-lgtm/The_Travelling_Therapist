@@ -14,6 +14,9 @@
     <link rel="stylesheet" href="{% static 'auction/style.css' %}">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <title>The Travelling Thearipst</title>
+
+    <!-- Google Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 
 <body>
@@ -30,7 +33,9 @@
     <!-- Nav Start -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
         <div class="container">
-            <a class="navbar-brand" href="{% url 'index' %}">LOGO</a>
+            <a class="navbar-brand" href="{% url 'index' %}">
+                <img src="/media/images/TTT_LOGO.png" alt="Traveling Therapist Logo" class="img-fluid banner-logo">
+            </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02"
                 aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
