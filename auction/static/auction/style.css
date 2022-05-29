@@ -148,6 +148,10 @@ input[type="time"] {
     border: 1px solid #ced4da;
     border-radius: 0.25rem !important;
 }
+select#id_city {
+    padding: 7px;
+    margin-left: 0.5rem;
+}
 
 .svg {
     max-width: 60px;

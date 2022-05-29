@@ -1,11 +1,12 @@
 {% extends 'auction/base.html' %}
+
 {% load static %}
 {% block content %}
 <!-- Content Start -->
 <main class="container">
   <div class="mt-5 row">
     <div class="col-8">
-      <h1 class="text-large">Active Auctions</h1>
+      <h1 class="text-large text-weight-normal">Active Auctions</h1>
     </div>
     {% if not user.is_authenticated %}
     <div class="col-4 text-end">
@@ -14,9 +15,9 @@
     {% endif %}
   </div>
   <!-- Search Box Start -->
-  <form method="GET">
+  <form method="GET" class="d-flex align-items-end mt-3">
     {{filter.form}}
-    <button type="submit" class="btn btn-primary">Search</button>
+    <button type="submit" class="btn btn-primary ms-4">Search</button>
   </form>
   <!-- Search Box End -->
 
