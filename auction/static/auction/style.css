@@ -40,7 +40,7 @@
 }
 
 * {
-    font-family: Futura-Normal, sans-serif;
+    font-family: Futura-Light, sans-serif;
     letter-spacing: 0.4;
     color: var(--dark-colour);
 }
@@ -155,4 +155,8 @@ input[type="time"] {
 
 .banner-logo {
     max-width: 12rem;
+}
+
+#termsAndConditions {
+    text-align: left;
 }
