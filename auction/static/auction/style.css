@@ -32,6 +32,11 @@ input[type="time"] {
     border-radius: 0.25rem !important;
 }
 
+input[type="number"] {
+    padding: 6px;
+    border: 1px solid #ced4da;
+}
+
 .svg {
     max-width: 60px;
 }

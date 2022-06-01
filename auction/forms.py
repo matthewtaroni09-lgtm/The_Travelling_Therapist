@@ -9,7 +9,6 @@ class AuctionForm(forms.ModelForm):
             'auctionStart', 
             'auctionEnd',
             'reservePrice', 
-            'startingBid',
             'placementStart', 
             'placementEnd', 
             'payFrequency', 
@@ -27,9 +26,15 @@ class AuctionForm(forms.ModelForm):
             'saturdayEnd',
             'sundayStart',
             'sundayEnd',
-            'comments'
+            'comments',
+            'MSK',
+            'neuro',
+            'cardioResp',
+            'underEightteen',
+            'eightteenToSixtyFive',
+            'overSixtyFive'
         )
-        labels = {}
+        # labels = {}
         widgets = {
             'auctionStart': forms.DateTimeInput(format=('%Y-%m-%d'), attrs={'class': 'form-control', 'placeholder': 'Select a date', 'type': 'date'}),
             'auctionEnd': forms.DateTimeInput(format=('%Y-%m-%d %H:%M'), attrs={'class': 'form-control', 'placeholder': 'Select a date', 'type': 'date'}),
@@ -49,6 +54,7 @@ class AuctionForm(forms.ModelForm):
             'saturdayEnd': forms.TimeInput(attrs={'class': 'form-control', 'placeholder': 'Select a date', 'type': 'time'}),
             'sundayStart': forms.TimeInput(attrs={'class': 'form-control', 'placeholder': 'Select a date', 'type': 'time'}),
             'sundayEnd': forms.TimeInput(attrs={'class': 'form-control', 'placeholder': 'Select a date', 'type': 'time'}),
+            'comments': forms.Textarea(attrs={'placeholder': 'Tell us about your clinic...', 'rows': '4'})
         }
 
 class BidForm(forms.ModelForm):
