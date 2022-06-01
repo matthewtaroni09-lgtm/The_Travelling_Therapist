@@ -1,26 +1,143 @@
-* {
-    font-family: 'Roboto', sans-serif;
+/** 
+* 1. VARIABLES
+* 2. FONTS
+* 3. COLOURS
+* 4. BUTTONS
+* 5. PAGES
+* 6. MISC
+*/
+
+
+/**************************** 1. VARIABLES ****************************/
+:root {
+    --primary-colour: #0AEAA9;
+    --secondary-colour: #C9FFE5;
+    --dark-colour: #1B1B1B;
+    --light-colour: #fff;
 }
 
-/* .container {
-  max-width: 992px !important;
-} */
+/**************************** 2. FONTS ****************************/
 
-.text-weight-thin {
-    font-weight: 100;
+/* Light */
+@font-face {
+    font-family: Futura-Light;
+    src: url(futura-light-bt.ttf);
+}
+/* Normal */
+@font-face {
+    font-family: Futura-Normal;
+    src: url(futura-medium-bt.ttf);
+}
+/* Bold */
+@font-face {
+    font-family: Futura-Bold;
+    src: url(Futura-Heavy-font.ttf);
+}
+/* Extra Bold */
+@font-face {
+    font-family: Futura-Extra-Bold;
+    src: url(Futura-XBlk-BT.ttf);
+}
+
+* {
+    font-family: Futura-Light, sans-serif;
+    letter-spacing: 0.4;
+    color: var(--dark-colour);
 }
 
 .text-weight-light {
-    font-weight: 300;
+    font-family: Futura-Light, sans-serif;
 }
-
+.text-weight-normal {
+    font-family: Futura-Normal, sans-serif;
+}
 .text-weight-bold {
-    font-weight: 700;
+    font-family: Futura-Bold, sans-serif;
+}
+.text-weight-extra-bold {
+    font-family: Futura-Extra-Bold, sans-serif;
 }
 
-.text-weight-xl-bold {
-    font-weight: 900;
+.text-x-small {
+    font-size: 0.75rem;
 }
+.text-small {
+    font-size: 1rem;
+}
+.text-medium {
+    font-size: 1.5rem;
+}
+.text-large {
+    font-size: 2.0rem;
+}
+
+/**************************** 3. COLOURS ****************************/
+.text-primary-colour {
+    color: var(--primary-colour);
+}
+.text-secondary-colour {
+    color: var(--secondary-colour);
+}
+.text-dark-colour {
+    color: var(--dark-colour);
+}
+.text-white {
+    color: #fff;
+}
+
+.bg-primary {
+    background-color: var(--primary-colour);
+}
+.bg-secondary {
+    background-color: var(--secondary-colour);
+}
+.bg-dark {
+    background-color: var(--dark-colour);
+}
+.bg-white {
+    background-color: #fff;
+}
+
+/**************************** 4. BUTTONS ****************************/
+.btn-primary {
+    background-color: var(--primary-colour);
+    border-color: var(--primary-colour);
+    color: var(--dark-colour);
+}
+
+.btn-primary:hover, .btn-primary:focus {
+    background-color: var(--secondary-colour);
+    border-color: var(--dark-colour);
+    color: var(--dark-colour);
+    transition: 0.2s ease-in-out;
+}
+
+
+/**************************** 5. PAGES ****************************/
+
+/* About Page */
+.accordion-button:not(.collapsed) {
+    color: var(--dark-colour);
+    background-color: var(--secondary-colour);
+}
+.accordion-button:focus {
+    border-color: var(--primary-colour);
+    box-shadow: 0 0 0 0.25rem var(--primary-colour);
+}
+.accordion-button:not(.collapsed)::after {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='1B1B1B'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+    transform: rotate(-180deg);
+}
+.material-icons {
+    font-size: 3rem !important;
+    margin-right: 16px;
+    color: #0AEAA9;
+}
+
+/**************************** 6. MISC ****************************/
+/* .container {
+  max-width: 992px !important;
+} */
 
 .clock {
     width: 20px;
@@ -31,6 +148,10 @@ input[type="time"] {
     border: 1px solid #ced4da;
     border-radius: 0.25rem !important;
 }
+select#id_city {
+    padding: 7px;
+    margin-left: 0.5rem;
+}
 
 input[type="number"] {
     padding: 6px;
@@ -40,6 +161,13 @@ input[type="number"] {
 .svg {
     max-width: 60px;
 }
+
+.banner-logo {
+    max-width: 12rem;
+}
+
+#termsAndConditions {
+    text-align: left;
 
 .carousel-item img {
     height: 280px;

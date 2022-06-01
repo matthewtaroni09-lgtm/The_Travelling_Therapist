@@ -54,15 +54,16 @@ def index(request):
             therapist_list.append(auction.clinic.userType)
 
     return render(request, 'auction/index.html', {
+        'path': 'home',
         'auctions_list': auctions_list,
         'location_list': location_list,
         'therapist_list': therapist_list
     })
 
 def about(request):
-    print("index")
-    scheduled_tasks.update_something('00c0ddbb-505b-4358-872f-315abb1b0db4')
-    return render(request, 'auction/about.html', {})
+    # print("index")
+    # scheduled_tasks.update_something('00c0ddbb-505b-4358-872f-315abb1b0db4')
+    return render(request, 'auction/about.html', {'path': 'about'})
 
 def profile(request):
     if str(request.user.account.userType).split(' ')[-1] == "Clinic":
@@ -125,6 +126,7 @@ def profile(request):
         return render(request, 'auction/profile.html', {
             'active_auctions_list': active_auctions_list,
             'past_auctions_list': past_auctions_list,
+            'path': 'profile'
             # 'form': form,
             # 'submitted': submitted
         })
@@ -272,7 +274,7 @@ def register(response):
     else:
         form = RegisterTherapist()
 
-    return render(response, 'auction/register.html', {'form': form})
+    return render(response, 'auction/register.html', {'form': form, 'path': 'register'})
 
     # if request.method == 'POST':
     #     form = RegisterTherapist(request.POST)
@@ -308,7 +310,7 @@ def login_user(request):
             messages.success(request, ("Error logging in"))
             return redirect('login')
     else:
-        return render(request, 'auction/login.html', {})
+        return render(request, 'auction/login.html', {'path': 'login'})
 
 def logout_user(request):
     logout(request)

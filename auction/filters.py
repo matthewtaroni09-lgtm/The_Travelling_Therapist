@@ -25,7 +25,7 @@ class AuctionFilter(django_filters.FilterSet):
             therapist_check_list.append(auction.clinic.userType)
 
     city = django_filters.ChoiceFilter(field_name='clinic__city', choices=location_list)
-    userType = django_filters.ChoiceFilter(field_name='clinic__userType__name', choices=therapist_list)
+    # userType = django_filters.ChoiceFilter(field_name='clinic__userType__name', choices=therapist_list)
     class Meta:
         model = Auction
         fields = ()
