@@ -29,7 +29,7 @@
       <a class="card mt-4 text-decoration-none text-dark" href="{% url 'auction' auction.auctionID %}">
         <div class="position-relative">
           {% if auction.clinic.imageOne %}
-          <img src="/media/{{ auction.clinic.imageOne }}" class="card-img-top" alt="Image of Clinic">
+          <img src="/media/{{ auction.clinic.imageOne }}" class="card-img-top" style="height: 270px; object-fit: cover;" alt="Image of Clinic">
           {% else %}
           <img src="/media/images/no-image.jpg" class="card-img-top" alt="Image of Clinic">
           {% endif %}
