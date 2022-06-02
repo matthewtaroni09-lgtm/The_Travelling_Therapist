@@ -5,12 +5,10 @@ from django.contrib.auth.forms import UserCreationForm
 class AuctionForm(forms.ModelForm):
     class Meta:
         model = Auction
-        fields = (
-            'auctionStart', 
-            'auctionEnd',
-            'reservePrice', 
+        fields = ( 
             'placementStart', 
             'placementEnd', 
+            'reservePrice',
             'payFrequency', 
             'mondayStart', 
             'mondayEnd',

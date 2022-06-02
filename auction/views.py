@@ -9,7 +9,7 @@ from .filters import AuctionFilter
 from .forms import RegisterTherapist, AuctionForm, BidForm, UserForm, ProfileForm
 from django.urls import reverse_lazy
 import datetime
-from datetime import datetime
+# from datetime import datetime
 from . import scheduled_tasks
 from .models import Account, Auction, Bid, PracticeArea, User, Account
 from django.contrib.auth.forms import PasswordResetForm
@@ -42,23 +42,6 @@ class AuctionListView2(ListView):
         return context
 
 # Page Links
-def index(request):
-    auctions_list = Auction.objects.filter(active=True)
-    location_list = []
-    therapist_list = []
-    for auction in auctions_list:
-        if auction.clinic.city not in location_list:
-            location_list.append(auction.clinic.city)
-
-        if auction.clinic.userType not in therapist_list:
-            therapist_list.append(auction.clinic.userType)
-
-    return render(request, 'auction/index.html', {
-        'path': 'home',
-        'auctions_list': auctions_list,
-        'location_list': location_list,
-        'therapist_list': therapist_list
-    })
 
 def about(request):
     # print("index")
@@ -77,15 +60,19 @@ def profile(request):
                 if form.is_valid():
                     auction = form.save(commit=False)
                     auction.clinic = request.user.account
-                    if form.cleaned_data.get('reservePrice') < 10000:
-                        auction.minimumBidIncrement = 100
-                    elif form.cleaned_data.get('reservePrice') > 10000 and form.cleaned_data.get('reservePrice') < 25000:
-                        auction.minimumBidIncrement = 250
-                    else:
-                        auction.minimumBidIncrement = 500
+                    print('R$ = ' + str(form.cleaned_data.get('reservePrice')))
+                    if form.cleaned_data.get('reservePrice') != None:
+                        if form.cleaned_data.get('reservePrice') < 10000:
+                            auction.minimumBidIncrement = 100
+                        elif form.cleaned_data.get('reservePrice') > 10000 and form.cleaned_data.get('reservePrice') < 25000:
+                            auction.minimumBidIncrement = 250
+                        else:
+                            auction.minimumBidIncrement = 500
+                    auction.auctionStart = datetime.datetime.now()
+                    auction.auctionEnd = datetime.datetime.now() + datetime.timedelta(days=14)
                     auction.currentLowBid = form.cleaned_data.get('reservePrice')
                     auction.closed = False
-                    auction.active = True
+                    auction.active = False
                     auction.deleted = False
                     auction.createdBy = request.user
                     auction.modifiedBy = request.user

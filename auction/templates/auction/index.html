@@ -29,14 +29,15 @@
       <a class="card mt-4 text-decoration-none text-dark" href="{% url 'auction' auction.auctionID %}">
         <div class="position-relative">
           {% if auction.clinic.imageOne %}
-          <img src="/media/{{ auction.clinic.imageOne }}" class="card-img-top" style="height: 270px; object-fit: cover;" alt="Image of Clinic">
+          <img src="/media/{{ auction.clinic.imageOne }}" class="card-img-top" style="height: 270px; object-fit: cover;"
+            alt="Image of Clinic">
           {% else %}
           <img src="/media/images/no-image.jpg" class="card-img-top" alt="Image of Clinic">
           {% endif %}
           <div class="d-inline-flex bg-dark p-2 rounded position-absolute bottom-0 start-0">
             <img class="clock me-2 text-white" src="{% static 'auction/clock.svg' %}" alt="clock">
-                <time id="auctionTimer-{{ auction.auctionID }}" class="m-0 d-flex me-4 text-white">--</time>
-            <p class="m-0 text-white">Bid:<span class="ms-2 text-white">${{ auction.get_low_bid }}</span></p>
+            <time id="auctionTimer-{{ auction.auctionID }}" class="m-0 d-flex me-4 text-white">--</time>
+            <p class="m-0 text-white">Lowest Bid:<span class="ms-2 text-white">${{ auction.get_low_bid }}</span></p>
           </div>
         </div>
         <div class="card-body">

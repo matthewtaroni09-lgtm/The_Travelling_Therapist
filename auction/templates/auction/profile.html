@@ -112,22 +112,13 @@
               {% csrf_token %}
               <div class="row">
                 <div class="mb-3 col-md-6">
-                  {{ form.auctionStart|as_crispy_field }}
-                </div>
-                <div class="mb-3 col-md-6">
-                  {{ form.auctionEnd|as_crispy_field }}
-                </div>
-                <div class="mb-3 col-md-6">
-                  {{ form.startingBid|as_crispy_field }}
-                </div>
-                <div class="mb-3 col-md-6">
-                  {{ form.reservePrice|as_crispy_field }}
-                </div>
-                <div class="mb-3 col-md-6">
                   {{ form.placementStart|as_crispy_field }}
                 </div>
                 <div class="mb-3 col-md-6">
                   {{ form.placementEnd|as_crispy_field }}
+                </div>
+                <div class="mb-3 col-md-6">
+                  {{ form.reservePrice|as_crispy_field }}
                 </div>
                 <div class="mb-3 col-md-6">
                   {{ form.payFrequency|as_crispy_field }}
