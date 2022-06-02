@@ -2,7 +2,7 @@ from tabnanny import verbose
 from unicodedata import category
 from django import forms
 from django.contrib import admin
-from .models import Auction, Bid, Account, PayFrequency, PracticeArea, PracticeAreaType, ProMember, UserType, Demographic, DemographicType, ProMember
+from .models import Auction, Bid, Account, PayFrequency, PracticeArea, PracticeAreaType, ProMember, UserType, Demographic, DemographicType, ProMember, AdminSettings
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
 
@@ -51,3 +51,4 @@ admin.site.register(PayFrequency)
 admin.site.register(PracticeArea)
 admin.site.register(PracticeAreaType)
 admin.site.register(ProMember)
+admin.site.register(AdminSettings)

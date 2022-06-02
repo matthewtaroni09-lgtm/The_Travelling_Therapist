@@ -165,5 +165,12 @@ class UserType(models.Model):
     def __str__(self):
         return self.name
 
+class AdminSettings(models.Model):
+    sendEmails = models.BooleanField(verbose_name='Send Emails', help_text='Turns on and off emails. If checked emails will send.')
+    numAllowedAuctions = models.IntegerField(verbose_name='# Allowed Auctions', help_text='Global setting for max number of active auctions')
+
+    def __str__(self):
+        return 'Admin Settings'
+
 
 

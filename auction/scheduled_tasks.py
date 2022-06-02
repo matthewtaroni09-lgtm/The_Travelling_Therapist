@@ -3,7 +3,7 @@ from datetime import datetime
 from django.core.mail import send_mail
 from django.conf import settings
 from django.http import JsonResponse, HttpResponse
-from .models import Account, Auction, Bid, User, Account
+from .models import Account, Auction, Bid, User, Account, AdminSettings
 from django.db.models import Min
 
 # Global variable
@@ -27,6 +27,8 @@ def update_something(id):
     auction = Auction.objects.get(auctionID=id)
     bids = Bid.objects.filter(auction=id, active=True).annotate(Min('amount')).order_by('amount')
     winningBid = ""
+    admin = AdminSettings.objects.all()[:1].get()
+    print(admin.sendEmails)
     print(bids.count())
     if bids.count() > 0:
         winningBid = bids[0]
@@ -38,19 +40,22 @@ def update_something(id):
         auction.winner = winningBid.user
         auction.winningPrice = winningBid.amount
         auction.save()
-        send_mail(
-                subject = "Auction Ended",
-                message = "<h1>Your auction ended at:</h1> " + dt_string + ". The winning bid was: " + str(winningBid.amount) + ".",
-                from_email = settings.EMAIL_HOST_USER,
-                recipient_list = [winningBid.user.email]
-            )
+        if admin.sendEmails:
+            print('send email')
+            send_mail(
+                    subject = "Auction Ended",
+                    message = "<h1>Your auction ended at:</h1> " + dt_string + ". The winning bid was: " + str(winningBid.amount) + ".",
+                    from_email = settings.EMAIL_HOST_USER,
+                    recipient_list = [winningBid.user.email]
+                )
     else:
         print("no winner")
-        send_mail(
-                subject = "Auction Ended",
-                message = "<h1>Your auction ended at:</h1>Your auction ended with no winner.",
-                from_email = settings.EMAIL_HOST_USER,
-                recipient_list = [auction.clinic.user.email]
-            )
+        if admin.sendEmails:
+            send_mail(
+                    subject = "Auction Ended",
+                    message = "<h1>Your auction ended at:</h1>Your auction ended with no winner.",
+                    from_email = settings.EMAIL_HOST_USER,
+                    recipient_list = [auction.clinic.user.email]
+                )
     
     return JsonResponse({'data': "success"})
