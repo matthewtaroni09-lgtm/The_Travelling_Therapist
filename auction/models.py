@@ -8,6 +8,20 @@ import uuid
 
 from django.dispatch import receiver
 
+PROVINCES = (
+    ("--", "--"),
+    ("Alberta", "Alberta"),
+    ("British Columbia", "British Columbia"),
+    ("Manitoba", "Manitoba"),
+    ("New Brunswick", "New Brunswick"),
+    ("Newfoundland and Labrador", "Newfoundland and Labrador"),
+    ("Nova Scotia", "Nova Scotia"),
+    ("Ontario", "Ontario"),
+    ("Prince Edward Island", "Prince Edward Island"),
+    ("Quebec", "Quebec"),
+    ("Saskatchewan", "Saskatchewan")
+)
+
 class Account(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     clinicName = models.CharField(verbose_name='Clinic Name', max_length=200, blank=True, null=True, help_text='Enter the clinic name.')
@@ -18,8 +32,8 @@ class Account(models.Model):
     imageThree = models.ImageField(verbose_name='Clinic Image Three', upload_to='images/', blank=True, null=True, help_text='Upload an image (optional).')
     imageFour = models.ImageField(verbose_name='Clinic Image Four', upload_to='images/', blank=True, null=True, help_text='Upload an image (optional).')
     city = models.CharField(verbose_name='City', max_length=120, blank=True, null=True, help_text='Enter the city your clinic is in.')
-    # province = models.CAProvinceField('Province')
     country = models.CharField(verbose_name='Conutry', max_length=100, blank=True, null=True, help_text='Enter the country your clinic is in.')
+    province = models.CharField(verbose_name='Province', help_text='The province the clinic resides in.', blank=True, null=True, max_length=30, choices=PROVINCES)
     about = models.TextField(verbose_name='About', blank=True, null=True, help_text='Tell us about your clinic.')
     practiceArea = models.ManyToManyField('PracticeArea', blank=True)
     demographic = models.ManyToManyField('Demographic', blank=True)

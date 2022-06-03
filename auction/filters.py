@@ -8,6 +8,7 @@ from .models import Auction
 class AuctionFilter(django_filters.FilterSet):
     print("in fi;ter")
     auctions_list = Auction.objects.filter(active=True)
+    # auctions_list = Auction.objects.all()
     location_list = ()
     location_check_list = []
 
@@ -20,17 +21,19 @@ class AuctionFilter(django_filters.FilterSet):
     
     therapist_list = []
     for auction in auctions_list:
+        print(auction.clinic.city)
         if auction.clinic.city not in location_check_list:
             locations = ()
             locations = (auction.clinic.city, auction.clinic.city)
             location_list = (*location_list, locations)
             location_check_list.append(auction.clinic.city)
-        print(auction.active)
-        if auction.active not in status_check_list:
-            statuses = ()
-            statuses = (auction.active, auction.active)
-            status_list = (*status_list, statuses)
-            status_check_list.append('Open')
+
+        # print(auction.active)
+        # if auction.active not in status_check_list:
+        #     statuses = ()
+        #     statuses = (auction.active, auction.active)
+        #     status_list = (*status_list, statuses)
+        #     status_check_list.append('Open')
 
         # if auction.clinic.userType not in therapist_check_list:
         #     therapist = ()

@@ -1,5 +1,5 @@
 from django import forms
-from .models import Auction, Bid, Account, User, UserType
+from .models import PROVINCES, Auction, Bid, Account, User, UserType
 from django.contrib.auth.forms import UserCreationForm
 
 class AuctionForm(forms.ModelForm):
@@ -34,8 +34,6 @@ class AuctionForm(forms.ModelForm):
         )
         # labels = {}
         widgets = {
-            'auctionStart': forms.DateTimeInput(format=('%Y-%m-%d'), attrs={'class': 'form-control', 'placeholder': 'Select a date', 'type': 'date'}),
-            'auctionEnd': forms.DateTimeInput(format=('%Y-%m-%d %H:%M'), attrs={'class': 'form-control', 'placeholder': 'Select a date', 'type': 'date'}),
             'placementStart': forms.DateInput(format=('%Y-%m-%d'), attrs={'class': 'form-control', 'placeholder': 'Select a date', 'type': 'date'}),
             'placementEnd': forms.DateInput(format=('%Y-%m-%d'), attrs={'class': 'form-control', 'placeholder': 'Select a date', 'type': 'date'}),
             'mondayStart': forms.TimeInput(attrs={'class': 'form-control', 'placeholder': 'Select a date', 'type': 'time'}),
@@ -67,14 +65,14 @@ class BidForm(forms.ModelForm):
 class RegisterTherapist(UserCreationForm):
     first_name = forms.CharField()
     last_name = forms.CharField()
-    license_number = forms.CharField()
     city = forms.CharField()
+    province = forms.ChoiceField(choices=PROVINCES)
     # user_type = forms.ModelChoiceField(queryset=UserType.objects.filter())
     user_type = forms.ModelChoiceField(queryset=UserType.objects.exclude(name__endswith='Clinic'))
 
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'license_number', 'username', 'city', 'user_type', 'password1' ,'password2' )
+        fields = ('first_name', 'last_name', 'username', 'city', 'province', 'user_type', 'password1' ,'password2' )
         labels = {'username': 'Email'}
 
 class UserForm(UserCreationForm):
