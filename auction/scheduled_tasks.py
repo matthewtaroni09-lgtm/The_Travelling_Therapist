@@ -49,7 +49,7 @@ def update_something(id):
                     message = "Your auction ended at: " + dt_string + ". The winning bid was: " + str(winningBid.amount) + ".",
                     # html_message = "<h1>Your auction ended at:</h1> " + dt_string + ". The winning bid was: " + str(winningBid.amount) + ".",
                     html_message = """<section style="font-size: 16px; margin-bottom: 4rem;">
-                            <p>Hello <span class="text-weight-bold">""" + auction.clinic.city + """</span>,</p>
+                            <p>Hello <span class="text-weight-bold">""" + auction.clinic.user.first_name + """</span>,</p>
                             
                             <p>You were the lowest bidder at the end of an auction using The Traveling Therapist. Congratulations!</p>
                             <p>Look for an email from us shortly to match you with the clinic. From that point it is your responsibility to contact the clinic and arrange some of the details of your job like how you will be paid (cheque, deposit, etc.)</p>

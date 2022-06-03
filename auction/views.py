@@ -22,6 +22,7 @@ from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.auth.models import User
 from django.template.loader import render_to_string
 from django.db.models.query_utils import Q
+from django.conf import settings
 
 class AuctionListView(ListView):
     model = Auction
@@ -77,6 +78,44 @@ def profile(request):
                     auction.createdBy = request.user
                     auction.modifiedBy = request.user
                     auction.save()
+                    # Therapist email
+                    send_mail(
+                        subject = "Auction Created",
+                        message = """A New Auction has been created
+                        Clinic Name: """ + str(auction.clinic.clinicName) + """
+                        Clinic Location: """ + str(auction.clinic.city) + """, """ + str(auction.clinic.city) + """
+                        Clinic email: """ + str(auction.clinic.user.email) + """
+                        Reserve Bid: """ + str(auction.reservePrice) + """
+                        Auction Start: """ + str(auction.auctionStart) + """
+                        Auction End: """ + str(auction.auctionEnd) + """
+                        Placement Start: """ + str(auction.placementStart) + """
+                        Placement End: """ + str(auction.placementEnd) + """
+                        """,
+                        html_message = """
+                        <header>
+                        <img src="/media/images/TTT_LOGO.png" alt="Traveling Therapist Logo">
+                        </header>
+
+                        <section style="font-size: 16px; margin-bottom: 4rem;">
+                        <h1>A New Auction has been created</h1>
+                        Clinic Name: """ + str(auction.clinic.clinicName) + """<br>
+                        Clinic Location: """ + str(auction.clinic.city) + """, """ + str(auction.clinic.city) + """<br>
+                        Clinic email: """ + str(auction.clinic.user.email) + """<br>
+                        Reserve Bid: """ + str(auction.reservePrice) + """<br>
+                        Auction Start: """ + str(auction.auctionStart) + """<br>
+                        Auction End: """ + str(auction.auctionEnd) + """<br>
+                        Placement Start: """ + str(auction.placementStart) + """<br>
+                        Placement End: """ + str(auction.placementEnd) + """<br>
+                        </section>
+
+                        <footer>
+                        <a href="travelingtherapist.ca">Click to visit The Traveling Therapist Website</a>
+                        <p style="font-size: 10px; color: #848585;">You are receiving this email because you have registered to use The Traveling Therapist website services. Please do not reply to this email. If you wish to contact us then email The Traveling Therapist at info@travelingtherapist.ca. To ensure you continue to receive these emails, add this email address to your email safelist. Your details will not be disclosed or used by third parties for marketing or promotional purposes.</p>
+                        </footer>
+                        """,
+                        from_email = settings.EMAIL_HOST_USER,
+                        recipient_list = ('loribine@gmail.com',)
+                    )
                     print(str(auction.auctionEnd.year) + ", " + str(auction.auctionEnd.month) + ", " + str(auction.auctionEnd.day) + ", " + str(auction.auctionEnd.hour) + ", " + str(auction.auctionEnd.minute))
                     print(auction.auctionID)
                     # scheduled_tasks.start(auction.auctionEnd.year, auction.auctionEnd.month, auction.auctionEnd.day, auction.auctionEnd.hour, auction.auctionEnd.minute, str(auction.auctionID))
