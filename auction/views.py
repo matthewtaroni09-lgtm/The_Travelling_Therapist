@@ -46,7 +46,7 @@ class AuctionListView2(ListView):
 
 def about(request):
     # print("index")
-    scheduled_tasks.update_something('5860ffea-cabc-4d2e-9b4c-059f86ab8ff8')
+    # scheduled_tasks.update_something('5860ffea-cabc-4d2e-9b4c-059f86ab8ff8')
     return render(request, 'auction/about.html', {'path': 'about'})
 
 def profile(request):
