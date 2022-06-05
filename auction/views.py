@@ -41,7 +41,7 @@ class AuctionListView(ListView):
 def about(request):
     # print("index")
     # scheduled_tasks.update_something('5860ffea-cabc-4d2e-9b4c-059f86ab8ff8')
-    return render(request, 'auction/about.html', {'path': 'about'})
+    return render(request, 'auction/test.html', {'path': 'about'})
 
 def profile(request):
     if str(request.user.account.userType).split(' ')[-1] == "Clinic":
@@ -50,14 +50,10 @@ def profile(request):
         submitted_profile = False
         submitted_auction = False
         parameter = {}
-        print(request.method)
         if request.method == 'POST':   # This Will Be Run When I Submit My Form. And Possibly Pass New Data.
-            print('indside')
             u_form = UserForm(request.POST, instance=request.user)  # request.POST To Pass The POST Data
             p_form = ProfileForm(request.POST, request.FILES, instance=request.user.account)  # File Data (images) Users Try To Upload.
-            print(str(u_form.is_valid()) + " || " + str(p_form.is_valid()))
             if u_form.is_valid() and p_form.is_valid():
-                print('indside save')
                 u_form.save()
                 p_form.save()
                 messages.success(request, f'Your profile has been updated!')
@@ -69,13 +65,11 @@ def profile(request):
                 submitted_profile = True
 
         if active_auctions_list.count() <= 3:
-            print(request.method)
             if request.method == "POST":
                 form = AuctionForm(request.POST, request.FILES)
                 if form.is_valid():
                     auction = form.save(commit=False)
                     auction.clinic = request.user.account
-                    print('R$ = ' + str(form.cleaned_data.get('reservePrice')))
                     if form.cleaned_data.get('reservePrice') != None:
                         if form.cleaned_data.get('reservePrice') < 10000:
                             auction.minimumBidIncrement = 100
@@ -271,10 +265,17 @@ def register(request):
             print('inside')
             user = form.save()
             user.refresh_from_db()  # load the profile instance created by the signal
+            user.email = form.cleaned_data.get('username')
             user.account.userType = form.cleaned_data.get('user_type')
             user.account.city = form.cleaned_data.get('city')
+            user.account.province = form.cleaned_data.get('province')
+            user.account.country = 'Canada'
+            user.account.about = form.cleaned_data.get('about')
             user.account.clinicName = form.cleaned_data.get('clinicName')
             user.account.imageOne = form.cleaned_data.get('imageOne')
+            user.account.imageTwo = form.cleaned_data.get('imageTwo')
+            user.account.imageThree = form.cleaned_data.get('imageThree')
+            user.account.imageFour = form.cleaned_data.get('imageFour')
             user.save()
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=user.username, password=raw_password)

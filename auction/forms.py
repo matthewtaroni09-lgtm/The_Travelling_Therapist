@@ -65,22 +65,26 @@ class BidForm(forms.ModelForm):
 
 class RegisterTherapist(UserCreationForm):
     x = list(range(1,101))
-    first_name = forms.CharField(initial='John')
-    last_name = forms.CharField(initial='Doe')
-    clinicName = forms.CharField()
-    city = forms.CharField(initial='Burlington')
-    province = forms.ChoiceField(choices=PROVINCES)
+    first_name = forms.CharField(initial='John', required=False)
+    last_name = forms.CharField(initial='Doe', required=False)
+    clinicName = forms.CharField(required=False)
+    city = forms.CharField(initial='Burlington', required=False)
+    about = forms.CharField(required=False, widget=forms.Textarea)
+    province = forms.ChoiceField(choices=PROVINCES, required=False)
     username = forms.CharField(initial='loribine' + str(random.choice(x)) + '@gmail.com')
     user_type = forms.ModelChoiceField(queryset=UserType.objects.all())
-    imageOne = forms.ImageField()
+    imageOne = forms.ImageField(required=False)
+    imageTwo = forms.ImageField(required=False)
+    imageThree = forms.ImageField(required=False)
+    imageFour = forms.ImageField(required=False)
 
     class Meta:
         model = User
-        fields = ('user_type', 'clinicName', 'first_name', 'last_name', 'username', 'city', 'province', 'password1' ,'password2', 'imageOne' )
-        # labels = {'username': 'Email'}
-        widgets = {
-            'imageOne': forms.ImageField()
-        }
+        fields = ('user_type', 'clinicName', 'first_name', 'last_name', 'username', 'city', 'province', 'about', 'password1' ,'password2', 'imageOne', 'imageTwo', 'imageThree', 'imageFour' )
+
+        def __init__(self,*args,**kwargs):
+            super().__init__(*args,**kwargs)
+            self.fields['username'].label = 'Email'
 
 class CreateUserForm(UserCreationForm):
     # first_name = forms.CharField(initial='John')

@@ -6,7 +6,12 @@
 <main class="container">
   <div class="mt-5 row">
     <div class="col-8">
-      <h1 class="text-large text-weight-normal">Active Auctions</h1>
+      {% if user.is_authenticated %}
+      <h1 class="text-large text-weight-normal">Welcome {{ user.username }}</h>
+        <h2 class="text-large text-weight-normal">Auctions</h2>
+        {% else %}
+        <h1 class="text-large text-weight-normal">Auctions</h1>
+        {% endif %}
     </div>
     {% if not user.is_authenticated %}
     <div class="col-4 text-end">
