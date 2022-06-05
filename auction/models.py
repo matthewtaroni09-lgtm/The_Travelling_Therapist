@@ -3,13 +3,11 @@ from unicodedata import category
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
-# from localflavor.ca.models import CAProvinceField
 import uuid
 
 from django.dispatch import receiver
 
 PROVINCES = (
-    ("--", "--"),
     ("Alberta", "Alberta"),
     ("British Columbia", "British Columbia"),
     ("Manitoba", "Manitoba"),
@@ -98,11 +96,13 @@ class Auction(models.Model):
     def __str__(self):
         return str(self.clinic.clinicName) + ": " + str(self.auctionStart.strftime("%m/%d/%Y"))
 
-    def get_low_bid(self):
+    def get_bid(self):
         if self.currentLowBid is None:
-            return str(self.reservePrice)
+            return str('No Bids Yet')
+        elif self.closed == True and self.active == False:
+            return 'Winning bid: $' + str(self.winningPrice)
         else:
-            return str(self.currentLowBid)
+            return 'Current Lowest Bid: $' + str(self.currentLowBid)
 
 class Bid(models.Model):
     bidID = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

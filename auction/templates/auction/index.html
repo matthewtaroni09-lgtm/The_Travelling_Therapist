@@ -37,7 +37,7 @@
           <div class="d-inline-flex bg-dark p-2 rounded position-absolute bottom-0 start-0">
             <img class="clock me-2 text-white" src="{% static 'auction/clock.svg' %}" alt="clock">
             <time id="auctionTimer-{{ auction.auctionID }}" class="m-0 d-flex me-4 text-white">--</time>
-            <p class="m-0 text-white">Lowest Bid:<span class="ms-2 text-white">${{ auction.get_low_bid }}</span></p>
+            <p class="m-0 text-white">{{ auction.get_bid }}</p>
           </div>
         </div>
         <div class="card-body">

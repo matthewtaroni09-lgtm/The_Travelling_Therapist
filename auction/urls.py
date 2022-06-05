@@ -23,7 +23,6 @@ urlpatterns = [
     path("auction/data/all_auctions", views.get_all_auctions, name="get-all-auctions"), 
     path("auction/data/active_auctions_clinic", views.get_active_auctions_clinic, name="get-active-auctions-clinic"), 
     
-    path("filter", views.AuctionListView.as_view(), name="list"), 
     path("password_reset", views.password_reset_request, name="password_reset")
 
 ]
