@@ -26,15 +26,6 @@ from django.conf import settings
 
 class AuctionListView(ListView):
     model = Auction
-    template_name = 'auction/filter.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['filter'] = AuctionFilter(self.request.GET, queryset=self.get_queryset())
-        return context
-
-class AuctionListView2(ListView):
-    model = Auction
     template_name = 'auction/index.html'
 
     def get_context_data(self, **kwargs):
@@ -69,9 +60,10 @@ def profile(request):
                             auction.minimumBidIncrement = 250
                         else:
                             auction.minimumBidIncrement = 500
+                        auction.currentLowBid = form.cleaned_data.get('reservePrice')
+
                     auction.auctionStart = datetime.datetime.now()
                     auction.auctionEnd = datetime.datetime.now() + datetime.timedelta(days=14)
-                    auction.currentLowBid = form.cleaned_data.get('reservePrice')
                     auction.closed = False
                     auction.active = False
                     auction.deleted = False
@@ -167,13 +159,9 @@ def create_auction(request):
         if form.is_valid():
             auction = form.save(commit=False)
             auction.clinic = request.user.account
-            if form.cleaned_data.get('reservePrice') < 10000:
-                auction.minimumBidIncrement = 100
-            elif form.cleaned_data.get('reservePrice') > 10000 and form.cleaned_data.get('reservePrice') < 25000:
-                auction.minimumBidIncrement = 250
-            else:
-                auction.minimumBidIncrement = 500
-            auction.currentLowBid = form.cleaned_data.get('reservePrice')
+            if form.cleaned_data.get('reservePrice') is not None:
+                auction.minimumBidIncrement = set_bid_increment(form.cleaned_data.get('reservePrice'))
+                auction.currentLowBid = form.cleaned_data.get('reservePrice')
             auction.closed = False
             auction.active = True
             auction.deleted = False
@@ -196,6 +184,7 @@ def view_auction(request, auction_id):
     auction = Auction.objects.get(pk=auction_id)
     num_bids = Bid.objects.filter(auction=auction_id).count()
     num_biders = Bid.objects.values('user').filter(auction=auction_id).distinct().count()
+    auction_change = False
 
     submitted = False
     form = BidForm(request.POST)
@@ -205,10 +194,15 @@ def view_auction(request, auction_id):
         bid.user = request.user
         bid.active = True
         bid.createdBy = request.user
-        bid.save()
-        if bid.amount < auction.currentLowBid:
+        if auction.currentLowBid is not None and bid.amount < auction.currentLowBid:
             auction.currentLowBid = bid.amount
+            auction_change = True
+        if num_bids == 0:
+            auction.minimumBidIncrement = set_bid_increment(bid.amount)
+            auction_change = True
+        if auction_change:
             auction.save()
+        bid.save()
     else:
         form = BidForm
         if 'submitted' in request.GET:
@@ -373,3 +367,14 @@ def password_reset_request(request):
 					return redirect ("password_reset/done/")
 	password_reset_form = PasswordResetForm()
 	return render(request=request, template_name="auction/password/password_reset.html", context={"password_reset_form":password_reset_form})
+
+# -------------- Utility --------------
+def set_bid_increment(reservePrice):
+    min_increment = 0
+    if reservePrice < 10000:
+        min_increment = 100
+    elif reservePrice > 10000 and reservePrice < 25000:
+        min_increment = 250
+    else:
+        min_increment = 500
+    return min_increment

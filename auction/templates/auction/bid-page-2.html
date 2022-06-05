@@ -7,47 +7,55 @@
   <h1>{{ auction.clinic.clinicName }}</h1>
   <h2 class="text-weight-light">Temporary Physiotherapist</h2>
 
- <!-- Carousel --><!-- 350 x 280 -->
-    <div id="carouselExampleIndicators" class="carousel slide my-3 d-sm-none" data-bs-ride="carousel">
-      <div class="carousel-indicators">
-        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
-        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
-        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="3" aria-label="Slide 4"></button>
-      </div>
-      <div class="carousel-inner">
-        <div class="carousel-item active">
-          <img src="/media/{{ auction.clinic.imageOne }}" class="d-block w-100"  alt="Clinic 1">
-        </div>
-        <div class="carousel-item">
-          <img src="/media/{{ auction.clinic.imageTwo }}" class="d-block w-100" alt="Clinic 2">
-        </div>
-        <div class="carousel-item">
-          <img src="/media/{{ auction.clinic.imageThree }}" class="d-block w-100" alt="Clinic 3">
-        </div>
-        <div class="carousel-item">
-          <img src="/media/{{ auction.clinic.imageFour }}" class="d-block w-100" alt="Clinic 4">
-        </div>
-      </div>
-      <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous</span>
-      </button>
-      <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span>
-      </button>
+  <!-- Carousel -->
+  <!-- 350 x 280 -->
+  <div id="carouselExampleIndicators" class="carousel slide my-3 d-sm-none" data-bs-ride="carousel">
+    <div class="carousel-indicators">
+      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active"
+        aria-current="true" aria-label="Slide 1"></button>
+      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"
+        aria-label="Slide 2"></button>
+      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"
+        aria-label="Slide 3"></button>
+      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="3"
+        aria-label="Slide 4"></button>
     </div>
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <img src="/media/{{ auction.clinic.imageOne }}" class="d-block w-100" alt="Clinic 1">
+      </div>
+      <div class="carousel-item">
+        <img src="/media/{{ auction.clinic.imageTwo }}" class="d-block w-100" alt="Clinic 2">
+      </div>
+      <div class="carousel-item">
+        <img src="/media/{{ auction.clinic.imageThree }}" class="d-block w-100" alt="Clinic 3">
+      </div>
+      <div class="carousel-item">
+        <img src="/media/{{ auction.clinic.imageFour }}" class="d-block w-100" alt="Clinic 4">
+      </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
+      data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
+      data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
 
- <div class="d-flex">
+  <div class="d-flex">
     <section class="d-inline-flex align-items-center text-white bg-dark py-2 px-3 me-3 rounded">
-      <img class="clock me-2" src="{% static 'auction/clock.svg' %}" alt="clock"><time id="auctionTimer-{{ auction.auctionID }}" class="m-0 d-flex me-4">--</time>
-      <p class="m-0">Low Bid:<span class="ms-2">${{ auction.get_low_bid }}</span></p>
+      <img class="clock me-2" src="{% static 'auction/clock.svg' %}" alt="clock"><time
+        id="auctionTimer-{{ auction.auctionID }}" class="m-0 d-flex me-4">--</time>
+      <p class="m-0">{{ auction.get_bid }}</p>
       <p class="m-0 mx-4 d-none d-lg-block"># Bids:<span class="ms-2">{{ num_bids }}</span></p>
       <p class="m-0 me-4 d-none d-lg-block"># of Therapists Bidding:<span class="ms-2">{{ num_biders }}</span></p>
     </section>
 
-    {% if user.is_authenticated and user.account.get_split_user_type != 'Clinic' %}
+    {% if user.is_authenticated and user.account.get_split_user_type != 'Clinic' and auction.active %}
     <button type="button" class="btn-lg btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
       data-bs-whatever="@mdo">Bid</button>
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -59,7 +67,7 @@
           </div>
           <div class="modal-body">
             <form method="post">
-              <p>Current Bid: ${{ auction.get_low_bid }}</p>
+              <p>{{ auction.get_bid }}</p>
               <div class="mb-3">
                 <!-- <label for="recipient-name" class="col-form-label">Your Bid Amount:</label>
                 <input type="number" class="form-control" id="recipient-name"> -->
@@ -72,7 +80,6 @@
               </div>
             </form>
           </div>
-
         </div>
       </div>
     </div>
@@ -83,7 +90,8 @@
   <!-- Static Images -->
   <div class="row d-none d-sm-inline-flex my-3">
     <div class="col-9">
-      <img src="/media/{{ auction.clinic.imageOne }}" class="img-fluid pt-3" alt="Image of Clinic" style="height: 600px;width: 990px;object-fit: contain;">
+      <img src="/media/{{ auction.clinic.imageOne }}" class="img-fluid pt-3" alt="Image of Clinic"
+        style="height: 600px;width: 990px;object-fit: contain;">
     </div>
     <div class="col-3">
       {% if auction.clinic.imageTwo %}
@@ -147,7 +155,7 @@
   </div>
   <div class="row w-100 mx-auto">
     <p class="col-4 text-weight-bold border mb-0 py-2 bg-light">Province</p>
-    <p class="col-8 text-weight-light border mb-0 py-2">ONTARIO</p>
+    <p class="col-8 text-weight-light border mb-0 py-2">{{ auction.clinic.province }}</p>
   </div>
   <div class="row w-100 mx-auto">
     <p class="col-4 text-weight-bold border mb-0 py-2 bg-light">Dates of Coverage</p>

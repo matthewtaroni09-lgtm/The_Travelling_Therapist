@@ -6,7 +6,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     # Page Links
-    path('', views.AuctionListView2.as_view(), name="index"),
+    path('', views.AuctionListView.as_view(), name="index"),
     path("about", views.about, name="about"),
     path("profile", views.profile, name="profile"),
     path("register", views.register, name="register"),
