@@ -108,7 +108,7 @@ def profile(request):
                         """,
                         html_message = """
                         <header>
-                        <img src="/media/images/TTT_LOGO.png" alt="Traveling Therapist Logo">
+                        <img src="https://travelingtherapist.ca/media/images/TTT_LOGO.png" alt="Traveling Therapist Logo">
                         </header>
 
                         <section style="font-size: 16px; margin-bottom: 4rem;">
