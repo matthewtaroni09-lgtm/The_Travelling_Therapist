@@ -1,6 +1,7 @@
 from django import forms
 from .models import PROVINCES, Auction, Bid, Account, User, UserType
 from django.contrib.auth.forms import UserCreationForm
+import random
 
 class AuctionForm(forms.ModelForm):
     class Meta:
@@ -63,24 +64,46 @@ class BidForm(forms.ModelForm):
         }
 
 class RegisterTherapist(UserCreationForm):
-    first_name = forms.CharField()
-    last_name = forms.CharField()
-    city = forms.CharField()
+    x = list(range(1,101))
+    first_name = forms.CharField(initial='John')
+    last_name = forms.CharField(initial='Doe')
+    clinicName = forms.CharField()
+    city = forms.CharField(initial='Burlington')
     province = forms.ChoiceField(choices=PROVINCES)
-    # user_type = forms.ModelChoiceField(queryset=UserType.objects.filter())
-    user_type = forms.ModelChoiceField(queryset=UserType.objects.exclude(name__endswith='Clinic'))
+    username = forms.CharField(initial='loribine' + str(random.choice(x)) + '@gmail.com')
+    user_type = forms.ModelChoiceField(queryset=UserType.objects.all())
+    imageOne = forms.ImageField()
 
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'username', 'city', 'province', 'user_type', 'password1' ,'password2' )
-        labels = {'username': 'Email'}
+        fields = ('user_type', 'clinicName', 'first_name', 'last_name', 'username', 'city', 'province', 'password1' ,'password2', 'imageOne' )
+        # labels = {'username': 'Email'}
+        widgets = {
+            'imageOne': forms.ImageField()
+        }
 
-class UserForm(UserCreationForm):
+class CreateUserForm(UserCreationForm):
+    # first_name = forms.CharField(initial='John')
+    # last_name = forms.CharField(initial='Doe')
+    # clinicName = forms.CharField(initial='Doe')
+    # userType = forms.ModelChoiceField(queryset=UserType.objects.all())
+    # # province = forms.ModelChoiceField(queryset=PROVINCES.)
+    # city = forms.CharField()
+    # about = forms.CharField()
+    # imageOne = forms.ImageField()
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'email', 'username', 'password1' ,'password2')
+        # fields = ['username', 'first_name', 'last_name', 'userType', 'clinicName', 'city', 'about']#,'province', 'imageOne', 'imageTwo', 'imageThree', 'imageFour', 'practiceArea']
+        fields = ['username', 'first_name', 'last_name', 'password1' ,'password2']
+
+class UserForm(forms.ModelForm):
+    email = forms.EmailField()  # This For Additional Field
+
+    class Meta:
+        model = User
+        fields = ['email']
 
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = Account
-        fields = ('licenseNumber', 'city')
+        fields = ['clinicName', 'city', 'province', 'about', 'imageOne', 'imageTwo', 'imageThree', 'imageFour', 'practiceArea']

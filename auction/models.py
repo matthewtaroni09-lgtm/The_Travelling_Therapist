@@ -25,7 +25,7 @@ class Account(models.Model):
     clinicName = models.CharField(verbose_name='Clinic Name', max_length=200, blank=True, null=True, help_text='Enter the clinic name.')
     userType = models.ForeignKey('UserType', verbose_name='User Type', blank=True, null=True, related_name='usertypes', on_delete=models.CASCADE)  
     licenseNumber = models.CharField(verbose_name='License Number', max_length=120, null=True, blank=True, help_text='Enter you license number.')
-    imageOne = models.ImageField(verbose_name='Clinic Image One', upload_to='images/', blank=True, null=True, help_text='Upload an image (optional).')
+    imageOne = models.ImageField(default='default.jpg', verbose_name='Clinic Image One', upload_to='images', blank=True, null=True, help_text='Upload an image (optional).')
     imageTwo = models.ImageField(verbose_name='Clinic Image Two', upload_to='images/', blank=True, null=True, help_text='Upload an image (optional).')
     imageThree = models.ImageField(verbose_name='Clinic Image Three', upload_to='images/', blank=True, null=True, help_text='Upload an image (optional).')
     imageFour = models.ImageField(verbose_name='Clinic Image Four', upload_to='images/', blank=True, null=True, help_text='Upload an image (optional).')

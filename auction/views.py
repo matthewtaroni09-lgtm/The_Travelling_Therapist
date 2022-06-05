@@ -1,3 +1,4 @@
+import re
 from unicodedata import category
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect
@@ -6,7 +7,7 @@ from django.contrib import messages
 from django.views.generic import ListView, CreateView
 
 from .filters import AuctionFilter
-from .forms import RegisterTherapist, AuctionForm, BidForm, UserForm, ProfileForm
+from .forms import RegisterTherapist, AuctionForm, BidForm, UserForm, ProfileForm, CreateUserForm
 from django.urls import reverse_lazy
 import datetime
 # from datetime import datetime
@@ -23,6 +24,8 @@ from django.contrib.auth.models import User
 from django.template.loader import render_to_string
 from django.db.models.query_utils import Q
 from django.conf import settings
+from django.shortcuts import render, redirect
+from django.contrib import messages
 
 class AuctionListView(ListView):
     model = Auction
@@ -44,9 +47,29 @@ def profile(request):
     if str(request.user.account.userType).split(' ')[-1] == "Clinic":
         active_auctions_list = Auction.objects.filter(active=True, clinic=request.user.account)
         past_auctions_list = Auction.objects.filter(active=False, deleted=False, clinic=request.user.account)
-        submitted = False
+        submitted_profile = False
+        submitted_auction = False
         parameter = {}
+        print(request.method)
+        if request.method == 'POST':   # This Will Be Run When I Submit My Form. And Possibly Pass New Data.
+            print('indside')
+            u_form = UserForm(request.POST, instance=request.user)  # request.POST To Pass The POST Data
+            p_form = ProfileForm(request.POST, request.FILES, instance=request.user.account)  # File Data (images) Users Try To Upload.
+            print(str(u_form.is_valid()) + " || " + str(p_form.is_valid()))
+            if u_form.is_valid() and p_form.is_valid():
+                print('indside save')
+                u_form.save()
+                p_form.save()
+                messages.success(request, f'Your profile has been updated!')
+
+        else:
+            u_form = UserForm(instance=request.user)
+            p_form = ProfileForm(instance=request.user.account)
+            if 'submitted' in request.GET:
+                submitted_profile = True
+
         if active_auctions_list.count() <= 3:
+            print(request.method)
             if request.method == "POST":
                 form = AuctionForm(request.POST, request.FILES)
                 if form.is_valid():
@@ -116,14 +139,17 @@ def profile(request):
                 else:
                     form = AuctionForm
                     if 'submitted' in request.GET:
-                        submitted = True
+                        submitted_auction = True
 
             form = AuctionForm
             parameter.update({
                 'active_auctions_list': active_auctions_list,
                 'past_auctions_list': past_auctions_list,
                 'form': form,
-                'submitted': submitted,
+                'u_form': u_form,
+                'p_form': p_form,
+                'submitted_profile': submitted_profile,
+                'submitted_auction': submitted_auction,
                 'show_form': True
             })
         else:
@@ -148,37 +174,6 @@ def profile(request):
             # 'form': form,
             # 'submitted': submitted
         })
-
-# def register(request):
-#     return render(request, 'auction/register.html', {})
-
-def create_auction(request):
-    submitted = False
-    if request.method == "POST":
-        form = AuctionForm(request.POST, request.FILES)
-        if form.is_valid():
-            auction = form.save(commit=False)
-            auction.clinic = request.user.account
-            if form.cleaned_data.get('reservePrice') is not None:
-                auction.minimumBidIncrement = set_bid_increment(form.cleaned_data.get('reservePrice'))
-                auction.currentLowBid = form.cleaned_data.get('reservePrice')
-            auction.closed = False
-            auction.active = True
-            auction.deleted = False
-            auction.createdBy = request.user
-            auction.modifiedBy = request.user
-            auction.save()
-            print(str(auction.auctionEnd.year) + ", " + str(auction.auctionEnd.month) + ", " + str(auction.auctionEnd.day) + ", " + str(auction.auctionEnd.hour) + ", " + str(auction.auctionEnd.minute))
-            print(auction.auctionID)
-            # updater.start(auction.auctionEnd.year, auction.auctionEnd.month, auction.auctionEnd.day, auction.auctionEnd.hour, auction.auctionEnd.minute, str(auction.auctionID))
-            # return HttpResponseRedirect('/add_auction?submitted=True')
-        else:
-            form = AuctionForm
-            if 'submitted' in request.GET:
-                submitted = True
-
-    form = AuctionForm
-    return render(request, 'auction/create_auction.html', {'form':form, 'submitted': submitted})
 
 def view_auction(request, auction_id):
     auction = Auction.objects.get(pk=auction_id)
@@ -268,54 +263,27 @@ def get_demogrpahics(request, clinic_id):
 
 # @login_required
 # @transaction.atomic
-def register(response):
-    print(response.method)
-    if response.method == 'POST':
-        form = RegisterTherapist(response.POST)
+def register(request):
+    print(request.method)
+    if request.method == 'POST':
+        form = RegisterTherapist(request.POST, request.FILES)
         if form.is_valid():
-            print("inside register")
+            print('inside')
             user = form.save()
-            user.refresh_from_db()
-            user.account.licenseNumber = form.cleaned_data.get('license_number')
-            user.account.city = form.cleaned_data.get('city')
+            user.refresh_from_db()  # load the profile instance created by the signal
             user.account.userType = form.cleaned_data.get('user_type')
+            user.account.city = form.cleaned_data.get('city')
+            user.account.clinicName = form.cleaned_data.get('clinicName')
+            user.account.imageOne = form.cleaned_data.get('imageOne')
             user.save()
-            # username = form.cleaned_data.get('username')
-            # password = form.cleaned_data.get('password1')
-            # user = authenticate(username=username, password=password)
-            # login(response, user)
-
+            raw_password = form.cleaned_data.get('password1')
+            user = authenticate(username=user.username, password=raw_password)
+            login(request, user)
             return redirect('index')
-
-        else:
-            print("invalid")
-            print(form.errors)
-            form = RegisterTherapist()
     else:
         form = RegisterTherapist()
-
-    return render(response, 'auction/register.html', {'form': form, 'path': 'register'})
-
-    # if request.method == 'POST':
-    #     form = RegisterTherapist(request.POST)
-    #     if form.is_valid():
-    #         signup = form.save(commit=False)
-    #         signup.refresh_from_db()  # load the profile instance created by the signal
-    #         signup.email = form.cleaned_data.get('username')
-
-    #         account = Account(signup.id)
-    #         # account.userType = 'Physiotherapist'
-    #         account.city = form.cleaned_data.get('license_Number')
-    #         account.save()
-    #         signup.save()
-    #         raw_password = form.cleaned_data.get('password1')
-    #         signup = authenticate(username=signup.username, password=raw_password)
-    #         login(request, signup)
-    #         return redirect('index')
-    # else:
-    #     form = RegisterTherapist()
-    # return render(request, 'auction/register.html', {'form': form})
-
+    return render(request, 'auction/register.html', {'form': form})
+    
 
 # -------------- Login --------------
 def login_user(request):

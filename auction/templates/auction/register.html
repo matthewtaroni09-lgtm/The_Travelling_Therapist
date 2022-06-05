@@ -1,5 +1,6 @@
 {% extends 'auction/base.html' %}
 {% load static %}
+{% load crispy_forms_tags %}
 {% block content %}
 
 <!-- Content Start -->
@@ -9,66 +10,24 @@
   <!-- Register Box Start -->
   <div class="row">
     <div class="col-md-6 offset-md-3">
-      <ul class="nav nav-tabs" id="myTab" role="tablist">
-        <li class="nav-item" role="presentation">
-          <button class="btn-lg nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#register-therapist"
-            type="button" role="tab" aria-controls="register-therapist" aria-selected="true">Therapist Sign Up</button>
-        </li>
-        <li class="nav-item" role="presentation">
-          <button class="btn-lg nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#register-clinic"
-            type="button" role="tab" aria-controls="register-clinic" aria-selected="false">Clinic Sign Up</button>
-        </li>
-      </ul>
-      <div class="tab-content" id="myTabContent">
-        <!-- Physio Sign Up End -->
-        <div class="tab-pane fade show active bg-danger p-3" id="register-therapist" role="tabpanel"
-          aria-labelledby="home-tab">
 
-          <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Submit New Post</button>
-          </form>
+      <!-- Physio Sign Up End -->
 
-        </div>
-        <!-- Physio Sign Up End -->
-        <!-- Clinic Sign Up Start -->
-        <div class="tab-pane fade" id="register-clinic" role="tabpanel" aria-labelledby="profile-tab">
-          <div class="tab-pane fade show active bg-success p-3" id="register-clinic" role="tabpanel"
-            aria-labelledby="home-tab">
-            <!-- <form class="p-3 p-md-5">
-              <h2 class="text-center mb-5">Register to find a Physiotherapist.</h2>
-              <div class="mb-3">
-                <label for="clinicName" class="form-label">Clinic Name</label>
-                <input type="text" class="form-control" id="clinicName">
-              </div>
-              <div class="mb-3">
-                <label for="license" class="form-label">Address</label>
-                <input type="text" class="form-control" id="license">
-              </div>
-              <div class="mb-3">
-                <label for="name" class="form-label">Contact Name</label>
-                <input type="text" class="form-control" id="name">
-              </div>
-              <div class="mb-3">
-                <label for="phone" class="form-label">Phone Number</label>
-                <input type="text" class="form-control" id="phone">
-              </div>
-              <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
-                <input type="text" class="form-control" id="email" aria-describedby="emailHelp">
-                <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
-              </div>
-              <div class="mb-3">
-                <label for="exampleInputPassword1" class="form-label">Password</label>
-                <input type="password" class="form-control" id="exampleInputPassword1">
-              </div>
-              <button type="submit" class="btn btn-primary">Register</button>
-            </form> -->
-          </div>
-        </div>
-        <!-- Clinic Sign Up End -->
-      </div>
+
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form | crispy }}
+        <!-- {{ u_form | crispy }}
+        {{ p_form | crispy }} -->
+
+        <button type="submit">Submit New Post</button>
+      </form>
+
+
+      <!-- Physio Sign Up End -->
+      <!-- Clinic Sign Up Start -->
+
+      <!-- Clinic Sign Up End -->
     </div>
   </div>
   <!-- Register Box End -->
