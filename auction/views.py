@@ -83,7 +83,8 @@ def profile(request):
                         auction.currentLowBid = form.cleaned_data.get('reservePrice')
 
                     auction.auctionStart = datetime.datetime.now()
-                    auction.auctionEnd = datetime.datetime.now() + datetime.timedelta(days=14)
+                    # auction.auctionEnd = datetime.datetime.now() + datetime.timedelta(days=14)
+                    auction.auctionEnd = datetime.datetime.now() + datetime.timedelta(minutes=5)
                     auction.closed = False
                     auction.active = False
                     auction.deleted = False
@@ -130,8 +131,9 @@ def profile(request):
                     )
                     print(str(auction.auctionEnd.year) + ", " + str(auction.auctionEnd.month) + ", " + str(auction.auctionEnd.day) + ", " + str(auction.auctionEnd.hour) + ", " + str(auction.auctionEnd.minute))
                     print(auction.auctionID)
-                    # scheduled_tasks.start(auction.auctionEnd.year, auction.auctionEnd.month, auction.auctionEnd.day, auction.auctionEnd.hour, auction.auctionEnd.minute, str(auction.auctionID))
+                    scheduled_tasks.start(auction.auctionEnd.year, auction.auctionEnd.month, auction.auctionEnd.day, auction.auctionEnd.hour, auction.auctionEnd.minute, str(auction.auctionID))
                     # scheduled_tasks.start(auction.auctionEnd.year, auction.auctionEnd.month, auction.auctionEnd.day, 8, 27, str(auction.auctionID))
+                    # scheduled_tasks.start(2022, 6, 6, 6, 29, str(auction.auctionID))
                     return HttpResponseRedirect('/profile?submitted=True')
                 else:
                     form = AuctionForm
@@ -166,12 +168,10 @@ def profile(request):
         user_id = str(request.user.id)
         active_auctions_list = Bid.objects.raw('SELECT DISTINCT AA.auctionID, AB.bidID, AA.placementStart, AA.placementEnd, AC.clinicName, AC.city, AC.about, AC.imageOne, AC.imageTwo, UT.name "userType" FROM auction_auction AA JOIN auction_bid AB ON AA.auctionID = AB.auction_id JOIN auction_account AC ON AA.clinic_id = AC.id JOIN auction_usertype UT ON AC.userType_id = UT.id WHERE AB.user_id = ' + user_id + ' AND AA.active = 1 AND AA.closed = 0 AND AA.deleted = 0 GROUP BY auctionID;')
         past_auctions_list = Bid.objects.raw('SELECT DISTINCT AA.auctionID, AB.bidID, AA.placementStart, AA.placementEnd, AC.clinicName, AC.city, AC.about, AC.imageOne, AC.imageTwo, UT.name "userType" FROM auction_auction AA JOIN auction_bid AB ON AA.auctionID = AB.auction_id JOIN auction_account AC ON AA.clinic_id = AC.id JOIN auction_usertype UT ON AC.userType_id = UT.id WHERE AB.user_id = ' + user_id + ' AND AA.active = 0 AND AA.closed = 1 AND AA.deleted = 0 GROUP BY auctionID;')
-        print(request.method)
         if request.method == 'POST':   # This Will Be Run When I Submit My Form. And Possibly Pass New Data.
             u_form = UserForm(request.POST, instance=request.user)  # request.POST To Pass The POST Data
             # p_form = ProfileUpdateTherapist(request.POST, request.FILES, instance=request.user.account)  # File Data (images) Users Try To Upload.
             if u_form.is_valid():
-                print('save')
                 u_form.save()
                 # p_form.save()
                 messages.success(request, f'Your profile has been updated!')

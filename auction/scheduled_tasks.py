@@ -10,7 +10,7 @@ from django.db.models import Min
 # Global variable
 scheduler = BackgroundScheduler()
 scheduler.start()
-scheduler.shutdown()
+# scheduler.shutdown()
 
 def start(year, month, day, hour, minute, id):
     # scheduler.add_job(update_something, 'interval', seconds=3)
@@ -66,7 +66,13 @@ def update_something(id):
                     subject = "Auction Ended",
                     message = "Your auction ended at: " + dt_string + ". The winning bid was: " + str(winningBid.amount) + ".",
                     # html_message = "<h1>Your auction ended at:</h1> " + dt_string + ". The winning bid was: " + str(winningBid.amount) + ".",
-                    html_message = """<section style="font-size: 16px; margin-bottom: 4rem;">
+                    html_message = """
+                    <header>
+                    <img src="/media/images/TTT_LOGO.png" alt="Traveling Therapist Logo">
+                    </header>
+
+                    <section style="font-size: 16px; margin-bottom: 4rem;">
+                    <section style="font-size: 16px; margin-bottom: 4rem;">
                     <p>Hello <span class="text-weight-bold">""" + auction.clinic.clinicName + """</span>,</p>
                     
                     <p>You auction has ended and you will be matched with the lowest bidding therapist soon. Look for an email from us shortly to connect you.</p>
@@ -82,7 +88,14 @@ def update_something(id):
 
                     <p>Thanks for using our service - we hope to see you again soon,</p>
                     <p style="font-weight: 700; padding-top: 0rem; margin-top: 0; line-height: 0;">The Traveling Therapist Team</p>
-                    </section>""",
+                    </section>
+                    </section>
+
+                    <footer>
+                    <a href="travelingtherapist.ca">Click to visit The Traveling Therapist Website</a>
+                    <p style="font-size: 10px; color: #848585;">You are receiving this email because you have registered to use The Traveling Therapist website services. Please do not reply to this email. If you wish to contact us then email The Traveling Therapist at info@travelingtherapist.ca. To ensure you continue to receive these emails, add this email address to your email safelist. Your details will not be disclosed or used by third parties for marketing or promotional purposes.</p>
+                    </footer>
+                    """,
                     from_email = settings.EMAIL_HOST_USER,
                     recipient_list = [winningBid.user.email]
                 )
