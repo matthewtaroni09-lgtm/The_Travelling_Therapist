@@ -7,7 +7,7 @@ from django.contrib import messages
 from django.views.generic import ListView, CreateView
 
 from .filters import AuctionFilter
-from .forms import RegisterTherapist, AuctionForm, BidForm, UserForm, ProfileForm, CreateUserForm
+from .forms import RegisterAcount, AuctionForm, BidForm, UserForm, ProfileUpdateClinic, CreateUserForm
 from django.urls import reverse_lazy
 import datetime
 # from datetime import datetime
@@ -53,7 +53,7 @@ def profile(request):
         parameter = {}
         if request.method == 'POST':   # This Will Be Run When I Submit My Form. And Possibly Pass New Data.
             u_form = UserForm(request.POST, instance=request.user)  # request.POST To Pass The POST Data
-            p_form = ProfileForm(request.POST, request.FILES, instance=request.user.account)  # File Data (images) Users Try To Upload.
+            p_form = ProfileUpdateClinic(request.POST, request.FILES, instance=request.user.account)  # File Data (images) Users Try To Upload.
             if u_form.is_valid() and p_form.is_valid():
                 u_form.save()
                 p_form.save()
@@ -61,7 +61,7 @@ def profile(request):
 
         else:
             u_form = UserForm(instance=request.user)
-            p_form = ProfileForm(instance=request.user.account)
+            p_form = ProfileUpdateClinic(instance=request.user.account)
             if 'submitted' in request.GET:
                 submitted_profile = True
 
@@ -164,13 +164,30 @@ def profile(request):
 
     else:
         user_id = str(request.user.id)
-        active_auctions_list = Bid.objects.raw('SELECT DISTINCT AA.auctionID, AB.bidID, AA.placementStart, AA.placementEnd, AC.clinicName, AC.city, AC.about, AC.imageOne, AC.imageTwo, UT.name "userType" FROM auction_auction AA JOIN auction_bid AB ON AA.auctionID = AB.auction_id JOIN auction_account AC ON AA.clinic_id = AC.user_id JOIN auction_usertype UT ON AC.userType_id = UT.id WHERE AB.user_id = ' + user_id + ' AND AA.active = 1 AND AA.closed = 0 AND AA.deleted = 0 GROUP BY auctionID;')
-        past_auctions_list = Bid.objects.raw('SELECT DISTINCT AA.auctionID, AB.bidID, AA.placementStart, AA.placementEnd, AC.clinicName, AC.city, AC.about, AC.imageOne, AC.imageTwo, UT.name "userType" FROM auction_auction AA JOIN auction_bid AB ON AA.auctionID = AB.auction_id JOIN auction_account AC ON AA.clinic_id = AC.user_id JOIN auction_usertype UT ON AC.userType_id = UT.id WHERE AB.user_id = ' + user_id + ' AND AA.active = 0 AND AA.closed = 1 AND AA.deleted = 0 GROUP BY auctionID;')
-        
+        active_auctions_list = Bid.objects.raw('SELECT DISTINCT AA.auctionID, AB.bidID, AA.placementStart, AA.placementEnd, AC.clinicName, AC.city, AC.about, AC.imageOne, AC.imageTwo, UT.name "userType" FROM auction_auction AA JOIN auction_bid AB ON AA.auctionID = AB.auction_id JOIN auction_account AC ON AA.clinic_id = AC.id JOIN auction_usertype UT ON AC.userType_id = UT.id WHERE AB.user_id = ' + user_id + ' AND AA.active = 1 AND AA.closed = 0 AND AA.deleted = 0 GROUP BY auctionID;')
+        past_auctions_list = Bid.objects.raw('SELECT DISTINCT AA.auctionID, AB.bidID, AA.placementStart, AA.placementEnd, AC.clinicName, AC.city, AC.about, AC.imageOne, AC.imageTwo, UT.name "userType" FROM auction_auction AA JOIN auction_bid AB ON AA.auctionID = AB.auction_id JOIN auction_account AC ON AA.clinic_id = AC.id JOIN auction_usertype UT ON AC.userType_id = UT.id WHERE AB.user_id = ' + user_id + ' AND AA.active = 0 AND AA.closed = 1 AND AA.deleted = 0 GROUP BY auctionID;')
+        print(request.method)
+        if request.method == 'POST':   # This Will Be Run When I Submit My Form. And Possibly Pass New Data.
+            u_form = UserForm(request.POST, instance=request.user)  # request.POST To Pass The POST Data
+            # p_form = ProfileUpdateTherapist(request.POST, request.FILES, instance=request.user.account)  # File Data (images) Users Try To Upload.
+            if u_form.is_valid():
+                print('save')
+                u_form.save()
+                # p_form.save()
+                messages.success(request, f'Your profile has been updated!')
+
+        else:
+            u_form = UserForm(instance=request.user)
+            # p_form = ProfileUpdateTherapist(instance=request.user.account)
+            if 'submitted' in request.GET:
+                submitted_profile = True
+
         return render(request, 'auction/profile.html', {
             'active_auctions_list': active_auctions_list,
             'past_auctions_list': past_auctions_list,
-            'path': 'profile'
+            'path': 'profile',
+            'u_form': u_form,
+            # 'p_form': p_form
             # 'form': form,
             # 'submitted': submitted
         })
@@ -267,7 +284,7 @@ def get_demogrpahics(request, clinic_id):
 def register(request):
     print(request.method)
     if request.method == 'POST':
-        form = RegisterTherapist(request.POST, request.FILES)
+        form = RegisterAcount(request.POST, request.FILES)
         if form.is_valid():
             print('inside')
             user = form.save()
@@ -289,7 +306,7 @@ def register(request):
             login(request, user)
             return redirect('index')
     else:
-        form = RegisterTherapist()
+        form = RegisterAcount()
     return render(request, 'auction/register.html', {'form': form})
     
 

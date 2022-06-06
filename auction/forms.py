@@ -63,7 +63,7 @@ class BidForm(forms.ModelForm):
             'amount': forms.TextInput(attrs={'class':'form-control', 'placeholder': 'Bid Amount'})
         }
 
-class RegisterTherapist(UserCreationForm):
+class RegisterAcount(UserCreationForm):
     x = list(range(1,101))
     first_name = forms.CharField(initial='John', required=False)
     last_name = forms.CharField(initial='Doe', required=False)
@@ -87,17 +87,8 @@ class RegisterTherapist(UserCreationForm):
             self.fields['username'].label = 'Email'
 
 class CreateUserForm(UserCreationForm):
-    # first_name = forms.CharField(initial='John')
-    # last_name = forms.CharField(initial='Doe')
-    # clinicName = forms.CharField(initial='Doe')
-    # userType = forms.ModelChoiceField(queryset=UserType.objects.all())
-    # # province = forms.ModelChoiceField(queryset=PROVINCES.)
-    # city = forms.CharField()
-    # about = forms.CharField()
-    # imageOne = forms.ImageField()
     class Meta:
         model = User
-        # fields = ['username', 'first_name', 'last_name', 'userType', 'clinicName', 'city', 'about']#,'province', 'imageOne', 'imageTwo', 'imageThree', 'imageFour', 'practiceArea']
         fields = ['username', 'first_name', 'last_name', 'password1' ,'password2']
 
 class UserForm(forms.ModelForm):
@@ -105,9 +96,14 @@ class UserForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ['email']
+        fields = ['first_name', 'last_name', 'email']
 
-class ProfileForm(forms.ModelForm):
+class ProfileUpdateClinic(forms.ModelForm):
     class Meta:
         model = Account
         fields = ['clinicName', 'city', 'province', 'about', 'imageOne', 'imageTwo', 'imageThree', 'imageFour', 'practiceArea']
+
+# class ProfileUpdateTherapist(forms.ModelForm):
+#     class Meta:
+#         model = Account
+#         fields = ['clinicName', 'city', 'province', 'about', 'imageOne', 'imageTwo', 'imageThree', 'imageFour', 'practiceArea']
