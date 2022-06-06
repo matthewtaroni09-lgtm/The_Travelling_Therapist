@@ -260,7 +260,7 @@ def get_auction_end(request, auction_id):
     return JsonResponse({'data': data})
 
 def get_all_auctions(request):
-    auction_list = list(Auction.objects.filter(active=True).values())
+    auction_list = list(Auction.objects.filter(Q(active=True) | Q(closed=True)).values())
     return JsonResponse({'data': auction_list})
 
 def get_active_auctions_clinic(request):
