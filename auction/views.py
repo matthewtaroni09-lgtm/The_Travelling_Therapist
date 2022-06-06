@@ -12,7 +12,7 @@ from django.urls import reverse_lazy
 import datetime
 # from datetime import datetime
 from . import scheduled_tasks
-from .models import Account, Auction, Bid, PracticeArea, User, Account
+from .models import Account, AdminSettings, Auction, Bid, PracticeArea, User, Account
 from django.contrib.auth.forms import PasswordResetForm
 from django.utils.http import urlsafe_base64_encode
 from django.contrib.auth.tokens import default_token_generator
@@ -64,7 +64,9 @@ def profile(request):
             if 'submitted' in request.GET:
                 submitted_profile = True
 
-        if active_auctions_list.count() <= 3:
+        max_auctions = AdminSettings.objects.all()[0]
+        print(max_auctions.numAllowedAuctions)
+        if active_auctions_list.count() <= max_auctions.numAllowedAuctions:
             if request.method == "POST":
                 form = AuctionForm(request.POST, request.FILES)
                 if form.is_valid():
@@ -150,7 +152,10 @@ def profile(request):
             parameter.update({
                 'active_auctions_list': active_auctions_list,
                 'past_auctions_list': past_auctions_list,
-                'show_form': False
+                'u_form': u_form,
+                'p_form': p_form,
+                'show_form': False,
+                'max_forms': max_auctions.numAllowedAuctions
             })
 
 
