@@ -12,7 +12,7 @@ from django.urls import reverse_lazy
 import datetime
 # from datetime import datetime
 from . import scheduled_tasks
-from .models import Account, AdminSettings, Auction, Bid, PracticeArea, User, Account
+from .models import PROVINCES, Account, AdminSettings, Auction, Bid, PracticeArea, User, Account
 from django.contrib.auth.forms import PasswordResetForm
 from django.utils.http import urlsafe_base64_encode
 from django.contrib.auth.tokens import default_token_generator
@@ -41,7 +41,7 @@ class AuctionListView(ListView):
 def about(request):
     # print("index")
     # scheduled_tasks.update_something('5860ffea-cabc-4d2e-9b4c-059f86ab8ff8')
-    return render(request, 'auction/test.html', {'path': 'about'})
+    return render(request, 'auction/about.html', {'path': 'about'})
 
 def profile(request):
     if str(request.user.account.userType).split(' ')[-1] == "Clinic":
@@ -198,12 +198,13 @@ def view_auction(request, auction_id):
         if auction_change:
             auction.save()
         bid.save()
+        # return HttpResponseRedirect('bid-page-2.html')
     else:
         form = BidForm
         if 'submitted' in request.GET:
             submitted = True
 
-    form = BidForm
+    # form = BidForm
 
     return render(request, 'auction/bid-page-2.html',{
         'auction': auction,
