@@ -7,11 +7,17 @@
   <div class="mt-5 row">
     <div class="col-8">
       {% if user.is_authenticated %}
-      <h1 class="text-large text-weight-normal">Welcome {{ user.username }}</h>
+      {% if user.account.get_split_user_type == 'Clinic' %}
+      <h1 class="text-large text-weight-normal">Welcome {{ user.account.clinicName }}</h>
         <h2 class="text-large text-weight-normal">Auctions</h2>
         {% else %}
-        <h1 class="text-large text-weight-normal">Auctions</h1>
-        {% endif %}
+        <h1 class="text-large text-weight-normal">Welcome {{ user.first_name }} {{ user.last_name }}
+          </h>
+          <h2 class="text-large text-weight-normal">Auctions</h2>
+          {% endif %}
+          {% else %}
+          <h1 class="text-large text-weight-normal">Auctions</h1>
+          {% endif %}
     </div>
     {% if not user.is_authenticated %}
     <div class="col-4 text-end">
