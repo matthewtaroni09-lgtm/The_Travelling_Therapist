@@ -46,18 +46,17 @@ function userTypeChange() {
     termsButton.style.display = 'block';
 }
 
-function agreementChecked() {
-    let checkBoxValue = document.getElementById("agreementCheckBox").checked;
-    if (checkBoxValue) {
-        submitButton.disabled = false;
-    }
-    else {
-        submitButton.disabled = true;
-    }
-}
-
 $(document).ready(function () {
-    console.log("jquery");
+    $('#tandcModal').on('hidden.bs.modal', function () {
+        $('#agreementCheckBox').css("display", "none");
+        $('#agreementCheckBoxLabel').css("display", "none");
+    })
+
+    $('#termsButton').click(function () {
+        $('#agreementCheckBox').css("display", "block");
+        $('#agreementCheckBoxLabel').css("display", "block");
+    });
+
     $('#agreementCheckBox').click(function () {
         if ($('#agreementCheckBox').prop("checked") === true) {
             $('#submitButton').prop('disabled', false);
