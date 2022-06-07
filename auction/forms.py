@@ -67,33 +67,35 @@ class RegisterAcount(UserCreationForm):
     x = list(range(1,101))
     first_name = forms.CharField(initial='John', required=False)
     last_name = forms.CharField(initial='Doe', required=False)
-    clinicName = forms.CharField(required=False)
+    clinicName = forms.CharField(required=False, label='Clinic Name')
     city = forms.CharField(initial='Burlington', required=False)
-    about = forms.CharField(required=False, widget=forms.Textarea)
+    about = forms.CharField(required=False, label='About the clinic', widget=forms.Textarea)
     province = forms.ChoiceField(choices=PROVINCES, required=False)
-    username = forms.CharField(initial='loribine' + str(random.choice(x)) + '@gmail.com')
+    username = forms.CharField(initial='loribine' + str(random.choice(x)) + '@gmail.com', label='Email')
     user_type = forms.ModelChoiceField(queryset=UserType.objects.all())
-    imageOne = forms.ImageField(required=False)
-    imageTwo = forms.ImageField(required=False)
-    imageThree = forms.ImageField(required=False)
-    imageFour = forms.ImageField(required=False)
+    imageOne = forms.ImageField(required=False, label='Image 1')
+    imageTwo = forms.ImageField(required=False, label='Image 2')
+    imageThree = forms.ImageField(required=False, label='Image 3')
+    imageFour = forms.ImageField(required=False, label='Image 4')
 
     class Meta:
         model = User
         fields = ('user_type', 'clinicName', 'first_name', 'last_name', 'username', 'city', 'province', 'about', 'password1' ,'password2', 'imageOne', 'imageTwo', 'imageThree', 'imageFour' )
-
-        def __init__(self,*args,**kwargs):
-            super().__init__(*args,**kwargs)
-            self.fields['username'].label = 'Email'
 
 class CreateUserForm(UserCreationForm):
     class Meta:
         model = User
         fields = ['username', 'first_name', 'last_name', 'password1' ,'password2']
 
-class UserForm(forms.ModelForm):
+class UserFormClinic(forms.ModelForm):
     email = forms.EmailField()  # This For Additional Field
+    class Meta:
+        model = User
+        # fields = ['first_name', 'last_name', 'email']
+        fields = ['email']
 
+class UserFormTherapist(forms.ModelForm):
+    email = forms.EmailField()  # This For Additional Field
     class Meta:
         model = User
         fields = ['first_name', 'last_name', 'email']

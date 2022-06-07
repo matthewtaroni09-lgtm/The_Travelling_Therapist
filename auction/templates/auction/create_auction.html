@@ -1,21 +1,16 @@
 {% extends 'auction/base.html' %}
 {% load crispy_forms_tags %}
 {% block content %}
-<div class="container">
-  <div class="row justify-content-center">
-    <div class="col-8">
-      <h1 class="mt-2">Create Auction</h1>
-      <hr class="mt-0 mb-4">
-      <form method="post">
+<div class="container mt-3 mb-5">
+  <div class="tab-pane fade show" id="create-auction" role="tabpanel" aria-labelledby="create-auction-tab">
+    <div class="tab-pane fade show active bg-light p-3" id="create-auction" role="tabpanel"
+      aria-labelledby="create-auction-tab">
+      <p>{{showForm}}</p>
+      {% if show_form %}
+      <form method="post" class="p-md-5">
+        <h2 class="mb-5">Create New Auction Post</h2>
+        {% csrf_token %}
         <div class="row">
-          {% csrf_token %}
-          <!-- {{ form|crispy }} -->
-          <!-- <div class="mb-3 col-md-6">
-            {{ form.auctionStart|as_crispy_field }}
-          </div>
-          <div class="mb-3 col-md-6">
-            {{ form.auctionEnd|as_crispy_field }}
-          </div> -->
           <div class="mb-3 col-md-6">
             {{ form.placementStart|as_crispy_field }}
           </div>
@@ -25,80 +20,75 @@
           <div class="mb-3 col-md-6">
             {{ form.reservePrice|as_crispy_field }}
           </div>
-        </div>
-
-        <div class="row mt-3">
-          <h3 class="fs-5">Therapist Schedule <small class='form-text text-muted fs-6'>*leave day blank if clinic is closed</small></h3>
-          <div class="mb-3 input-group align-items-center">
-            <span class="input-group-text me-3" style="width: 72px;">Mon:</span>
-            <span class="me-sm-1">Start: </span> <span class="me-3">{{ form.mondayStart }}</span>
-            <span class="me-sm-1">End: </span>  <span>{{ form.mondayEnd }}</span>
-          </div>
-          <div class="mb-3 input-group align-items-center">
-            <span class="input-group-text me-3" style="width: 72px;">Tues:</span>
-            <span class="me-sm-1">Start: </span> <span class="me-3">{{ form.tuesdayStart }}</span>
-            <span class="me-sm-1">End: </span>  <span>{{ form.tuesdayEnd }}</span>
-          </div>
-          <div class="mb-3 input-group align-items-center">
-            <span class="input-group-text me-3" style="width: 72px;">Wed:</span>
-            <span class="me-sm-1">Start: </span> <span class="me-3">{{ form.wednesdayStart }}</span>
-            <span class="me-sm-1">End: </span>  <span>{{ form.wednesdayEnd }}</span>
-          </div>
-          <div class="mb-3 input-group align-items-center">
-            <span class="input-group-text me-3" style="width: 72px;">Thurs:</span>
-            <span class="me-sm-1">Start: </span> <span class="me-3">{{ form.thursdayStart }}</span>
-            <span class="me-sm-1">End: </span>  <span>{{ form.thursdayEnd }}</span>
-          </div>
-          <div class="mb-3 input-group align-items-center">
-            <span class="input-group-text me-3" style="width: 72px;">Fri:</span>
-            <span class="me-sm-1">Start: </span> <span class="me-3">{{ form.fridayStart }}</span>
-            <span class="me-sm-1">End: </span>  <span>{{ form.fridayEnd }}</span>
-          </div>
-          <div class="mb-3 input-group align-items-center">
-            <span class="input-group-text me-3" style="width: 72px;">Sat:</span>
-            <span class="me-sm-1">Start: </span> <span class="me-3">{{ form.saturdayStart }}</span>
-            <span class="me-sm-1">End: </span>  <span>{{ form.saturdayEnd }}</span>
-          </div>
-          <div class="mb-3 input-group align-items-center">
-            <span class="input-group-text me-3" style="width: 72px;">Sun:</span>
-            <span class="me-sm-1">Start: </span> <span class="me-3">{{ form.sundayStart }}</span>
-            <span class="me-sm-1">End: </span>  <span>{{ form.sundayEnd }}</span>
-          </div>
-        </div>
-          
-        <div class="row mt-3">
           <div class="mb-3 col-md-6">
-            <h3 class="fs-5">Clinic Areas of Practice</h3>
-            <div class="input-group mb-3 flex">
-              <span class="input-group-text" style="width: 28%;">MSK:</span> {{ form.MSK }} <span class="input-group-text">%</span>
-            </div>
-            <div class="input-group mb-3">
-              <span class="input-group-text" style="width: 28%;">Neuro:</span>{{ form.neuro }} <span class="input-group-text">%</span>
-            </div>
-            <div class="input-group mb-3">
-              <span class="input-group-text" style="width: 28%;">CardioResp:</span>{{ form.cardioResp }} <span class="input-group-text">%</span>
-            </div>
+            {{ form.payFrequency|as_crispy_field }}
           </div>
-          <div class="mb-3 col-md-6">
-            <h3 class="fs-5">Clinic Demographics</h3>
-            <div class="input-group mb-3">
-              <span class="input-group-text" style="width: 28%;">Under 18:</span> {{ form.underEightteen }} <span class="input-group-text">%</span>
-            </div>
-            <div class="input-group mb-3">
-              <span class="input-group-text" style="width: 28%;">18 - 65:</span> {{ form.eightteenToSixtyFive }} <span class="input-group-text">%</span>
-            </div>
-            <div class="input-group mb-3">
-              <span class="input-group-text" style="width: 28%;">Over 65:</span> {{ form.overSixtyFive }} <span class="input-group-text">%</span>
-            </div>
-          </div>
-        </div>
+          <div class="mb-3">
+            <h3 class="fs-5">Therapist Schedule <span class="text-weight-thin fs-6">*leave day blank if clinic is
+                closed</span>
+            </h3>
 
+            <div class="input-group mb-3 align-items-center">
+              <span class="input-group-text me-3">Mon:</span>
+              <div class="d-inline mt-2 mt-sm-0">
+                {{ form.mondayStart|as_crispy_field }}
+                {{ form.mondayEnd|as_crispy_field }}
+              </div>
+            </div>
+            <div class="input-group mb-3 align-items-center">
+              <span class="input-group-text me-3">Tue:</span>
+              <div class="d-inline mt-2 mt-sm-0">
+                {{ form.tuesdayStart|as_crispy_field }}
+                {{ form.tuesdayEnd|as_crispy_field }}
+              </div>
+            </div>
+            <div class="input-group mb-3 align-items-center">
+              <span class="input-group-text me-3">Wed:</span>
+              <div class="d-inline mt-2 mt-sm-0">
+                {{ form.wednesdayStart|as_crispy_field }}
+                {{ form.wednesdayEnd|as_crispy_field }}
+              </div>
+            </div>
+            <div class="input-group mb-3 align-items-center">
+              <span class="input-group-text me-3">Thu:</span>
+              <div class="d-inline mt-2 mt-sm-0">
+                {{ form.thursdayStart|as_crispy_field }}
+                {{ form.thursdayEnd|as_crispy_field }}
+              </div>
+            </div>
+            <div class="input-group mb-3 align-items-center">
+              <span class="input-group-text me-3">Fri:</span>
+              <div class="d-inline mt-2 mt-sm-0">
+                {{ form.fridayStart|as_crispy_field }}
+                {{ form.fridayEnd|as_crispy_field }}
+              </div>
+            </div>
+            <div class="input-group mb-3 align-items-center">
+              <span class="input-group-text me-3">Sat:</span>
+              <div class="d-inline mt-2 mt-sm-0">
+                {{ form.saturdayStart|as_crispy_field }}
+                {{ form.saturdayEnd|as_crispy_field }}
+              </div>
+            </div>
+            <div class="input-group mb-3 align-items-center">
+              <span class="input-group-text me-3">Sun:</span>
+              <div class="d-inline mt-2 mt-sm-0">
+                {{ form.sundayStart|as_crispy_field }}
+                {{ form.sundayEnd|as_crispy_field }}
+              </div>
+            </div>
+          </div>
           <div class="mb-3">
             {{ form.comments|as_crispy_field }}
           </div>
-          <button type="submit" class="btn btn-success">Creat Auction</button>
-      </form>
+          <button type="submit" class="btn btn-primary">Create Auction</button>
+        </div>
     </div>
+    </form>
+    {% else %}
+    <p>Only {{ max_forms }} active auctions are allowed at a time. Contact info@travelingtherapist.ca for more
+      information on our Pro plan.</p>
+    {% endif %}
   </div>
 </div>
 {% endblock %}

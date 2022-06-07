@@ -9,6 +9,7 @@ urlpatterns = [
     path('', views.AuctionListView.as_view(), name="index"),
     path("about", views.about, name="about"),
     path("profile", views.profile, name="profile"),
+    path("create_auction", views.create_auction, name="create-auction"),
     path("register", views.register, name="register"),
     path("login", views.login_user, name="login"),
     path('logout_user', views.logout_user, name="logout"),

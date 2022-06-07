@@ -48,9 +48,13 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-weight-normal {% if path == 'about' %}active{% endif %}"
-                            href="{% url 'about' %}">About/ FAQ</a>
+                            href="{% url 'about' %}">About/FAQ</a>
                     </li>
                     {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link text-weight-normal {% if path == 'create-auction' %}active{% endif %}"
+                            href="{% url 'create-auction' %}">Create Auction</a>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link text-weight-normal {% if path == 'profile' %}active{% endif %}"
                             href="{% url 'profile' %}">Profile</a>

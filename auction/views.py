@@ -7,7 +7,7 @@ from django.contrib import messages
 from django.views.generic import ListView, CreateView
 
 from .filters import AuctionFilter
-from .forms import RegisterAcount, AuctionForm, BidForm, UserForm, ProfileUpdateClinic, CreateUserForm
+from .forms import RegisterAcount, AuctionForm, BidForm, UserFormClinic, UserFormTherapist, ProfileUpdateClinic, CreateUserForm
 from django.urls import reverse_lazy
 import datetime
 # from datetime import datetime
@@ -26,6 +26,7 @@ from django.db.models.query_utils import Q
 from django.conf import settings
 from django.shortcuts import render, redirect
 from django.contrib import messages
+
 
 class AuctionListView(ListView):
     model = Auction
@@ -52,7 +53,7 @@ def profile(request):
         submitted_auction = False
         parameter = {}
         if request.method == 'POST':   # This Will Be Run When I Submit My Form. And Possibly Pass New Data.
-            u_form = UserForm(request.POST, instance=request.user)  # request.POST To Pass The POST Data
+            u_form = UserFormClinic(request.POST, instance=request.user)  # request.POST To Pass The POST Data
             p_form = ProfileUpdateClinic(request.POST, request.FILES, instance=request.user.account)  # File Data (images) Users Try To Upload.
             if u_form.is_valid() and p_form.is_valid():
                 u_form.save()
@@ -60,108 +61,14 @@ def profile(request):
                 messages.success(request, f'Your profile has been updated!')
 
         else:
-            u_form = UserForm(instance=request.user)
+            u_form = UserFormClinic(instance=request.user)
             p_form = ProfileUpdateClinic(instance=request.user.account)
             if 'submitted' in request.GET:
                 submitted_profile = True
 
-        max_auctions = AdminSettings.objects.all()[0]
-        print(active_auctions_list.count())
-        if active_auctions_list.count() <= max_auctions.numAllowedAuctions:
-            if request.method == "POST":
-                form = AuctionForm(request.POST, request.FILES)
-                if form.is_valid():
-                    auction = form.save(commit=False)
-                    auction.clinic = request.user.account
-                    if form.cleaned_data.get('reservePrice') != None:
-                        if form.cleaned_data.get('reservePrice') < 10000:
-                            auction.minimumBidIncrement = 100
-                        elif form.cleaned_data.get('reservePrice') > 10000 and form.cleaned_data.get('reservePrice') < 25000:
-                            auction.minimumBidIncrement = 250
-                        else:
-                            auction.minimumBidIncrement = 500
-                        auction.currentLowBid = form.cleaned_data.get('reservePrice')
-
-                    auction.auctionStart = datetime.datetime.now()
-                    # auction.auctionEnd = datetime.datetime.now() + datetime.timedelta(days=14)
-                    auction.auctionEnd = datetime.datetime.now() + datetime.timedelta(minutes=5)
-                    auction.closed = False
-                    auction.active = False
-                    auction.deleted = False
-                    auction.createdBy = request.user
-                    auction.modifiedBy = request.user
-                    auction.save()
-                    # Therapist email
-                    send_mail(
-                        subject = "Auction Created",
-                        message = """A New Auction has been created
-                        Clinic Name: """ + str(auction.clinic.clinicName) + """
-                        Clinic Location: """ + str(auction.clinic.city) + """, """ + str(auction.clinic.city) + """
-                        Clinic email: """ + str(auction.clinic.user.email) + """
-                        Reserve Bid: """ + str(auction.reservePrice) + """
-                        Auction Start: """ + str(auction.auctionStart) + """
-                        Auction End: """ + str(auction.auctionEnd) + """
-                        Placement Start: """ + str(auction.placementStart) + """
-                        Placement End: """ + str(auction.placementEnd) + """
-                        """,
-                        html_message = """
-                        <header>
-                        <img src="https://travelingtherapist.ca/media/images/TTT_LOGO.png" alt="Traveling Therapist Logo">
-                        </header>
-
-                        <section style="font-size: 16px; margin-bottom: 4rem;">
-                        <h1>A New Auction has been created</h1>
-                        Clinic Name: """ + str(auction.clinic.clinicName) + """<br>
-                        Clinic Location: """ + str(auction.clinic.city) + """, """ + str(auction.clinic.city) + """<br>
-                        Clinic email: """ + str(auction.clinic.user.email) + """<br>
-                        Reserve Bid: """ + str(auction.reservePrice) + """<br>
-                        Auction Start: """ + str(auction.auctionStart) + """<br>
-                        Auction End: """ + str(auction.auctionEnd) + """<br>
-                        Placement Start: """ + str(auction.placementStart) + """<br>
-                        Placement End: """ + str(auction.placementEnd) + """<br>
-                        </section>
-
-                        <footer>
-                        <a href="travelingtherapist.ca">Click to visit The Traveling Therapist Website</a>
-                        <p style="font-size: 10px; color: #848585;">You are receiving this email because you have registered to use The Traveling Therapist website services. Please do not reply to this email. If you wish to contact us then email The Traveling Therapist at info@travelingtherapist.ca. To ensure you continue to receive these emails, add this email address to your email safelist. Your details will not be disclosed or used by third parties for marketing or promotional purposes.</p>
-                        </footer>
-                        """,
-                        from_email = settings.EMAIL_HOST_USER,
-                        recipient_list = ('loribine@gmail.com',)
-                    )
-                    print(str(auction.auctionEnd.year) + ", " + str(auction.auctionEnd.month) + ", " + str(auction.auctionEnd.day) + ", " + str(auction.auctionEnd.hour) + ", " + str(auction.auctionEnd.minute))
-                    print(auction.auctionID)
-                    scheduled_tasks.start(auction.auctionEnd.year, auction.auctionEnd.month, auction.auctionEnd.day, auction.auctionEnd.hour, auction.auctionEnd.minute, str(auction.auctionID))
-                    # scheduled_tasks.start(auction.auctionEnd.year, auction.auctionEnd.month, auction.auctionEnd.day, 8, 27, str(auction.auctionID))
-                    # scheduled_tasks.start(2022, 6, 6, 6, 29, str(auction.auctionID))
-                    return HttpResponseRedirect('/profile?submitted=True')
-                else:
-                    form = AuctionForm
-                    if 'submitted' in request.GET:
-                        submitted_auction = True
-
-            form = AuctionForm
-            parameter.update({
-                'active_auctions_list': active_auctions_list,
-                'past_auctions_list': past_auctions_list,
-                'form': form,
-                'u_form': u_form,
-                'p_form': p_form,
-                'submitted_profile': submitted_profile,
-                'submitted_auction': submitted_auction,
-                'show_form': True
-            })
-        else:
-            parameter.update({
-                'active_auctions_list': active_auctions_list,
-                'past_auctions_list': past_auctions_list,
-                'u_form': u_form,
-                'p_form': p_form,
-                'show_form': False,
-                'max_forms': max_auctions.numAllowedAuctions
-            })
-
-
+        parameter = create_auction_form(request)
+        parameter.update({'u_form': u_form, 'p_form': p_form})
+        
         return render(request, 'auction/profile.html', parameter)
 
     else:
@@ -169,7 +76,7 @@ def profile(request):
         active_auctions_list = Bid.objects.raw('SELECT DISTINCT AA.auctionID, AB.bidID, AA.placementStart, AA.placementEnd, AC.clinicName, AC.city, AC.about, AC.imageOne, AC.imageTwo, UT.name "userType" FROM auction_auction AA JOIN auction_bid AB ON AA.auctionID = AB.auction_id JOIN auction_account AC ON AA.clinic_id = AC.id JOIN auction_usertype UT ON AC.userType_id = UT.id WHERE AB.user_id = ' + user_id + ' AND AA.active = 1 AND AA.closed = 0 AND AA.deleted = 0 GROUP BY auctionID;')
         past_auctions_list = Bid.objects.raw('SELECT DISTINCT AA.auctionID, AB.bidID, AA.placementStart, AA.placementEnd, AC.clinicName, AC.city, AC.about, AC.imageOne, AC.imageTwo, UT.name "userType" FROM auction_auction AA JOIN auction_bid AB ON AA.auctionID = AB.auction_id JOIN auction_account AC ON AA.clinic_id = AC.id JOIN auction_usertype UT ON AC.userType_id = UT.id WHERE AB.user_id = ' + user_id + ' AND AA.active = 0 AND AA.closed = 1 AND AA.deleted = 0 GROUP BY auctionID;')
         if request.method == 'POST':   # This Will Be Run When I Submit My Form. And Possibly Pass New Data.
-            u_form = UserForm(request.POST, instance=request.user)  # request.POST To Pass The POST Data
+            u_form = UserFormTherapist(request.POST, instance=request.user)  # request.POST To Pass The POST Data
             # p_form = ProfileUpdateTherapist(request.POST, request.FILES, instance=request.user.account)  # File Data (images) Users Try To Upload.
             if u_form.is_valid():
                 u_form.save()
@@ -177,7 +84,7 @@ def profile(request):
                 messages.success(request, f'Your profile has been updated!')
 
         else:
-            u_form = UserForm(instance=request.user)
+            u_form = UserFormTherapist(instance=request.user)
             # p_form = ProfileUpdateTherapist(instance=request.user.account)
             if 'submitted' in request.GET:
                 submitted_profile = True
@@ -279,6 +186,10 @@ def get_demogrpahics(request, clinic_id):
     print(account.demographic)
     return JsonResponse({'data': data})
 
+def create_auction(request):
+    parameter = create_auction_form(request)
+    return render(request, 'auction/create_auction.html', parameter)
+
 # @login_required
 # @transaction.atomic
 def register(request):
@@ -362,6 +273,94 @@ def password_reset_request(request):
 	return render(request=request, template_name="auction/password/password_reset.html", context={"password_reset_form":password_reset_form})
 
 # -------------- Utility --------------
+def create_auction_form(request):
+    active_auctions_list = Auction.objects.filter(closed=False, deleted=False, clinic=request.user.account)
+    max_auctions = AdminSettings.objects.all()[0]
+    submitted_auction = False
+    parameter = {}
+    print(active_auctions_list.count())
+    if active_auctions_list.count() <= max_auctions.numAllowedAuctions:
+        if request.method == "POST":
+            form = AuctionForm(request.POST, request.FILES)
+            if form.is_valid():
+                auction = form.save(commit=False)
+                auction.clinic = request.user.account
+                if form.cleaned_data.get('reservePrice') != None:
+                    if form.cleaned_data.get('reservePrice') < 10000:
+                        auction.minimumBidIncrement = 100
+                    elif form.cleaned_data.get('reservePrice') > 10000 and form.cleaned_data.get('reservePrice') < 25000:
+                        auction.minimumBidIncrement = 250
+                    else:
+                        auction.minimumBidIncrement = 500
+                    auction.currentLowBid = form.cleaned_data.get('reservePrice')
+
+                auction.auctionStart = datetime.datetime.now()
+                # auction.auctionEnd = datetime.datetime.now() + datetime.timedelta(days=14)
+                auction.auctionEnd = datetime.datetime.now() + datetime.timedelta(minutes=5)
+                auction.closed = False
+                auction.active = False
+                auction.deleted = False
+                auction.createdBy = request.user
+                auction.modifiedBy = request.user
+                auction.save()
+                # Therapist email
+                send_mail(
+                    subject = "Auction Created",
+                    message = """A New Auction has been created
+                    Clinic Name: """ + str(auction.clinic.clinicName) + """
+                    Clinic Location: """ + str(auction.clinic.city) + """, """ + str(auction.clinic.city) + """
+                    Clinic email: """ + str(auction.clinic.user.email) + """
+                    Reserve Bid: """ + str(auction.reservePrice) + """
+                    Auction Start: """ + str(auction.auctionStart) + """
+                    Auction End: """ + str(auction.auctionEnd) + """
+                    Placement Start: """ + str(auction.placementStart) + """
+                    Placement End: """ + str(auction.placementEnd) + """
+                    """,
+                    html_message = """
+                    <header>
+                    <img src="https://travelingtherapist.ca/media/images/TTT_LOGO.png" alt="Traveling Therapist Logo">
+                    </header>
+
+                    <section style="font-size: 16px; margin-bottom: 4rem;">
+                    <h1>A New Auction has been created</h1>
+                    Clinic Name: """ + str(auction.clinic.clinicName) + """<br>
+                    Clinic Location: """ + str(auction.clinic.city) + """, """ + str(auction.clinic.city) + """<br>
+                    Clinic email: """ + str(auction.clinic.user.email) + """<br>
+                    Reserve Bid: """ + str(auction.reservePrice) + """<br>
+                    Auction Start: """ + str(auction.auctionStart) + """<br>
+                    Auction End: """ + str(auction.auctionEnd) + """<br>
+                    Placement Start: """ + str(auction.placementStart) + """<br>
+                    Placement End: """ + str(auction.placementEnd) + """<br>
+                    </section>
+
+                    <footer>
+                    <a href="travelingtherapist.ca">Click to visit The Traveling Therapist Website</a>
+                    <p style="font-size: 10px; color: #848585;">You are receiving this email because you have registered to use The Traveling Therapist website services. Please do not reply to this email. If you wish to contact us then email The Traveling Therapist at info@travelingtherapist.ca. To ensure you continue to receive these emails, add this email address to your email safelist. Your details will not be disclosed or used by third parties for marketing or promotional purposes.</p>
+                    </footer>
+                    """,
+                    from_email = settings.EMAIL_HOST_USER,
+                    recipient_list = ('loribine@gmail.com',)
+                )
+                print(str(auction.auctionEnd.year) + ", " + str(auction.auctionEnd.month) + ", " + str(auction.auctionEnd.day) + ", " + str(auction.auctionEnd.hour) + ", " + str(auction.auctionEnd.minute))
+                print(auction.auctionID)
+                scheduled_tasks.start(auction.auctionEnd.year, auction.auctionEnd.month, auction.auctionEnd.day, auction.auctionEnd.hour, auction.auctionEnd.minute, str(auction.auctionID))
+                # scheduled_tasks.start(auction.auctionEnd.year, auction.auctionEnd.month, auction.auctionEnd.day, 8, 27, str(auction.auctionID))
+                # scheduled_tasks.start(2022, 6, 6, 6, 29, str(auction.auctionID))
+                return HttpResponseRedirect('/profile?submitted=True')
+            else:
+                form = AuctionForm
+                if 'submitted' in request.GET:
+                    submitted_auction = True
+
+        form = AuctionForm
+        parameter.update({
+            'active_auctions_list': active_auctions_list,
+            'form': form,
+            'submitted_auction': submitted_auction,
+            'show_form': True
+        })
+        return parameter
+
 def set_bid_increment(reservePrice):
     min_increment = 0
     if reservePrice < 10000:
