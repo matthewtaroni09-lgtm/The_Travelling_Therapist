@@ -48,8 +48,10 @@ def about(request):
 def profile(request):
     if str(request.user.account.userType).split(' ')[-1] == "Clinic":
         # Not closed and not deleted counts any auctions that are active or have no status selected
-        active_auctions_list = Auction.objects.filter(closed=False, deleted=False, clinic=request.user.account)
-        past_auctions_list = Auction.objects.filter(active=False, deleted=False, clinic=request.user.account)
+        active_auctions_list = Auction.objects.filter(active=True, closed=False, deleted=False, clinic=request.user.account)
+        past_auctions_list = Auction.objects.filter(active=False, closed=True, deleted=False, clinic=request.user.account)
+        pending_auctions_list = Auction.objects.filter(active=False, closed=False, deleted=False, clinic=request.user.account)
+        num_pending = pending_auctions_list.count()
         submitted_profile = False
         submitted_auction = False
         parameter = {}
@@ -68,7 +70,6 @@ def profile(request):
                 submitted_profile = True
 
         max_auctions = AdminSettings.objects.all()[0]
-        print(active_auctions_list.count())
         if active_auctions_list.count() <= max_auctions.numAllowedAuctions:
             if request.method == "POST":
                 form = AuctionForm(request.POST, request.FILES)
@@ -144,6 +145,8 @@ def profile(request):
             parameter.update({
                 'active_auctions_list': active_auctions_list,
                 'past_auctions_list': past_auctions_list,
+                'pending_auctions_list': pending_auctions_list,
+                'num_pending': num_pending,
                 'form': form,
                 'u_form': u_form,
                 'p_form': p_form,
@@ -155,6 +158,8 @@ def profile(request):
             parameter.update({
                 'active_auctions_list': active_auctions_list,
                 'past_auctions_list': past_auctions_list,
+                'past_auctions_list': pending_auctions_list,
+                'num_pending': num_pending,
                 'u_form': u_form,
                 'p_form': p_form,
                 'show_form': False,

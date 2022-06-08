@@ -111,7 +111,11 @@ class Auction(models.Model):
         elif self.closed == True and self.active == False:
             return 'Winning bid: $' + str(self.winningPrice)
         else:
-            return 'Current Lowest Bid: $' + str(self.currentLowBid)
+            return 'Current Low Bid: $' + str(self.currentLowBid)
+
+    def get_num_bids(self):
+        num_bids = Bid.objects.filter(auction=self.auctionID).count()
+        return num_bids
 
 class Bid(models.Model):
     bidID = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

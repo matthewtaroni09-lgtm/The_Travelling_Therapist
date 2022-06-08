@@ -26,6 +26,38 @@
       <div class="tab-content" id="therapistProfileContent">
         <div class="tab-pane fade show active bg-light p-3" id="auction-history" role="tabpanel"
           aria-labelledby="auction-tab">
+
+          {% if num_pending > 0 %}
+          <h2>Auctions Pending Approval</h2>
+          <div class="row mb-5">
+            {% for auction in pending_auctions_list %}
+            <div class="col-sm-6 col-lg-4">
+              <a class="card mt-4 text-decoration-none text-dark" href="{% url 'auction' auction.auctionID %}">
+                <div class="position-relative">
+                  {% if auction.clinic.imageTwo %}
+                  <img src="/media/{{ auction.clinic.imageOne }}" class="card-img-top" alt="Image of Clinic">
+                  {% else %}
+                  <img src="/media/images/no-image.jpg" class="card-img-top" alt="Image of Clinic">
+                  {% endif %}
+                  <div
+                    class="d-inline-flex text-align-center text-white bg-dark p-2 rounded position-absolute bottom-0 start-0">
+                    <span class="material-icons small text-white">schedule</span>
+                    <p class="m-0 text-white">Pending Approval</p>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <h2 class="card-title">{{ auction.clinic.clinicName }}</h2>
+                  <p class="text-weight-thin mb-0">{{ auction.placementStart }} - {{ auction.placementEnd }}</p>
+                  <p class="text-weight-thin mb-0">{{ auction.clinic.userType }}</p>
+                  <p class="text-weight-thin">{{ auction.clinic.city }}, ON</p>
+                  <p class="card-text">{{ auction.clinic.about }}</p>
+                </div>
+              </a>
+            </div>
+            {% endfor %}
+          </div>
+          {% endif %}
+
           <h2>Live Auctions</h2>
           <div class="row mb-5">
             {% for auction in active_auctions_list %}
@@ -37,11 +69,13 @@
                   {% else %}
                   <img src="/media/images/no-image.jpg" class="card-img-top" alt="Image of Clinic">
                   {% endif %}
-                  <div class="d-inline-flex text-align-center text-white bg-dark p-2 rounded position-absolute bottom-0 start-0">
+                  <div
+                    class="d-inline-flex text-align-center text-white bg-dark p-2 rounded position-absolute bottom-0 start-0">
                     <span class="material-icons small text-white">schedule</span><time
                       id="auctionTimer-{{ auction.auctionID }}" class="m-0 d-flex me-4 text-white">--</time>
                     <p class="m-0 text-white">{{ auction.get_bid }}</p>
-                    <p class="m-0 mx-4 d-none d-lg-block text-white"># Bids:<span class="ms-2 text-white">{{ num_bids }}</span></p>
+                    <p class="m-0 mx-4 d-none d-lg-block text-white">
+                      # Bids:<span class="ms-2 text-white">{{ auction.get_num_bids }}</span></p>
                   </div>
                 </div>
                 <div class="card-body">
@@ -65,7 +99,7 @@
                   <h2 class="card-title">{{ auction.clinic.clinicName }}</h2>
                   <div class="d-inline-flex text-white bg-dark p-2 rounded mb-2">
                     <p class="m-0">Winning Bid:<span class="ms-2">${{ auction.winningPrice }}</span></p>
-                    <p class="m-0 ms-4"># Bids:<span class="ms-2">8</span></p>
+                    <p class="m-0 ms-4"># Bids:<span class="ms-2">{{ auction.get_num_bids }}</span></p>
                   </div>
                   <p class="text-weight-thin mb-0">{{ auction.placementStart }} - {{ auction.placementEnd }}</p>
                   <p class="text-weight-thin mb-0">Physiotherapist</p>
