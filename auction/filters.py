@@ -24,7 +24,8 @@ class AuctionFilter(django_filters.FilterSet):
 
     city = django_filters.ChoiceFilter(label='City', field_name='clinic__city', choices=location_list)
     active = django_filters.ChoiceFilter(label='Auction Status', field_name='active', choices=AUCTION_STATUSES)
-    clinic = django_filters.CharFilter(label='Clinic', field_name='clinic__clinicName', lookup_expr='icontains')
+    clinic = django_filters.CharFilter(label='Clinic', field_name='clinic__clinicName', lookup_expr='icontains', widget=forms.TextInput(attrs={
+            'placeholder': 'Search auctions'}))
    
     class Meta:
         model = Auction
