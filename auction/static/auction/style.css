@@ -178,6 +178,10 @@ input[type="time"] {
     border-radius: 0.25rem !important;
 }
 
+.input-group-text {
+    width: 60px !important;
+}
+
 select#id_city, select#id_active {
     padding: 7px;
     margin-left: 0.5rem;
