@@ -14,7 +14,8 @@ scheduler.start()
 
 def start(year, month, day, hour, minute, id):
     # scheduler.add_job(update_something, 'interval', seconds=3)
-    scheduler.add_job(update_something, 'cron', year=year, month=month, day=day, hour=hour, minute=minute, id=id, args=(id,))
+    id = scheduler.add_job(update_something, 'cron', year=year, month=month, day=day, hour=hour, minute=minute, id=id, args=(id,))
+    print(id)
     scheduler.print_jobs()
 
 def reschedule_job(year, month, day, hour, minute, id):
