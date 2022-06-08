@@ -147,19 +147,29 @@
     transform: rotate(-180deg);
 }
 
-.material-icons {
+.material-icons.small {
+    font-size: 2rem !important;
+    margin-right: 16px;
+}
+.material-icons.medium {
     font-size: 3rem !important;
     margin-right: 16px;
     color: #0AEAA9;
 }
 
 /**************************** 6. MISC ****************************/
-/* .container {
-  max-width: 992px !important;
-} */
+.form-control:focus, input:focus {
+    color: #212529;
+    background-color: #fff;
+    border-color: var(--secondary-colour);
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem var(--secondary-colour);
+}
 
-.clock {
-    width: 20px;
+input:focus {
+    border-color: var(--secondary-colour);
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem var(--secondary-colour);
 }
 
 input[type="time"] {
@@ -168,8 +178,12 @@ input[type="time"] {
     border-radius: 0.25rem !important;
 }
 
-select#id_city {
+select#id_city, select#id_active {
     padding: 7px;
+    margin-left: 0.5rem;
+}
+input#id_clinic {
+    padding: 5px;
     margin-left: 0.5rem;
 }
 

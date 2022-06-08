@@ -48,11 +48,11 @@
 
   <div class="d-flex">
     <section class="d-inline-flex align-items-center text-white bg-dark py-2 px-3 me-3 rounded">
-      <img class="clock me-2" src="{% static 'auction/clock.svg' %}" alt="clock"><time
-        id="auctionTimer-{{ auction.auctionID }}" class="m-0 d-flex me-4">--</time>
-      <p class="m-0">{{ auction.get_bid }}</p>
-      <p class="m-0 mx-4 d-none d-lg-block"># Bids:<span class="ms-2">{{ num_bids }}</span></p>
-      <p class="m-0 me-4 d-none d-lg-block"># of Therapists Bidding:<span class="ms-2">{{ num_biders }}</span></p>
+      <span class="material-icons small text-white">schedule</span><time
+        id="auctionTimer-{{ auction.auctionID }}" class="m-0 d-flex me-4 text-white">--</time>
+      <p class="m-0 text-white">{{ auction.get_bid }}</p>
+      <p class="m-0 mx-4 d-none d-lg-block text-white"># Bids:<span class="ms-2 text-white">{{ num_bids }}</span></p>
+      <p class="m-0 me-4 d-none d-lg-block text-white"># of Therapists Bidding:<span class="ms-2 text-white">{{ num_biders }}</span></p>
     </section>
 
     {% if user.is_authenticated and user.account.get_split_user_type != 'Clinic' and auction.active %}
