@@ -53,8 +53,8 @@
           {% else %}
           <img src="/media/images/no-image.jpg" class="card-img-top" alt="Image of Clinic">
           {% endif %}
-          <div class="d-inline-flex bg-dark p-2 rounded position-absolute bottom-0 start-0">
-            <img class="clock me-2 text-white" src="{% static 'auction/clock.svg' %}" alt="clock">
+          <div class="d-inline-flex align-items-center bg-dark p-2 rounded position-absolute bottom-0 start-0">
+            <span class="material-icons small text-white">schedule</span>
             <time id="auctionTimer-{{ auction.auctionID }}" class="m-0 d-flex me-4 text-white">--</time>
             <p class="m-0 text-white">{{ auction.get_bid }}</p>
           </div>

@@ -158,12 +158,18 @@
 }
 
 /**************************** 6. MISC ****************************/
-/* .container {
-  max-width: 992px !important;
-} */
+.form-control:focus, input:focus {
+    color: #212529;
+    background-color: #fff;
+    border-color: var(--secondary-colour);
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem var(--secondary-colour);
+}
 
-.clock {
-    width: 20px;
+input:focus {
+    border-color: var(--secondary-colour);
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem var(--secondary-colour);
 }
 
 input[type="time"] {
