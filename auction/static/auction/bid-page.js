@@ -81,9 +81,9 @@ const getAuction = () => {
 
             // Area of Practice Chart
             const areasOfPracticeLabels = [
-                'MSK',
-                'Neuro',
-                'CardioResp',
+                'Musculoskeletal',
+                'Neurological',
+                'Cardiorespiratory',
             ];
 
             const areasOfPracticeData = {
