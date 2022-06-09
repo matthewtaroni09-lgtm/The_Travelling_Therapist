@@ -46,15 +46,16 @@ def about(request):
 
 
 def profile(request):
+    parameter = {}
+    # Not closed and not deleted counts any auctions that are active or have no status selected
+    active_auctions_list = Auction.objects.filter(active=True, closed=False, deleted=False, clinic=request.user.account)
+    past_auctions_list = Auction.objects.filter(active=False, closed=True, deleted=False, clinic=request.user.account)
     if str(request.user.account.userType).split(' ')[-1] == "Clinic":
-        # Not closed and not deleted counts any auctions that are active or have no status selected
-        active_auctions_list = Auction.objects.filter(active=True, closed=False, deleted=False, clinic=request.user.account)
-        past_auctions_list = Auction.objects.filter(active=False, closed=True, deleted=False, clinic=request.user.account)
+        print(request.method)
         pending_auctions_list = Auction.objects.filter(active=False, closed=False, deleted=False, clinic=request.user.account)
         num_pending = pending_auctions_list.count()
         submitted_profile = False
         submitted_auction = False
-        parameter = {}
         if request.method == 'POST':   # This Will Be Run When I Submit My Form. And Possibly Pass New Data.
             u_form = UserFormClinic(request.POST, instance=request.user)  # request.POST To Pass The POST Data
             p_form = ProfileUpdateClinic(request.POST, request.FILES, instance=request.user.account)  # File Data (images) Users Try To Upload.
@@ -131,7 +132,6 @@ def profile(request):
                         recipient_list = ('loribine@gmail.com',)
                     )
                     print(str(auction.auctionEnd.year) + ", " + str(auction.auctionEnd.month) + ", " + str(auction.auctionEnd.day) + ", " + str(auction.auctionEnd.hour) + ", " + str(auction.auctionEnd.minute))
-                    print(auction.auctionID)
                     scheduled_tasks.start(auction.auctionEnd.year, auction.auctionEnd.month, auction.auctionEnd.day, auction.auctionEnd.hour, auction.auctionEnd.minute, str(auction.auctionID))
                     # scheduled_tasks.start(auction.auctionEnd.year, auction.auctionEnd.month, auction.auctionEnd.day, 8, 27, str(auction.auctionID))
                     # scheduled_tasks.start(2022, 6, 6, 6, 29, str(auction.auctionID))
@@ -154,20 +154,26 @@ def profile(request):
                 'submitted_auction': submitted_auction,
                 'show_form': True
             })
+    else:
+        print(request.method)
+        if request.method == 'POST':   # This Will Be Run When I Submit My Form. And Possibly Pass New Data.
+            u_form = UserFormTherapist(request.POST, instance=request.user)  # request.POST To Pass The POST Data
+            if u_form.is_valid():
+                u_form.save()
+                messages.success(request, f'Your profile has been updated!')
+
         else:
-            parameter.update({
-                'active_auctions_list': active_auctions_list,
-                'past_auctions_list': past_auctions_list,
-                'past_auctions_list': pending_auctions_list,
-                'num_pending': num_pending,
-                'u_form': u_form,
-                'p_form': p_form,
-                'show_form': False,
-                'max_forms': max_auctions.numAllowedAuctions
-            })
+            u_form = UserFormTherapist(instance=request.user)
+            if 'submitted' in request.GET:
+                submitted_profile = True
 
+        parameter.update({
+            'active_auctions_list': active_auctions_list,
+            'past_auctions_list': past_auctions_list,
+            'u_form': u_form
+        })
 
-        return render(request, 'auction/profile.html', parameter)
+    return render(request, 'auction/profile.html', parameter)
 
 def view_auction(request, auction_id):
     auction = Auction.objects.get(pk=auction_id)
@@ -189,16 +195,17 @@ def view_auction(request, auction_id):
         if num_bids == 0:
             auction.minimumBidIncrement = set_bid_increment(bid.amount)
             auction_change = True
+        # if True:
+        #     print(auction.cronID)
+        #     scheduled_tasks.reschedule_job(2022, 6, 8, 8, 19, auction.cronID)
         if auction_change:
             auction.save()
         bid.save()
-        # return HttpResponseRedirect('bid-page-2.html')
+        return HttpResponseRedirect('/auction/' + str(auction.auctionID))
     else:
         form = BidForm
         if 'submitted' in request.GET:
             submitted = True
-
-    # form = BidForm
 
     return render(request, 'auction/bid-page-2.html',{
         'auction': auction,

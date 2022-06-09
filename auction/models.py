@@ -23,19 +23,19 @@ PROVINCES = (
 )
 
 class Account(models.Model):
-    def path_and_rename(path):
-        def wrapper(instance, filename):
-            ext = filename.split('.')[-1]
-            filename = '{}.{}'.format(uuid.uuid4().hex, ext)
-            # return the whole path to the file
-            return os.path.join(path, filename)
-        return wrapper
+    # def path_and_rename(path):
+    #     def wrapper(instance, filename):
+    #         ext = filename.split('.')[-1]
+    #         filename = '{}.{}'.format(uuid.uuid4().hex, ext)
+    #         # return the whole path to the file
+    #         return os.path.join(path, filename)
+    #     return wrapper
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     clinicName = models.CharField(verbose_name='Clinic Name', max_length=200, blank=True, null=True, help_text='Enter the clinic name.')
     userType = models.ForeignKey('UserType', verbose_name='User Type', blank=True, null=True, related_name='usertypes', on_delete=models.CASCADE)  
     licenseNumber = models.CharField(verbose_name='License Number', max_length=120, null=True, blank=True, help_text='Enter you license number.')
     imageOne = models.ImageField(default='default.jpg', verbose_name='Clinic Image One', upload_to='images', blank=True, null=True, help_text='Upload an image (optional).')
-    imageTwo = models.ImageField(verbose_name='Clinic Image Two', upload_to=path_and_rename('images/'), blank=True, null=True, help_text='Upload an image (optional).')
+    imageTwo = models.ImageField(verbose_name='Clinic Image Two', upload_to='images/', blank=True, null=True, help_text='Upload an image (optional).')
     imageThree = models.ImageField(verbose_name='Clinic Image Three', upload_to='images/', blank=True, null=True, help_text='Upload an image (optional).')
     imageFour = models.ImageField(verbose_name='Clinic Image Four', upload_to='images/', blank=True, null=True, help_text='Upload an image (optional).')
     city = models.CharField(verbose_name='City', max_length=120, blank=True, null=True, help_text='Enter the city your clinic is in.')
@@ -97,6 +97,7 @@ class Auction(models.Model):
     active = models.BooleanField(verbose_name='Active Auction')
     closed = models.BooleanField(verbose_name='Closed Auction')
     deleted = models.BooleanField(verbose_name='Deleted Auction')
+    cronID = models.TextField(verbose_name='Cron Job Timer ID',  editable=False)
     created = models.DateTimeField(verbose_name='Created Time', auto_now_add=True)
     createdBy = models.ForeignKey(User, related_name='auction_created_by', blank=True, null=True, on_delete=models.CASCADE)
     modified = models.DateTimeField(verbose_name='Modified Time', null=True, blank=True)

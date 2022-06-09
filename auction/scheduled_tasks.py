@@ -13,16 +13,19 @@ scheduler.start()
 # scheduler.shutdown()
 
 def start(year, month, day, hour, minute, id):
-    # scheduler.add_job(update_something, 'interval', seconds=3)
-    id = scheduler.add_job(update_something, 'cron', year=year, month=month, day=day, hour=hour, minute=minute, id=id, args=(id,))
-    print(id)
+    schedule_id = scheduler.add_job(auction_closed, 'cron', year=year, month=month, day=day, hour=hour, minute=minute, id=id, args=(id,))
+    print(schedule_id.id)
+    auction = Auction.objects.get(auctionID=id)
+    print(schedule_id)
+    auction.cronID = schedule_id.id
+    auction.save()
     scheduler.print_jobs()
 
 def reschedule_job(year, month, day, hour, minute, id):
     scheduler.reschedule_job(id, trigger='cron', year=year, month=month, day=day, hour=hour, minute=minute)
     scheduler.print_jobs()
 
-def update_something(id):
+def auction_closed(id):
     now = datetime.now()
     dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
     print("date and time =", dt_string)
