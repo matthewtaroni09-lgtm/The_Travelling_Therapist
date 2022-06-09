@@ -23,16 +23,6 @@ PROVINCES = (
 )
 
 class Account(models.Model):
-<<<<<<< HEAD
-    # def path_and_rename(path):
-    #     def wrapper(instance, filename):
-    #         ext = filename.split('.')[-1]
-    #         filename = '{}.{}'.format(uuid.uuid4().hex, ext)
-    #         # return the whole path to the file
-    #         return os.path.join(path, filename)
-    #     return wrapper
-=======
->>>>>>> be3deec58c97e81deba8c66c343a6f7354249447
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     clinicName = models.CharField(verbose_name='Clinic Name', max_length=200, blank=True, null=True, help_text='Enter the clinic name.')
     userType = models.ForeignKey('UserType', verbose_name='User Type', blank=True, null=True, related_name='usertypes', on_delete=models.CASCADE)  
