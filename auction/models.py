@@ -23,6 +23,7 @@ PROVINCES = (
 )
 
 class Account(models.Model):
+<<<<<<< HEAD
     # def path_and_rename(path):
     #     def wrapper(instance, filename):
     #         ext = filename.split('.')[-1]
@@ -30,6 +31,8 @@ class Account(models.Model):
     #         # return the whole path to the file
     #         return os.path.join(path, filename)
     #     return wrapper
+=======
+>>>>>>> be3deec58c97e81deba8c66c343a6f7354249447
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     clinicName = models.CharField(verbose_name='Clinic Name', max_length=200, blank=True, null=True, help_text='Enter the clinic name.')
     userType = models.ForeignKey('UserType', verbose_name='User Type', blank=True, null=True, related_name='usertypes', on_delete=models.CASCADE)  
@@ -66,20 +69,20 @@ class Auction(models.Model):
     auctionEnd = models.DateTimeField(verbose_name='Auction End', help_text='Enter the end date of the auction.')
     placementStart = models.DateField(verbose_name='Therapist Start Date', help_text='Enter the start date of the placement.')
     placementEnd = models.DateField(verbose_name='Therapist End Date', help_text='Enter the end date of the placement.')
-    mondayStart = models.TimeField(verbose_name='Monday Start Time', null=True, blank=True, help_text='Enter the start of the workday on Mondays.', default='09:00')
-    mondayEnd = models.TimeField(verbose_name='Monday End Time', null=True, blank=True, help_text='Enter the end of the workday on Mondays.', default='17:00')
-    tuesdayStart = models.TimeField(verbose_name='Tuesday Start Time', null=True, blank=True, help_text='Enter the start of the workday on Tuesdays.', default='09:00')
-    tuesdayEnd = models.TimeField(verbose_name='Tuesday End Time', null=True, blank=True, help_text='Enter the end of the workday on Tuesdays.', default='17:00')
-    wednesdayStart = models.TimeField(verbose_name='Wednesday Start Time', null=True, blank=True, help_text='Enter the start of the workday on Wednesdays.', default='09:00')
-    wednesdayEnd = models.TimeField(verbose_name='Wednesday End Time', null=True, blank=True, help_text='Enter the end of the workday on Wednesdays.', default='17:00')
-    thursdayStart = models.TimeField(verbose_name='Thursday Start Time', null=True, blank=True, help_text='Enter the start of the workday on Thursdays.', default='09:00')
-    thursdayEnd = models.TimeField(verbose_name='Thursday End Time', null=True, blank=True, help_text='Enter the end of the workday on Thursdays.', default='17:00')
-    fridayStart = models.TimeField(verbose_name='Friday Start Time', null=True, blank=True, help_text='Enter the start of the workday on Fridays.', default='09:00')
-    fridayEnd = models.TimeField(verbose_name='Friday End Time', null=True, blank=True, help_text='Enter the end of the workday on Fridays.', default='17:00')
-    saturdayStart = models.TimeField(verbose_name='Saturday Start Time', null=True, blank=True, help_text='Enter the start of the workday on Saturdays.')
-    saturdayEnd = models.TimeField(verbose_name='Saturday End Time', null=True, blank=True, help_text='Enter the end of the workday on Saturdays.')
-    sundayStart = models.TimeField(verbose_name='Sunday Start Time', null=True, blank=True, help_text='Enter the start of the workday on Sundays.')
-    sundayEnd = models.TimeField(verbose_name='Sunday End Time', null=True, blank=True, help_text='Enter the end of the workday on Sundays.')
+    mondayStart = models.TimeField(verbose_name='Start Time', null=True, blank=True, default='09:00')
+    mondayEnd = models.TimeField(verbose_name='End Time', null=True, blank=True, default='17:00')
+    tuesdayStart = models.TimeField(verbose_name='Start Time', null=True, blank=True, default='09:00')
+    tuesdayEnd = models.TimeField(verbose_name='End Time', null=True, blank=True, default='17:00')
+    wednesdayStart = models.TimeField(verbose_name='Start Time', null=True, blank=True, default='09:00')
+    wednesdayEnd = models.TimeField(verbose_name='End Time', null=True, blank=True, default='17:00')
+    thursdayStart = models.TimeField(verbose_name='Start Time', null=True, blank=True, default='09:00')
+    thursdayEnd = models.TimeField(verbose_name='End Time', null=True, blank=True, default='17:00')
+    fridayStart = models.TimeField(verbose_name='Start Time', null=True, blank=True, default='09:00')
+    fridayEnd = models.TimeField(verbose_name='End Time', null=True, blank=True, default='17:00')
+    saturdayStart = models.TimeField(verbose_name='Start Time', null=True, blank=True)
+    saturdayEnd = models.TimeField(verbose_name='End Time', null=True, blank=True)
+    sundayStart = models.TimeField(verbose_name='Start Time', null=True, blank=True)
+    sundayEnd = models.TimeField(verbose_name='End Time', null=True, blank=True)
     payFrequency = models.ForeignKey('PayFrequency', verbose_name='Pay Frequency', related_name='pay_frequency', on_delete=models.CASCADE) 
     reservePrice = models.IntegerField(verbose_name='Reserve Price', null=True, blank=True, help_text='Reserve bid is the maximum price the clinic is willing to offer.')
     startingBid = models.IntegerField(verbose_name='Starting Bid', null=True, blank=True, help_text='The intial bid amount.')
@@ -112,7 +115,7 @@ class Auction(models.Model):
         elif self.closed == True and self.active == False:
             return 'Winning bid: $' + str(self.winningPrice)
         else:
-            return 'Current Low Bid: $' + str(self.currentLowBid)
+            return 'Current Bid: $' + str(self.currentLowBid)
 
     def get_num_bids(self):
         num_bids = Bid.objects.filter(auction=self.auctionID).count()
