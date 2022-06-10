@@ -158,6 +158,10 @@
 }
 
 /**************************** 6. MISC ****************************/
+.nav-link {
+    color: var(--primary-colour);
+}
+
 .form-control:focus, input:focus {
     color: #212529;
     background-color: #fff;

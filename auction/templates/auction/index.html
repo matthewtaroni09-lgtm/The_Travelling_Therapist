@@ -3,78 +3,76 @@
 {% load static %}
 {% block content %}
 <!-- Content Start -->
-<main class="container">
-  <div class="mt-5 row">
-    <div class="col-8">
-      {% if user.is_authenticated %}
-      {% if user.account.get_split_user_type == 'Clinic' %}
-      <h1 class="text-large text-weight-normal">Welcome {{ user.account.clinicName }}</h>
+<div class="row">
+  <div class="col">
+    {% if user.is_authenticated %}
+    {% if user.account.get_split_user_type == 'Clinic' %}
+    <h1 class="text-small text-weight-light text-md-end">Welcome, {{ user.account.clinicName }}</h>
+      <h2 class="text-large text-weight-normal">Auctions</h2>
+      {% else %}
+      <h1 class="text-large text-weight-normal">Welcome {{ user.first_name }} {{ user.last_name }}
+        </h>
         <h2 class="text-large text-weight-normal">Auctions</h2>
+        {% endif %}
         {% else %}
-        <h1 class="text-large text-weight-normal">Welcome {{ user.first_name }} {{ user.last_name }}
-          </h>
-          <h2 class="text-large text-weight-normal">Auctions</h2>
-          {% endif %}
-          {% else %}
-          <h1 class="text-large text-weight-normal">Auctions</h1>
-          {% endif %}
-    </div>
-    {% if not user.is_authenticated %}
-    <div class="col-4 text-end">
-      <a href="{% url 'register' %}" class="btn btn-primary">Sign Up</a>
-    </div>
-    {% endif %}
+        <h1 class="text-large text-weight-normal">Auctions</h1>
+        {% endif %}
   </div>
-  <!-- Search Box Start -->
-  <form method="GET" class="d-md-flex align-items-center mt-3">
-    <div class="d-flex align-items-center">
-      <p class="mt-3">City:</p>{{filter.form.city}}
-    </div>
-    <div class="d-flex align-items-center">
-      <p class="mt-3 ms-md-4">Auction Status:</p>{{filter.form.active}}
-    </div>
-    <div class="d-flex align-items-center">
-      <p class="mt-3 ms-md-4">Clinic:</p>{{filter.form.clinic}}
-    </div>
-    <button type="submit" class="btn btn-primary mt-3 mt-md-0 ms-md-4">Search</button>
-  </form>
-  <!-- Search Box End -->
-
-  <!-- Start of auction loops  -->
-
-  <div class="row mb-5">
-    {% for auction in filter.qs %}
-    <div class="col-sm-6 col-lg-4">
-      <a class="card mt-4 text-decoration-none text-dark" href="{% url 'auction' auction.auctionID %}">
-        <div class="position-relative">
-          {% if auction.clinic.imageOne %}
-          <img src="/media/{{ auction.clinic.imageOne }}" class="card-img-top" style="height: 270px; object-fit: cover;"
-            alt="Image of Clinic">
-          {% else %}
-          <img src="/media/images/no-image.jpg" class="card-img-top" alt="Image of Clinic">
-          {% endif %}
-          <div class="d-inline-flex align-items-center bg-dark p-2 rounded position-absolute bottom-0 start-0">
-            <span class="material-icons small text-white">schedule</span>
-            <time id="auctionTimer-{{ auction.auctionID }}" class="m-0 d-flex me-3 text-white">--</time>
-            <p class="m-0 text-white">{{ auction.get_bid }}</p>
-          </div>
-        </div>
-        <div class="card-body">
-          <h2 class="card-title text-weight-bold text-medium">{{ auction.clinic.clinicName }}</h2>
-          <p class="text-weight-light mb-0">{{ auction.placementStart }} - {{ auction.placementEnd }}</p>
-          <p class="text-weight-light mb-0">{{ auction.clinic.userType }}</p>
-          <p class="text-weight-light">{{ auction.clinic.city }}, ON</p>
-          <p class="card-text">{{ auction.clinic.about }}</p>
-        </div>
-      </a>
-    </div>
-    {% endfor %}
-
-
+  {% if not user.is_authenticated %}
+  <div class="col-4 text-end">
+    <a href="{% url 'register' %}" class="btn btn-primary">Sign Up</a>
   </div>
-  <!-- End of auction loops -->
+  {% endif %}
+</div>
+<!-- Search Box Start -->
+<form method="GET" class="d-md-flex align-items-center mt-3">
+  <div class="d-flex align-items-center">
+    <p class="mt-3">City:</p>{{filter.form.city}}
+  </div>
+  <div class="d-flex align-items-center">
+    <p class="mt-3 ms-md-4">Auction Status:</p>{{filter.form.active}}
+  </div>
+  <div class="d-flex align-items-center">
+    <p class="mt-3 ms-md-4">Clinic:</p>{{filter.form.clinic}}
+  </div>
+  <button type="submit" class="btn btn-primary mt-3 mt-md-0 ms-md-4">Search</button>
+</form>
+<!-- Search Box End -->
 
-</main>
+<!-- Start of auction loops  -->
+
+<div class="row mb-3">
+  {% for auction in filter.qs %}
+  <div class="col-sm-6 col-lg-4">
+    <a class="card mt-4 text-decoration-none text-dark" href="{% url 'auction' auction.auctionID %}">
+      <div class="position-relative">
+        {% if auction.clinic.imageOne %}
+        <img src="/media/{{ auction.clinic.imageOne }}" class="card-img-top" style="height: 270px; object-fit: cover;"
+          alt="Image of Clinic">
+        {% else %}
+        <img src="/media/images/no-image.jpg" class="card-img-top" alt="Image of Clinic">
+        {% endif %}
+        <div class="d-inline-flex align-items-center bg-dark p-2 rounded position-absolute bottom-0 start-0">
+          <span class="material-icons small text-white">schedule</span>
+          <time id="auctionTimer-{{ auction.auctionID }}" class="m-0 d-flex me-3 text-white">--</time>
+          <p class="m-0 text-white">{{ auction.get_bid }}</p>
+        </div>
+      </div>
+      <div class="card-body">
+        <h2 class="card-title text-weight-bold text-medium">{{ auction.clinic.clinicName }}</h2>
+        <p class="text-weight-light mb-0">{{ auction.placementStart }} - {{ auction.placementEnd }}</p>
+        <p class="text-weight-light mb-0">{{ auction.clinic.userType }}</p>
+        <p class="text-weight-light">{{ auction.clinic.city }}, ON</p>
+        <p class="card-text">{{ auction.clinic.about }}</p>
+      </div>
+    </a>
+  </div>
+  {% endfor %}
+
+
+</div>
+<!-- End of auction loops -->
+
 <!-- Content End -->
 <script src="{% static 'auction/index.js' %}"></script>
 {% endblock %}

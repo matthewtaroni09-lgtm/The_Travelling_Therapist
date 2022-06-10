@@ -6,7 +6,6 @@
 <!-- Clinic -->
 <!-- Content Start -->
 {% if user.account.get_split_user_type == 'Clinic' %}
-<div class="container my-3">
   <div class="row">
     <div>
       <ul class="nav nav-tabs" id="therapistProfile" role="tablist">
@@ -24,11 +23,11 @@
         </li>
       </ul>
       <div class="tab-content" id="therapistProfileContent">
-        <div class="tab-pane fade show active bg-light p-3" id="auction-history" role="tabpanel"
+        <div class="tab-pane fade show active p-3" id="auction-history" role="tabpanel"
           aria-labelledby="auction-tab">
 
           {% if num_pending > 0 %}
-          <h2>Auctions Pending Approval</h2>
+          <h2 class="mb-4">Auctions Pending Approval</h2>
           <div class="row mb-5">
             {% for auction in pending_auctions_list %}
             <div class="col-sm-6 col-lg-4">
@@ -58,7 +57,7 @@
           </div>
           {% endif %}
 
-          <h2>Live Auctions</h2>
+          <h2 class="mb-4">Live Auctions</h2>
           <div class="row mb-5">
             {% for auction in active_auctions_list %}
             <div class="col-sm-6 col-lg-4">
@@ -91,7 +90,7 @@
             {% endfor %}
           </div>
 
-          <h2>Past Auctions</h2>
+          <h2 class="mb-4">Past Auctions</h2>
           <div class="row mb-5">
             {% for auction in past_auctions_list %}
             <div class="col-sm-6 col-lg-4">
@@ -115,26 +114,28 @@
         </div>
 
         <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-          <div class="tab-pane fade show active bg-light p-3" id="profile" role="tabpanel" aria-labelledby="home-tab">
-            <h2 class="mb-5">Update Profile</h2>
+          <div class="tab-pane fade show active p-3" id="profile" role="tabpanel" aria-labelledby="home-tab">
+            <h2 class="mb-4">Update Profile</h2>
             <div class="row">
-              <form method="post" enctype="multipart/form-data">
+              <form method="post" enctype="multipart/form-data" class="d-flex flex-column gap-3">
                 {% csrf_token %}
                 {{ u_form | crispy }}
                 {{ p_form | crispy }}
-                <button type="submit" class="btn btn-primary">Update</button>
+                <div>
+                  <button type="submit" class="btn btn-primary">Update</button>
+                </div>
               </form>
             </div>
           </div>
         </div>
 
         <div class="tab-pane fade show" id="create-auction" role="tabpanel" aria-labelledby="create-auction-tab">
-          <div class="tab-pane fade show active bg-light p-3" id="create-auction" role="tabpanel"
+          <div class="tab-pane fade show active p-3" id="create-auction" role="tabpanel"
             aria-labelledby="create-auction-tab">
             <p>{{showForm}}</p>
             {% if show_form %}
             <form method="post" class="p-md-5">
-              <h2 class="mb-5">Create New Auction Post</h2>
+              <h2 class="mb-4">Create New Auction Post</h2>
               {% csrf_token %}
               <div class="row">
                 <div class="mb-3 col-md-6">
@@ -222,14 +223,11 @@
       </div>
     </div>
   </div>
-</div>
-</div>
-</div>
 {% else %}
 <!-- Content End -->
 <!-- Therapist -->
 <!-- Content Start -->
-<div class="container mt-3 mb-5">
+
   <div class="row">
     <div>
       <ul class="nav nav-tabs" id="therapistProfile" role="tablist">
@@ -243,7 +241,7 @@
         </li>
       </ul>
       <div class="tab-content" id="therapistProfileContent">
-        <div class="tab-pane fade show active bg-light p-3" id="auction-history" role="tabpanel"
+        <div class="tab-pane fade show active p-3" id="auction-history" role="tabpanel"
           aria-labelledby="auction-tab">
           <h2>Live Auctions</h2>
           <div class="row mb-5">
@@ -296,21 +294,20 @@
         </div>
 
         <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-          <div class="tab-pane fade show active bg-light p-3" id="profile" role="tabpanel" aria-labelledby="home-tab">
-            <form method="post" class="p-md-5">
-              <h2 class="mb-5">Update Profile</h2>
+          <div class="tab-pane fade show active p-3" id="profile" role="tabpanel" aria-labelledby="home-tab">
+            <form method="post" class="d-flex flex-column gap-3">
+              <h2 class="mb-4">Update Profile</h2>
               {% csrf_token %}
               {{ u_form | crispy }}
-              <button type="submit" class="btn btn-primary">Update</button>
+              <div>
+                <button type="submit" class="btn btn-primary">Update</button>
+              </div>
           </div>
           </form>
         </div>
       </div>
     </div>
   </div>
-</div>
-</div>
-</div>
 <!-- Content End -->
 {% endif %}
 <script src="{% static 'auction/profile.js' %}"></script>

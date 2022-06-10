@@ -1,14 +1,17 @@
 {% extends 'auction/base.html' %}
 {% load crispy_forms_tags %}
 {% block content %}
-<div class="container my-3">
+<!-- <div class="container my-3"> -->
   <div class="tab-pane fade show" id="create-auction" role="tabpanel" aria-labelledby="create-auction-tab">
-    <div class="tab-pane fade show active bg-light p-3" id="create-auction" role="tabpanel"
+    <div class="tab-pane" id="create-auction" role="tabpanel"
       aria-labelledby="create-auction-tab">
+    <!-- <div class="tab-pane fade show active bg-light p-3" id="create-auction" role="tabpanel"
+      aria-labelledby="create-auction-tab"> -->
       <p>{{showForm}}</p>
       {% if show_form %}
-      <form method="post" class="p-md-5">
-        <h2 class="mb-5 text-weight-normal">Create New Auction Post</h2>
+      <form method="post" class="p-2">
+      <!-- <form method="post" class="p-md-5"> -->
+        <h1 class="text-large text-weight-normal mb-5">Create New Auction Post</h1>
         {% csrf_token %}
         <div class="row">
           <div class="mb-3 col-md-6">
@@ -29,7 +32,7 @@
             </h3>
 
             <div class="input-group mb-3 align-items-center">
-              <span class="input-group-text me-3 mt-3 mt-md-4 ">Mon:</span>
+              <span class="input-group-text me-3 mt-3 mt-md-4">Mon:</span>
               <div class="d-flex gap-3 mt-2 mt-sm-0">
                 {{ form.mondayStart|as_crispy_field }}
                 {{ form.mondayEnd|as_crispy_field }}
@@ -92,5 +95,5 @@
       information on our Pro plan.</p>
     {% endif %}
   </div>
-</div>
+<!-- </div> -->
 {% endblock %}
