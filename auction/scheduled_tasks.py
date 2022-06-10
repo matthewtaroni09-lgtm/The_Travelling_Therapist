@@ -6,24 +6,32 @@ from django.conf import settings
 from django.http import JsonResponse, HttpResponse
 from .models import Account, Auction, Bid, User, Account, AdminSettings
 from django.db.models import Min
+from .emails import therapist_auction_end_win
 
 # Global variable
 scheduler = BackgroundScheduler()
 scheduler.start()
 # scheduler.shutdown()
 
-def start(year, month, day, hour, minute, id):
-    schedule_id = scheduler.add_job(auction_closed, 'cron', year=year, month=month, day=day, hour=hour, minute=minute, id=id, args=(id,))
-    print(schedule_id.id)
+def start(year, month, day, hour, minute, second, id):
+    schedule_id = scheduler.add_job(auction_closed, 'cron', year=year, month=month, day=day, hour=hour, minute=minute, second=second, id=id, args=(id,))
     auction = Auction.objects.get(auctionID=id)
-    print(schedule_id)
     auction.cronID = schedule_id.id
     auction.save()
     scheduler.print_jobs()
 
-def reschedule_job(year, month, day, hour, minute, id):
-    scheduler.reschedule_job(id, trigger='cron', year=year, month=month, day=day, hour=hour, minute=minute)
+def restart(year, month, day, hour, minute, second, id, auction_id):
+    scheduler.add_job(auction_closed, 'cron', year=year, month=month, day=day, hour=hour, minute=minute, second=second, id=id, args=(auction_id,))
+    auction = Auction.objects.get(auctionID=auction_id)
+    auction.cronID = id
+    auction.save()
     scheduler.print_jobs()
+
+def print_job():
+    scheduler.print_jobs()
+
+def remove_cron_job(id):
+    scheduler.remove_job(id)
 
 def auction_closed(id):
     now = datetime.now()
@@ -108,7 +116,8 @@ def auction_closed(id):
         if admin.sendEmails:
             send_mail(
                     subject = "Auction Ended",
-                    message = "<h1>Your auction ended at:</h1>Your auction ended with no winner.",
+                    message = therapist_auction_end_win('John', 'Doe'),
+                    html_message = therapist_auction_end_win('John', 'Doe'),
                     from_email = settings.EMAIL_HOST_USER,
                     recipient_list = [auction.clinic.user.email]
                 )

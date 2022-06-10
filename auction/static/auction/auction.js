@@ -153,13 +153,16 @@ function countDown(date, auctionID) {
 }
 
 function getTimeDistance(date) {
+    console.log(date);
+    console.log(Date());
     // Set the date we're counting down to
-    let countDownDate = new Date(date).getTime();
+    let countDownDate = new Date(date).getTime() + (4 * 60 * 60 * 1000);
     // Get today's date and time
     var now = new Date().getTime();
-
+    console.log(countDownDate + " " + now)
     // Find the distance between now and the count down date
     var distance = countDownDate - now;
+    console.log(distance)
     return distance;
 }
 

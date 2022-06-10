@@ -90,7 +90,7 @@ class Auction(models.Model):
     active = models.BooleanField(verbose_name='Active Auction')
     closed = models.BooleanField(verbose_name='Closed Auction')
     deleted = models.BooleanField(verbose_name='Deleted Auction')
-    cronID = models.TextField(verbose_name='Cron Job Timer ID',  editable=False)
+    cronID = models.TextField(verbose_name='Cron Job Timer ID')
     created = models.DateTimeField(verbose_name='Created Time', auto_now_add=True)
     createdBy = models.ForeignKey(User, related_name='auction_created_by', blank=True, null=True, on_delete=models.CASCADE)
     modified = models.DateTimeField(verbose_name='Modified Time', null=True, blank=True)

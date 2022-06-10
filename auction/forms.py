@@ -1,5 +1,6 @@
+from pyexpat import model
 from django import forms
-from .models import PROVINCES, Auction, Bid, Account, User, UserType
+from .models import PROVINCES, Auction, Bid, Account, Demographic, User, UserType
 from django.contrib.auth.forms import UserCreationForm
 import random
 
@@ -80,7 +81,12 @@ class RegisterAcount(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ('user_type', 'clinicName', 'first_name', 'last_name', 'username', 'city', 'province', 'about', 'password1' ,'password2', 'imageOne', 'imageTwo', 'imageThree', 'imageFour' )
+        fields = ('user_type', 'clinicName', 'first_name', 'last_name', 'username', 'city', 'province', 'about', 'password1' ,'password2', 'imageOne', 'imageTwo', 'imageThree', 'imageFour')
+
+class DemographicForm(forms.ModelForm):
+    class Meta:
+        model = Demographic
+        fields = ['clinic', 'category', 'percentage' ]
 
 class CreateUserForm(UserCreationForm):
     class Meta:
