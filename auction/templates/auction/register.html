@@ -9,7 +9,7 @@
   <!-- Register Box Start -->
   <div class="row">
     <div class="col-md-6 offset-md-3">
-      <form method="post" enctype="multipart/form-data">
+      <form method="post" enctype="multipart/form-data" class="d-flex flex-column gap-3">
         <h5>Select an account type to get started:</h5>
         {% csrf_token %}
         {{ form.user_type | as_crispy_field }}
@@ -28,10 +28,12 @@
         <span class="combinedFields">{{ form.password2 | as_crispy_field }}</span>
         <!-- Practce Area & Demographics -->
         <button id="termsButton" data-bs-toggle="modal" data-bs-target="#tandcModal" class="btn btn-primary">Read Terms
-          and Conidtions Account</button>
+          and Conditions</button>
         <p class="combinedFields"><small>Terms and Conditions must be agreed to before an account can be
             created.</small></p>
-        <button type="submit" disabled id="submitButton" class="btn btn-primary">Create Account</button>
+        <div>
+          <button type="submit" disabled id="submitButton" class="btn btn-primary">Create Account</button>
+        </div>
       </form>
     </div>
   </div>

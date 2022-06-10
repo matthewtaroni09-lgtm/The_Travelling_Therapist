@@ -121,7 +121,8 @@
 }
 
 .btn-primary:hover,
-.btn-primary:focus {
+.btn-primary:focus,
+.btn-primary:disabled {
     background-color: var(--secondary-colour);
     border-color: var(--dark-colour);
     color: var(--dark-colour);
