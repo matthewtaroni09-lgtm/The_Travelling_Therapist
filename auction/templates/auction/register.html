@@ -4,45 +4,42 @@
 {% block content %}
 
 <!-- Content Start -->
-<div class="container mt-3 mb-5">
-  <h1 class="text-center p-5">Register to Get Started With The Traveling Therapist!</h1>
-  <!-- Register Box Start -->
-  <div class="row">
-    <div class="col-md-6 offset-md-3">
-      <form method="post" enctype="multipart/form-data">
-        <h5>Select an account type to get started:</h5>
-        {% csrf_token %}
-        {{ form.user_type | as_crispy_field }}
-        <span class="clinicField">{{ form.clinicName | as_crispy_field }}</span>
-        <span class="clinicField">{{ form.city | as_crispy_field }}</span>
-        <span class="clinicField">{{ form.province | as_crispy_field }}</span>
-        <span class="clinicField">{{ form.about | as_crispy_field }}</span>
-        <span class="clinicField">{{ form.imageOne | as_crispy_field }}</span>
-        <span class="clinicField">{{ form.imageTwo | as_crispy_field }}</span>
-        <span class="clinicField">{{ form.imageThree | as_crispy_field }}</span>
-        <span class="clinicField">{{ form.imageFour | as_crispy_field }}</span>
-        <span class="therapistField">{{ form.first_name | as_crispy_field }}</span>
-        <span class="therapistField">{{ form.last_name | as_crispy_field }}</span>
-        <span class="combinedFields">{{ form.username | as_crispy_field }}</span>
-        <span class="combinedFields">{{ form.password1 | as_crispy_field }}</span>
-        <span class="combinedFields">{{ form.password2 | as_crispy_field }}</span>
-        {{form_d.clinic|as_crispy_field}}
-        {{form_d.category|as_crispy_field}}
-        {{form_d.percentage|as_crispy_field}}
-        <!-- Practce Area & Demographics -->
-        <a id="termsButton" data-bs-toggle="modal" data-bs-target="#tandcModal" class="btn btn-primary">Read Terms
-          and Conditions Account</a>
-        <p class="combinedFields"><small>Terms and Conditions must be agreed to before an account can be
-            created.</small></p>
+<h1 class="text-center mb-5">Register to Get Started With The Traveling Therapist!</h1>
+<!-- Register Box Start -->
+<div class="row">
+  <div class="col-md-6 offset-md-3">
+    <form method="post" enctype="multipart/form-data" class="d-flex flex-column gap-3">
+      <h5>Select an account type to get started:</h5>
+      {% csrf_token %}
+      {{ form.user_type | as_crispy_field }}
+      <span class="clinicField">{{ form.clinicName | as_crispy_field }}</span>
+      <span class="clinicField">{{ form.city | as_crispy_field }}</span>
+      <span class="clinicField">{{ form.province | as_crispy_field }}</span>
+      <span class="clinicField">{{ form.about | as_crispy_field }}</span>
+      <span class="clinicField">{{ form.imageOne | as_crispy_field }}</span>
+      <span class="clinicField">{{ form.imageTwo | as_crispy_field }}</span>
+      <span class="clinicField">{{ form.imageThree | as_crispy_field }}</span>
+      <span class="clinicField">{{ form.imageFour | as_crispy_field }}</span>
+      <span class="therapistField">{{ form.first_name | as_crispy_field }}</span>
+      <span class="therapistField">{{ form.last_name | as_crispy_field }}</span>
+      <span class="combinedFields">{{ form.username | as_crispy_field }}</span>
+      <span class="combinedFields">{{ form.password1 | as_crispy_field }}</span>
+      <span class="combinedFields">{{ form.password2 | as_crispy_field }}</span>
+      {{form_d.clinic|as_crispy_field}}
+      {{form_d.category|as_crispy_field}}
+      {{form_d.percentage|as_crispy_field}}
+      <!-- Practce Area & Demographics -->
+      <a id="termsButton" data-bs-toggle="modal" data-bs-target="#tandcModal" class="btn btn-primary">Read Terms
+        and Conditions Account</a>
+      <p class="combinedFields"><small>Terms and Conditions must be agreed to before an account can be
+          created.</small></p>
+      <div>
         <button type="submit" disabled id="submitButton" class="btn btn-primary">Create Account</button>
-      </form>
-    </div>
+      </div>
+    </form>
   </div>
-  <!-- Register Box End -->
-
-
-
 </div>
+<!-- Register Box End -->
 <!-- Content End -->
 <script src="{% static 'auction/register.js' %}"></script>
 {% endblock %}
