@@ -81,7 +81,9 @@
       </h2>
       <div id="collapseSix" class="accordion-collapse collapse" aria-labelledby="headingSix" data-bs-parent="#faqAccordion">
         <div class="accordion-body text-weight-light">
-          Check with your professional governing body and insurance provider first. Some professions allow this, while others do not. The Traveling Therapist allows bids on auctions outside of your province, but the responsibility is on the therapist to ensure they are legally able to perform that work that they are bidding on. See full details on your responsibilities as a bidder in our Terms & Conditions.
+          Check with your professional governing body and insurance provider first. Some professions allow this, while others do not. The Traveling Therapist allows bids on auctions outside of your province, but the responsibility is on the therapist to ensure they are legally able to perform that work that they are bidding on. See full details on your responsibilities as a bidder in our <!-- Trigger Button -->
+          <span type="button" data-bs-toggle="modal" data-bs-target="#tandcModalAbout" class="mb-0 text-primary-colour">Terms & Conditions</span>.
+          {% include 'auction/modal_terms_and_conditions.html' with id='tandcModalAbout' %}
         </div>
       </div>
     </div>
