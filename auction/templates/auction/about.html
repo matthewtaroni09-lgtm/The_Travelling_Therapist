@@ -69,7 +69,9 @@
       </h2>
       <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive" data-bs-parent="#faqAccordion">
         <div class="accordion-body text-weight-light">
-          We store the following information, privately and encrypted on our end. We  only share therapist contact information with the clinic if you're the lowest bidding therapist at the end of an auction. See full details with our privacy policy, here.
+          We store the following information, privately and encrypted on our end. We  only share therapist contact information with the clinic if you're the lowest bidding therapist at the end of an auction. See full details with our 
+          <span type="button" data-bs-toggle="modal" data-bs-target="#privacyModaAbout" class="text-primary-colour">Privacy Policy</span>.
+        {% include 'auction/modal_privacy_policy.html' with id='privacyModaAbout' %}
         </div>
       </div>
     </div>
