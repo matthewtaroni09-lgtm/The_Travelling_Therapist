@@ -1,29 +1,27 @@
 {% extends 'auction/base.html' %}
 {% block content %}
 <!-- Content Start -->
-<div class="container mt-3 mb-5">
-  <h1 class="text-center p-5">Log In To The Traveling Therapist!</h1>
+<h1 class="text-center mb-5">Log In To The Traveling Therapist!</h1>
 
-  <!-- Login Box Start -->
-  <div class="row">
-    <div class="col-md-6 offset-md-3">
-      <form action="" method=POST>
-        {% csrf_token %}
-        <div class="mb-3">
-          <label for="exampleInputEmail1" class="form-label">Username</label>
-          <input type="text" class="form-control" id="username" name="username" aria-describedby="emailHelp">
-        </div>
-        <div class="mb-3">
-          <label for="exampleInputPassword1" class="form-label">Password</label>
-          <input type="password" class="form-control" id="password" name="password">
-        </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
-      </form>
-      <a href="{% url 'password_reset' %}">Need help logging in?</a>
-      <!-- Login Box End -->
-    </div>
-    <!-- Content End -->
+<!-- Login Box Start -->
+<div class="row">
+  <div class="col-md-6 offset-md-3">
+    <form action="" method=POST>
+      {% csrf_token %}
+      <div class="mb-3">
+        <label for="exampleInputEmail1" class="form-label">Username</label>
+        <input type="text" class="form-control" id="username" name="username" aria-describedby="emailHelp">
+      </div>
+      <div class="mb-3">
+        <label for="exampleInputPassword1" class="form-label">Password</label>
+        <input type="password" class="form-control" id="password" name="password">
+      </div>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+    <a href="{% url 'password_reset' %}">Need help logging in?</a>
+    <!-- Login Box End -->
   </div>
+  <!-- Content End -->
 </div>
 
 {% endblock %}
