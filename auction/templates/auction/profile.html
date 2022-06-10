@@ -61,7 +61,8 @@
           <h2 class="mb-4">Live Auctions</h2>
           <div class="row mb-5">
             {% for auction in active_auctions_list %}
-            <div class="col-sm-6 col-lg-4">
+            {% include 'auction/card_active_auction.html' with auction=auction %}
+            <!-- <div class="col-sm-6 col-lg-4">
               <a class="card mt-4 text-decoration-none text-dark" href="{% url 'auction' auction.auctionID %}">
                 <div class="position-relative">
                   {% if auction.clinic.imageTwo %}
@@ -87,7 +88,7 @@
                   <p class="card-text">{{ auction.clinic.about }}</p>
                 </div>
               </a>
-            </div>
+            </div> -->
             {% endfor %}
           </div>
 
@@ -246,7 +247,8 @@
           <h2>Live Auctions</h2>
           <div class="row mb-5">
             {% for auction in active_auctions_list %}
-            <div class="col-sm-6 col-lg-4">
+            {% include 'auction/card_active_auction.html' with auction=auction %}
+            <!-- <div class="col-sm-6 col-lg-4">
               <a class="card mt-4 text-decoration-none text-dark" href="{% url 'auction' auction.auctionID %}">
                 <div class="position-relative">
                   {% if auction.imageTwo %}
@@ -254,11 +256,6 @@
                   {% else %}
                   <img src="/media/images/no-image.jpg" class="card-img-top" alt="Image of Clinic">
                   {% endif %}
-                  <!-- <div class="d-inline-flex text-white bg-dark p-2 rounded position-absolute bottom-0 start-0">
-                    <time id="auctionTimer-{{ auction.auctionID }}" class="m-0 d-flex me-3"><img class="clock me-2"
-                        src="{% static 'auction/clock.svg' %}" alt="clock">--</time>
-                    <p class="m-0">Bid:<span class="ms-2">${{ auction.get_low_bid }}</span></p>
-                  </div> -->
                   <div
                     class="d-inline-flex text-align-center text-white bg-dark p-2 rounded position-absolute bottom-0 start-0">
                     <span class="material-icons small text-white align-self-center">schedule</span><time
@@ -277,7 +274,7 @@
                   <p class="card-text">{{ auction.about }}</p>
                 </div>
               </a>
-            </div>
+            </div> -->
             {% endfor %}
           </div>
 
