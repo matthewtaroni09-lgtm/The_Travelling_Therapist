@@ -30,7 +30,8 @@
           <h2 class="mb-4">Auctions Pending Approval</h2>
           <div class="row mb-5">
             {% for auction in pending_auctions_list %}
-            <div class="col-sm-6 col-lg-4">
+            {% include 'auction/card_pending_approval_auction.html' with auction=auction %}
+            <!-- <div class="col-sm-6 col-lg-4">
               <a class="card mt-4 text-decoration-none text-dark" href="{% url 'auction' auction.auctionID %}">
                 <div class="position-relative">
                   {% if auction.clinic.imageTwo %}
@@ -52,7 +53,7 @@
                   <p class="card-text">{{ auction.clinic.about }}</p>
                 </div>
               </a>
-            </div>
+            </div> -->
             {% endfor %}
           </div>
           {% endif %}
