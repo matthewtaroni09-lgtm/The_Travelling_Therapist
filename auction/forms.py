@@ -65,14 +65,13 @@ class BidForm(forms.ModelForm):
         }
 
 class RegisterAcount(UserCreationForm):
-    x = list(range(1,101))
-    first_name = forms.CharField(initial='John', required=False)
-    last_name = forms.CharField(initial='Doe', required=False)
+    first_name = forms.CharField( required=False)
+    last_name = forms.CharField(required=False)
     clinicName = forms.CharField(required=False, label='Clinic Name')
     city = forms.CharField(initial='Burlington', required=False)
     about = forms.CharField(required=False, label='About the clinic', widget=forms.Textarea)
     province = forms.ChoiceField(choices=PROVINCES, required=False)
-    username = forms.CharField(initial='loribine' + str(random.choice(x)) + '@gmail.com', label='Email')
+    username = forms.CharField(label='Email')
     user_type = forms.ModelChoiceField(queryset=UserType.objects.all())
     imageOne = forms.ImageField(required=False, label='Image 1')
     imageTwo = forms.ImageField(required=False, label='Image 2')
