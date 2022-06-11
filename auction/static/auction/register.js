@@ -47,6 +47,7 @@ function userTypeChange() {
 }
 
 $(document).ready(function () {
+    //$('#submitButton').prop('disabled', false);
     $('#tandcModal').on('hidden.bs.modal', function () {
         $('#agreementCheckBox').css("display", "none");
         $('#agreementCheckBoxLabel').css("display", "none");

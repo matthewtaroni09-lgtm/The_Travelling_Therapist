@@ -35,6 +35,12 @@ class Account(models.Model):
     country = models.CharField(verbose_name='Conutry', max_length=100, blank=True, null=True, help_text='Enter the country your clinic is in.')
     province = models.CharField(verbose_name='Province', help_text='The province the clinic resides in.', blank=True, null=True, max_length=30, choices=PROVINCES)
     about = models.TextField(verbose_name='About the clinic', blank=True, null=True, help_text='Tell us about your clinic.')
+    underEighteen = models.IntegerField(verbose_name='Under 18', blank=True, null=True)
+    eighteenToSixtyFive = models.IntegerField(verbose_name='18 - 65', blank=True, null=True)
+    overSixtyFive = models.IntegerField(verbose_name='Over 65', blank=True, null=True)
+    MSK = models.IntegerField(verbose_name='MSK', blank=True, null=True)
+    neuro = models.IntegerField(verbose_name='Neuro', blank=True, null=True)
+    cardioResp = models.IntegerField(verbose_name='CardioResp', blank=True, null=True)
     practiceArea = models.ManyToManyField('PracticeArea', blank=True)
     demographic = models.ManyToManyField('Demographic', blank=True)
     pro = models.BooleanField(verbose_name='Pro Member', null=True, blank=True)
@@ -108,6 +114,7 @@ class Auction(models.Model):
             return 'Current Bid: $' + str(self.currentLowBid)
 
     def get_num_bids(self):
+        print('in num bids')
         num_bids = Bid.objects.filter(auction=self.auctionID).count()
         return num_bids
 

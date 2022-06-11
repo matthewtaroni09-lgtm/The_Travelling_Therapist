@@ -1,4 +1,4 @@
-const getActiveAuctionsClnic = () => {
+const getActiveAuctionsClinic = () => {
     $.ajax({
         type: "GET",
         url: "/auction/data/active_auctions_clinic",
@@ -19,4 +19,4 @@ const getActiveAuctionsClnic = () => {
     })
 }
 
-getActiveAuctionsClnic();
+getActiveAuctionsClinic();

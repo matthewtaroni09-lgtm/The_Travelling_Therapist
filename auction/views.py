@@ -8,7 +8,7 @@ from django.contrib import messages
 from django.views.generic import ListView, CreateView
 
 from .filters import AuctionFilter
-from .forms import DemographicForm, RegisterAcount, AuctionForm, BidForm, UserFormClinic, UserFormTherapist, ProfileUpdateClinic, CreateUserForm
+from .forms import RegisterAcount, AuctionForm, BidForm, UserFormClinic, UserFormTherapist, ProfileUpdateClinic, CreateUserForm
 from django.urls import reverse_lazy
 import datetime
 # from datetime import datetime
@@ -27,8 +27,9 @@ from django.db.models.query_utils import Q
 from django.conf import settings
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from .emails import auction_created_admin
+from . import emails
 from pytz import timezone
+from django.core import serializers
 
 class AuctionListView(ListView):
     model = Auction
@@ -42,8 +43,6 @@ class AuctionListView(ListView):
 # Page Links
 
 def about(request):
-    # print("index")
-    # scheduled_tasks.update_something('5860ffea-cabc-4d2e-9b4c-059f86ab8ff8')
     return render(request, 'auction/about.html', {'path': 'about'})
 
 
@@ -110,28 +109,9 @@ def profile(request):
                         Placement Start: """ + str(auction.placementStart) + """
                         Placement End: """ + str(auction.placementEnd) + """
                         """,
-                        html_message = """
-                        <header>
-                        <img src="https://travelingtherapist.ca/media/images/TTT_LOGO.png" alt="Traveling Therapist Logo">
-                        </header>
-                        <section style="font-size: 16px; margin-bottom: 4rem;">
-                        <h1>A New Auction has been created</h1>
-                        Clinic Name: """ + str(auction.clinic.clinicName) + """<br>
-                        Clinic Location: """ + str(auction.clinic.city) + """, """ + str(auction.clinic.city) + """<br>
-                        Clinic email: """ + str(auction.clinic.user.email) + """<br>
-                        Reserve Bid: """ + str(auction.reservePrice) + """<br>
-                        Auction Start: """ + str(auction.auctionStart) + """<br>
-                        Auction End: """ + str(auction.auctionEnd) + """<br>
-                        Placement Start: """ + str(auction.placementStart) + """<br>
-                        Placement End: """ + str(auction.placementEnd) + """<br>
-                        </section>
-                        <footer>
-                        <a href="travelingtherapist.ca">Click to visit The Traveling Therapist Website</a>
-                        <p style="font-size: 10px; color: #848585;">You are receiving this email because you have registered to use The Traveling Therapist website services. Please do not reply to this email. If you wish to contact us then email The Traveling Therapist at info@travelingtherapist.ca. To ensure you continue to receive these emails, add this email address to your email safelist. Your details will not be disclosed or used by third parties for marketing or promotional purposes.</p>
-                        </footer>
-                        """,
+                        html_message = emails.auction_created_admin(str(auction.clinic.clinicName), str(auction.clinic.city), str(auction.clinic.province), str(auction.clinic.user.email), str(auction.reservePrice), str(auction.auctionStart), str(auction.auctionEnd), str(auction.placementStart), str(auction.placementEnd), str(auction.auctionID)),
                         from_email = settings.EMAIL_HOST_USER,
-                        recipient_list = ('loribine@gmail.com',)
+                        recipient_list = ('loribine@gmail.com', 'info@travelingtherapist.ca')
                     )
                     print(str(auction.auctionEnd.year) + ", " + str(auction.auctionEnd.month) + ", " + str(auction.auctionEnd.day) + ", " + str(auction.auctionEnd.hour) + ", " + str(auction.auctionEnd.minute))
                     scheduled_tasks.start(auction.auctionEnd.year, auction.auctionEnd.month, auction.auctionEnd.day, auction.auctionEnd.hour, auction.auctionEnd.minute, str(auction.auctionID))
@@ -159,8 +139,8 @@ def profile(request):
     else:
         print(request.method)
         user_id = str(request.user.id)
-        active_auctions_list = Bid.objects.raw('SELECT DISTINCT AA.auctionID, AB.bidID, AA.placementStart, AA.placementEnd, AA.clinic_id, AC.user_id , AC.clinicName, AC.city, AC.about, AC.imageOne, AC.imageTwo, UT.name "userType" FROM auction_auction AA LEFT JOIN auction_bid AB ON AA.auctionID = AB.auction_id LEFT JOIN auction_account AC ON AA.clinic_id = AC.id LEFT JOIN auction_usertype UT ON AC.userType_id = UT.id WHERE AB.user_id = ' + user_id + ' AND AA.active = 1 AND AA.closed = 0 AND AA.deleted = 0 GROUP BY auctionID, AA.placementStart, AA.placementEnd, AA.clinic_id, AC.user_id , AC.clinicName, AC.city, AC.about, AC.imageOne, AC.imageTwo, UT.name;')
-        past_auctions_list = Bid.objects.raw('SELECT DISTINCT AA.auctionID, AB.bidID, AA.placementStart, AA.placementEnd, AA.clinic_id, AC.user_id , AC.clinicName, AC.city, AC.about, AC.imageOne, AC.imageTwo, UT.name "userType" FROM auction_auction AA LEFT JOIN auction_bid AB ON AA.auctionID = AB.auction_id LEFT JOIN auction_account AC ON AA.clinic_id = AC.id LEFT JOIN auction_usertype UT ON AC.userType_id = UT.id WHERE AB.user_id = ' + user_id + ' AND AA.active = 0 AND AA.closed = 1 AND AA.deleted = 0 GROUP BY auctionID, AA.placementStart, AA.placementEnd, AA.clinic_id, AC.user_id , AC.clinicName, AC.city, AC.about, AC.imageOne, AC.imageTwo, UT.name;')
+        active_auctions_list = Bid.objects.raw('SELECT DISTINCT AA.auctionID, AB.bidID, AA.placementStart, AA.placementEnd, AA.clinic_id, AC.user_id , AC.clinicName, AC.city, AC.about, AC.imageOne, AC.imageTwo, UT.name "userType", count(*) "get_num_bids" FROM auction_auction AA LEFT JOIN auction_bid AB ON AA.auctionID = AB.auction_id LEFT JOIN auction_account AC ON AA.clinic_id = AC.id LEFT JOIN auction_usertype UT ON AC.userType_id = UT.id WHERE AB.user_id = ' + user_id + ' AND AA.active = 1 AND AA.closed = 0 AND AA.deleted = 0 GROUP BY auctionID, AA.placementStart, AA.placementEnd, AA.clinic_id, AC.user_id , AC.clinicName, AC.city, AC.about, AC.imageOne, AC.imageTwo, UT.name;')
+        past_auctions_list = Bid.objects.raw('SELECT DISTINCT AA.auctionID, AB.bidID, AA.placementStart, AA.placementEnd, AA.clinic_id, AA.winningPrice, AC.user_id , AC.clinicName, AC.city, AC.about, AC.imageOne, AC.imageTwo, UT.name "userType", count(*) "get_num_bids"  FROM auction_auction AA LEFT JOIN auction_bid AB ON AA.auctionID = AB.auction_id LEFT JOIN auction_account AC ON AA.clinic_id = AC.id LEFT JOIN auction_usertype UT ON AC.userType_id = UT.id WHERE AB.user_id = ' + user_id + ' AND AA.active = 0 AND AA.closed = 1 AND AA.deleted = 0 GROUP BY auctionID, AA.placementStart, AA.placementEnd, AA.clinic_id, AC.user_id , AC.clinicName, AC.city, AC.about, AC.imageOne, AC.imageTwo, UT.name;')
         if request.method == 'POST':   # This Will Be Run When I Submit My Form. And Possibly Pass New Data.
             u_form = UserFormTherapist(request.POST, instance=request.user)  # request.POST To Pass The POST Data
             if u_form.is_valid():
@@ -229,21 +209,16 @@ def view_auction(request, auction_id):
 
 def get_auction_end(request, auction_id):
     auction = Auction.objects.get(pk=auction_id)
+    account = Account.objects.get(user=auction.clinic.user)
     demogrpahics = {}
     practiceAreas = {}
-    for demogrpahic in auction.clinic.demographic.all():
-        # JS cannot get a value that starts with a number or has spaces so convert 18 - 65 to words and remove spaces from other categroies
-        category = ""
-        if demogrpahic.get_category() == "18 - 65":
-            category = "eighteenToSixtyFive"
-        else:
-            category = demogrpahic.get_category().replace(" ", "")
-        demogrpahics.update({category: demogrpahic.get_percentage()})
 
-    for practiceArea in auction.clinic.practiceArea.all():
-        # JS cannot get a value that has spaces so remove spaces from categroies
-        # print(11111 + practiceArea.get_percentage())
-        practiceAreas.update({practiceArea.get_category().replace(" ", ""): practiceArea.get_percentage()})
+    demogrpahics.update({'Under18': account.underEighteen})
+    demogrpahics.update({'eighteenToSixtyFive': account.eighteenToSixtyFive})
+    demogrpahics.update({'Over65': account.overSixtyFive})
+    practiceAreas.update({'MSK': account.MSK})
+    practiceAreas.update({'Neuro': account.neuro})
+    practiceAreas.update({'CardioResp': account.cardioResp})
 
     data = {
         'auctionStart': auction.auctionStart,
@@ -260,7 +235,19 @@ def get_all_auctions(request):
     return JsonResponse({'data': auction_list})
 
 def get_active_auctions_clinic(request):
-    active_auctions_list = list(Auction.objects.filter(active=True, clinic=request.user.account).values())
+    active_auctions_list = ''
+    if str(request.user.account.userType).split(' ')[-1] == "Clinic":
+        active_auctions_list = list(Auction.objects.filter(active=True, clinic=request.user.account).values())
+    else:
+        print("ther")
+        print(str(request.user.account.user_id))
+        query = 'SELECT DISTINCT AA.auctionID, AA.auctionStart, AA.auctionEnd, AA.currentLowBid, AB.bidID, AA.placementStart, AA.placementEnd, AA.clinic_id, AC.user_id , AC.clinicName, AC.city, AC.about, AC.imageOne, AC.imageTwo, UT.name "userType" FROM auction_auction AA LEFT JOIN auction_bid AB ON AA.auctionID = AB.auction_id LEFT JOIN auction_account AC ON AA.clinic_id = AC.id LEFT JOIN auction_usertype UT ON AC.userType_id = UT.id WHERE AB.user_id = ' + str(request.user.account.user_id) + ' AND AA.active = 1 AND AA.closed = 0 AND AA.deleted = 0 GROUP BY auctionID, AA.placementStart, AA.placementEnd, AA.clinic_id, AC.user_id , AC.clinicName, AC.city, AC.about, AC.imageOne, AC.imageTwo, UT.name;'
+        auction_list = Bid.objects.raw(query)
+        active_auctions_list = []
+        for a in auction_list:
+            b = {}
+            b.update({'auctionID': a.auctionID, 'auctionStart': a.auctionStart, 'auctionEnd': a.auctionEnd, 'currentLowBid': a.currentLowBid})
+            active_auctions_list.append(b)
     return JsonResponse({'data': active_auctions_list})
 
 def get_active_auctions_theraipist(request):
@@ -308,7 +295,7 @@ def create_auction(request):
                 auction.modifiedBy = request.user
                 auction.save()
                 # Therapist email
-                print(auction_created_admin(str(auction.clinic.clinicName), str(auction.clinic.city), str(auction.clinic.province), str(auction.clinic.user.email), str(auction.reservePrice), str(auction.auctionStart), str(auction.auctionEnd), str(auction.placementStart), str(auction.placementEnd), str(auction.auctionID)))
+                # print(auction_created_admin(str(auction.clinic.clinicName), str(auction.clinic.city), str(auction.clinic.province), str(auction.clinic.user.email), str(auction.reservePrice), str(auction.auctionStart), str(auction.auctionEnd), str(auction.placementStart), str(auction.placementEnd), str(auction.auctionID)))
                 send_mail(
                     subject = "Auction Created",
                     message = """A New Auction has been created
@@ -321,9 +308,9 @@ def create_auction(request):
                     Placement Start: """ + str(auction.placementStart) + """
                     Placement End: """ + str(auction.placementEnd) + """
                     """,
-                    html_message = auction_created_admin(str(auction.clinic.clinicName), str(auction.clinic.city), str(auction.clinic.province), str(auction.clinic.user.email), str(auction.reservePrice), str(auction.auctionStart), str(auction.auctionEnd), str(auction.placementStart), str(auction.placementEnd), str(auction.auctionID)),
+                    html_message = emails.auction_created_admin(str(auction.clinic.clinicName), str(auction.clinic.city), str(auction.clinic.province), str(auction.clinic.user.email), str(auction.reservePrice), str(auction.auctionStart), str(auction.auctionEnd), str(auction.placementStart), str(auction.placementEnd), str(auction.auctionID)),
                     from_email = settings.EMAIL_HOST_USER,
-                    recipient_list = ('loribine@gmail.com',)
+                    recipient_list = ('loribine@gmail.com', 'info@travelingtherapist.ca')
                 )
                 print(str(auction.auctionEnd.year) + ", " + str(auction.auctionEnd.month) + ", " + str(auction.auctionEnd.day) + ", " + str(auction.auctionEnd.hour) + ", " + str(auction.auctionEnd.minute))
                 print(auction.auctionID)
@@ -358,7 +345,6 @@ def register(request):
     print(request.method)
     if request.method == 'POST':
         form = RegisterAcount(request.POST, request.FILES)
-        form_d = DemographicForm(request.POST)
         if form.is_valid():
             print('inside')
             user = form.save()
@@ -374,20 +360,21 @@ def register(request):
             user.account.imageTwo = form.cleaned_data.get('imageTwo')
             user.account.imageThree = form.cleaned_data.get('imageThree')
             user.account.imageFour = form.cleaned_data.get('imageFour')
+            user.account.underEighteen = form.cleaned_data.get('underEighteen')
+            user.account.eighteenToSixtyFive = form.cleaned_data.get('eighteenToSixtyFive')
+            user.account.overSixtyFive = form.cleaned_data.get('overSixtyFive')
+            user.account.MSK = form.cleaned_data.get('MSK')
+            user.account.neuro = form.cleaned_data.get('neuro')
+            user.account.cardioResp = form.cleaned_data.get('cardioResp')
             user.save()
-            d = form_d.save()
-            # d.refresh_from_db()
-            # d.category = 'Over 65'
-            # d.percentage = 51
-            d.save()
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=user.username, password=raw_password)
             login(request, user)
             return redirect('index')
     else:
+        print('outside')
         form = RegisterAcount()
-        form_d = DemographicForm()
-    return render(request, 'auction/register.html', {'form': form, 'form_d': form_d})
+    return render(request, 'auction/register.html', {'form': form})
     
 
 # -------------- Login --------------

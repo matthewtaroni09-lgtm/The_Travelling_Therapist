@@ -32,90 +32,6 @@ const getCookie = (name) => {
 }
 const csrftoken = getCookie('csrftoken');
 
-
-
-
-
-
-
-// const getDemographics = () => {
-//     $.ajax({
-//         type: "GET",
-//         url: "/auction/data/auction/" + auctionID,
-//         success: function (response) {
-//             console.log(response);
-//             auctionStartDateTime = response.data.auctionStart;
-//             auctionEndDateTime = response.data.auctionEnd;
-//             currentLowBid = response.data.currentLowBid;
-//             countDown(auctionEndDateTime);
-//             // spinnerBox.classList.add('not-visible');
-//             auction_list.innerHTML += `
-//             <ul>
-//                 Auction Start Date: ` + auctionStartDateTime + ` <br>
-//                 Auction End Date: ` + auctionEndDateTime + `<br>
-//                 Current Bid: $` + currentLowBid + `<br>
-//             </ul>`;
-//         },
-//         error: function (error) {
-//             console.log('error: ', error);
-//         }
-//     })
-// }
-
-
-
-// bidForm.addEventListener('submit', e => {
-//     console.log("submitted");
-//     e.preventDefault();
-
-//     let auctionEndDate = 0;
-//     if (getTimeDistance(auctionEndDateTime) < 60000000 & getTimeDistance(auctionEndDateTime) > 0) {
-//         clearInterval(timer);
-//         auctionEndDateTime = new Date(new Date(auctionEndDateTime).getTime() + 5000000);
-//         countDown(auctionEndDateTime);
-//         auctionEndDate = auctionEndDateTime;
-//     }
-
-//     auctionInfo.innerHTML =
-//         `<ul>
-//             Auction Start Date: ` + auctionStartDateTime + ` <br>
-//             Auction End Date: ` + auctionEndDateTime + `<br>
-//             Current Bid: $` + bidAmountInput.value + `<br>
-//         </ul>`;
-
-//     $.ajax({
-//         type: 'POST',
-//         url: "/auction/create_bid/" + auctionID,
-//         data: {
-//             'csrfmiddlewaretoken': csrf[0].value,
-//             'bidAmount': bidAmountInput.value,
-//             'auctionEnd': auctionEndDate
-//         },
-//         success: function (response) {
-//             console.log(response)
-//         },
-//         error: function (error) {
-//             console.log(error)
-//         }
-//     })
-// });
-
-// email.addEventListener('click', e => {
-//     $.ajax({
-//         type: 'POST',
-//         url: "/auction/send_email_message/",
-//         data: {
-//             'csrfmiddlewaretoken': csrf[0].value
-//         },
-//         success: function (response) {
-//             console.log(response)
-//         },
-//         error: function (error) {
-//             console.log(error)
-//         }
-//     })
-// });
-
 function countDown(date, auctionID) {
     // Update the count down every 1 second
     timer = setInterval(function () {
@@ -153,16 +69,16 @@ function countDown(date, auctionID) {
 }
 
 function getTimeDistance(date) {
-    console.log(date);
-    console.log(Date());
+    // console.log(date);
+    // console.log(Date());
     // Set the date we're counting down to
     let countDownDate = new Date(date).getTime() + (4 * 60 * 60 * 1000);
     // Get today's date and time
     var now = new Date().getTime();
-    console.log(countDownDate + " " + now)
+    // console.log(countDownDate + " " + now)
     // Find the distance between now and the count down date
     var distance = countDownDate - now;
-    console.log(distance)
+    // console.log(distance)
     return distance;
 }
 

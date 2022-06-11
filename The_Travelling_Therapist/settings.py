@@ -29,6 +29,16 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+ENVIRONMENT = 'DEV'
+
+DEV_LINK = 'http://127.0.0.1:8000'
+PROD_LINK = 'https://travelingtherapist.ca'
+ACTIVE_LINK = ''
+
+if ENVIRONMENT == 'DEV':
+    ACTIVE_LINK = DEV_LINK
+else:
+    ACTIVE_LINK = PROD_LINK
 
 # Application definition
 

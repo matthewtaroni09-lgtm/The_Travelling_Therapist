@@ -16,6 +16,30 @@
       <span class="clinicField">{{ form.city | as_crispy_field }}</span>
       <span class="clinicField">{{ form.province | as_crispy_field }}</span>
       <span class="clinicField">{{ form.about | as_crispy_field }}</span>
+      <h5 class="clinicField">Clinic Demographics</h5>
+      <div class="row">
+        <div class="mb-3 col-md-4">
+          <span class="clinicField">{{ form.underEighteen | as_crispy_field }}</span>
+        </div>
+        <div class="mb-3 col-md-4">
+          <span class="clinicField">{{ form.eighteenToSixtyFive | as_crispy_field }}</span>
+        </div>
+        <div class="mb-3 col-md-4">
+          <span class="clinicField">{{ form.overSixtyFive | as_crispy_field }}</span>
+        </div>
+      </div>
+      <h5 class="clinicField">Clinic Areas of Practice</h5>
+      <div class="row">
+        <div class="mb-3 col-md-4">
+          <span class="clinicField">{{ form.MSK | as_crispy_field }}</span>
+        </div>
+        <div class="mb-3 col-md-4">
+          <span class="clinicField">{{ form.neuro | as_crispy_field }}</span>
+        </div>
+        <div class="mb-3 col-md-4">
+          <span class="clinicField">{{ form.cardioResp | as_crispy_field }}</span>
+        </div>
+      </div>
       <span class="clinicField">{{ form.imageOne | as_crispy_field }}</span>
       <span class="clinicField">{{ form.imageTwo | as_crispy_field }}</span>
       <span class="clinicField">{{ form.imageThree | as_crispy_field }}</span>
@@ -25,9 +49,6 @@
       <span class="combinedFields">{{ form.username | as_crispy_field }}</span>
       <span class="combinedFields">{{ form.password1 | as_crispy_field }}</span>
       <span class="combinedFields">{{ form.password2 | as_crispy_field }}</span>
-      {{form_d.clinic|as_crispy_field}}
-      {{form_d.category|as_crispy_field}}
-      {{form_d.percentage|as_crispy_field}}
       <!-- Practce Area & Demographics -->
       <a id="termsButton" data-bs-toggle="modal" data-bs-target="#tandcModal" class="btn btn-primary">Read Terms
         and Conditions Account</a>

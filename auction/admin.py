@@ -17,6 +17,7 @@ class AuctionAdmin(admin.ModelAdmin):
     ordering = ('auctionID', )
     search_fields = ('auctionID', 'clinic')
     inlines = [BidInline]
+    exclude = ['startingBid', 'underEightteen', 'eightteenToSixtyFive', 'overSixtyFive', 'MSK', 'neuro', 'cardioResp']
 
 @admin.register(Bid)
 class BidAdmin(admin.ModelAdmin):
@@ -29,6 +30,7 @@ class AccountInline(admin.StackedInline):
     model = Account
     can_delete = False
     verbose_name_plural = 'Accounts'
+    exclude = ['practiceArea', 'demographic', 'licenseNumber']
 
     # def formfield_for_manytomany(self, db_field, request, **kwargs):
     #     print("heee" + db_field.name)
