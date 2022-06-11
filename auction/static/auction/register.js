@@ -67,3 +67,51 @@ $(document).ready(function () {
         }
     });
 });
+
+// Show and hide image inputs
+$(document).ready(function() {
+    clearAndHideImageTwo();
+    clearAndHideImageThree();
+    clearAndHideImageFour();
+
+    $('#id_imageOne').change(function () {
+        if ($(this).val() != '') {
+            $('#div_id_imageTwo').show();
+        } else {
+            clearAndHideImageTwo();
+            clearAndHideImageThree();
+            clearAndHideImageFour();
+        }
+    })  
+
+    $('#id_imageTwo').change(function () {
+        if ($(this).val() != '') {
+            $('#div_id_imageThree').show();
+        } else {
+            clearAndHideImageThree();
+            clearAndHideImageFour();
+        }
+    })  
+
+    $('#id_imageThree').change(function () {
+        if ($(this).val() != '') {
+            $('#div_id_imageFour').show();
+        } else {
+            clearAndHideImageFour();
+        }
+    })  
+
+   function clearAndHideImageTwo () {
+        $('#id_imageTwo').val('');
+        $('#div_id_imageTwo').hide();
+   } 
+
+   function clearAndHideImageThree () {
+        $('#id_imageThree').val('');
+        $('#div_id_imageThree').hide();
+   } 
+   function clearAndHideImageFour () {
+        $('#id_imageFour').val('');
+        $('#div_id_imageFour').hide();
+   } 
+})
