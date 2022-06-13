@@ -32,14 +32,14 @@ const getAuction = () => {
                 datasets: [{
                     label: 'Client Demographics',
                     backgroundColor: [
-                        'rgb(255, 99, 132)',
-                        'rgb(54, 162, 235)',
-                        'rgb(255, 205, 86)'
+                        '#0AEAA9',
+                        '#0ABBEA',
+                        '#A90AEA'
                     ],
                     borderColor: [
-                        'rgb(255, 99, 132)',
-                        'rgb(54, 162, 235)',
-                        'rgb(255, 205, 86)'
+                        '#0AEAA9',
+                        '#0ABBEA',
+                        '#A90AEA'
                     ],
                     data: [response.data.demogrpahics.Under18, response.data.demogrpahics.eighteenToSixtyFive, response.data.demogrpahics.Over65],
                 }]
@@ -91,14 +91,14 @@ const getAuction = () => {
                 datasets: [{
                     label: 'Area of Practice',
                     backgroundColor: [
-                        'rgb(255, 99, 132)',
-                        'rgb(54, 162, 235)',
-                        'rgb(255, 205, 86)'
+                        '#0AEAA9',
+                        '#0ABBEA',
+                        '#A90AEA'
                     ],
                     borderColor: [
-                        'rgb(255, 99, 132)',
-                        'rgb(54, 162, 235)',
-                        'rgb(255, 205, 86)'
+                        '#0AEAA9',
+                        '#0ABBEA',
+                        '#A90AEA'
                     ],
                     data: [response.data.practiceAreas.MSK, response.data.practiceAreas.Neuro, response.data.practiceAreas.CardioResp],
                 }]
