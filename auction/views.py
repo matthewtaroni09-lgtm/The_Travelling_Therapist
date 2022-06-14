@@ -50,9 +50,10 @@ def about(request):
 
 def profile(request):
     parameter = {}
-    # Not closed and not deleted counts any auctions that are active or have no status selected
+    show_form = False
     if str(request.user.account.userType).split(' ')[-1] == "Clinic":
         print(request.method)
+        # Not closed and not deleted counts any auctions that are active or have no status selected
         active_auctions_list = Auction.objects.filter(active=True, closed=False, deleted=False, clinic=request.user.account)
         past_auctions_list = Auction.objects.filter(active=False, closed=True, deleted=False, clinic=request.user.account)
         pending_auctions_list = Auction.objects.filter(active=False, closed=False, deleted=False, clinic=request.user.account)
@@ -75,6 +76,7 @@ def profile(request):
 
         max_auctions = AdminSettings.objects.all()[0]
         if active_auctions_list.count() <= max_auctions.numAllowedAuctions:
+            show_form = True
             if request.method == "POST":
                 form = AuctionForm(request.POST, request.FILES)
                 if form.is_valid():
@@ -107,28 +109,31 @@ def profile(request):
                         recipient_list = ('loribine@gmail.com', 'info@travelingtherapist.ca')
                     )
                     print(str(auction.auctionEnd.year) + ", " + str(auction.auctionEnd.month) + ", " + str(auction.auctionEnd.day) + ", " + str(auction.auctionEnd.hour) + ", " + str(auction.auctionEnd.minute))
-                    scheduled_tasks.start(auction.auctionEnd.year, auction.auctionEnd.month, auction.auctionEnd.day, auction.auctionEnd.hour, auction.auctionEnd.minute, str(auction.auctionID))
+                    scheduled_tasks.start(auction.auctionEnd.year, auction.auctionEnd.month, auction.auctionEnd.day, auction.auctionEnd.hour, auction.auctionEnd.minute, auction.auctionEnd.second, str(auction.auctionID))
                     # scheduled_tasks.start(auction.auctionEnd.year, auction.auctionEnd.month, auction.auctionEnd.day, 8, 27, str(auction.auctionID))
                     # scheduled_tasks.start(2022, 6, 6, 6, 29, str(auction.auctionID))
                     return HttpResponseRedirect('/profile?submitted=True')
                 else:
-                    form = AuctionForm
+                    form = AuctionForm()
                     if 'submitted' in request.GET:
                         submitted_auction = True
 
-            form = AuctionForm
-            parameter.update({
-                'active_auctions_list': active_auctions_list,
-                'past_auctions_list': past_auctions_list,
-                'pending_auctions_list': pending_auctions_list,
-                'num_pending': num_pending,
-                'form': form,
-                'u_form': u_form,
-                'p_form': p_form,
-                'submitted_profile': submitted_profile,
-                'submitted_auction': submitted_auction,
-                'show_form': True
-            })
+        form = AuctionForm()
+        print(show_form)
+        parameter.update({
+            'active_auctions_list': active_auctions_list,
+            'past_auctions_list': past_auctions_list,
+            'pending_auctions_list': pending_auctions_list,
+            'num_pending': num_pending,
+            'form': form,
+            'u_form': u_form,
+            'p_form': p_form,
+            'submitted_profile': submitted_profile,
+            'submitted_auction': submitted_auction,
+            'show_form': show_form,
+            'max_forms': max_auctions.numAllowedAuctions
+        })
+
     else:
         print(request.method)
         user_id = str(request.user.id)

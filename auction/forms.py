@@ -7,6 +7,7 @@ import random
 from django.core.exceptions import ValidationError
 
 class AuctionForm(forms.ModelForm):
+    reservePrice = forms.IntegerField(max_value=25000, min_value=1)
     class Meta:
         model = Auction
         fields = ( 

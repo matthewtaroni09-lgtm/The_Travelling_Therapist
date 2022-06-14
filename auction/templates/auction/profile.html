@@ -216,8 +216,13 @@
       </div>
       </form>
       {% else %}
+      {% if max_forms > 1 %}
       <p>Only {{ max_forms }} active auctions are allowed at a time. Contact info@travelingtherapist.ca for more
         information on our Pro plan.</p>
+      {% else %}
+      <p>Only 1 active auction is allowed at a time. Contact info@travelingtherapist.ca for more
+        information on our Pro plan.</p>
+      {% endif %}
       {% endif %}
     </div>
   </div>

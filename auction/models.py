@@ -114,9 +114,14 @@ class Auction(models.Model):
             return 'Current Low Bid: $' + str("{:,}".format(self.currentLowBid))
 
     def get_num_bids(self):
-        print('in num bids')
         num_bids = Bid.objects.filter(auction=self.auctionID).count()
         return num_bids
+
+    def get_position_type(self):
+        if str(self.clinic.userType) == 'Physiotherapy Clinic':
+            return 'Temporary Physiotherapist'
+        else:
+            return ''
 
 class Bid(models.Model):
     bidID = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
