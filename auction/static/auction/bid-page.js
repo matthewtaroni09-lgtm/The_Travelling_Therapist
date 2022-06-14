@@ -1,5 +1,19 @@
 const URL = window.location.href;
 const auctionID = URL.substring(URL.lastIndexOf('/') + 1);
+let currentLowBid = 0
+
+$(document).ready(function () {
+    $('#submitBidButton').click(function () {
+        let amount = $('#id_amount').value();
+        if (amount > currentLowBid) {
+            if (!confirm('Are you sure?')) {
+                e.preventDefault();
+            }
+        }
+
+    });
+});
+
 const getAuction = () => {
     $.ajax({
         type: "GET",
@@ -10,15 +24,6 @@ const getAuction = () => {
             auctionEndDateTime = response.data.auctionEnd;
             currentLowBid = response.data.currentLowBid;
             countDown(auctionEndDateTime, auctionID);
-            // spinnerBox.classList.add('not-visible');
-
-            //Update time this because it could change
-            // auction_list.innerHTML += `
-            // <ul>
-            //     Auction Start Date: ` + auctionStartDateTime + ` <br>
-            //     Auction End Date: ` + auctionEndDateTime + `<br>
-            //     Current Bid: $` + currentLowBid + `<br>
-            // </ul>`;
 
             //Demographics Chart
             const demographicsLabels = [
@@ -77,7 +82,6 @@ const getAuction = () => {
                 document.getElementById('demographics'),
                 config
             );
-
 
             // Area of Practice Chart
             const areasOfPracticeLabels = [

@@ -72,7 +72,7 @@ function getTimeDistance(date) {
     // console.log(date);
     // console.log(Date());
     // Set the date we're counting down to
-    let countDownDate = new Date(date).getTime() + (4 * 60 * 60 * 1000);
+    let countDownDate = new Date(date).getTime();
     // Get today's date and time
     var now = new Date().getTime();
     // console.log(countDownDate + " " + now)

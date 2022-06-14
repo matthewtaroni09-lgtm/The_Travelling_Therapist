@@ -101,16 +101,7 @@ def profile(request):
                     # Therapist email
                     send_mail(
                         subject = "Auction Created",
-                        message = """A New Auction has been created
-                        Clinic Name: """ + str(auction.clinic.clinicName) + """
-                        Clinic Location: """ + str(auction.clinic.city) + """, """ + str(auction.clinic.city) + """
-                        Clinic email: """ + str(auction.clinic.user.email) + """
-                        Reserve Bid: """ + str(auction.reservePrice) + """
-                        Auction Start: """ + str(auction.auctionStart) + """
-                        Auction End: """ + str(auction.auctionEnd) + """
-                        Placement Start: """ + str(auction.placementStart) + """
-                        Placement End: """ + str(auction.placementEnd) + """
-                        """,
+                        message = "",
                         html_message = emails.auction_created_admin(str(auction.clinic.clinicName), str(auction.clinic.city), str(auction.clinic.province), str(auction.clinic.user.email), str(auction.reservePrice), str(auction.auctionStart), str(auction.auctionEnd), str(auction.placementStart), str(auction.placementEnd), str(auction.auctionID)),
                         from_email = settings.EMAIL_HOST_USER,
                         recipient_list = ('loribine@gmail.com', 'info@travelingtherapist.ca')
@@ -183,11 +174,12 @@ def view_auction(request, auction_id):
             auction.minimumBidIncrement = set_bid_increment(bid.amount)
             auction.currentLowBid = bid.amount
             auction_change = True
-        diff = auction.auctionEnd - datetime.datetime.now(timezone('US/Eastern')) + datetime.timedelta(hours=4)
+        diff = auction.auctionEnd - datetime.datetime.now(timezone('US/Eastern'))
         if diff.total_seconds() < 60:
             print('last minute')
             new_id = str(uuid.uuid4())
             auction.auctionEnd = auction.auctionEnd + datetime.timedelta(minutes=1)
+            scheduled_tasks.print_job()
             scheduled_tasks.remove_cron_job(auction.cronID)
             scheduled_tasks.restart(auction.auctionEnd.year, auction.auctionEnd.month, auction.auctionEnd.day, auction.auctionEnd.hour, auction.auctionEnd.minute, auction.auctionEnd.second, new_id, str(auction.auctionID))
             auction.cronID = new_id
@@ -289,9 +281,9 @@ def create_auction(request):
 
                 auction.auctionStart = datetime.datetime.now()
                 # auction.auctionEnd = datetime.datetime.now() + datetime.timedelta(days=14)
-                auction.auctionEnd = datetime.datetime.now() + datetime.timedelta(minutes=5)
+                auction.auctionEnd = datetime.datetime.now() + datetime.timedelta(seconds=65)
                 auction.closed = False
-                auction.active = False
+                auction.active = True
                 auction.deleted = False
                 auction.createdBy = request.user
                 auction.modifiedBy = request.user
@@ -300,16 +292,7 @@ def create_auction(request):
                 # print(auction_created_admin(str(auction.clinic.clinicName), str(auction.clinic.city), str(auction.clinic.province), str(auction.clinic.user.email), str(auction.reservePrice), str(auction.auctionStart), str(auction.auctionEnd), str(auction.placementStart), str(auction.placementEnd), str(auction.auctionID)))
                 send_mail(
                     subject = "Auction Created",
-                    message = """A New Auction has been created
-                    Clinic Name: """ + str(auction.clinic.clinicName) + """
-                    Clinic Location: """ + str(auction.clinic.city) + """, """ + str(auction.clinic.city) + """
-                    Clinic email: """ + str(auction.clinic.user.email) + """
-                    Reserve Bid: """ + str(auction.reservePrice) + """
-                    Auction Start: """ + str(auction.auctionStart) + """
-                    Auction End: """ + str(auction.auctionEnd) + """
-                    Placement Start: """ + str(auction.placementStart) + """
-                    Placement End: """ + str(auction.placementEnd) + """
-                    """,
+                    message = "",
                     html_message = emails.auction_created_admin(str(auction.clinic.clinicName), str(auction.clinic.city), str(auction.clinic.province), str(auction.clinic.user.email), str(auction.reservePrice), str(auction.auctionStart), str(auction.auctionEnd), str(auction.placementStart), str(auction.placementEnd), str(auction.auctionID)),
                     from_email = settings.EMAIL_HOST_USER,
                     recipient_list = ('loribine@gmail.com', 'info@travelingtherapist.ca')
@@ -345,6 +328,7 @@ def create_auction(request):
 # @transaction.atomic
 def register(request):
     print(request.method)
+    admin = AdminSettings.objects.all()[:1].get()
     if request.method == 'POST':
         form = RegisterAcount(request.POST, request.FILES)
         if form.is_valid():
@@ -369,6 +353,26 @@ def register(request):
             user.account.neuro = form.cleaned_data.get('neuro')
             user.account.cardioResp = form.cleaned_data.get('cardioResp')
             user.save()
+            
+            if admin.sendEmails:
+                if str(user.account.userType).split(' ')[-1] == "Clinic":
+                    # Clinic email
+                    send_mail(
+                            subject = "Welcome to the Traveling Therapist",
+                            message = "",
+                            html_message = emails.clinic_welcome(user.account.clinicName),
+                            from_email = settings.EMAIL_HOST_USER,
+                            recipient_list = [user.email]
+                        )
+                else:
+                    # Therapist email
+                    send_mail(
+                            subject = "Welcome to the Traveling Therapist",
+                            message = "",
+                            html_message = emails.therapist_welcome(user.first_name, user.last_name),
+                            from_email = settings.EMAIL_HOST_USER,
+                            recipient_list = [user.email]
+                        )
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=user.username, password=raw_password)
             login(request, user)

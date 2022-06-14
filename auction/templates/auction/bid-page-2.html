@@ -57,6 +57,7 @@
     </section>
 
     {% if user.is_authenticated and user.account.get_split_user_type != 'Clinic' and auction.active %}
+
     <button type="button" class="btn-lg btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
       data-bs-whatever="@mdo">Bid</button>
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -75,9 +76,12 @@
                 {% csrf_token %}
                 {{ form.amount|as_crispy_field }}
               </div>
+              {% for error in form.non_field_errors %}
+              <p>{{error}}</p>
+              {% endfor %}
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary">Submit Bid</button>
+                <button id="submitBidButton" type="submit" class="btn btn-primary">Submit Bid</button>
               </div>
             </form>
           </div>

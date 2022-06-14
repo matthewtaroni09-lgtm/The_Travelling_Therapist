@@ -1,8 +1,10 @@
+import email
 from pyexpat import model
 from django import forms
 from .models import PROVINCES, Auction, Bid, Account, Demographic, User, UserType
 from django.contrib.auth.forms import UserCreationForm
 import random
+from django.core.exceptions import ValidationError
 
 class AuctionForm(forms.ModelForm):
     class Meta:
@@ -55,20 +57,31 @@ class AuctionForm(forms.ModelForm):
             'comments': forms.Textarea(attrs={'placeholder': 'Tell us about your clinic...', 'rows': '4'})
         }
 
+    # def clean(self):
+    #     reservePrice = self.cleaned_data.get('reservePrice')
+    #     print(reservePrice)
+    #     if reservePrice > 50:
+            
+    #         raise forms.ValidationError("Mx  50")
+    #     return reservePrice
+
 class BidForm(forms.ModelForm):
+    amount = forms.IntegerField(max_value=25000, min_value=1)
     class Meta:
         model = Bid
         fields = ('amount', )
-        labels = {}
-        widgets = {
-            'amount': forms.TextInput(attrs={'class':'form-control', 'placeholder': 'Bid Amount'})
-        }
+
+    # def clean_amount(self):
+    #     email_passed = self.cleaned_data.get("amount")
+    #     if not email_passed > 50:
+    #         raise forms.ValidationError("Sorry, the email submitted is invalid. All emails have to be registered on this domain only.")
+    #     return email_passed
 
 class RegisterAcount(UserCreationForm):
     first_name = forms.CharField( required=False)
     last_name = forms.CharField(required=False)
     clinicName = forms.CharField(required=False, label='Clinic Name')
-    city = forms.CharField(initial='Burlington', required=False)
+    city = forms.CharField(required=False)
     about = forms.CharField(required=False, label='About the clinic', widget=forms.Textarea)
     province = forms.ChoiceField(choices=PROVINCES, required=False)
     username = forms.CharField(label='Email')

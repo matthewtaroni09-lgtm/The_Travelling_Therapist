@@ -41,6 +41,8 @@ def auction_closed(id):
     bids = Bid.objects.filter(auction=id, active=True).annotate(Min('amount')).order_by('amount')
     winningBid = ""
     admin = AdminSettings.objects.all()[:1].get()
+    bidding_emails = []
+    
     print(admin.sendEmails)
     print(bids.count())
     if bids.count() > 0:
@@ -48,18 +50,21 @@ def auction_closed(id):
         print(winningBid.amount)
         print(winningBid.user.first_name)
         print(winningBid.user.email)
+        for bid in bids:
+            if bid.user.email is not winningBid.user.email:
+                bidding_emails.append({'email': bid.user.email, 'first_name': bid.user.first_name, 'last_name': bid.user.last_name})
+        print(bidding_emails)
         auction.active = False
         auction.closed = True
         auction.winner = winningBid.user
         auction.winningPrice = winningBid.amount
         auction.save()
-        if admin.sendEmails:
+        if admin.sendEmails and (winningBid.amount < auction.reservePrice or auction.reservePrice is None):
             print('send email')
             # Therapist email
             send_mail(
-                    subject = "Auction Ended",
-                    message = "Your auction ended at: " + dt_string + ". The winning bid was: " + str(winningBid.amount) + ".",
-                    # html_message = "<h1>Your auction ended at:</h1> " + dt_string + ". The winning bid was: " + str(winningBid.amount) + ".",
+                    subject = "Auction Ended - You are the Winner",
+                    message = "",
                     html_message = emails.therapist_auction_end_win(winningBid.user.first_name, winningBid.user.last_name),
                     from_email = settings.EMAIL_HOST_USER,
                     recipient_list = [winningBid.user.email]
@@ -67,9 +72,35 @@ def auction_closed(id):
             # Clinic email
             send_mail(
                     subject = "Auction Ended",
-                    message = "Your auction ended at: " + dt_string + ". The winning bid was: " + str(winningBid.amount) + ".",
-                    # html_message = "<h1>Your auction ended at:</h1> " + dt_string + ". The winning bid was: " + str(winningBid.amount) + ".",
-                    html_message = emails.clinic_auction_end(auction.user.clinicName),
+                    message = "",
+                    html_message = emails.clinic_auction_end(auction.clinic.clinicName),
+                    from_email = settings.EMAIL_HOST_USER,
+                    recipient_list = [winningBid.user.email]
+                )
+            for email in bidding_emails:
+                print(email)
+                send_mail(
+                    subject = "Auction Ended - Better Luck Next Time",
+                    message = "",
+                    html_message = emails.therapist_auction_end_lose(email['first_name'], email['last_name']),
+                    from_email = settings.EMAIL_HOST_USER,
+                    recipient_list = [email['email']]
+                )
+        elif admin.sendEmails and winningBid.amount > auction.reservePrice and auction.reservePrice is not None:
+            # Therapist email
+            for bid in bids: 
+                send_mail(
+                        subject = "Auction Ended - Reserve Not Meet",
+                        message = "",
+                        html_message = emails.therapist_auction_not_met(bid.user.first_name, bid.user.last_name),
+                        from_email = settings.EMAIL_HOST_USER,
+                        recipient_list = [bid.user.email]
+                    )
+            # Clinic email
+            send_mail(
+                    subject = "Auction Ended - Reserve Not Meet",
+                    message = "",
+                    html_message = emails.clinic_reserve_not_met(auction.clinic.clinicName),
                     from_email = settings.EMAIL_HOST_USER,
                     recipient_list = [winningBid.user.email]
                 )
@@ -78,8 +109,8 @@ def auction_closed(id):
         if admin.sendEmails:
             send_mail(
                     subject = "Auction Ended",
-                    message = emails.therapist_auction_end_win(winningBid.user.first_name, winningBid.user.last_name),
-                    html_message = emails.clinic_reserve_not_met(winningBid.user.first_name, winningBid.user.last_name),
+                    message = "",
+                    html_message = emails.clinic_no_bids(auction.clinic.clinicName),
                     from_email = settings.EMAIL_HOST_USER,
                     recipient_list = [auction.clinic.user.email]
                 )

@@ -45,6 +45,23 @@ def clinic_reserve_not_met(clinic_name):
     message = message + email_footer
     return message
 
+def clinic_no_bids(clinic_name):
+    message = email_header
+    message = message + """<section style="font-size: 16px; margin-bottom: 4rem;">
+  <p>Hello <span class="text-weight-bold">""" + clinic_name + """</span>,</p>
+  
+  <p>Your auction has reached an end, and there were no bids made. As such there will be no match made at this time.</p>
+
+  <p>Feel free to re-create your auction if you'd like to try to fill this position again.</p>
+
+  <p>Re-created auctions will still need to be approved by us like any other auction.</p>
+
+  <p>Thanks for using our service - we hope to see you again soon,</p>
+  <p style="font-weight: 700; padding-top: 0rem; margin-top: 0; line-height: 0;">The Traveling Therapist Team</p>
+</section>"""
+    message = message + email_footer
+    return message
+
 def clinic_welcome(clinic_name):
     message = email_header
     message = message + """<section style="font-size: 16px; margin-bottom: 4rem;">
