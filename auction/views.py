@@ -64,7 +64,9 @@ def profile(request):
             u_form = UserFormClinic(request.POST, instance=request.user)  # request.POST To Pass The POST Data
             p_form = ProfileUpdateClinic(request.POST, request.FILES, instance=request.user.account)  # File Data (images) Users Try To Upload.
             if u_form.is_valid() and p_form.is_valid():
-                u_form.save()
+                user_form = u_form.save(commit=False)
+                user_form.username = u_form.cleaned_data.get('email')
+                user_form.save()
                 p_form.save()
                 messages.success(request, f'Your profile has been updated!')
 
@@ -142,9 +144,9 @@ def profile(request):
         if request.method == 'POST':   # This Will Be Run When I Submit My Form. And Possibly Pass New Data.
             u_form = UserFormTherapist(request.POST, instance=request.user)  # request.POST To Pass The POST Data
             if u_form.is_valid():
-                u_form.save()
-                messages.success(request, f'Your profile has been updated!')
-
+                user_form = u_form.save(commit=False)
+                user_form.username = u_form.cleaned_data.get('email')
+                user_form.save()
         else:
             u_form = UserFormTherapist(instance=request.user)
             if 'submitted' in request.GET:
