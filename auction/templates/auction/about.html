@@ -33,7 +33,9 @@
       </h2>
       <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#faqAccordion">
         <div class="accordion-body text-weight-light">
-          The traveling therapist matches the lowest bidding therapist and the clinic within 48h of a match via email. This is the handoff process, from which point finances are handled outside of the traveling therapist. Note that therapists attempting to contact the clinic directly can be banned from the service as outlined in the terms & conditions.
+          The traveling therapist matches the lowest bidding therapist and the clinic within 48h of a match via email. This is the handoff process, from which point finances are handled outside of the traveling therapist. Note that therapists attempting to contact the clinic directly can be banned from the service as outlined in the 
+          <span type="button" data-bs-toggle="modal" data-bs-target="#tandcModalAbout1" class="mb-0 text-primary-colour">Terms & Conditions</span>.
+          {% include 'auction/modal_terms_and_conditions.html' with id='tandcModalAbout1' %}
         </div>
       </div>
     </div>
@@ -84,8 +86,8 @@
       <div id="collapseSix" class="accordion-collapse collapse" aria-labelledby="headingSix" data-bs-parent="#faqAccordion">
         <div class="accordion-body text-weight-light">
           Check with your professional governing body and insurance provider first. Some professions allow this, while others do not. The Traveling Therapist allows bids on auctions outside of your province, but the responsibility is on the therapist to ensure they are legally able to perform that work that they are bidding on. See full details on your responsibilities as a bidder in our <!-- Trigger Button -->
-          <span type="button" data-bs-toggle="modal" data-bs-target="#tandcModalAbout" class="mb-0 text-primary-colour">Terms & Conditions</span>.
-          {% include 'auction/modal_terms_and_conditions.html' with id='tandcModalAbout' %}
+          <span type="button" data-bs-toggle="modal" data-bs-target="#tandcModalAbout2" class="mb-0 text-primary-colour">Terms & Conditions</span>.
+          {% include 'auction/modal_terms_and_conditions.html' with id='tandcModalAbout2' %}
         </div>
       </div>
     </div>
