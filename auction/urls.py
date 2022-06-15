@@ -1,8 +1,12 @@
+from re import template
 from django.urls import path
 from . import views
 from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib.auth import views as auth_views
+from .views import PasswordsChangeView
+
 
 urlpatterns = [
     # Page Links
@@ -23,7 +27,8 @@ urlpatterns = [
     path("auction/data/all_auctions", views.get_all_auctions, name="get-all-auctions"), 
     path("auction/data/active_auctions_clinic", views.get_active_auctions_clinic, name="get-active-auctions-clinic"), 
     
-    path("password_reset", views.password_reset_request, name="password_reset")
+    path("password_reset", views.password_reset_request, name="password_reset"),
+    path("password", PasswordsChangeView.as_view(template_name="auction/registration/change_password.html"), name="change-password")
 
 ]
 

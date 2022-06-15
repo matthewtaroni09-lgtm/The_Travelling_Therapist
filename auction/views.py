@@ -10,7 +10,7 @@ from django.views.generic import ListView, CreateView
 from The_Travelling_Therapist.settings import ACTIVE_LINK
 
 from .filters import AuctionFilter
-from .forms import RegisterAcount, AuctionForm, BidForm, UserFormClinic, UserFormTherapist, ProfileUpdateClinic, CreateUserForm
+from .forms import RegisterAcount, AuctionForm, BidForm, UserFormClinic, UserFormTherapist, ProfileUpdateClinic, CreateUserForm, PasswordChangingForm
 from django.urls import reverse_lazy
 import datetime
 # from datetime import datetime
@@ -23,6 +23,7 @@ from django.utils.encoding import force_bytes
 from django.core.mail import send_mail, BadHeaderError
 from django.http import HttpResponse
 from django.contrib.auth.forms import PasswordResetForm
+from django.contrib.auth.views import PasswordChangeView
 from django.contrib.auth.models import User
 from django.template.loader import render_to_string
 from django.db.models.query_utils import Q
@@ -32,6 +33,10 @@ from django.contrib import messages
 from . import emails
 from pytz import timezone
 from django.core import serializers
+
+class PasswordsChangeView(PasswordChangeView):
+    form_class = PasswordChangingForm
+    success_url = reverse_lazy('profile')
 
 class AuctionListView(ListView):
     model = Auction
@@ -409,6 +414,8 @@ def logout_user(request):
     logout(request)
     messages.success(request, ("Logged out"))
     return redirect('index')
+
+
 
 def password_reset_request(request):
 	if request.method == "POST":

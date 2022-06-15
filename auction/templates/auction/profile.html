@@ -124,6 +124,8 @@
                 <button type="submit" class="btn btn-primary">Update</button>
               </div>
             </form>
+            <hr>
+            <a href="{% url 'change-password' %}" class="btn btn-primary">Change Password</a>
           </div>
         </div>
       </div>
@@ -204,9 +206,6 @@
                   </div>
                 </div>
               </div>
-
-
-
             </div>
             <div class="mb-3">
               {{ form.comments|as_crispy_field }}
@@ -338,6 +337,8 @@
             <div>
               <button type="submit" class="btn btn-primary">Update</button>
             </div>
+            <hr>
+            <a href="{% url 'change-password' %}" class="btn btn-primary">Change Password</a>
         </div>
         </form>
       </div>

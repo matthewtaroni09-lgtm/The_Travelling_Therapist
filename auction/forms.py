@@ -1,8 +1,10 @@
 import email
+from operator import mod
 from pyexpat import model
+from tkinter import Widget
 from django import forms
 from .models import PROVINCES, Auction, Bid, Account, Demographic, User, UserType
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
 import random
 from django.core.exceptions import ValidationError
 
@@ -124,3 +126,12 @@ class ProfileUpdateClinic(forms.ModelForm):
     class Meta:
         model = Account
         fields = ['clinicName', 'city', 'province', 'about', 'underEighteen', 'eighteenToSixtyFive', 'overSixtyFive', 'MSK', 'neuro', 'cardioResp', 'imageOne', 'imageTwo', 'imageThree', 'imageFour']
+
+class PasswordChangingForm(PasswordChangeForm):
+    old_password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control', 'type': 'password'}))
+    new_password1 = forms.CharField(label='Enter new password', widget=forms.PasswordInput(attrs={'class': 'form-control', 'type': 'password'}))
+    new_password2 = forms.CharField(label='Re-enter new password', widget=forms.PasswordInput(attrs={'class': 'form-control', 'type': 'password'}))
+
+    class Meta:
+        model = User
+        fields = ('old_password', 'new_password1', 'new_password2')
