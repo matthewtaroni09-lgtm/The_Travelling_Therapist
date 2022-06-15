@@ -122,7 +122,7 @@ def profile(request):
 
                     auction.auctionStart = datetime.datetime.now()
                     # auction.auctionEnd = datetime.datetime.now() + datetime.timedelta(days=14)
-                    auction.auctionEnd = datetime.datetime.now() + datetime.timedelta(minutes=1)
+                    auction.auctionEnd = datetime.datetime.now() + datetime.timedelta(seconds=300)
                     auction.closed = False
                     auction.active = False
                     auction.deleted = False
@@ -318,9 +318,9 @@ def create_auction(request):
 
                 auction.auctionStart = datetime.datetime.now()
                 # auction.auctionEnd = datetime.datetime.now() + datetime.timedelta(days=14)
-                auction.auctionEnd = datetime.datetime.now() + datetime.timedelta(seconds=65)
+                auction.auctionEnd = datetime.datetime.now() + datetime.timedelta(seconds=300)
                 auction.closed = False
-                auction.active = True
+                auction.active = False
                 auction.deleted = False
                 auction.createdBy = request.user
                 auction.modifiedBy = request.user
