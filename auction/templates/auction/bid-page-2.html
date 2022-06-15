@@ -112,44 +112,6 @@
   </div>
   <!-- Image Section End -->
 
-  <!-- <div class="d-flex">
-    <section class="d-inline-flex align-items-center text-white bg-dark py-2 px-3 me-3 rounded">
-      <img class="clock me-2 text-white" src="{% static 'auction/clock.svg' %}" alt="clock"><time id="auctionTimer-{{ auction.auctionID }}" class="m-0 d-flex me-4 text-white">--</time>
-      <p class="m-0 text-white">Low Bid:<span class="ms-2 text-white">${{ auction.get_low_bid }}</span></p>
-      <p class="m-0 mx-4 d-none d-lg-block text-white"># Bids:<span class="ms-2 text-white">{{ num_bids }}</span></p>
-      <p class="m-0 me-4 d-none d-lg-block text-white"># of Therapists Bidding:<span class="ms-2 text-white">{{ num_biders }}</span></p>
-    </section>
-
-    {% if user.is_authenticated and user.account.get_split_user_type != 'Clinic' %}
-    <button type="button" class="btn-lg btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
-      data-bs-whatever="@mdo">Bid</button>
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Place Bid</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <form method="post">
-              <p>Current Bid: ${{ auction.get_low_bid }}</p>
-              <div class="mb-3">
-                {% csrf_token %}
-                {{ form.amount|as_crispy_field }}
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary">Submit Bid</button>
-              </div>
-            </form>
-          </div>
-
-        </div>
-      </div>
-    </div>
-    {% endif %}
-  </div> -->
-
   <div class="row w-100 mx-auto mt-3">
     <p class="col-4 text-weight-bold border mb-0 py-2 bg-light">Clinic Name</p>
     <p class="col-8 text-weight-light border mb-0 py-2">{{ auction.clinic.clinicName }}</p>

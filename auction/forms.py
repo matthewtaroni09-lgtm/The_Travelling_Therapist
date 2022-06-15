@@ -42,8 +42,8 @@ class AuctionForm(forms.ModelForm):
         # labels = {}
         widgets = {
             'placementStart': forms.DateInput(format=('%Y-%m-%d'), attrs={'class': 'form-control', 'placeholder': 'Select a date', 'type': 'date'}),
-            'placementEnd': forms.DateInput(format=('%Y-%m-%d'), attrs={'class': 'form-control', 'placeholder': 'Select a date', 'type': 'date'}),
-            'mondayStart': forms.TimeInput(attrs={'class': 'form-control', 'placeholder': 'Select a date', 'type': 'time'}),
+            'placementEnd': forms.DateInput(format=('%Y-%m'), attrs={'class': 'form-control', 'placeholder': 'Select a date', 'type': 'date'}),
+            'mondayStart': forms.TimeInput(format=('%I:%M'), attrs={'class': 'form-control', 'placeholder': 'Select a date', 'type': 'time'}),
             'mondayEnd': forms.TimeInput(attrs={'class': 'form-control', 'placeholder': 'Select a date', 'type': 'time'}),
             'tuesdayStart': forms.TimeInput(attrs={'class': 'form-control', 'placeholder': 'Select a date', 'type': 'time'}),
             'tuesdayEnd': forms.TimeInput(attrs={'class': 'form-control', 'placeholder': 'Select a date', 'type': 'time'}),
