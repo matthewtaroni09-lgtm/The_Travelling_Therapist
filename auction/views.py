@@ -214,7 +214,10 @@ def view_auction(request, auction_id):
             new_id = str(uuid.uuid4())
             auction.auctionEnd = auction.auctionEnd + datetime.timedelta(minutes=1)
             scheduled_tasks.print_job()
-            scheduled_tasks.remove_cron_job(auction.cronID)
+            try:
+                scheduled_tasks.remove_cron_job(auction.cronID)
+            except:
+                print("fail")
             scheduled_tasks.restart(auction.auctionEnd.year, auction.auctionEnd.month, auction.auctionEnd.day, auction.auctionEnd.hour, auction.auctionEnd.minute, auction.auctionEnd.second, new_id, str(auction.auctionID))
             auction.cronID = new_id
             auction_change = True
