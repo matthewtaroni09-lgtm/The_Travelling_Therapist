@@ -47,14 +47,20 @@ function countDown(date, auctionID) {
 
         if (days >= 0 && hours >= 0 && minutes >= 0 && seconds >= 0) {
             if (days > 0) {
-                timeLeft += days + "d ";
+                timeLeft += days + "d " + hours + "h ";
             }
-            if (hours > 0) {
-                timeLeft += hours + "h ";
+            else if (days == 0 && hours > 0) {
+                timeLeft += hours + "h " + minutes + "m ";
+            }
+            else if (days == 0 && hours == 0 && minutes > 0) {
+                timeLeft += minutes + "m " + seconds + "s";
+            }
+            else {
+                timeLeft += seconds + "s"
             }
 
             // Output the result in an element with id="demo"
-            document.getElementById("auctionTimer-" + auctionID).innerHTML = timeLeft + minutes + "m " + seconds + "s";
+            document.getElementById("auctionTimer-" + auctionID).innerHTML = timeLeft;
 
             // If the count down is over, write some text 
             if (distance < 0) {
