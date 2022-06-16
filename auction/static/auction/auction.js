@@ -59,11 +59,11 @@ function countDown(date, auctionID) {
             // If the count down is over, write some text 
             if (distance < 0) {
                 clearInterval(x);
-                document.getElementById("auctionTimer-" + auctionID).innerHTML = "Auction Closed";
+                document.getElementById("auctionTimer-" + auctionID).innerHTML = "Auction Completed";
             }
         }
         else {
-            document.getElementById("auctionTimer-" + auctionID).innerHTML = "Auction Closed";
+            document.getElementById("auctionTimer-" + auctionID).innerHTML = "Auction Completed";
         }
     }, 1000);
 }
