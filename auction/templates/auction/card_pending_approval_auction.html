@@ -1,4 +1,4 @@
-<div class="col-sm-6 col-lg-4 text-x-small">
+<div class="col-sm-6 col-lg-4">
   <a class="card mt-4 text-decoration-none text-dark" href="{% url 'auction' auction.auctionID %}">
     <div class="position-relative">
       {% if auction.clinic.imageOne %}
@@ -6,8 +6,7 @@
       {% else %}
       <img src="/media/images/no-image.jpg" class="card-img-top card-image" alt="Image of Clinic">
       {% endif %}
-      <div
-        class="d-inline-flex text-align-center text-white bg-dark p-2 rounded position-absolute bottom-0 start-0">
+      <div class="d-inline-flex text-align-center text-white bg-dark p-2 rounded position-absolute bottom-0 start-0 text-x-small">
         <span class="material-icons small text-white">schedule</span>
         <p class="m-0 text-white align-self-center">Pending Approval</p>
       </div>
