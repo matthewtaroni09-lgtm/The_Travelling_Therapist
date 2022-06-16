@@ -120,7 +120,7 @@ class Auction(models.Model):
         return num_bids
 
     def get_position_type(self):
-        if str(self.clinic.userType) == 'Physiotherapy Clinic':
+        if str(self.clinic.userType) == 'Physiotherapy Clinic' or str(self.clinic.userType) == 'Physiotherapist':
             return 'Temporary Physiotherapist'
         else:
             return ''
