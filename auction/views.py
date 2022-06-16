@@ -121,8 +121,7 @@ def profile(request):
                         auction.currentLowBid = form.cleaned_data.get('reservePrice')
 
                     auction.auctionStart = datetime.datetime.now()
-                    # auction.auctionEnd = datetime.datetime.now() + datetime.timedelta(days=14)
-                    auction.auctionEnd = datetime.datetime.now() + datetime.timedelta(seconds=300)
+                    auction.auctionEnd = datetime.datetime.now() + datetime.timedelta(seconds=settings.DEAFULT_AUCTION_LENGTH)
                     auction.closed = False
                     auction.active = False
                     auction.deleted = False
@@ -210,7 +209,7 @@ def view_auction(request, auction_id):
             auction_change = True
         diff = auction.auctionEnd - datetime.datetime.now(timezone('US/Eastern'))
         if diff.total_seconds() < 60:
-            print('last minute')
+            print(auction.auctionEnd)
             new_id = str(uuid.uuid4())
             auction.auctionEnd = auction.auctionEnd + datetime.timedelta(minutes=1)
             scheduled_tasks.print_job()
@@ -316,11 +315,11 @@ def create_auction(request):
                         auction.minimumBidIncrement = 500
                     auction.currentLowBid = form.cleaned_data.get('reservePrice')
 
-                auction.auctionStart = datetime.datetime.now()
+                auction.auctionStart = datetime.datetime.now(timezone('US/Eastern'))
                 # auction.auctionEnd = datetime.datetime.now() + datetime.timedelta(days=14)
-                auction.auctionEnd = datetime.datetime.now() + datetime.timedelta(seconds=300)
+                auction.auctionEnd = datetime.datetime.now(timezone('US/Eastern')) + datetime.timedelta(seconds=settings.DEAFULT_AUCTION_LENGTH)
                 auction.closed = False
-                auction.active = False
+                auction.active = settings.DEFAULT_AUCTION_ACTIVE
                 auction.deleted = False
                 auction.createdBy = request.user
                 auction.modifiedBy = request.user

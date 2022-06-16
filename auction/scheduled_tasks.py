@@ -7,11 +7,15 @@ from django.http import JsonResponse, HttpResponse
 from .models import Account, Auction, Bid, User, Account, AdminSettings
 from django.db.models import Min
 from . import emails
+from apscheduler.schedulers.background import BackgroundScheduler
+from django_apscheduler.jobstores import DjangoJobStore, register_events, register_job
 
-# Global variable
 scheduler = BackgroundScheduler()
+scheduler.add_jobstore(DjangoJobStore(), "default")
+
+register_events(scheduler)
+
 scheduler.start()
-# scheduler.shutdown()
 
 def start(year, month, day, hour, minute, second, id):
     schedule_id = scheduler.add_job(auction_closed, 'cron', year=year, month=month, day=day, hour=hour, minute=minute, second=second, id=id, args=(id,))
@@ -43,6 +47,8 @@ def auction_closed(id):
     admin = AdminSettings.objects.all()[:1].get()
     bidding_emails = []
     
+    auction.active = False
+    auction.closed = True
     print(admin.sendEmails)
     print(bids.count())
     if bids.count() > 0:
@@ -54,8 +60,6 @@ def auction_closed(id):
             if bid.user.email is not winningBid.user.email:
                 bidding_emails.append({'email': bid.user.email, 'first_name': bid.user.first_name, 'last_name': bid.user.last_name})
         print(bidding_emails)
-        auction.active = False
-        auction.closed = True
         auction.winner = winningBid.user
         auction.winningPrice = winningBid.amount
         auction.save()
@@ -106,6 +110,7 @@ def auction_closed(id):
                 )
     else:
         print("no winner")
+        auction.save()
         if admin.sendEmails:
             send_mail(
                     subject = "Auction Ended",

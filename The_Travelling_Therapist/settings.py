@@ -40,6 +40,9 @@ if ENVIRONMENT == 'DEV':
 else:
     ACTIVE_LINK = PROD_LINK
 
+DEAFULT_AUCTION_LENGTH = 85
+DEFAULT_AUCTION_ACTIVE = True
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -51,7 +54,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'auction',
     'crispy_forms',
-    'django_filters'
+    'django_filters',
+    'django_apscheduler',
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'

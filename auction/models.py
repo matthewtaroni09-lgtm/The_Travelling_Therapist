@@ -108,8 +108,10 @@ class Auction(models.Model):
     def get_bid(self):
         if self.currentLowBid is None:
             return str('No Bids Yet')
-        elif self.closed == True and self.active == False:
+        elif self.closed == True and self.active == False and self.winningPrice is not None:
             return 'Winning bid: $' + str("{:,}".format(self.winningPrice))
+        elif self.closed == True and self.active == False and self.winningPrice is None:
+            return 'No winner'
         else:
             return 'Current Low Bid: $' + str("{:,}".format(self.currentLowBid))
 
