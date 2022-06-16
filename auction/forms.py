@@ -93,12 +93,12 @@ class RegisterAcount(UserCreationForm):
     imageTwo = forms.ImageField(required=False, label='Image 2')
     imageThree = forms.ImageField(required=False, label='Image 3')
     imageFour = forms.ImageField(required=False, label='Image 4')
-    underEighteen = forms.IntegerField(required=False, label='Under 18')
-    eighteenToSixtyFive = forms.IntegerField(required=False, label='18 - 65')
-    overSixtyFive = forms.IntegerField(required=False, label='Over 65')
-    MSK = forms.IntegerField(required=False, label='Musculoskeletal')
-    neuro = forms.IntegerField(required=False, label='Neurological')
-    cardioResp = forms.IntegerField(required=False, label='Cardiorespiratory')
+    underEighteen = forms.IntegerField(required=False, label='% Under 18')
+    eighteenToSixtyFive = forms.IntegerField(required=False, label='% 18 - 65')
+    overSixtyFive = forms.IntegerField(required=False, label='% Over 65')
+    MSK = forms.IntegerField(required=False, label='% Musculoskeletal')
+    neuro = forms.IntegerField(required=False, label='% Neurological')
+    cardioResp = forms.IntegerField(required=False, label='% Cardiorespiratory')
 
     class Meta:
         model = User
