@@ -1,5 +1,4 @@
 <div class="col-sm-6 col-lg-4">
-  {{ auction.currentLowBid }}
   <a class="card mt-4 text-decoration-none text-dark" href="{% url 'auction' auction.auctionID %}">
     <div class="position-relative">
       {% if auction.clinic.imageOne or auction.imageOne %}
@@ -11,7 +10,7 @@
       <div class="d-flex text-align-center align-items-center bg-dark p-2 rounded position-absolute bottom-0 start-0 text-x-small">
         <span class="material-icons small text-white">schedule</span><time id="auctionTimer-{{ auction.auctionID }}"
           class="m-0 d-flex me-3 text-white">--</time>
-        <p class="m-0 text-white">{{ auction.get_bid }}{{ auction.currentLowBid }}</p>
+        <p class="m-0 text-white">{{ auction.get_bid }}</p>
         <!-- <p class="m-0 d-none d-lg-block text-white">
           # Bids:<span class="ms-2 text-white">{{ auction.get_num_bids }}</span>
         </p> -->
