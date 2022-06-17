@@ -28,7 +28,6 @@ function getDateDiff() {
 
     let dateDiff = days_between(startDate, endDate);
     if (dateDiff < 30) {
-        console.log('monthly');
         $("#id_payFrequency option[value='3']").remove();
     }
     else {
