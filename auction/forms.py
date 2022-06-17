@@ -10,6 +10,7 @@ from django.core.exceptions import ValidationError
 
 class AuctionForm(forms.ModelForm):
     # reservePrice = forms.IntegerField(max_value=25000, min_value=1)
+
     class Meta:
         model = Auction
         fields = ( 
@@ -40,10 +41,11 @@ class AuctionForm(forms.ModelForm):
             'overSixtyFive'
         )
         # labels = {}
+
         widgets = {
             'placementStart': forms.DateInput(format=('%Y-%m-%d'), attrs={'class': 'form-control', 'placeholder': 'Select a date', 'type': 'date'}),
             'placementEnd': forms.DateInput(format=('%Y-%m-%d'), attrs={'class': 'form-control', 'placeholder': 'Select a date', 'type': 'date'}),
-            'mondayStart': forms.TimeInput(format=('%I:%M'), attrs={'class': 'form-control', 'placeholder': 'Select a date', 'type': 'time'}),
+            'mondayStart': forms.TimeInput(attrs={'class': 'form-control', 'placeholder': 'Select a date', 'type': 'time'}),
             'mondayEnd': forms.TimeInput(attrs={'class': 'form-control', 'placeholder': 'Select a date', 'type': 'time'}),
             'tuesdayStart': forms.TimeInput(attrs={'class': 'form-control', 'placeholder': 'Select a date', 'type': 'time'}),
             'tuesdayEnd': forms.TimeInput(attrs={'class': 'form-control', 'placeholder': 'Select a date', 'type': 'time'}),
@@ -64,8 +66,7 @@ class AuctionForm(forms.ModelForm):
     #     reservePrice = self.cleaned_data.get('reservePrice')
     #     print(reservePrice)
     #     if reservePrice > 50:
-            
-    #         raise forms.ValidationError("Mx  50")
+    #         raise forms.ValidationError("Over 50")
     #     return reservePrice
 
 class BidForm(forms.ModelForm):

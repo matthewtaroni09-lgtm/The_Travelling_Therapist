@@ -8,11 +8,11 @@
       </div>
       <p class="text-weight-thin mb-0">{{ auction.placementStart }} - {{ auction.placementEnd }}</p>
       {% if auction.userType %}
-        <p class="text-weight-thin mb-0">{{ auction.userType }}</p>
+      <p class="text-weight-thin mb-0">{{ auction.get_position_type }}</p>
       {% else %}
-        <p class="text-weight-thin mb-0">Physiotherapist</p>
+      <p class="text-weight-thin mb-0">{{ auction.get_position_type }}</p>
       {% endif %}
-      <p class="text-weight-thin mb-0">{{ auction.city }}{{ auction.clinic.city }}, ON</p>
+      <p class="text-weight-thin mb-0">{{ auction.city }}{{ auction.clinic.city }}, {{ auction.province }}</p>
     </div>
   </div>
 </div>

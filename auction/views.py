@@ -165,8 +165,8 @@ def profile(request):
     else:
         print(request.method)
         user_id = str(request.user.id)
-        active_auctions_list = Bid.objects.raw('SELECT DISTINCT AA.auctionID, AB.bidID, AA.placementStart, AA.placementEnd, AA.clinic_id, AA.currentLowBid, AA.winningPrice, AC.user_id , AC.clinicName, AC.city, AC.about, AC.imageOne, AC.imageTwo, UT.name "userType", count(*) "get_num_bids", CASE WHEN AA.currentLowBid IS NULL THEN "No Bids Yet" WHEN AA.closed = 1 AND AA.active = 0 and AA.winningPrice IS NOT NULL THEN CONCAT("Winning Bid: $", AA.winningPrice) WHEN AA.closed = 1 AND AA.active = 0 and AA.winningPrice IS NULL THEN "No winner" ELSE CONCAT("Current Low Bid: $", AA.currentLowBid) END "get_bid" FROM auction_auction AA LEFT JOIN auction_bid AB ON AA.auctionID = AB.auction_id LEFT JOIN auction_account AC ON AA.clinic_id = AC.id LEFT JOIN auction_usertype UT ON AC.userType_id = UT.id WHERE AB.user_id = ' + user_id + ' AND AA.active = 1 AND AA.closed = 0 AND AA.deleted = 0 GROUP BY auctionID, AA.placementStart, AA.placementEnd, AA.clinic_id, AC.user_id , AC.clinicName, AC.city, AC.about, AC.imageOne, AC.imageTwo, UT.name;')
-        past_auctions_list = Bid.objects.raw('SELECT DISTINCT AA.auctionID, AB.bidID, AA.placementStart, AA.placementEnd, AA.clinic_id, AA.winningPrice, AC.user_id , AC.clinicName, AC.city, AC.about, AC.imageOne, AC.imageTwo, UT.name "userType", count(*) "get_num_bids"  FROM auction_auction AA LEFT JOIN auction_bid AB ON AA.auctionID = AB.auction_id LEFT JOIN auction_account AC ON AA.clinic_id = AC.id LEFT JOIN auction_usertype UT ON AC.userType_id = UT.id WHERE AB.user_id = ' + user_id + ' AND AA.active = 0 AND AA.closed = 1 AND AA.deleted = 0 GROUP BY auctionID, AA.placementStart, AA.placementEnd, AA.clinic_id, AC.user_id , AC.clinicName, AC.city, AC.about, AC.imageOne, AC.imageTwo, UT.name;')
+        active_auctions_list = Bid.objects.raw('SELECT DISTINCT AA.auctionID, AB.bidID, AA.placementStart, AA.placementEnd, AA.clinic_id, AA.currentLowBid, AA.winningPrice, AC.user_id , AC.clinicName, AC.city, AC.province, AC.about, AC.imageOne, AC.imageTwo, UT.name "userType", count(*) "get_num_bids", CASE WHEN AA.currentLowBid IS NULL THEN "No Bids Yet" WHEN AA.closed = 1 AND AA.active = 0 and AA.winningPrice IS NOT NULL THEN CONCAT("Winning Bid: $", AA.winningPrice) WHEN AA.closed = 1 AND AA.active = 0 and AA.winningPrice IS NULL THEN "No winner" ELSE CONCAT("Current Low Bid: $", AA.currentLowBid) END "get_bid", CASE WHEN UT.name = "Physiotherapy Clinic" THEN "Temporary Physiotherapist" ELSE "" END "get_position_type" FROM auction_auction AA LEFT JOIN auction_bid AB ON AA.auctionID = AB.auction_id LEFT JOIN auction_account AC ON AA.clinic_id = AC.id LEFT JOIN auction_usertype UT ON AC.userType_id = UT.id WHERE AB.user_id = ' + user_id + ' AND AA.active = 1 AND AA.closed = 0 AND AA.deleted = 0 GROUP BY auctionID, AA.placementStart, AA.placementEnd, AA.clinic_id, AC.user_id , AC.clinicName, AC.city, AC.about, AC.imageOne, AC.imageTwo, UT.name;')
+        past_auctions_list = Bid.objects.raw('SELECT DISTINCT AA.auctionID, AB.bidID, AA.placementStart, AA.placementEnd, AA.clinic_id, AA.winningPrice, AC.user_id , AC.clinicName, AC.city, AC.province, AC.about, AC.imageOne, AC.imageTwo, UT.name "userType", count(*) "get_num_bids", CASE WHEN UT.name = "Physiotherapy Clinic" THEN "Temporary Physiotherapist" ELSE "" END "get_position_type" FROM auction_auction AA LEFT JOIN auction_bid AB ON AA.auctionID = AB.auction_id LEFT JOIN auction_account AC ON AA.clinic_id = AC.id LEFT JOIN auction_usertype UT ON AC.userType_id = UT.id WHERE AB.user_id = ' + user_id + ' AND AA.active = 0 AND AA.closed = 1 AND AA.deleted = 0 GROUP BY auctionID, AA.placementStart, AA.placementEnd, AA.clinic_id, AC.user_id , AC.clinicName, AC.city, AC.about, AC.imageOne, AC.imageTwo, UT.name;')
         if request.method == 'POST':   # This Will Be Run When I Submit My Form. And Possibly Pass New Data.
             u_form = UserFormTherapist(request.POST, instance=request.user)  # request.POST To Pass The POST Data
             if u_form.is_valid():
@@ -207,11 +207,12 @@ def view_auction(request, auction_id):
             auction.minimumBidIncrement = set_bid_increment(bid.amount)
             auction.currentLowBid = bid.amount
             auction_change = True
-        diff = auction.auctionEnd - datetime.datetime.now(timezone('US/Eastern'))
+        diff = auction.auctionEnd - datetime.datetime.now(timezone('Canada/Eastern'))
         if diff.total_seconds() < 60:
             print(auction.auctionEnd)
             new_id = str(uuid.uuid4())
-            auction.auctionEnd = auction.auctionEnd + datetime.timedelta(minutes=1)
+            auction.auctionEnd = auction.auctionEnd + datetime.timedelta(minutes=241)
+            print(auction.auctionEnd)
             scheduled_tasks.print_job()
             try:
                 scheduled_tasks.remove_cron_job(auction.cronID)
@@ -271,7 +272,7 @@ def get_active_auctions_clinic(request):
     else:
         print("ther")
         print(str(request.user.account.user_id))
-        query = 'SELECT DISTINCT AA.auctionID, AA.auctionStart, AA.auctionEnd, AA.currentLowBid, AB.bidID, AA.placementStart, AA.placementEnd, AA.clinic_id, AC.user_id , AC.clinicName, AC.city, AC.about, AC.imageOne, AC.imageTwo, UT.name "userType" FROM auction_auction AA LEFT JOIN auction_bid AB ON AA.auctionID = AB.auction_id LEFT JOIN auction_account AC ON AA.clinic_id = AC.id LEFT JOIN auction_usertype UT ON AC.userType_id = UT.id WHERE AB.user_id = ' + str(request.user.account.user_id) + ' AND AA.active = 1 AND AA.closed = 0 AND AA.deleted = 0 GROUP BY auctionID, AA.placementStart, AA.placementEnd, AA.clinic_id, AC.user_id , AC.clinicName, AC.city, AC.about, AC.imageOne, AC.imageTwo, UT.name;'
+        query = 'SELECT DISTINCT AA.auctionID, AA.auctionStart, AA.auctionEnd, AA.currentLowBid, AB.bidID, AA.placementStart, AA.placementEnd, AA.clinic_id, AC.user_id, AC.clinicName, AC.city, AC.province, AC.about, AC.imageOne, AC.imageTwo, UT.name "userType" FROM auction_auction AA LEFT JOIN auction_bid AB ON AA.auctionID = AB.auction_id LEFT JOIN auction_account AC ON AA.clinic_id = AC.id LEFT JOIN auction_usertype UT ON AC.userType_id = UT.id WHERE AB.user_id = ' + str(request.user.account.user_id) + ' AND AA.active = 1 AND AA.closed = 0 AND AA.deleted = 0 GROUP BY auctionID, AA.placementStart, AA.placementEnd, AA.clinic_id, AC.user_id , AC.clinicName, AC.city, AC.about, AC.imageOne, AC.imageTwo, UT.name;'
         auction_list = Bid.objects.raw(query)
         active_auctions_list = []
         for a in auction_list:
@@ -282,7 +283,7 @@ def get_active_auctions_clinic(request):
 
 def get_active_auctions_theraipist(request):
     user_id = str(request.user.id)
-    active_auctions_list = list(Bid.objects.raw('SELECT DISTINCT AA.auctionID, AB.bidID, AA.placementStart, AA.placementEnd, AC.clinicName, AC.city, AC.about, AC.imageOne, AC.imageTwo, UT.name "userType" FROM auction_auction AA JOIN auction_bid AB ON AA.auctionID = AB.auction_id JOIN auction_account AC ON AA.clinic_id = AC.user_id JOIN auction_usertype UT ON AC.userType_id = UT.id WHERE AB.user_id = ' + user_id + ' AND AA.active = 1 AND AA.closed = 0 AND AA.deleted = 0 GROUP BY auctionID;').values())
+    active_auctions_list = list(Bid.objects.raw('SELECT DISTINCT AA.auctionID, AB.bidID, AA.placementStart, AA.placementEnd, AC.clinicName, AC.city, AC.province, AC.about, AC.imageOne, AC.imageTwo, UT.name "userType" FROM auction_auction AA JOIN auction_bid AB ON AA.auctionID = AB.auction_id JOIN auction_account AC ON AA.clinic_id = AC.user_id JOIN auction_usertype UT ON AC.userType_id = UT.id WHERE AB.user_id = ' + user_id + ' AND AA.active = 1 AND AA.closed = 0 AND AA.deleted = 0 GROUP BY auctionID;').values())
     return JsonResponse({'data': active_auctions_list})
 
 def get_demogrpahics(request, clinic_id):
@@ -302,6 +303,7 @@ def create_auction(request):
     print(active_auctions_list.count())
     if active_auctions_list.count() <= max_auctions.numAllowedAuctions:
         if request.method == "POST":
+
             form = AuctionForm(request.POST, request.FILES)
             if form.is_valid():
                 auction = form.save(commit=False)
@@ -418,7 +420,6 @@ def register(request):
         form = RegisterAcount()
     return render(request, 'auction/register.html', {'form': form})
     
-
 # -------------- Login --------------
 def login_user(request):
     if request.method == 'POST':
