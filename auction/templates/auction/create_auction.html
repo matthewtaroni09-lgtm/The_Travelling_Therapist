@@ -9,10 +9,13 @@
       aria-labelledby="create-auction-tab"> -->
     <p>{{showForm}}</p>
     {% if show_form %}
+    <!-- Message Alert -->
+
     <form method="post" class="p-2">
       <!-- <form method="post" class="p-md-5"> -->
       <h1 class="text-large text-weight-normal mb-5">Create New Auction Post</h1>
       {% csrf_token %}
+      {{ form|as_crispy_errors }}
       <div class="row">
         <div class="mb-3 col-md-6">
           {{ form.placementStart|as_crispy_field }}
@@ -22,6 +25,10 @@
         </div>
         <div class="mb-3 col-md-6">
           {{ form.reservePrice|as_crispy_field }}
+          <p>{{forms.non_field_errors}}</p>
+          {% for error in forms.non_field_errors %}
+          <p>{{error}}</p>
+          {% endfor %}
         </div>
         <div class="mb-3 col-md-6">
           {{ form.payFrequency|as_crispy_field }}
@@ -92,9 +99,6 @@
         <div class="mb-3">
           {{ form.comments|as_crispy_field }}
         </div>
-        {% for error in form.non_field_errors %}
-        <p>{{error}}</p>
-        {% endfor %}
         <div>
           <button type="submit" class="btn btn-primary">Create Auction</button>
         </div>

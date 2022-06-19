@@ -3,14 +3,31 @@ const auctionID = URL.substring(URL.lastIndexOf('/') + 1);
 let currentLowBid = 0
 
 $(document).ready(function () {
-    $('#submitBidButton').click(function () {
-        let amount = $('#id_amount').value();
-        if (amount > currentLowBid) {
-            if (!confirm('Are you sure?')) {
-                e.preventDefault();
-            }
+    $("#warningMessage").hide();
+    let max_bid = 0;
+    let url = $(location).attr('href').split("/");
+    let auctionID = url[url.length - 1];
+    $.ajax({
+        type: "GET",
+        url: "/auction/data/view_auction_data",
+        data: {
+            'auctionID': auctionID
+        },
+        success: function (response) {
+            console.log(response);
+            max_bid = response.max_bid;
+        },
+        error: function (error) {
+            console.log('error: ', error);
         }
+    });
 
+    $("#id_amount").change(function () {
+        $("#warningMessage").hide();
+        if (parseInt($("#id_amount").val()) > max_bid) {
+            $("#warningMessage").text("Your bid is over the current minimum bid and will not be considered for determing the winner of the auction. Click Submit if you would like to proceed anyway.")
+            $("#warningMessage").show();
+        }
     });
 });
 

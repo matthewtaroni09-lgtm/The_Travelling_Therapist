@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 import email
 from operator import mod
 from pyexpat import model
@@ -8,9 +9,18 @@ from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
 import random
 from django.core.exceptions import ValidationError
 
-class AuctionForm(forms.ModelForm):
-    # reservePrice = forms.IntegerField(max_value=25000, min_value=1)
+def check_times(start_time, end_time, day):
+    if (start_time is None and end_time is not None) or (start_time is not None and end_time is None):
+        return "Please ensure that the start and end times are completed for " + str(day) + ". If this is not a working day please remove both start and end times."
+    elif start_time is not None and end_time is not None:
+        if start_time >= end_time:
+            return str(day) + "'s start time is after the end time."
+        else:
+            return ''
+    else: 
+        return ''
 
+class AuctionForm(forms.ModelForm):
     class Meta:
         model = Auction
         fields = ( 
@@ -62,24 +72,86 @@ class AuctionForm(forms.ModelForm):
             'comments': forms.Textarea(attrs={'placeholder': 'Tell us about your clinic...', 'rows': '4'})
         }
 
-    # def clean(self):
-    #     reservePrice = self.cleaned_data.get('reservePrice')
-    #     print(reservePrice)
-    #     if reservePrice > 50:
-    #         raise forms.ValidationError("Over 50")
-    #     return reservePrice
+    def clean(self):
+        placementStart = self.cleaned_data.get('placementStart')
+        placementEnd = self.cleaned_data.get('placementEnd')
+        reservePrice = self.cleaned_data.get('reservePrice')
+
+        mondayStart = self.cleaned_data.get('mondayStart')
+        mondayEnd = self.cleaned_data.get('mondayEnd')
+        tuesdayStart = self.cleaned_data.get('tuesdayStart')
+        tuesdayEnd = self.cleaned_data.get('tuesdayEnd')
+        wednesdayStart = self.cleaned_data.get('wednesdayStart')
+        wednesdayEnd = self.cleaned_data.get('wednesdayEnd')
+        thursdayStart = self.cleaned_data.get('thursdayStart')
+        thursdayEnd = self.cleaned_data.get('thursdayEnd')
+        fridayStart = self.cleaned_data.get('fridayStart')
+        fridayEnd = self.cleaned_data.get('fridayEnd')
+        saturdayStart = self.cleaned_data.get('saturdayStart')
+        saturdayEnd = self.cleaned_data.get('saturdayEnd')
+        sundayStart = self.cleaned_data.get('sundayStart')
+        sundayEnd = self.cleaned_data.get('sundayEnd')
+
+        monday_val = check_times(mondayStart, mondayEnd, 'Monday')
+        tuesday_val = check_times(tuesdayStart, tuesdayEnd, 'Tuesday')
+        wednesday_val = check_times(wednesdayStart, wednesdayEnd, 'Wednesday')
+        thursday_val = check_times(thursdayStart, thursdayEnd, 'Thursday')
+        friday_val = check_times(fridayStart, fridayEnd, 'Friday')
+        saturday_val = check_times(saturdayStart, saturdayEnd, 'Saturday')
+        sunday_val = check_times(sundayStart, sundayEnd, 'Sunday')
+
+        error_list = []
+        if placementStart > datetime.now().date() + timedelta(days=365):
+            error_list.append(ValidationError("Placements must start within the next 12 months."))
+
+        if reservePrice is not None:
+            if reservePrice < 0:
+                error_list.append(ValidationError("Reserve price cannot be 0 or less. If no reserve price is desired leave the field blank."))
+
+        if reservePrice is not None:
+            if reservePrice > 25000:
+                error_list.append(ValidationError("Reserve price must be less than $25,000."))
+
+        if placementEnd <= placementStart:
+            error_list.append(ValidationError("The end of placement date must be before the start of placement."))
+
+        if (placementEnd - placementStart).days > 730:
+            error_list.append(ValidationError("Placements must be less than two years."))
+
+        if monday_val != '':
+            error_list.append(ValidationError(monday_val))
+        if tuesday_val != '':
+            error_list.append(ValidationError(tuesday_val))
+        if wednesday_val != '':
+            error_list.append(ValidationError(wednesday_val))
+        if thursday_val != '':
+            error_list.append(ValidationError(thursday_val))
+        if friday_val != '':
+            error_list.append(ValidationError(friday_val))
+        if saturday_val != '':
+            error_list.append(ValidationError(saturday_val))
+        if sunday_val != '':
+            error_list.append(ValidationError(sunday_val))
+
+        if len(error_list) > 0:
+            raise forms.ValidationError(error_list)
 
 class BidForm(forms.ModelForm):
-    amount = forms.IntegerField(max_value=25000, min_value=1)
+    def __init__(self, *args, **kwargs):
+        self.max_bid = kwargs.pop('max_bid', None)
+        self.min_bid_increment = kwargs.pop('min_bid_increment', None)
+        super(BidForm, self).__init__(*args, **kwargs)
+
+    amount = forms.IntegerField(max_value=25000, min_value=0)
     class Meta:
         model = Bid
         fields = ('amount', )
 
-    # def clean_amount(self):
-    #     email_passed = self.cleaned_data.get("amount")
-    #     if not email_passed > 50:
-    #         raise forms.ValidationError("Sorry, the email submitted is invalid. All emails have to be registered on this domain only.")
-    #     return email_passed
+    def clean_amount(self):
+        amount = self.cleaned_data.get("amount")
+        if amount > 0 and self.max_bid > 0 and amount % self.max_bid != 0:
+            raise forms.ValidationError("Bids must be in increments of $" + str(self.min_bid_increment) + ".")
+        return amount 
 
 class RegisterAcount(UserCreationForm):
     first_name = forms.CharField( required=False)
@@ -111,14 +183,13 @@ class CreateUserForm(UserCreationForm):
         fields = ['username', 'first_name', 'last_name', 'password1' ,'password2']
 
 class UserFormClinic(forms.ModelForm):
-    email = forms.EmailField()  # This For Additional Field
+    email = forms.EmailField()
     class Meta:
         model = User
-        # fields = ['first_name', 'last_name', 'email']
         fields = ['email']
 
 class UserFormTherapist(forms.ModelForm):
-    email = forms.EmailField()  # This For Additional Field
+    email = forms.EmailField()
     class Meta:
         model = User
         fields = ['first_name', 'last_name', 'email']
@@ -138,7 +209,17 @@ class PasswordChangingForm(PasswordChangeForm):
         fields = ('old_password', 'new_password1', 'new_password2')
 
 class ContactForm(forms.Form):
-	first_name = forms.CharField(max_length = 50)
-	last_name = forms.CharField(max_length = 50)
-	email_address = forms.EmailField(max_length = 150)
-	message = forms.CharField(widget = forms.Textarea, max_length = 2000)
+    first_name = forms.CharField(max_length = 50)
+    last_name = forms.CharField(max_length = 50)
+    email_address = forms.EmailField(max_length = 150)
+    message = forms.CharField(widget = forms.Textarea, max_length = 2000)
+
+class testForm(forms.Form):
+    name = forms.CharField(label="New Pay Frequency", max_length=100, widget=forms.TextInput(attrs={'class': 'input'}))
+
+    def clean_name(self):
+        data = self.cleaned_data.get('name')
+
+        if 'aa' not in data:
+            raise forms.ValidationError('No aa')
+        return data

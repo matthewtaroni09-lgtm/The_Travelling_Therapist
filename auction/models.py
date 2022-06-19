@@ -65,7 +65,7 @@ class Auction(models.Model):
     auctionEnd = models.DateTimeField(verbose_name='Auction End', help_text='Enter the end date of the auction.')
     placementStart = models.DateField(verbose_name='Therapist Start Date', help_text='Enter the start date of the placement.')
     placementEnd = models.DateField(verbose_name='Therapist End Date', help_text='Enter the end date of the placement.')
-    mondayStart = models.TimeField(verbose_name='Start Time', null=True, blank=True, default='9:00')
+    mondayStart = models.TimeField(verbose_name='Start Time', null=True, blank=True, default='09:00')
     mondayEnd = models.TimeField(verbose_name='End Time', null=True, blank=True, default='17:00')
     tuesdayStart = models.TimeField(verbose_name='Start Time', null=True, blank=True, default='09:00')
     tuesdayEnd = models.TimeField(verbose_name='End Time', null=True, blank=True, default='17:00')
@@ -116,12 +116,23 @@ class Auction(models.Model):
             return 'Current Low Bid: $' + str("{:,}".format(self.currentLowBid))
 
     def get_num_bids(self):
-        num_bids = Bid.objects.filter(auction=self.auctionID).count()
+        num_bids = Bid.objects.filter(auction=self.auctionID, active=True).count()
         return num_bids
 
     def get_position_type(self):
         if str(self.clinic.userType) == 'Physiotherapy Clinic':
             return 'Temporary Physiotherapist'
+        else:
+            return ''
+
+    def get_max_bid(self):
+        num_bids = Bid.objects.filter(auction=self.auctionID).count()
+        if num_bids > 0:
+            diff = self.currentLowBid - self.minimumBidIncrement
+            if diff > 0:
+                return '$' + str(diff)
+            else:
+                return 0
         else:
             return ''
 

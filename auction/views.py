@@ -10,7 +10,7 @@ from django.views.generic import ListView, CreateView
 from The_Travelling_Therapist.settings import ACTIVE_LINK
 
 from .filters import AuctionFilter
-from .forms import RegisterAcount, AuctionForm, BidForm, UserFormClinic, UserFormTherapist, ProfileUpdateClinic, CreateUserForm, PasswordChangingForm, ContactForm
+from .forms import RegisterAcount, AuctionForm, BidForm, UserFormClinic, UserFormTherapist, ProfileUpdateClinic, CreateUserForm, PasswordChangingForm, ContactForm, testForm
 from django.urls import reverse_lazy
 import datetime
 # from datetime import datetime
@@ -33,6 +33,23 @@ from django.contrib import messages
 from . import emails
 from pytz import timezone
 from django.core import serializers
+from django.contrib import messages # For message alerts
+
+def test(request):
+    
+    if request.method == 'POST':
+        details = testForm(request.POST)
+
+        if details.is_valid():
+            post = details.save(commit=False)
+            post.save()
+            return HttpResponse("data saved")
+        else:
+            return render(request, "auction/test.html", {'form': details})
+    else:
+        form = testForm(None)
+        return render(request, "auction/test.html", {'form': form})
+
 
 class PasswordsChangeView(PasswordChangeView):
     form_class = PasswordChangingForm
@@ -56,9 +73,11 @@ def contact(request):
 			except BadHeaderError:
 				return HttpResponse('Invalid header found.')
 			return redirect ("index")
-      
-	form = ContactForm()
-	return render(request, "auction/contact_us.html", {'form':form})
+		else:
+			return render(request, "auction/contact_us.html", {'form': form})
+	else:
+		form = ContactForm(None)
+		return render(request, "auction/contact_us.html", {'form': form})
 
 class AuctionListView(ListView):
     model = Auction
@@ -73,7 +92,6 @@ class AuctionListView(ListView):
 
 def about(request):
     return render(request, 'auction/about.html', {'path': 'about'})
-
 
 def profile(request):
     parameter = {}
@@ -191,53 +209,71 @@ def view_auction(request, auction_id):
     num_bids = Bid.objects.filter(auction=auction_id).count()
     num_biders = Bid.objects.values('user').filter(auction=auction_id).distinct().count()
     auction_change = False
-
     submitted = False
-    form = BidForm(request.POST)
-    if form.is_valid():
-        bid = form.save(commit=False)
-        bid.auction = auction
-        bid.user = request.user
-        bid.active = True
-        bid.createdBy = request.user
-        if auction.currentLowBid is not None and bid.amount < auction.currentLowBid:
-            auction.currentLowBid = bid.amount
-            auction_change = True
-        if num_bids == 0:
-            auction.minimumBidIncrement = set_bid_increment(bid.amount)
-            auction.currentLowBid = bid.amount
-            auction_change = True
-        diff = auction.auctionEnd - datetime.datetime.now(timezone('Canada/Eastern'))
-        if diff.total_seconds() < 60:
-            print(auction.auctionEnd)
-            new_id = str(uuid.uuid4())
-            auction.auctionEnd = auction.auctionEnd + datetime.timedelta(minutes=241)
-            print(auction.auctionEnd)
-            scheduled_tasks.print_job()
-            try:
-                scheduled_tasks.remove_cron_job(auction.cronID)
-            except:
-                print("fail")
-            scheduled_tasks.restart(auction.auctionEnd.year, auction.auctionEnd.month, auction.auctionEnd.day, auction.auctionEnd.hour, auction.auctionEnd.minute, auction.auctionEnd.second, new_id, str(auction.auctionID))
-            auction.cronID = new_id
-            auction_change = True
-        if auction_change:
-            auction.save()
-        bid.save()
-        return HttpResponseRedirect('/auction/' + str(auction.auctionID))
+    max_bid = 0
+
+    if num_bids > 0:
+        diff = auction.currentLowBid - auction.minimumBidIncrement
+        if diff > 0:
+            max_bid = diff
+        else:
+            max_bid = 0
     else:
-        form = BidForm
-        if 'submitted' in request.GET:
-            submitted = True
+        max_bid = 0
 
-    return render(request, 'auction/bid-page-2.html',{
-        'auction': auction,
-        'form': form,
-        'submitted': submitted,
-        'num_bids': num_bids,
-        'num_biders': num_biders
-    })
-
+    if request.method == 'POST':
+        form = BidForm(request.POST, max_bid=max_bid, min_bid_increment=auction.minimumBidIncrement)
+        if form.is_valid():
+            bid = form.save(commit=False)
+            bid.auction = auction
+            bid.user = request.user
+            bid.active = True
+            bid.createdBy = request.user
+            if auction.currentLowBid is not None and bid.amount < auction.currentLowBid:
+                auction.currentLowBid = bid.amount
+                auction_change = True
+            if num_bids == 0:
+                auction.minimumBidIncrement = set_bid_increment(bid.amount)
+                auction.currentLowBid = bid.amount
+                auction_change = True
+            diff = auction.auctionEnd - datetime.datetime.now(timezone('utc'))
+            if diff.total_seconds() < 60:
+                new_id = str(uuid.uuid4())
+                auction.auctionEnd = auction.auctionEnd + datetime.timedelta(minutes=1)
+                scheduled_tasks.print_job()
+                try:
+                    scheduled_tasks.remove_cron_job(auction.cronID)
+                except:
+                    print("fail")
+                auctionEndEST = auction.auctionEnd.astimezone(timezone('Canada/Eastern'))
+                print(auctionEndEST)
+                scheduled_tasks.restart(auctionEndEST.year, auctionEndEST.month, auctionEndEST.day, auctionEndEST.hour, auctionEndEST.minute, auctionEndEST.second, new_id, str(auction.auctionID))
+                auction.cronID = new_id
+                auction_change = True
+            if auction_change:
+                auction.save()
+            bid.save()
+            return HttpResponseRedirect('/auction/' + str(auction.auctionID))
+        else:
+            context = {
+                'auction': auction,
+                'form': form,
+                'submitted': submitted,
+                'num_bids': num_bids,
+                'num_biders': num_biders
+            }
+            return render(request, 'auction/view_auction.html', context)
+    else:
+        form = BidForm(None)
+        context = {
+                'auction': auction,
+                'form': form,
+                'submitted': submitted,
+                'num_bids': num_bids,
+                'num_biders': num_biders
+            }
+        return render(request, 'auction/view_auction.html', context)
+    
 def get_auction_end(request, auction_id):
     auction = Auction.objects.get(pk=auction_id)
     account = Account.objects.get(user=auction.clinic.user)
@@ -270,8 +306,6 @@ def get_active_auctions_clinic(request):
     if str(request.user.account.userType).split(' ')[-1] == "Clinic":
         active_auctions_list = list(Auction.objects.filter(active=True, clinic=request.user.account).values())
     else:
-        print("ther")
-        print(str(request.user.account.user_id))
         query = 'SELECT DISTINCT AA.auctionID, AA.auctionStart, AA.auctionEnd, AA.currentLowBid, AB.bidID, AA.placementStart, AA.placementEnd, AA.clinic_id, AC.user_id, AC.clinicName, AC.city, AC.province, AC.about, AC.imageOne, AC.imageTwo, UT.name "userType" FROM auction_auction AA LEFT JOIN auction_bid AB ON AA.auctionID = AB.auction_id LEFT JOIN auction_account AC ON AA.clinic_id = AC.id LEFT JOIN auction_usertype UT ON AC.userType_id = UT.id WHERE AB.user_id = ' + str(request.user.account.user_id) + ' AND AA.active = 1 AND AA.closed = 0 AND AA.deleted = 0 GROUP BY auctionID, AA.placementStart, AA.placementEnd, AA.clinic_id, AC.user_id , AC.clinicName, AC.city, AC.about, AC.imageOne, AC.imageTwo, UT.name;'
         auction_list = Bid.objects.raw(query)
         active_auctions_list = []
@@ -286,6 +320,21 @@ def get_active_auctions_theraipist(request):
     active_auctions_list = list(Bid.objects.raw('SELECT DISTINCT AA.auctionID, AB.bidID, AA.placementStart, AA.placementEnd, AC.clinicName, AC.city, AC.province, AC.about, AC.imageOne, AC.imageTwo, UT.name "userType" FROM auction_auction AA JOIN auction_bid AB ON AA.auctionID = AB.auction_id JOIN auction_account AC ON AA.clinic_id = AC.user_id JOIN auction_usertype UT ON AC.userType_id = UT.id WHERE AB.user_id = ' + user_id + ' AND AA.active = 1 AND AA.closed = 0 AND AA.deleted = 0 GROUP BY auctionID;').values())
     return JsonResponse({'data': active_auctions_list})
 
+def get_view_auction_data(request):
+    auction = Auction.objects.get(auctionID=request.GET['auctionID'])
+    num_bids = Bid.objects.filter(auction=request.GET['auctionID']).count()
+    max_bid = 0
+    if num_bids > 0:
+        diff = auction.currentLowBid - auction.minimumBidIncrement
+        if diff > 0:
+            max_bid = diff
+        else:
+            max_bid = 0
+    else:
+        return 0
+    print(max_bid)
+    return JsonResponse({'max_bid': max_bid})
+
 def get_demogrpahics(request, clinic_id):
     account = Account.objects.get(pk=clinic_id)
     data = {}
@@ -298,12 +347,10 @@ def create_auction(request):
     active_auctions_list = Auction.objects.filter(closed=False, deleted=False, clinic=request.user.account)
     submitted_auction = False
     parameter = {}
-
     max_auctions = AdminSettings.objects.all()[0]
     print(active_auctions_list.count())
     if active_auctions_list.count() <= max_auctions.numAllowedAuctions:
         if request.method == "POST":
-
             form = AuctionForm(request.POST, request.FILES)
             if form.is_valid():
                 auction = form.save(commit=False)
@@ -318,7 +365,6 @@ def create_auction(request):
                     auction.currentLowBid = form.cleaned_data.get('reservePrice')
 
                 auction.auctionStart = datetime.datetime.now(timezone('US/Eastern'))
-                # auction.auctionEnd = datetime.datetime.now() + datetime.timedelta(days=14)
                 auction.auctionEnd = datetime.datetime.now(timezone('US/Eastern')) + datetime.timedelta(seconds=settings.DEAFULT_AUCTION_LENGTH)
                 auction.closed = False
                 auction.active = settings.DEFAULT_AUCTION_ACTIVE
@@ -327,7 +373,6 @@ def create_auction(request):
                 auction.modifiedBy = request.user
                 auction.save()
                 # Therapist email
-                # print(auction_created_admin(str(auction.clinic.clinicName), str(auction.clinic.city), str(auction.clinic.province), str(auction.clinic.user.email), str(auction.reservePrice), str(auction.auctionStart), str(auction.auctionEnd), str(auction.placementStart), str(auction.placementEnd), str(auction.auctionID)))
                 send_mail(
                     subject = "Auction Created",
                     message = "",
@@ -338,29 +383,34 @@ def create_auction(request):
                 print(str(auction.auctionEnd.year) + ", " + str(auction.auctionEnd.month) + ", " + str(auction.auctionEnd.day) + ", " + str(auction.auctionEnd.hour) + ", " + str(auction.auctionEnd.minute))
                 print(auction.auctionID)
                 scheduled_tasks.start(auction.auctionEnd.year, auction.auctionEnd.month, auction.auctionEnd.day, auction.auctionEnd.hour, auction.auctionEnd.minute, auction.auctionEnd.second, str(auction.auctionID))
-                # scheduled_tasks.start(auction.auctionEnd.year, auction.auctionEnd.month, auction.auctionEnd.day, 8, 27, str(auction.auctionID))
-                # scheduled_tasks.start(2022, 6, 6, 6, 29, str(auction.auctionID))
                 return HttpResponseRedirect('/profile?submitted=True')
             else:
-                form = AuctionForm
-                if 'submitted' in request.GET:
-                    submitted_auction = True
-
-        form = AuctionForm
-        parameter.update({
-            'active_auctions_list': active_auctions_list,
-            'form': form,
-            'submitted_auction': submitted_auction,
-            'show_form': True
-        })
+                # if 'submitted' in request.GET:
+                #     submitted_auction = True
+                parameter.update({
+                    'active_auctions_list': active_auctions_list,
+                    'form': form,
+                    'submitted_auction': submitted_auction,
+                    'show_form': True
+                })
+                return render(request, 'auction/create_auction.html', parameter)
+        else:
+            form = AuctionForm(None)
+            parameter.update({
+                'active_auctions_list': active_auctions_list,
+                'form': form,
+                'submitted_auction': submitted_auction,
+                'show_form': True
+            })
+            return render(request, 'auction/create_auction.html', parameter)
     else:
+        form = AuctionForm()
         parameter.update({
             'active_auctions_list': active_auctions_list,
             'show_form': False,
             'max_forms': max_auctions.numAllowedAuctions
         })
-
-    return render(request, 'auction/create_auction.html', parameter)
+        return render(request, 'auction/create_auction.html', parameter)
 
 # @login_required
 # @transaction.atomic

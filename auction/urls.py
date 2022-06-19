@@ -19,14 +19,14 @@ urlpatterns = [
     path('logout_user', views.logout_user, name="logout"),
     path('auction/<auction_id>', views.view_auction, name="auction"),
     path("contact_us", views.contact, name="contact-us"),
+    path("test", views.test, name="test"),
 
     # AJAX Calls
     path('auction/data/auction/<auction_id>', views.get_auction_end, name="get-auction-end"),
     path('auction/data/clinic/<clinic_id>', views.get_demogrpahics, name="get-demogrpahics"),
-    # path('auction/create_bid/<auction_id>', views.create_bid, name="create-bid"),
-    # path('auction/send_email_message/', views.send_email_message, name="send-email_message"),
     path("auction/data/all_auctions", views.get_all_auctions, name="get-all-auctions"), 
     path("auction/data/active_auctions_clinic", views.get_active_auctions_clinic, name="get-active-auctions-clinic"), 
+    path("auction/data/view_auction_data", views.get_view_auction_data, name="get-active-view-auction-data"), 
     
     path("password_reset", views.password_reset_request, name="password_reset"),
     path("password", PasswordsChangeView.as_view(template_name="auction/registration/change_password.html"), name="change-password")

@@ -1,0 +1,13 @@
+{% extends 'auction/base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block content %}
+<form method="POST">
+  {% csrf_token %}
+
+  {{ form.name|as_crispy_field }}
+
+  <button>Submit</button>
+</form>
+
+{% endblock %}

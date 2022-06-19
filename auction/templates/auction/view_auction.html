@@ -71,14 +71,12 @@
             <form method="post">
               <p>{{ auction.get_bid }}</p>
               <div class="mb-3">
-                <!-- <label for="recipient-name" class="col-form-label">Your Bid Amount:</label>
-                <input type="number" class="form-control" id="recipient-name"> -->
                 {% csrf_token %}
                 {{ form.amount|as_crispy_field }}
               </div>
-              {% for error in form.non_field_errors %}
-              <p>{{error}}</p>
-              {% endfor %}
+              <p>Next avaiable bid: {{ auction.get_max_bid }}</p>
+              <div id="warningMessage" class="alert alert-warning" role="alert"></div>
+              <small>For more information on the bidding process see our <a href="{% url 'about' %}">FAQ</a></small>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 <button id="submitBidButton" type="submit" class="btn btn-primary">Submit Bid</button>
@@ -189,7 +187,14 @@
   <h3 class="mt-3">About the Clinic</h3>
   <p class="text-weight-light">{{ user.account.about }}</p>
 </div>
-<!-- <script src="{% static 'auction/app.js' %}"></script> -->
+<script>
+  $(document).ready(function () {
+    {% if form.errors %}
+    $("#exampleModal").modal("show");
+    {% endif %}
+  });
+</script>
+
 <script src="{% static 'auction/bid-page.js' %}"></script>
 <!-- Content End -->
 {% endblock %}
