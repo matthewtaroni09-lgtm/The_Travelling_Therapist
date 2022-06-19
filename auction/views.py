@@ -333,7 +333,11 @@ def get_view_auction_data(request):
     else:
         return 0
     print(max_bid)
-    return JsonResponse({'max_bid': max_bid})
+    return JsonResponse({
+        'max_bid': max_bid,
+        'currentLowBid': auction.currentLowBid,
+        'minimumBidIncrement': auction.minimumBidIncrement
+        })
 
 def get_demogrpahics(request, clinic_id):
     account = Account.objects.get(pk=clinic_id)

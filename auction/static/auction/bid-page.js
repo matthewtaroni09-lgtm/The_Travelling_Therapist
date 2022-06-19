@@ -5,6 +5,7 @@ let currentLowBid = 0
 $(document).ready(function () {
     $("#warningMessage").hide();
     let max_bid = 0;
+    let currentLowBid = 0;
     let url = $(location).attr('href').split("/");
     let auctionID = url[url.length - 1];
     $.ajax({
@@ -16,6 +17,7 @@ $(document).ready(function () {
         success: function (response) {
             console.log(response);
             max_bid = response.max_bid;
+            currentLowBid = response.currentLowBid
         },
         error: function (error) {
             console.log('error: ', error);
@@ -24,7 +26,7 @@ $(document).ready(function () {
 
     $("#id_amount").change(function () {
         $("#warningMessage").hide();
-        if (parseInt($("#id_amount").val()) > max_bid) {
+        if (parseInt($("#id_amount").val()) > currentLowBid) {
             $("#warningMessage").text("Your bid is over the current minimum bid and will not be considered for determing the winner of the auction. Click Submit if you would like to proceed anyway.")
             $("#warningMessage").show();
         }
