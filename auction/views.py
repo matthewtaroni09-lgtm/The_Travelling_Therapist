@@ -480,7 +480,7 @@ def login_user(request):
             login(request, user)
             return redirect('index')
         else:
-            messages.success(request, ("Error logging in"))
+            messages.error(request, ("Login was unsuccessful. Please check your email and password."))
             return redirect('login')
     else:
         return render(request, 'auction/login.html', {'path': 'login'})

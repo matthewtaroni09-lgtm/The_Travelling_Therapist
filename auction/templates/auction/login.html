@@ -6,6 +6,13 @@
 <!-- Login Box Start -->
 <div class="row">
   <div class="col-md-6 offset-md-3">
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-danger" role="alert">
+      {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
     <form action="" method=POST>
       {% csrf_token %}
       <div class="mb-3">
