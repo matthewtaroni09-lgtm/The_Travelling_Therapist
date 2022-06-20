@@ -11,6 +11,7 @@
     <form method="post" enctype="multipart/form-data" class="d-flex flex-column gap-3">
       <h5>Select an account type to get started:</h5>
       {% csrf_token %}
+      {{ form|as_crispy_errors }}
       {{ form.user_type | as_crispy_field }}
       <span class="clinicField">{{ form.clinicName | as_crispy_field }}</span>
       <span class="clinicField">{{ form.city | as_crispy_field }}</span>
@@ -63,5 +64,36 @@
 </div>
 <!-- Register Box End -->
 <!-- Content End -->
+<script>
+  $(document).ready(function () {
+    {% if form.errors %}
+    let userType = document.getElementById("id_user_type");
+    let userTypeValue = userType.options[userType.selectedIndex].text
+    console.log(userType)
+    if (userTypeValue.split(" ")[1] === "Clinic") {
+      for (const fields of combinedFields) {
+        fields.style.display = 'block';
+      }
+      for (const fields of clinicFields) {
+        fields.style.display = 'block';
+      }
+      for (const fields of therapistFields) {
+        fields.style.display = 'none';
+      }
+    }
+    else {
+      for (const fields of combinedFields) {
+        fields.style.display = 'block';
+      }
+      for (const fields of clinicFields) {
+        fields.style.display = 'none';
+      }
+      for (const fields of therapistFields) {
+        fields.style.display = 'block';
+      }
+    }
+    {% endif %}
+  });
+</script>
 <script src="{% static 'auction/register.js' %}"></script>
 {% endblock %}

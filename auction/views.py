@@ -419,12 +419,10 @@ def create_auction(request):
 # @login_required
 # @transaction.atomic
 def register(request):
-    print(request.method)
     admin = AdminSettings.objects.all()[:1].get()
     if request.method == 'POST':
         form = RegisterAcount(request.POST, request.FILES)
         if form.is_valid():
-            print('inside')
             user = form.save()
             user.refresh_from_db()  # load the profile instance created by the signal
             user.email = form.cleaned_data.get('username')
@@ -469,10 +467,13 @@ def register(request):
             user = authenticate(username=user.username, password=raw_password)
             login(request, user)
             return redirect('index')
+        else:
+            print("not valid")
+            return render(request, 'auction/register.html', {'form': form})
     else:
         print('outside')
-        form = RegisterAcount()
-    return render(request, 'auction/register.html', {'form': form})
+        form = RegisterAcount(None)
+        return render(request, 'auction/register.html', {'form': form})
     
 # -------------- Login --------------
 def login_user(request):

@@ -47,7 +47,7 @@ function userTypeChange() {
 }
 
 $(document).ready(function () {
-    //$('#submitButton').prop('disabled', false);
+    $('#submitButton').prop('disabled', false);
     $('#tandcModal').on('hidden.bs.modal', function () {
         $('#agreementCheckBox').css("display", "none");
         $('#agreementCheckBoxLabel').css("display", "none");
@@ -58,18 +58,18 @@ $(document).ready(function () {
         $('#agreementCheckBoxLabel').css("display", "block");
     });
 
-    $('#agreementCheckBox').click(function () {
-        if ($('#agreementCheckBox').prop("checked") === true) {
-            $('#submitButton').prop('disabled', false);
-        }
-        else {
-            $('#submitButton').prop('disabled', true);
-        }
-    });
+    // $('#agreementCheckBox').click(function () {
+    //     if ($('#agreementCheckBox').prop("checked") === true) {
+    //         $('#submitButton').prop('disabled', false);
+    //     }
+    //     else {
+    //         $('#submitButton').prop('disabled', true);
+    //     }
+    // });
 });
 
 // Show and hide image inputs
-$(document).ready(function() {
+$(document).ready(function () {
     clearAndHideImageTwo();
     clearAndHideImageThree();
     clearAndHideImageFour();
@@ -82,7 +82,7 @@ $(document).ready(function() {
             clearAndHideImageThree();
             clearAndHideImageFour();
         }
-    })  
+    })
 
     $('#id_imageTwo').change(function () {
         if ($(this).val() != '') {
@@ -91,7 +91,7 @@ $(document).ready(function() {
             clearAndHideImageThree();
             clearAndHideImageFour();
         }
-    })  
+    })
 
     $('#id_imageThree').change(function () {
         if ($(this).val() != '') {
@@ -99,19 +99,19 @@ $(document).ready(function() {
         } else {
             clearAndHideImageFour();
         }
-    })  
+    })
 
-   function clearAndHideImageTwo () {
+    function clearAndHideImageTwo() {
         $('#id_imageTwo').val('');
         $('#div_id_imageTwo').hide();
-   } 
+    }
 
-   function clearAndHideImageThree () {
+    function clearAndHideImageThree() {
         $('#id_imageThree').val('');
         $('#div_id_imageThree').hide();
-   } 
-   function clearAndHideImageFour () {
+    }
+    function clearAndHideImageFour() {
         $('#id_imageFour').val('');
         $('#div_id_imageFour').hide();
-   } 
+    }
 })

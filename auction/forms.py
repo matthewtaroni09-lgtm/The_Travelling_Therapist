@@ -154,7 +154,7 @@ class BidForm(forms.ModelForm):
         return amount 
 
 class RegisterAcount(UserCreationForm):
-    first_name = forms.CharField( required=False)
+    first_name = forms.CharField(required=False)
     last_name = forms.CharField(required=False)
     clinicName = forms.CharField(required=False, label='Clinic Name')
     city = forms.CharField(required=False)
@@ -176,6 +176,62 @@ class RegisterAcount(UserCreationForm):
     class Meta:
         model = User
         fields = ('user_type', 'clinicName', 'first_name', 'last_name', 'username', 'city', 'province', 'about', 'underEighteen', 'eighteenToSixtyFive', 'overSixtyFive', 'MSK', 'neuro', 'cardioResp', 'password1' ,'password2', 'imageOne', 'imageTwo', 'imageThree', 'imageFour')
+
+    def clean(self):
+        userType = self.cleaned_data.get('user_type')
+        firstName = self.cleaned_data.get('first_name')
+        lastName = self.cleaned_data.get('last_name')
+        clinicName = self.cleaned_data.get('clinicName')
+        city = self.cleaned_data.get('city')
+        about = self.cleaned_data.get('about')
+        province = self.cleaned_data.get('province')
+        username = self.cleaned_data.get('username')
+        imageOne = self.cleaned_data.get('imageOne')
+        imageTwo = self.cleaned_data.get('imageTwo')
+        imageThree = self.cleaned_data.get('imageThree')
+        imageFour = self.cleaned_data.get('imageFour')
+        underEighteen = self.cleaned_data.get('underEighteen')
+        eighteenToSixtyFive = self.cleaned_data.get('eighteenToSixtyFive')
+        overSixtyFive = self.cleaned_data.get('overSixtyFive')
+        MSK = self.cleaned_data.get('MSK')
+        neuro = self.cleaned_data.get('neuro')
+        cardioResp = self.cleaned_data.get('cardioResp')
+
+        error_list = []
+
+        if User.objects.exclude(pk=self.instance.pk).filter(username=username).exists():
+            error_list.append(f'Username "{username}" is already in use.')
+
+        if str(userType).split(' ')[-1] == "Clinic":
+            if clinicName == '' or clinicName is None:
+                error_list.append(ValidationError("Please enter a clinic name."))
+
+            if city == '' or city is None:
+                error_list.append(ValidationError("Please enter a city."))
+
+            if province == '' or province is None:
+                error_list.append(ValidationError("Please enter a province."))
+
+            if underEighteen is None or eighteenToSixtyFive is None or overSixtyFive is None:
+                error_list.append(ValidationError("Please enter a value for all Clinic Demographics. If one of the age groups does not apply put in a 0."))
+            else:
+                if (underEighteen + eighteenToSixtyFive + overSixtyFive) != 100:
+                    error_list.append(ValidationError("Clinic Demographics values must add to 100%."))
+
+            if MSK is None or neuro is None or cardioResp is None:
+                error_list.append(ValidationError("Please enter a value for all Clinic Areas of Practice. If one of the age groups does not apply put in a 0."))
+            else:
+                if (MSK + neuro + cardioResp) != 100:
+                    error_list.append(ValidationError("Clinic Areas of Practice values must add to 100%."))
+        else:
+            if firstName == '' or firstName is None:
+                error_list.append(ValidationError("Please enter a first name."))
+
+            if lastName == '' or lastName is None:
+                error_list.append(ValidationError("Please enter a last name."))
+
+        if len(error_list) > 0:
+            raise forms.ValidationError(error_list)
 
 class CreateUserForm(UserCreationForm):
     class Meta:
