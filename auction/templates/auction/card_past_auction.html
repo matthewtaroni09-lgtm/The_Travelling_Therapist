@@ -12,7 +12,9 @@
       {% else %}
       <p class="text-weight-thin mb-0">{{ auction.get_position_type }}</p>
       {% endif %}
-      <p class="text-weight-thin mb-0">{{ auction.city }}{{ auction.clinic.city }}, {{ auction.province }}</p>
+      <p class="text-weight-thin mb-0">
+        {{auction.city }}{{auction.clinic.city}}, {{auction.province}}{{auction.clinic.province }}
+      </p>
     </div>
   </div>
 </div>
