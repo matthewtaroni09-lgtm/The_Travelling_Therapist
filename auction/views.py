@@ -105,104 +105,80 @@ def profile(request):
         num_pending = pending_auctions_list.count()
         submitted_profile = False
         submitted_auction = False
-        if request.method == 'POST':   # This Will Be Run When I Submit My Form. And Possibly Pass New Data.
-            u_form = UserFormClinic(request.POST, instance=request.user)  # request.POST To Pass The POST Data
-            p_form = ProfileUpdateClinic(request.POST, request.FILES, instance=request.user.account)  # File Data (images) Users Try To Upload.
-            if u_form.is_valid() and p_form.is_valid():
-                user_form = u_form.save(commit=False)
-                user_form.username = u_form.cleaned_data.get('email')
-                user_form.save()
-                p_form.save()
-                messages.success(request, f'Your profile has been updated!')
 
+        if request.method == 'POST':   # This Will Be Run When I Submit My Form. And Possibly Pass New Data.
+            user_clinic_form = UserFormClinic(request.POST, instance=request.user)  # request.POST To Pass The POST Data
+            profile_clinic_form = ProfileUpdateClinic(request.POST, request.FILES, instance=request.user.account)  # File Data (images) Users Try To Upload.
+            print(user_clinic_form.is_valid())
+            print(profile_clinic_form.is_valid())
+            if user_clinic_form.is_valid() and profile_clinic_form.is_valid():
+                user_form = user_clinic_form.save(commit=False)
+                user_form.username = user_clinic_form.cleaned_data.get('email')
+                user_form.save()
+                profile_clinic_form.save()
+                # messages.success(request, f'Your profile has been updated!')
+                return HttpResponseRedirect('profile')
+            else:
+                print("fail")
+                parameter.update({
+                    'active_auctions_list': active_auctions_list,
+                    'past_auctions_list': past_auctions_list,
+                    'pending_auctions_list': pending_auctions_list,
+                    'num_pending': num_pending,
+                    'user_clinic_form': user_clinic_form,
+                    'profile_clinic_form': profile_clinic_form,
+                    'submitted_profile': submitted_profile,
+                    'submitted_auction': submitted_auction,
+                    'show_form': show_form,
+                })
+                return render(request, 'auction/profile.html', parameter)
         else:
-            u_form = UserFormClinic(instance=request.user)
-            p_form = ProfileUpdateClinic(instance=request.user.account)
+            user_clinic_form = UserFormClinic(instance=request.user)
+            profile_clinic_form = ProfileUpdateClinic(instance=request.user.account)
             if 'submitted' in request.GET:
                 submitted_profile = True
-
-        max_auctions = AdminSettings.objects.all()[0]
-        if active_auctions_list.count() <= max_auctions.numAllowedAuctions:
-            show_form = True
-            if request.method == "POST":
-                form = AuctionForm(request.POST, request.FILES)
-                if form.is_valid():
-                    auction = form.save(commit=False)
-                    auction.clinic = request.user.account
-                    if form.cleaned_data.get('reservePrice') != None:
-                        if form.cleaned_data.get('reservePrice') < 10000:
-                            auction.minimumBidIncrement = 100
-                        elif form.cleaned_data.get('reservePrice') > 10000 and form.cleaned_data.get('reservePrice') < 25000:
-                            auction.minimumBidIncrement = 250
-                        else:
-                            auction.minimumBidIncrement = 500
-                        auction.currentLowBid = form.cleaned_data.get('reservePrice')
-
-                    auction.auctionStart = datetime.datetime.now()
-                    auction.auctionEnd = datetime.datetime.now() + datetime.timedelta(seconds=settings.DEAFULT_AUCTION_LENGTH)
-                    auction.closed = False
-                    auction.active = False
-                    auction.deleted = False
-                    auction.createdBy = request.user
-                    auction.modifiedBy = request.user
-                    auction.save()
-                    # Therapist email
-                    send_mail(
-                        subject = "Auction Created",
-                        message = "",
-                        html_message = emails.auction_created_admin(str(auction.clinic.clinicName), str(auction.clinic.city), str(auction.clinic.province), str(auction.clinic.user.email), str(auction.reservePrice), str(auction.auctionStart), str(auction.auctionEnd), str(auction.placementStart), str(auction.placementEnd), str(auction.auctionID)),
-                        from_email = settings.EMAIL_HOST_USER,
-                        recipient_list = ('loribine@gmail.com', 'info@travelingtherapist.ca')
-                    )
-                    print(str(auction.auctionEnd.year) + ", " + str(auction.auctionEnd.month) + ", " + str(auction.auctionEnd.day) + ", " + str(auction.auctionEnd.hour) + ", " + str(auction.auctionEnd.minute))
-                    scheduled_tasks.start(auction.auctionEnd.year, auction.auctionEnd.month, auction.auctionEnd.day, auction.auctionEnd.hour, auction.auctionEnd.minute, auction.auctionEnd.second, str(auction.auctionID))
-                    # scheduled_tasks.start(auction.auctionEnd.year, auction.auctionEnd.month, auction.auctionEnd.day, 8, 27, str(auction.auctionID))
-                    # scheduled_tasks.start(2022, 6, 6, 6, 29, str(auction.auctionID))
-                    return HttpResponseRedirect('/profile?submitted=True')
-                else:
-                    form = AuctionForm()
-                    if 'submitted' in request.GET:
-                        submitted_auction = True
-
-        form = AuctionForm()
-        print(show_form)
-        parameter.update({
-            'active_auctions_list': active_auctions_list,
-            'past_auctions_list': past_auctions_list,
-            'pending_auctions_list': pending_auctions_list,
-            'num_pending': num_pending,
-            'form': form,
-            'u_form': u_form,
-            'p_form': p_form,
-            'submitted_profile': submitted_profile,
-            'submitted_auction': submitted_auction,
-            'show_form': show_form,
-            'max_forms': max_auctions.numAllowedAuctions
-        })
-
+            parameter.update({
+                    'active_auctions_list': active_auctions_list,
+                    'past_auctions_list': past_auctions_list,
+                    'pending_auctions_list': pending_auctions_list,
+                    'num_pending': num_pending,
+                    'user_clinic_form': user_clinic_form,
+                    'profile_clinic_form': profile_clinic_form,
+                    'submitted_profile': submitted_profile,
+                    'submitted_auction': submitted_auction,
+                    'show_form': show_form,
+                })
+            return render(request, 'auction/profile.html', parameter)
     else:
         print(request.method)
         user_id = str(request.user.id)
         active_auctions_list = Bid.objects.raw('SELECT DISTINCT AA.auctionID, AB.bidID, AA.placementStart, AA.placementEnd, AA.clinic_id, AA.currentLowBid, AA.winningPrice, AC.user_id , AC.clinicName, AC.city, AC.province, AC.about, AC.imageOne, AC.imageTwo, UT.name "userType", count(*) "get_num_bids", CASE WHEN AA.currentLowBid IS NULL THEN "No Bids Yet" WHEN AA.closed = 1 AND AA.active = 0 and AA.winningPrice IS NOT NULL THEN CONCAT("Winning Bid: $", AA.winningPrice) WHEN AA.closed = 1 AND AA.active = 0 and AA.winningPrice IS NULL THEN "No winner" ELSE CONCAT("Current Low Bid: $", AA.currentLowBid) END "get_bid", CASE WHEN UT.name = "Physiotherapy Clinic" THEN "Temporary Physiotherapist" ELSE "" END "get_position_type" FROM auction_auction AA LEFT JOIN auction_bid AB ON AA.auctionID = AB.auction_id LEFT JOIN auction_account AC ON AA.clinic_id = AC.id LEFT JOIN auction_usertype UT ON AC.userType_id = UT.id WHERE AB.user_id = ' + user_id + ' AND AA.active = 1 AND AA.closed = 0 AND AA.deleted = 0 GROUP BY auctionID, AA.placementStart, AA.placementEnd, AA.clinic_id, AC.user_id , AC.clinicName, AC.city, AC.about, AC.imageOne, AC.imageTwo, UT.name;')
         past_auctions_list = Bid.objects.raw('SELECT DISTINCT AA.auctionID, AB.bidID, AA.placementStart, AA.placementEnd, AA.clinic_id, AA.winningPrice, AC.user_id , AC.clinicName, AC.city, AC.province, AC.about, AC.imageOne, AC.imageTwo, UT.name "userType", count(*) "get_num_bids", CASE WHEN UT.name = "Physiotherapy Clinic" THEN "Temporary Physiotherapist" ELSE "" END "get_position_type" FROM auction_auction AA LEFT JOIN auction_bid AB ON AA.auctionID = AB.auction_id LEFT JOIN auction_account AC ON AA.clinic_id = AC.id LEFT JOIN auction_usertype UT ON AC.userType_id = UT.id WHERE AB.user_id = ' + user_id + ' AND AA.active = 0 AND AA.closed = 1 AND AA.deleted = 0 GROUP BY auctionID, AA.placementStart, AA.placementEnd, AA.clinic_id, AC.user_id , AC.clinicName, AC.city, AC.about, AC.imageOne, AC.imageTwo, UT.name;')
-        if request.method == 'POST':   # This Will Be Run When I Submit My Form. And Possibly Pass New Data.
-            u_form = UserFormTherapist(request.POST, instance=request.user)  # request.POST To Pass The POST Data
-            if u_form.is_valid():
-                user_form = u_form.save(commit=False)
-                user_form.username = u_form.cleaned_data.get('email')
+        if request.method == 'POST':
+            user_therapist_form = UserFormTherapist(request.POST, instance=request.user)
+            if user_therapist_form.is_valid():
+                user_form = user_therapist_form.save(commit=False)
+                user_form.username = user_therapist_form.cleaned_data.get('email')
                 user_form.save()
+                # messages.success(request, f'Your profile has been updated!')
+                return HttpResponseRedirect('profile')
+            else:
+                parameter.update({
+                    'active_auctions_list': active_auctions_list,
+                    'past_auctions_list': past_auctions_list,
+                    'user_therapist_form': user_therapist_form
+                })
+                return render(request, 'auction/profile.html', parameter)
         else:
-            u_form = UserFormTherapist(instance=request.user)
+            user_therapist_form = UserFormTherapist(instance=request.user)
             if 'submitted' in request.GET:
                 submitted_profile = True
-
-        parameter.update({
-            'active_auctions_list': active_auctions_list,
-            'past_auctions_list': past_auctions_list,
-            'u_form': u_form,
-        })
-
-    return render(request, 'auction/profile.html', parameter)
+            parameter.update({
+                'active_auctions_list': active_auctions_list,
+                'past_auctions_list': past_auctions_list,
+                'user_therapist_form': user_therapist_form
+            })
+            return render(request, 'auction/profile.html', parameter)
 
 def view_auction(request, auction_id):
     auction = Auction.objects.get(pk=auction_id)
@@ -492,7 +468,7 @@ def login_user(request):
 
 def logout_user(request):
     logout(request)
-    messages.success(request, ("Logged out"))
+    # messages.success(request, ("Logged out"))
     return redirect('index')
 
 

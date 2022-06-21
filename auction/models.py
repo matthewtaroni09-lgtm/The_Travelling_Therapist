@@ -19,7 +19,10 @@ PROVINCES = (
     ("Ontario", "Ontario"),
     ("Prince Edward Island", "Prince Edward Island"),
     ("Quebec", "Quebec"),
-    ("Saskatchewan", "Saskatchewan")
+    ("Saskatchewan", "Saskatchewan"),
+    ("Yukon", "Yukon"),
+    ("Northwest Territories", "Northwest Territories"),
+    ("Nunavut", "Nunavut"),
 )
 
 class Account(models.Model):

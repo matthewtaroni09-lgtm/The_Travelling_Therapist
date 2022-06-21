@@ -26,7 +26,7 @@ $(document).ready(function () {
 
     $("#id_amount").change(function () {
         $("#warningMessage").hide();
-        if (parseInt($("#id_amount").val()) > currentLowBid) {
+        if (parseInt($("#id_amount").val()) > currentLowBid && currentLowBid !== 0) {
             $("#warningMessage").text("Your bid is over the current minimum bid and will not be considered for determing the winner of the auction. Click Submit if you would like to proceed anyway.")
             $("#warningMessage").show();
         }

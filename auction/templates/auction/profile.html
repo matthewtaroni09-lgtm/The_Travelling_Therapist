@@ -17,10 +17,6 @@
         <button class="btn-lg nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button"
           role="tab" aria-controls="profile" aria-selected="false">Update Profile</button>
       </li>
-      <li class="nav-item" role="presentation">
-        <button class="btn-lg nav-link" id="create-auction-tab" data-bs-toggle="tab" data-bs-target="#create-auction"
-          type="button" role="tab" aria-controls="create-auction" aria-selected="false">Create Auction</button>
-      </li>
     </ul>
     <div class="tab-content" id="therapistProfileContent">
       <div class="tab-pane fade show active p-3" id="auction-history" role="tabpanel" aria-labelledby="auction-tab">
@@ -29,7 +25,7 @@
         <h2 class="mb-4">Auctions Pending Approval</h2>
         <div class="row mb-5">
           {% for auction in pending_auctions_list %}
-            {% include 'auction/card_pending_approval_auction.html' with auction=auction %}
+          {% include 'auction/card_pending_approval_auction.html' with auction=auction %}
           {% endfor %}
         </div>
         {% endif %}
@@ -37,14 +33,14 @@
         <h2 class="mb-4">Live Auctions</h2>
         <div class="row mb-5">
           {% for auction in active_auctions_list %}
-            {% include 'auction/card_active_auction.html' with auction=auction %}
+          {% include 'auction/card_active_auction.html' with auction=auction %}
           {% endfor %}
         </div>
 
         <h2 class="mb-4">Past Auctions</h2>
         <div class="row mb-5">
           {% for auction in past_auctions_list %}
-            {% include 'auction/card_past_auction.html' with auction=auction %}
+          {% include 'auction/card_past_auction.html' with auction=auction %}
           {% endfor %}
         </div>
       </div>
@@ -55,62 +51,64 @@
           <div class="row">
             <form method="post" enctype="multipart/form-data" class="d-flex flex-column gap-3">
               {% csrf_token %}
-              {{ u_form | crispy }}
+              {{ user_clinic_form | as_crispy_errors }}
+              {{ profile_clinic_form | as_crispy_errors }}
+              {{ user_clinic_form | crispy }}
               <div class="row">
-                 <div class="mb-3 col-md-4">
-                  <span class="clinicField">{{ p_form.clinicName | as_crispy_field }}</span>
+                <div class="mb-3 col-md-4">
+                  <span class="clinicField">{{ profile_clinic_form.clinicName | as_crispy_field }}</span>
                 </div>
                 <div class="mb-3 col-md-4">
-                  <span class="clinicField">{{ p_form.city | as_crispy_field }}</span>
+                  <span class="clinicField">{{ profile_clinic_form.city | as_crispy_field }}</span>
                 </div>
                 <div class="mb-3 col-md-4">
-                  <span class="clinicField">{{ p_form.province | as_crispy_field }}</span>
+                  <span class="clinicField">{{ profile_clinic_form.province | as_crispy_field }}</span>
                 </div>
                 <div class="mb-3">
-                  <span class="clinicField">{{ p_form.about | as_crispy_field }}</span>
+                  <span class="clinicField">{{ profile_clinic_form.about | as_crispy_field }}</span>
                 </div>
               </div>
 
-                <div class="row">
-                 <div class="mb-3">
-                  <span class="clinicField">{{ p_form.imageOne | as_crispy_field }}</span>
+              <div class="row">
+                <div class="mb-3">
+                  <span class="clinicField">{{ profile_clinic_form.imageOne | as_crispy_field }}</span>
                 </div>
                 <div class="mb-3">
-                  <span class="clinicField">{{ p_form.imageTwo | as_crispy_field }}</span>
+                  <span class="clinicField">{{ profile_clinic_form.imageTwo | as_crispy_field }}</span>
                 </div>
                 <div class="mb-3">
-                  <span class="clinicField">{{ p_form.imageThree | as_crispy_field }}</span>
+                  <span class="clinicField">{{ profile_clinic_form.imageThree | as_crispy_field }}</span>
                 </div>
                 <div class="mb-3">
-                  <span class="clinicField">{{ p_form.imageFour | as_crispy_field }}</span>
+                  <span class="clinicField">{{ profile_clinic_form.imageFour | as_crispy_field }}</span>
                 </div>
               </div>
 
               <h5 class="clinicField">Clinic Demographics</h5>
               <div class="row">
                 <div class="mb-3 col-md-4">
-                  <span class="clinicField">{{ p_form.underEighteen | as_crispy_field }}</span>
+                  <span class="clinicField">{{ profile_clinic_form.underEighteen | as_crispy_field }}</span>
                 </div>
                 <div class="mb-3 col-md-4">
-                  <span class="clinicField">{{ p_form.eighteenToSixtyFive | as_crispy_field }}</span>
+                  <span class="clinicField">{{ profile_clinic_form.eighteenToSixtyFive | as_crispy_field }}</span>
                 </div>
                 <div class="mb-3 col-md-4">
-                  <span class="clinicField">{{ p_form.overSixtyFive | as_crispy_field }}</span>
+                  <span class="clinicField">{{ profile_clinic_form.overSixtyFive | as_crispy_field }}</span>
                 </div>
               </div>
               <h5 class="clinicField">Clinic Areas of Practice</h5>
               <div class="row">
                 <div class="mb-3 col-md-4">
-                  <span class="clinicField">{{ p_form.MSK | as_crispy_field }}</span>
+                  <span class="clinicField">{{ profile_clinic_form.MSK | as_crispy_field }}</span>
                 </div>
                 <div class="mb-3 col-md-4">
-                  <span class="clinicField">{{ p_form.neuro | as_crispy_field }}</span>
+                  <span class="clinicField">{{ profile_clinic_form.neuro | as_crispy_field }}</span>
                 </div>
                 <div class="mb-3 col-md-4">
-                  <span class="clinicField">{{ p_form.cardioResp | as_crispy_field }}</span>
+                  <span class="clinicField">{{ profile_clinic_form.cardioResp | as_crispy_field }}</span>
                 </div>
               </div>
-              
+
               <div>
                 <button type="submit" class="btn btn-primary">Update</button>
               </div>
@@ -122,166 +120,70 @@
           </div>
         </div>
       </div>
-
-      <div class="tab-pane fade show" id="create-auction" role="tabpanel" aria-labelledby="create-auction-tab">
-        <div class="tab-pane fade show active p-3" id="create-auction" role="tabpanel"
-          aria-labelledby="create-auction-tab">
-          <p>{{showForm}}</p>
-          {% if show_form %}
-          <form method="post" class="p-md-5">
-            <h2 class="mb-4">Create New Auction Post</h2>
-            {% csrf_token %}
-            <div class="row">
-              <div class="mb-3 col-md-6">
-                {{ form.placementStart|as_crispy_field }}
-              </div>
-              <div class="mb-3 col-md-6">
-                {{ form.placementEnd|as_crispy_field }}
-              </div>
-              <div class="mb-3 col-md-6">
-                {{ form.reservePrice|as_crispy_field }}
-              </div>
-              <div class="mb-3 col-md-6">
-                {{ form.payFrequency|as_crispy_field }}
-              </div>
-              <div class="mb-3">
-                <h3 class="fs-5">Therapist Schedule <span class="text-weight-thin fs-6">*leave day blank if clinic is
-                    closed</span>
-                </h3>
-
-                <div class="input-group mb-3 align-items-center">
-                  <span class="input-group-text me-3 mt-3 mt-md-4">Mon:</span>
-                  <div class="d-flex gap-3 mt-2 mt-sm-0">
-                    {{ form.mondayStart|as_crispy_field }}
-                    {{ form.mondayEnd|as_crispy_field }}
-                    <button id="mondayClearButton" class="btn btn-primary clearButton mt-4" type="button">Clear</button>
-                  </div>
-                </div>
-                <div class="input-group mb-3 align-items-center">
-                  <span class="input-group-text me-3 mt-3 mt-md-4">Tue:</span>
-                  <div class="d-flex gap-3 mt-2 mt-sm-0">
-                    {{ form.tuesdayStart|as_crispy_field }}
-                    {{ form.tuesdayEnd|as_crispy_field }}
-                    <button id="tuessdayClearButton" class="btn btn-primary clearButton mt-4" type="button">Clear</button>
-                  </div>
-                </div>
-                <div class="input-group mb-3 align-items-center">
-                  <span class="input-group-text me-3 mt-3 mt-md-4">Wed:</span>
-                  <div class="d-flex gap-3 mt-2 mt-sm-0">
-                    {{ form.wednesdayStart|as_crispy_field }}
-                    {{ form.wednesdayEnd|as_crispy_field }}
-                    <button id="wednesdayClearButton" class="btn btn-primary clearButton mt-4" type="button">Clear</button>
-                  </div>
-                </div>
-                <div class="input-group mb-3 align-items-center">
-                  <span class="input-group-text me-3 mt-3 mt-md-4">Thu:</span>
-                  <div class="d-flex gap-3 mt-2 mt-sm-0">
-                    {{ form.thursdayStart|as_crispy_field }}
-                    {{ form.thursdayEnd|as_crispy_field }}
-                    <button id="thursdayClearButton" class="btn btn-primary clearButton mt-4" type="button">Clear</button>
-                  </div>
-                </div>
-                <div class="input-group mb-3 align-items-center">
-                  <span class="input-group-text me-3 mt-3 mt-md-4">Fri:</span>
-                  <div class="d-flex gap-3 mt-2 mt-sm-0">
-                    {{ form.fridayStart|as_crispy_field }}
-                    {{ form.fridayEnd|as_crispy_field }}
-                    <button id="fridayClearButton" class="btn btn-primary clearButton mt-4" type="button">Clear</button>
-                  </div>
-                </div>
-                <div class="input-group mb-3 align-items-center">
-                  <span class="input-group-text me-3 mt-3 mt-md-4">Sat:</span>
-                  <div class="d-flex gap-3 mt-2 mt-sm-0">
-                    {{ form.saturdayStart|as_crispy_field }}
-                    {{ form.saturdayEnd|as_crispy_field }}
-                    <button id="saturdayClearButton" class="btn btn-primary clearButton mt-4" type="button">Clear</button>
-                  </div>
-                </div>
-                <div class="input-group mb-3 align-items-center">
-                  <span class="input-group-text me-3 mt-3 mt-md-4">Sun:</span>
-                  <div class="d-flex gap-3 mt-2 mt-sm-0">
-                    {{ form.sundayStart|as_crispy_field }}
-                    {{ form.sundayEnd|as_crispy_field }}
-                    <button id="sundayClearButton" class="btn btn-primary clearButton mt-4" type="button">Clear</button>
-                  </div>
-                </div>
-
-              </div>
-            </div>
-            <div class="mb-3">
-              {{ form.comments|as_crispy_field }}
-            </div>
-            <button type="submit" class="btn btn-primary">Create Auction</button>
-        </div>
-      </div>
-      </form>
       {% else %}
-      {% if max_forms > 1 %}
-      <p>Only {{ max_forms }} active auctions are allowed at a time. Contact info@travelingtherapist.ca for more
-        information on our Pro plan.</p>
-      {% else %}
-      <p>Only 1 active auction is allowed at a time. Contact info@travelingtherapist.ca for more
-        information on our Pro plan.</p>
-      {% endif %}
-      {% endif %}
-    </div>
-  </div>
-</div>
-{% else %}
-<!-- Content End -->
-<!-- Therapist -->
-<!-- Content Start -->
+      <!-- Content End -->
+      <!-- Therapist -->
+      <!-- Content Start -->
 
-<div class="row">
-  <div>
-    <ul class="nav nav-tabs" id="therapistProfile" role="tablist">
-      <li class="nav-item" role="presentation">
-        <button class="btn-lg nav-link active" id="auction-tab" data-bs-toggle="tab" data-bs-target="#auction-history"
-          type="button" role="tab" aria-controls="auction-history" aria-selected="true">Auction History</button>
-      </li>
-      <li class="nav-item" role="presentation">
-        <button class="btn-lg nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button"
-          role="tab" aria-controls="profile" aria-selected="false">Update Profile</button>
-      </li>
-    </ul>
-    <div class="tab-content" id="therapistProfileContent">
-      <div class="tab-pane fade show active p-3" id="auction-history" role="tabpanel" aria-labelledby="auction-tab">
-        <h2>Live Auctions</h2>
-        <div class="row mb-5">
-          {% for auction in active_auctions_list %}
-            {% include 'auction/card_active_auction.html' with auction=auction %}
-          {% endfor %}
-        </div>
+      <div class="row">
+        <div>
+          <ul class="nav nav-tabs" id="therapistProfile" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="btn-lg nav-link active" id="auction-tab" data-bs-toggle="tab"
+                data-bs-target="#auction-history" type="button" role="tab" aria-controls="auction-history"
+                aria-selected="true">Auction History</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="btn-lg nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile"
+                type="button" role="tab" aria-controls="profile" aria-selected="false">Update Profile</button>
+            </li>
+          </ul>
+          <div class="tab-content" id="therapistProfileContent">
+            <div class="tab-pane fade show active p-3" id="auction-history" role="tabpanel"
+              aria-labelledby="auction-tab">
+              <h2>Live Auctions</h2>
+              <div class="row mb-5">
+                {% for auction in active_auctions_list %}
+                {% include 'auction/card_active_auction.html' with auction=auction %}
+                {% endfor %}
+              </div>
 
-        <h2>Past Auctions</h2>
-        <div class="row mb-5">
-          {% for auction in past_auctions_list %}
-            {% include 'auction/card_past_auction.html' with auction=auction %}
-          {% endfor %}
+              <h2>Past Auctions</h2>
+              <div class="row mb-5">
+                {% for auction in past_auctions_list %}
+                {% include 'auction/card_past_auction.html' with auction=auction %}
+                {% endfor %}
+              </div>
+            </div>
+
+            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+              <div class="tab-pane fade show active p-3" id="profile" role="tabpanel" aria-labelledby="home-tab">
+                <form method="post" class="d-flex flex-column gap-3">
+                  <h2 class="mb-4">Update Profile</h2>
+                  {% csrf_token %}
+                  {{ user_therapist_form | crispy }}
+                  <div>
+                    <button type="submit" class="btn btn-primary">Update</button>
+                  </div>
+                  <hr>
+                  <div>
+                    <a href="{% url 'change-password' %}" class="btn btn-primary">Change Password</a>
+                  </div>
+              </div>
+              </form>
+            </div>
+          </div>
         </div>
       </div>
-
-      <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-        <div class="tab-pane fade show active p-3" id="profile" role="tabpanel" aria-labelledby="home-tab">
-          <form method="post" class="d-flex flex-column gap-3">
-            <h2 class="mb-4">Update Profile</h2>
-            {% csrf_token %}
-            {{ u_form | crispy }}
-            <div>
-              <button type="submit" class="btn btn-primary">Update</button>
-            </div>
-            <hr>
-            <div>
-              <a href="{% url 'change-password' %}" class="btn btn-primary">Change Password</a>
-            </div>
-        </div>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- Content End -->
-{% endif %}
-<script src="{% static 'auction/profile.js' %}"></script>
-<script src="{% static 'auction/create_auction.js' %}"></script>
-{% endblock %}
+      <!-- Content End -->
+      {% endif %}
+      <script>
+        $(document).ready(function () {
+          {% if user_clinic_form or profile_clinic_form.errors or user_therapist_form %}
+          $('#profile-tab').tab('show');
+          {% endif %}
+        });
+      </script>
+      <script src="{% static 'auction/profile.js' %}"></script>
+      <script src="{% static 'auction/create_auction.js' %}"></script>
+      {% endblock %}

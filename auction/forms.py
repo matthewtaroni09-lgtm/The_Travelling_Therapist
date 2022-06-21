@@ -20,6 +20,32 @@ def check_times(start_time, end_time, day):
     else: 
         return ''
 
+def validate_clinic_fields(clinicName, city, province, underEighteen, eighteenToSixtyFive, overSixtyFive, MSK, neuro, cardioResp):
+    error_list = []
+    if clinicName == '' or clinicName is None:
+        error_list.append(ValidationError("Please enter a clinic name."))
+
+    if city == '' or city is None:
+        error_list.append(ValidationError("Please enter a city."))
+
+    if province == '' or province is None:
+        error_list.append(ValidationError("Please enter a province."))
+
+    if underEighteen is None or eighteenToSixtyFive is None or overSixtyFive is None:
+        error_list.append(ValidationError("Please enter a value for all Clinic Demographics. If one of the age groups does not apply put in a 0."))
+    else:
+        if (underEighteen + eighteenToSixtyFive + overSixtyFive) != 100:
+            error_list.append(ValidationError("Clinic Demographics values must add to 100%."))
+
+    if MSK is None or neuro is None or cardioResp is None:
+        error_list.append(ValidationError("Please enter a value for all Clinic Areas of Practice. If one of the age groups does not apply put in a 0."))
+    else:
+        if (MSK + neuro + cardioResp) != 100:
+            error_list.append(ValidationError("Clinic Areas of Practice values must add to 100%."))
+    print("val_clinic_fields"+str(error_list))
+    return error_list
+        
+
 class AuctionForm(forms.ModelForm):
     class Meta:
         model = Auction
@@ -142,14 +168,14 @@ class BidForm(forms.ModelForm):
         self.min_bid_increment = kwargs.pop('min_bid_increment', None)
         super(BidForm, self).__init__(*args, **kwargs)
 
-    amount = forms.IntegerField(max_value=25000, min_value=0)
+    amount = forms.IntegerField(max_value=100000, min_value=0)
     class Meta:
         model = Bid
         fields = ('amount', )
 
     def clean_amount(self):
         amount = self.cleaned_data.get("amount")
-        if amount > 0 and self.max_bid > 0 and amount % self.max_bid != 0:
+        if amount > 0 and self.max_bid > 0 and amount % self.min_bid_increment != 0:
             raise forms.ValidationError("Bids must be in increments of $" + str(self.min_bid_increment) + ".")
         return amount 
 
@@ -203,26 +229,9 @@ class RegisterAcount(UserCreationForm):
             error_list.append(f'Username "{username}" is already in use.')
 
         if str(userType).split(' ')[-1] == "Clinic":
-            if clinicName == '' or clinicName is None:
-                error_list.append(ValidationError("Please enter a clinic name."))
-
-            if city == '' or city is None:
-                error_list.append(ValidationError("Please enter a city."))
-
-            if province == '' or province is None:
-                error_list.append(ValidationError("Please enter a province."))
-
-            if underEighteen is None or eighteenToSixtyFive is None or overSixtyFive is None:
-                error_list.append(ValidationError("Please enter a value for all Clinic Demographics. If one of the age groups does not apply put in a 0."))
-            else:
-                if (underEighteen + eighteenToSixtyFive + overSixtyFive) != 100:
-                    error_list.append(ValidationError("Clinic Demographics values must add to 100%."))
-
-            if MSK is None or neuro is None or cardioResp is None:
-                error_list.append(ValidationError("Please enter a value for all Clinic Areas of Practice. If one of the age groups does not apply put in a 0."))
-            else:
-                if (MSK + neuro + cardioResp) != 100:
-                    error_list.append(ValidationError("Clinic Areas of Practice values must add to 100%."))
+            errors = validate_clinic_fields(clinicName, city, province, underEighteen, eighteenToSixtyFive, overSixtyFive, MSK, neuro, cardioResp)
+            if errors != None:
+                error_list.extend(errors)
         else:
             if firstName == '' or firstName is None:
                 error_list.append(ValidationError("Please enter a first name."))
@@ -243,17 +252,81 @@ class UserFormClinic(forms.ModelForm):
     class Meta:
         model = User
         fields = ['email']
+    
+    def clean(self):
+        print("in user")
+        email = self.cleaned_data.get('email')
+
+        error_list = []
+
+        if User.objects.exclude(pk=self.instance.pk).filter(username=email).exists():
+            error_list.append(f'Username "{email}" is already in use.')
+
+        if email == '' or email is None:
+            error_list.append(ValidationError("Please enter a properly formatted email."))
+
+        if len(error_list) > 0:
+            raise forms.ValidationError(error_list)
 
 class UserFormTherapist(forms.ModelForm):
     email = forms.EmailField()
     class Meta:
         model = User
         fields = ['first_name', 'last_name', 'email']
+    
+    def clean(self):
+        firstName = self.cleaned_data.get('first_name')
+        lastName = self.cleaned_data.get('last_name')
+        email = self.cleaned_data.get('email')
+
+        error_list = []
+
+        if User.objects.exclude(pk=self.instance.pk).filter(username=email).exists():
+            error_list.append(f'Username "{email}" is already in use.')
+
+        if firstName == '' or firstName is None:
+            error_list.append(ValidationError("First name cannot be blank."))
+
+        if lastName == '' or lastName is None:
+            error_list.append(ValidationError("Last name cannot be blank."))
+
+        if len(error_list) > 0:
+            raise forms.ValidationError(error_list)
 
 class ProfileUpdateClinic(forms.ModelForm):
     class Meta:
         model = Account
         fields = ['clinicName', 'city', 'province', 'about', 'underEighteen', 'eighteenToSixtyFive', 'overSixtyFive', 'MSK', 'neuro', 'cardioResp', 'imageOne', 'imageTwo', 'imageThree', 'imageFour']
+
+    def clean(self):
+        print("in vals")
+        clinicName = self.cleaned_data.get('clinicName')
+        city = self.cleaned_data.get('city')
+        about = self.cleaned_data.get('about')
+        province = self.cleaned_data.get('province')
+        username = self.cleaned_data.get('username')
+        imageOne = self.cleaned_data.get('imageOne')
+        imageTwo = self.cleaned_data.get('imageTwo')
+        imageThree = self.cleaned_data.get('imageThree')
+        imageFour = self.cleaned_data.get('imageFour')
+        underEighteen = self.cleaned_data.get('underEighteen')
+        eighteenToSixtyFive = self.cleaned_data.get('eighteenToSixtyFive')
+        overSixtyFive = self.cleaned_data.get('overSixtyFive')
+        MSK = self.cleaned_data.get('MSK')
+        neuro = self.cleaned_data.get('neuro')
+        cardioResp = self.cleaned_data.get('cardioResp')
+
+        error_list = []
+
+        if User.objects.exclude(pk=self.instance.pk).filter(username=username).exists():
+            error_list.append(f'Username "{username}" is already in use.')
+
+        errors = validate_clinic_fields(clinicName, city, province, underEighteen, eighteenToSixtyFive, overSixtyFive, MSK, neuro, cardioResp)
+        if errors != None:
+            error_list.extend(errors)
+    
+        if len(error_list) > 0:
+            raise forms.ValidationError(error_list)
 
 class PasswordChangingForm(PasswordChangeForm):
     old_password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control', 'type': 'password'}))

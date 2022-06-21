@@ -74,7 +74,9 @@
                 {% csrf_token %}
                 {{ form.amount|as_crispy_field }}
               </div>
+              {% if num_bids > 0%}
               <p>Next avaiable bid: {{ auction.get_max_bid }}</p>
+              {% endif %}
               <div id="warningMessage" class="alert alert-warning" role="alert"></div>
               <small>For more information on the bidding process see our <a href="{% url 'about' %}">FAQ</a></small>
               <div class="modal-footer">
