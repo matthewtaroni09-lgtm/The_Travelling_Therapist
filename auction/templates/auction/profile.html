@@ -179,7 +179,7 @@
       {% endif %}
       <script>
         $(document).ready(function () {
-          {% if user_clinic_form or profile_clinic_form.errors or user_therapist_form %}
+          {% if user_clinic_form.errors or profile_clinic_form.errors or user_therapist_form.errors %}
           $('#profile-tab').tab('show');
           {% endif %}
         });

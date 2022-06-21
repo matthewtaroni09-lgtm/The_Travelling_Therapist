@@ -188,7 +188,7 @@ def view_auction(request, auction_id):
     submitted = False
     max_bid = 0
 
-    if num_bids > 0:
+    if num_bids > 0 and auction.currentLowBid is not None and auction.minimumBidIncrement is not None:
         diff = auction.currentLowBid - auction.minimumBidIncrement
         if diff > 0:
             max_bid = diff
@@ -207,6 +207,7 @@ def view_auction(request, auction_id):
             bid.createdBy = request.user
             if auction.currentLowBid is not None and bid.amount < auction.currentLowBid:
                 auction.currentLowBid = bid.amount
+                auction.minimumBidIncrement = set_bid_increment(bid.amount)
                 auction_change = True
             if num_bids == 0:
                 auction.minimumBidIncrement = set_bid_increment(bid.amount)
@@ -335,15 +336,6 @@ def create_auction(request):
             if form.is_valid():
                 auction = form.save(commit=False)
                 auction.clinic = request.user.account
-                if form.cleaned_data.get('reservePrice') != None:
-                    if form.cleaned_data.get('reservePrice') < 10000:
-                        auction.minimumBidIncrement = 100
-                    elif form.cleaned_data.get('reservePrice') > 10000 and form.cleaned_data.get('reservePrice') < 25000:
-                        auction.minimumBidIncrement = 250
-                    else:
-                        auction.minimumBidIncrement = 500
-                    auction.currentLowBid = form.cleaned_data.get('reservePrice')
-
                 auction.auctionStart = datetime.datetime.now(timezone('US/Eastern'))
                 auction.auctionEnd = datetime.datetime.now(timezone('US/Eastern')) + datetime.timedelta(seconds=settings.DEAFULT_AUCTION_LENGTH)
                 auction.closed = False
@@ -507,9 +499,9 @@ def password_reset_request(request):
 # -------------- Utility --------------
 def set_bid_increment(reservePrice):
     min_increment = 0
-    if reservePrice < 10000:
+    if reservePrice <= 15000:
         min_increment = 100
-    elif reservePrice > 10000 and reservePrice < 25000:
+    elif reservePrice > 15000 and reservePrice <= 50000:
         min_increment = 250
     else:
         min_increment = 500

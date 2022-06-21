@@ -130,14 +130,14 @@ class Auction(models.Model):
 
     def get_max_bid(self):
         num_bids = Bid.objects.filter(auction=self.auctionID).count()
-        if num_bids > 0:
+        if num_bids > 0 and self.currentLowBid is not None and self.minimumBidIncrement is not None:
             diff = self.currentLowBid - self.minimumBidIncrement
             if diff > 0:
                 return '$' + str(diff)
             else:
                 return 0
         else:
-            return ''
+            return 0
 
 class Bid(models.Model):
     bidID = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

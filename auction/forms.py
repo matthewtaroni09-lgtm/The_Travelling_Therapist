@@ -230,7 +230,7 @@ class RegisterAcount(UserCreationForm):
 
         if str(userType).split(' ')[-1] == "Clinic":
             errors = validate_clinic_fields(clinicName, city, province, underEighteen, eighteenToSixtyFive, overSixtyFive, MSK, neuro, cardioResp)
-            if errors != None:
+            if errors is not None:
                 error_list.extend(errors)
         else:
             if firstName == '' or firstName is None:
@@ -322,7 +322,7 @@ class ProfileUpdateClinic(forms.ModelForm):
             error_list.append(f'Username "{username}" is already in use.')
 
         errors = validate_clinic_fields(clinicName, city, province, underEighteen, eighteenToSixtyFive, overSixtyFive, MSK, neuro, cardioResp)
-        if errors != None:
+        if errors is not None:
             error_list.extend(errors)
     
         if len(error_list) > 0:
