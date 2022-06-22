@@ -8,6 +8,7 @@ $(document).ready(function () {
     let currentLowBid = 0;
     let url = $(location).attr('href').split("/");
     let auctionID = url[url.length - 1];
+    let auctionEnd = "";
     $.ajax({
         type: "GET",
         url: "/auction/data/view_auction_data",
@@ -17,7 +18,13 @@ $(document).ready(function () {
         success: function (response) {
             console.log(response);
             max_bid = response.max_bid;
-            currentLowBid = response.currentLowBid
+            currentLowBid = response.currentLowBid;
+            auctionEnd = new Date(response.auctionEnd);
+
+            let currentTime = new Date().getTime()
+            let subtractMilliSecondsValue = auctionEnd.getTime() - currentTime;
+            console.log(subtractMilliSecondsValue);
+            setTimeout(auctionEnded, subtractMilliSecondsValue);
         },
         error: function (error) {
             console.log('error: ', error);
@@ -31,7 +38,13 @@ $(document).ready(function () {
             $("#warningMessage").show();
         }
     });
+
+    function auctionEnded() {
+        $("#bidButton").hide();
+    }
 });
+
+
 
 const getAuction = () => {
     $.ajax({

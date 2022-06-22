@@ -308,12 +308,13 @@ def get_view_auction_data(request):
         else:
             max_bid = 0
     else:
-        return 0
+        max_bid = 0
     print(max_bid)
     return JsonResponse({
         'max_bid': max_bid,
         'currentLowBid': auction.currentLowBid,
-        'minimumBidIncrement': auction.minimumBidIncrement
+        'minimumBidIncrement': auction.minimumBidIncrement,
+        'auctionEnd': auction.auctionEnd
         })
 
 def get_demogrpahics(request, clinic_id):

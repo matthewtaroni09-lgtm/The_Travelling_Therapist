@@ -47,7 +47,7 @@ function userTypeChange() {
 }
 
 $(document).ready(function () {
-    $('#submitButton').prop('disabled', false);
+    // $('#submitButton').prop('disabled', false);
     $('#tandcModal').on('hidden.bs.modal', function () {
         $('#agreementCheckBox').css("display", "none");
         $('#agreementCheckBoxLabel').css("display", "none");
@@ -58,14 +58,14 @@ $(document).ready(function () {
         $('#agreementCheckBoxLabel').css("display", "block");
     });
 
-    // $('#agreementCheckBox').click(function () {
-    //     if ($('#agreementCheckBox').prop("checked") === true) {
-    //         $('#submitButton').prop('disabled', false);
-    //     }
-    //     else {
-    //         $('#submitButton').prop('disabled', true);
-    //     }
-    // });
+    $('#agreementCheckBox').click(function () {
+        if ($('#agreementCheckBox').prop("checked") === true) {
+            $('#submitButton').prop('disabled', false);
+        }
+        else {
+            $('#submitButton').prop('disabled', true);
+        }
+    });
 });
 
 // Show and hide image inputs

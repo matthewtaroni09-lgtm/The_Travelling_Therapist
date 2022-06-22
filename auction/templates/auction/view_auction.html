@@ -58,8 +58,8 @@
 
     {% if user.is_authenticated and user.account.get_split_user_type != 'Clinic' and auction.active %}
 
-    <button type="button" class="btn-lg btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
-      data-bs-whatever="@mdo">Bid</button>
+    <button id="bidButton" type="button" class="btn-lg btn-primary" data-bs-toggle="modal"
+      data-bs-target="#exampleModal" data-bs-whatever="@mdo">Bid</button>
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
