@@ -1,14 +1,11 @@
 from The_Travelling_Therapist.settings import ACTIVE_LINK
 
 
-email_header = """<header>
-  <img src="https://travelingtherapist.ca/media/images/TTT_LOGO.png" alt="Traveling Therapist Logo">
-</header>
-
-<section style="font-size: 16px; margin-bottom: 4rem;">
+email_header = """<section style="font-size: 16px; margin-bottom: 4rem;">
 </section>"""
 
 email_footer = """<footer>
+  <img src="https://travelingtherapist.ca/media/images/TTT_LOGO.png" alt="Traveling Therapist Logo">
   <a href="travelingtherapist.ca">Click to visit The Traveling Therapist Website</a>
   <p style="font-size: 10px; color: #848585;">You are receiving this email because you have registered to use The Traveling Therapist website services. Please do not reply to this email. If you wish to contact us then email The Traveling Therapist at info@travelingtherapist.ca. To ensure you continue to receive these emails, add this email address to your email safelist. Your details will not be disclosed or used by third parties for marketing or promotional purposes.</p>
 </footer>"""
