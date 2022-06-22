@@ -133,7 +133,7 @@ class Auction(models.Model):
         if num_bids > 0 and self.currentLowBid is not None and self.minimumBidIncrement is not None:
             diff = self.currentLowBid - self.minimumBidIncrement
             if diff > 0:
-                return '$' + str(diff)
+                return '$' + str("{:,}".format(diff))
             else:
                 return 0
         else:
