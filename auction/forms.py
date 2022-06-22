@@ -31,14 +31,20 @@ def validate_clinic_fields(clinicName, city, province, underEighteen, eighteenTo
     if province == '' or province is None:
         error_list.append(ValidationError("Please enter a province."))
 
+    if underEighteen < 0 or eighteenToSixtyFive < 0 or overSixtyFive < 0:
+            error_list.append(ValidationError("Please enter a positive value for all Clinic Demographics. If one of the age groups does not apply put in a 0."))
+
     if underEighteen is None or eighteenToSixtyFive is None or overSixtyFive is None:
         error_list.append(ValidationError("Please enter a value for all Clinic Demographics. If one of the age groups does not apply put in a 0."))
     else:
         if (underEighteen + eighteenToSixtyFive + overSixtyFive) != 100:
             error_list.append(ValidationError("Clinic Demographics values must add to 100%."))
 
+    if MSK < 0 or neuro < 0 or cardioResp < 0:
+        error_list.append(ValidationError("Please enter a positive value for all Clinic Areas of Practice. If one of the areas does not apply put in a 0."))
+
     if MSK is None or neuro is None or cardioResp is None:
-        error_list.append(ValidationError("Please enter a value for all Clinic Areas of Practice. If one of the age groups does not apply put in a 0."))
+        error_list.append(ValidationError("Please enter a value for all Clinic Areas of Practice. If one of the areas does not apply put in a 0."))
     else:
         if (MSK + neuro + cardioResp) != 100:
             error_list.append(ValidationError("Clinic Areas of Practice values must add to 100%."))
