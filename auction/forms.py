@@ -17,6 +17,8 @@ def check_times(start_time, end_time, day):
             return str(day) + "'s start time is after the end time."
         else:
             return ''
+    elif start_time is None and end_time is None:
+        return 'None'
     else: 
         return ''
 
@@ -130,12 +132,22 @@ class AuctionForm(forms.ModelForm):
         saturday_val = check_times(saturdayStart, saturdayEnd, 'Saturday')
         sunday_val = check_times(sundayStart, sundayEnd, 'Sunday')
 
+        print(monday_val)
+        print(tuesday_val)
+        print(wednesday_val)
+        print(thursday_val)
+        print(friday_val)
+        print(saturday_val)
+        print(sunday_val)
+
         error_list = []
+        none_count = 0
+
         if placementStart > datetime.now().date() + timedelta(days=365):
             error_list.append(ValidationError("Placements must start within the next 12 months."))
 
         if reservePrice is not None:
-            if reservePrice < 0:
+            if reservePrice <= 0:
                 error_list.append(ValidationError("Reserve price cannot be 0 or less. If no reserve price is desired leave the field blank."))
 
         if reservePrice is not None:
@@ -143,25 +155,48 @@ class AuctionForm(forms.ModelForm):
                 error_list.append(ValidationError("Reserve price must be less than $25,000."))
 
         if placementEnd <= placementStart:
-            error_list.append(ValidationError("The end of placement date must be before the start of placement."))
+            error_list.append(ValidationError("The end of placement date must be after the start date of placement"))
 
         if (placementEnd - placementStart).days > 730:
             error_list.append(ValidationError("Placements must be less than two years."))
 
-        if monday_val != '':
+        if monday_val == 'None':
+            none_count = none_count + 1
+        elif monday_val != '' and monday_val != 'None':
             error_list.append(ValidationError(monday_val))
-        if tuesday_val != '':
+
+        if tuesday_val == 'None':
+            none_count = none_count + 1
+        elif tuesday_val != '' and tuesday_val != 'None':
             error_list.append(ValidationError(tuesday_val))
-        if wednesday_val != '':
+
+        if wednesday_val == 'None':
+            none_count = none_count + 1
+        if wednesday_val != '' and wednesday_val != 'None':
             error_list.append(ValidationError(wednesday_val))
-        if thursday_val != '':
+
+        if thursday_val == 'None':
+            none_count = none_count + 1
+        if thursday_val != '' and thursday_val != 'None':
             error_list.append(ValidationError(thursday_val))
-        if friday_val != '':
+
+        if friday_val == 'None':
+            none_count = none_count + 1
+        if friday_val != '' and friday_val != 'None':
             error_list.append(ValidationError(friday_val))
-        if saturday_val != '':
+
+        if saturday_val == 'None':
+            none_count = none_count + 1
+        if saturday_val != '' and saturday_val != 'None':
             error_list.append(ValidationError(saturday_val))
-        if sunday_val != '':
+
+        if sunday_val == 'None':
+            none_count = none_count + 1
+        if sunday_val != '' and sunday_val != 'None':
             error_list.append(ValidationError(sunday_val))
+
+        if none_count == 7:
+            error_list.append(ValidationError('At least one start and end time must be entered.'))
 
         if len(error_list) > 0:
             raise forms.ValidationError(error_list)
