@@ -31,20 +31,18 @@ def validate_clinic_fields(clinicName, city, province, underEighteen, eighteenTo
     if province == '' or province is None:
         error_list.append(ValidationError("Please enter a province."))
 
-    if underEighteen < 0 or eighteenToSixtyFive < 0 or overSixtyFive < 0:
-            error_list.append(ValidationError("Please enter a positive value for all Clinic Demographics. If one of the age groups does not apply put in a 0."))
-
     if underEighteen is None or eighteenToSixtyFive is None or overSixtyFive is None:
         error_list.append(ValidationError("Please enter a value for all Clinic Demographics. If one of the age groups does not apply put in a 0."))
+    elif underEighteen < 0 or eighteenToSixtyFive < 0 or overSixtyFive < 0:
+        error_list.append(ValidationError("Please enter a positive value for all Clinic Demographics. If one of the age groups does not apply put in a 0."))
     else:
         if (underEighteen + eighteenToSixtyFive + overSixtyFive) != 100:
             error_list.append(ValidationError("Clinic Demographics values must add to 100%."))
 
-    if MSK < 0 or neuro < 0 or cardioResp < 0:
-        error_list.append(ValidationError("Please enter a positive value for all Clinic Areas of Practice. If one of the areas does not apply put in a 0."))
-
     if MSK is None or neuro is None or cardioResp is None:
         error_list.append(ValidationError("Please enter a value for all Clinic Areas of Practice. If one of the areas does not apply put in a 0."))
+    elif MSK < 0 or neuro < 0 or cardioResp < 0:
+        error_list.append(ValidationError("Please enter a positive value for all Clinic Areas of Practice. If one of the areas does not apply put in a 0."))
     else:
         if (MSK + neuro + cardioResp) != 100:
             error_list.append(ValidationError("Clinic Areas of Practice values must add to 100%."))
@@ -174,7 +172,7 @@ class BidForm(forms.ModelForm):
         self.min_bid_increment = kwargs.pop('min_bid_increment', None)
         super(BidForm, self).__init__(*args, **kwargs)
 
-    amount = forms.IntegerField(max_value=100000, min_value=0)
+    amount = forms.IntegerField(min_value=0, max_value=100000)
     class Meta:
         model = Bid
         fields = ('amount', )
@@ -198,12 +196,12 @@ class RegisterAcount(UserCreationForm):
     imageTwo = forms.ImageField(required=False, label='Image 2')
     imageThree = forms.ImageField(required=False, label='Image 3')
     imageFour = forms.ImageField(required=False, label='Image 4')
-    underEighteen = forms.IntegerField(required=False, label='% Under 18')
-    eighteenToSixtyFive = forms.IntegerField(required=False, label='% 18 - 65')
-    overSixtyFive = forms.IntegerField(required=False, label='% Over 65')
-    MSK = forms.IntegerField(required=False, label='% Musculoskeletal')
-    neuro = forms.IntegerField(required=False, label='% Neurological')
-    cardioResp = forms.IntegerField(required=False, label='% Cardiorespiratory')
+    underEighteen = forms.IntegerField(required=False, label='% Under 18', min_value=0, max_value=100)
+    eighteenToSixtyFive = forms.IntegerField(required=False, label='% 18 - 65', min_value=0, max_value=100)
+    overSixtyFive = forms.IntegerField(required=False, label='% Over 65', min_value=0, max_value=100)
+    MSK = forms.IntegerField(required=False, label='% Musculoskeletal', min_value=0, max_value=100)
+    neuro = forms.IntegerField(required=False, label='% Neurological', min_value=0, max_value=100)
+    cardioResp = forms.IntegerField(required=False, label='% Cardiorespiratory', min_value=0, max_value=100)
 
     class Meta:
         model = User

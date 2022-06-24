@@ -11,7 +11,7 @@
     <form method="post" enctype="multipart/form-data" class="d-flex flex-column gap-3">
       <h5>Select an account type to get started:</h5>
       {% csrf_token %}
-      {{ form|as_crispy_errors }}
+      {{ form | as_crispy_errors }}
       {{ form.user_type | as_crispy_field }}
       <span class="clinicField">{{ form.clinicName | as_crispy_field }}</span>
       <span class="clinicField">{{ form.city | as_crispy_field }}</span>

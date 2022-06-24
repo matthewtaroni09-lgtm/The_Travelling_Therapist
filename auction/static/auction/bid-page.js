@@ -41,6 +41,7 @@ $(document).ready(function () {
 
     function auctionEnded() {
         $("#bidButton").hide();
+        $("#exampleModal").modal("hide");
     }
 });
 

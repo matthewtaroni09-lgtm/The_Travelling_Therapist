@@ -21,6 +21,7 @@ function userTypeChange() {
     let userType = document.getElementById("id_user_type");
     let userTypeValue = userType.options[userType.selectedIndex].text
 
+    //Show clinic fields
     if (userTypeValue.split(" ")[1] === "Clinic") {
         for (const fields of combinedFields) {
             fields.style.display = 'block';
@@ -31,6 +32,20 @@ function userTypeChange() {
         for (const fields of therapistFields) {
             fields.style.display = 'none';
         }
+        termsButton.style.display = 'block';
+    }
+    //If nothing is selected hide fields
+    else if (userTypeValue === "---------") {
+        for (const fields of combinedFields) {
+            fields.style.display = 'none';
+        }
+        for (const fields of clinicFields) {
+            fields.style.display = 'none';
+        }
+        for (const fields of therapistFields) {
+            fields.style.display = 'none';
+        }
+        termsButton.style.display = 'none';
     }
     else {
         for (const fields of combinedFields) {
@@ -42,12 +57,21 @@ function userTypeChange() {
         for (const fields of therapistFields) {
             fields.style.display = 'block';
         }
+        termsButton.style.display = 'block';
     }
-    termsButton.style.display = 'block';
+
 }
 
 $(document).ready(function () {
-    // $('#submitButton').prop('disabled', false);
+    //$('#submitButton').prop('disabled', false);
+    if ($("#id_user_type :selected").text() !== "---------") {
+        $('#termsButton').css("display", "block");
+    }
+
+    $("#id_user_type").change(function () {
+        $('.alert-block').css("display", "none");
+    });
+
     $('#tandcModal').on('hidden.bs.modal', function () {
         $('#agreementCheckBox').css("display", "none");
         $('#agreementCheckBoxLabel').css("display", "none");
