@@ -298,6 +298,12 @@ class UserFormTherapist(forms.ModelForm):
             raise forms.ValidationError(error_list)
 
 class ProfileUpdateClinic(forms.ModelForm):
+    underEighteen = forms.IntegerField(required=False, label='% Under 18', min_value=0, max_value=100)
+    eighteenToSixtyFive = forms.IntegerField(required=False, label='% 18 - 65', min_value=0, max_value=100)
+    overSixtyFive = forms.IntegerField(required=False, label='% Over 65', min_value=0, max_value=100)
+    MSK = forms.IntegerField(required=False, label='% Musculoskeletal', min_value=0, max_value=100)
+    neuro = forms.IntegerField(required=False, label='% Neurological', min_value=0, max_value=100)
+    cardioResp = forms.IntegerField(required=False, label='% Cardiorespiratory', min_value=0, max_value=100)
     class Meta:
         model = Account
         fields = ['clinicName', 'city', 'province', 'about', 'underEighteen', 'eighteenToSixtyFive', 'overSixtyFive', 'MSK', 'neuro', 'cardioResp', 'imageOne', 'imageTwo', 'imageThree', 'imageFour']

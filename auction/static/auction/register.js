@@ -59,7 +59,6 @@ function userTypeChange() {
         }
         termsButton.style.display = 'block';
     }
-
 }
 
 $(document).ready(function () {
