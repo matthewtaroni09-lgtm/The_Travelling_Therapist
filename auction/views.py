@@ -205,6 +205,7 @@ def view_auction(request, auction_id):
             bid.user = request.user
             bid.active = True
             bid.createdBy = request.user
+            prev_low_bid = auction.currentLowBid
             if auction.currentLowBid is not None and bid.amount < auction.currentLowBid:
                 auction.currentLowBid = bid.amount
                 auction.minimumBidIncrement = set_bid_increment(bid.amount)
@@ -214,7 +215,10 @@ def view_auction(request, auction_id):
                 auction.currentLowBid = bid.amount
                 auction_change = True
             diff = auction.auctionEnd - datetime.datetime.now(timezone('utc'))
-            if diff.total_seconds() < 60:
+            print(diff)
+            print(bid.amount)
+            print(auction.currentLowBid)
+            if diff.total_seconds() < 60 and bid.amount <= prev_low_bid:
                 new_id = str(uuid.uuid4())
                 auction.auctionEnd = auction.auctionEnd + datetime.timedelta(minutes=1)
                 scheduled_tasks.print_job()
