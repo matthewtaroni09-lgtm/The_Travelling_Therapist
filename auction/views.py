@@ -87,7 +87,7 @@ class AuctionListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['filter'] = AuctionFilter(self.request.GET, queryset=Auction.objects.filter(active=True) | Auction.objects.filter(closed=True))
+        context['filter'] = AuctionFilter(self.request.GET, queryset=Auction.objects.filter(active=True).order_by('auctionEnd') | Auction.objects.filter(closed=True).order_by('auctionEnd'))
         return context
 
 # Page Links
