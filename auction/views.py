@@ -96,6 +96,8 @@ def about(request):
     return render(request, 'auction/about.html', {'path': 'about'})
 
 def profile(request):
+    if request.user.is_authenticated == False:
+        return render(request, 'auction/profile.html', {})
     parameter = {}
     show_form = False
     if str(request.user.account.userType).split(' ')[-1] == "Clinic":
@@ -331,6 +333,8 @@ def get_demogrpahics(request, clinic_id):
     return JsonResponse({'data': data})
 
 def create_auction(request):
+    if request.user.is_authenticated == False:
+        return render(request, 'auction/create_auction.html', {})
     admin = AdminSettings.objects.all()[:1].get()
     # Not closed and not deleted counts any auctions that are active or have no status selected
     active_auctions_list = Auction.objects.filter(closed=False, deleted=False, clinic=request.user.account)

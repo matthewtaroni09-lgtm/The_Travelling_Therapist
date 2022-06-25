@@ -2,6 +2,7 @@
 {% load static %}
 {% load crispy_forms_tags %}
 {% block content %}
+{% if user.is_authenticated %}
 <!-- <div class="container my-3"> -->
 <div class="tab-pane fade show" id="create-auction" role="tabpanel" aria-labelledby="create-auction-tab">
   <div class="tab-pane" id="create-auction" role="tabpanel" aria-labelledby="create-auction-tab">
@@ -112,4 +113,8 @@
 </div>
 <!-- </div> -->
 <script src="{% static 'auction/create_auction.js' %}"></script>
+{% else %}
+<p>You must be logged in to access this page. Please <a href="https://travelingtherapist.ca/login">login here</a>
+</p>
+{% endif %}
 {% endblock %}
