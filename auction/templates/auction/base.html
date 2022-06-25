@@ -33,6 +33,9 @@
     <!-- Navigation -->
     {% include 'auction/navigation.html' %}
 
+    <!-- Runs the auction countdown clock -->
+    <script src="{% static 'auction/auction.js' %}"></script>
+
     <!-- Main Content -->
     <main class="container my-3 py-3 p-md-5 bg-light">
         {% block content %}
@@ -45,4 +48,3 @@
 
 
 </html>
-<script src="{% static 'auction/auction.js' %}"></script>

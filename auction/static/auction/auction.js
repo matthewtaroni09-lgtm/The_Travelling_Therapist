@@ -88,5 +88,5 @@ function getTimeDistance(date) {
     return distance;
 }
 
-let currentYear = document.getElementById('current-year');
-currentYear.innerText = new Date().getFullYear();
+// let currentYear = document.getElementById('current-year');
+// currentYear.innerText = new Date().getFullYear();
