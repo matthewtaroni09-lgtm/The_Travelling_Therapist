@@ -1,3 +1,8 @@
+$(document).ready(function () {
+    if ($('.alert-block').css("display") === "block") {
+        $('#profile-tab').tab('show');
+    }
+});
 const getActiveAuctionsClinic = () => {
     $.ajax({
         type: "GET",

@@ -177,13 +177,6 @@
       </div>
       <!-- Content End -->
       {% endif %}
-      <script>
-        $(document).ready(function () {
-          {% if user_clinic_form.errors or profile_clinic_form.errors or user_therapist_form.errors %}
-          $('#profile-tab').tab('show');
-          {% endif %}
-        });
-      </script>
       <script src="{% static 'auction/profile.js' %}"></script>
       <script src="{% static 'auction/create_auction.js' %}"></script>
       {% else %}

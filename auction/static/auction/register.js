@@ -89,10 +89,12 @@ $(document).ready(function () {
             $('#submitButton').prop('disabled', true);
         }
     });
-});
 
-// Show and hide image inputs
-$(document).ready(function () {
+    if ($('.alert-block').css("display") === "block") {
+        userTypeChange();
+    }
+
+    // Show and hide image inputs
     clearAndHideImageTwo();
     clearAndHideImageThree();
     clearAndHideImageFour();
@@ -137,4 +139,5 @@ $(document).ready(function () {
         $('#id_imageFour').val('');
         $('#div_id_imageFour').hide();
     }
-})
+
+});
