@@ -56,28 +56,30 @@ class PasswordsChangeView(PasswordChangeView):
     success_url = reverse_lazy('profile')
 
 def contact(request):
-	if request.method == 'POST':
-		form = ContactForm(request.POST)
-		if form.is_valid():
-			subject = "Website Inquiry" 
-			body = {
-			'first_name': form.cleaned_data['first_name'], 
-			'last_name': form.cleaned_data['last_name'], 
-			'email': form.cleaned_data['email_address'], 
-			'message':form.cleaned_data['message'], 
-			}
-			message = "\n".join(body.values())
+    admin = AdminSettings.objects.all()[:1].get()
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            subject = "Website Inquiry" 
+            body = {
+            'first_name': form.cleaned_data['first_name'], 
+            'last_name': form.cleaned_data['last_name'], 
+            'email': form.cleaned_data['email_address'], 
+            'message':form.cleaned_data['message'], 
+            }
+            message = "\n".join(body.values())
 
-			try:
-				send_mail(subject, message, 'loribine@gmail.com', ['loribine@gmail.com']) 
-			except BadHeaderError:
-				return HttpResponse('Invalid header found.')
-			return redirect ("index")
-		else:
-			return render(request, "auction/contact_us.html", {'form': form})
-	else:
-		form = ContactForm(None)
-		return render(request, "auction/contact_us.html", {'form': form})
+            try:
+                if admin.sendEmails:
+                    send_mail(subject, message, 'loribine@gmail.com', ['loribine@gmail.com']) 
+            except BadHeaderError:
+                return HttpResponse('Invalid header found.')
+            return redirect ("index")
+        else:
+            return render(request, "auction/contact_us.html", {'form': form})
+    else:
+        form = ContactForm(None)
+        return render(request, "auction/contact_us.html", {'form': form})
 
 class AuctionListView(ListView):
     model = Auction
@@ -329,6 +331,7 @@ def get_demogrpahics(request, clinic_id):
     return JsonResponse({'data': data})
 
 def create_auction(request):
+    admin = AdminSettings.objects.all()[:1].get()
     # Not closed and not deleted counts any auctions that are active or have no status selected
     active_auctions_list = Auction.objects.filter(closed=False, deleted=False, clinic=request.user.account)
     submitted_auction = False
@@ -349,14 +352,15 @@ def create_auction(request):
                 auction.createdBy = request.user
                 auction.modifiedBy = request.user
                 auction.save()
-                # Therapist email
-                send_mail(
-                    subject = "Auction Created",
-                    message = "",
-                    html_message = emails.auction_created_admin(str(auction.clinic.clinicName), str(auction.clinic.city), str(auction.clinic.province), str(auction.clinic.user.email), str(auction.reservePrice), str(auction.auctionStart), str(auction.auctionEnd), str(auction.placementStart), str(auction.placementEnd), str(auction.auctionID)),
-                    from_email = settings.EMAIL_HOST_USER,
-                    recipient_list = ('loribine@gmail.com', 'info@travelingtherapist.ca')
-                )
+                if admin.sendEmails:
+                    # Therapist email
+                    send_mail(
+                        subject = "Auction Created",
+                        message = "",
+                        html_message = emails.auction_created_admin(str(auction.clinic.clinicName), str(auction.clinic.city), str(auction.clinic.province), str(auction.clinic.user.email), str(auction.reservePrice), str(auction.auctionStart), str(auction.auctionEnd), str(auction.placementStart), str(auction.placementEnd), str(auction.auctionID)),
+                        from_email = settings.EMAIL_HOST_USER,
+                        recipient_list = ('loribine@gmail.com', 'info@travelingtherapist.ca')
+                    )
                 print(str(auction.auctionEnd.year) + ", " + str(auction.auctionEnd.month) + ", " + str(auction.auctionEnd.day) + ", " + str(auction.auctionEnd.hour) + ", " + str(auction.auctionEnd.minute))
                 print(auction.auctionID)
                 scheduled_tasks.start(auction.auctionEnd.year, auction.auctionEnd.month, auction.auctionEnd.day, auction.auctionEnd.hour, auction.auctionEnd.minute, auction.auctionEnd.second, str(auction.auctionID))
