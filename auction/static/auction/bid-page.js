@@ -9,6 +9,12 @@ $(document).ready(function () {
     let url = $(location).attr('href').split("/");
     let auctionID = url[url.length - 1];
     let auctionEnd = "";
+    let reservePrice = 0;
+
+    if ($('#error_1_id_amount').css("display") === "block") {
+        $("#exampleModal").modal("show");
+    }
+
     $.ajax({
         type: "GET",
         url: "/auction/data/view_auction_data",
@@ -20,6 +26,7 @@ $(document).ready(function () {
             max_bid = response.max_bid;
             currentLowBid = response.currentLowBid;
             auctionEnd = new Date(response.auctionEnd);
+            reservePrice = response.reservePrice;
 
             let currentTime = new Date().getTime()
             let subtractMilliSecondsValue = auctionEnd.getTime() - currentTime;
@@ -42,10 +49,14 @@ $(document).ready(function () {
     function auctionEnded() {
         $("#bidButton").hide();
         $("#exampleModal").modal("hide");
+        if (currentLowBid > reservePrice && reservePrice !== null) {
+            $("#bidText").text("Reserve price not meet");
+        }
+        else {
+            $("#bidText").text("Winning Bid: $" + currentLowBid);
+        }
     }
 });
-
-
 
 const getAuction = () => {
     $.ajax({

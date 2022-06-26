@@ -71,7 +71,7 @@ def contact(request):
 
             try:
                 if admin.sendEmails:
-                    send_mail(subject, message, 'loribine@gmail.com', ['loribine@gmail.com']) 
+                    send_mail(subject, message, 'info@travelingtherapist.ca', [form.cleaned_data['email_address']]) 
             except BadHeaderError:
                 return HttpResponse('Invalid header found.')
             return redirect ("index")
@@ -209,7 +209,10 @@ def view_auction(request, auction_id):
             bid.user = request.user
             bid.active = True
             bid.createdBy = request.user
-            prev_low_bid = auction.currentLowBid
+            if auction.currentLowBid is None:
+                prev_low_bid = 0
+            else:
+                prev_low_bid = auction.currentLowBid
             if auction.currentLowBid is not None and bid.amount < auction.currentLowBid:
                 auction.currentLowBid = bid.amount
                 auction.minimumBidIncrement = set_bid_increment(bid.amount)
@@ -222,7 +225,7 @@ def view_auction(request, auction_id):
             print(diff)
             print(bid.amount)
             print(auction.currentLowBid)
-            if diff.total_seconds() < 60 and bid.amount <= prev_low_bid:
+            if diff.total_seconds() < 60 and (bid.amount <= prev_low_bid or prev_low_bid == 0):
                 new_id = str(uuid.uuid4())
                 auction.auctionEnd = auction.auctionEnd + datetime.timedelta(minutes=1)
                 scheduled_tasks.print_job()
@@ -322,7 +325,8 @@ def get_view_auction_data(request):
         'max_bid': max_bid,
         'currentLowBid': auction.currentLowBid,
         'minimumBidIncrement': auction.minimumBidIncrement,
-        'auctionEnd': auction.auctionEnd
+        'auctionEnd': auction.auctionEnd,
+        'reservePrice': auction.reservePrice
         })
 
 def get_demogrpahics(request, clinic_id):
@@ -502,7 +506,7 @@ def password_reset_request(request):
 					email = render_to_string(email_template_name, c)
 					html_email = render_to_string(email_template_name_html, c)
 					try:
-						send_mail(subject, email, 'admin@example.com' , [user.email], html_message=html_email, fail_silently=False)
+						send_mail(subject, email, 'info@travelingtherapist.ca' , [user.email], html_message=html_email, fail_silently=False)
 					except BadHeaderError:
 						return HttpResponse('Invalid header found.')
 					return redirect ("password_reset/done/")
@@ -510,11 +514,11 @@ def password_reset_request(request):
 	return render(request=request, template_name="auction/password/password_reset.html", context={"password_reset_form":password_reset_form})
 
 # -------------- Utility --------------
-def set_bid_increment(reservePrice):
+def set_bid_increment(amount):
     min_increment = 0
-    if reservePrice <= 15000:
+    if amount <= 15000:
         min_increment = 100
-    elif reservePrice > 15000 and reservePrice <= 50000:
+    elif amount > 15000 and amount <= 50000:
         min_increment = 250
     else:
         min_increment = 500

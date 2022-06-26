@@ -5,6 +5,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 import uuid
+from django.core.exceptions import ValidationError
 
 from django.dispatch import receiver
 
@@ -26,11 +27,18 @@ PROVINCES = (
 )
 
 class Account(models.Model):
+    def validate_file_extension(value):
+        
+        if value.file.content_type is not None and (value.file.content_type != 'image/jpg' or value.file.content_type != 'image/jpeg' or value.file.content_type != 'image/png' or value.file.content_type != 'image/hecf'):
+            print("break")
+            print(value.file.content_type)
+            raise ValidationError('Please upload an image of one of the following type: jpg, jpeg, png, hecf')
+
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     clinicName = models.CharField(verbose_name='Clinic Name', max_length=200, blank=True, null=True, help_text='Enter the clinic name.')
     userType = models.ForeignKey('UserType', verbose_name='User Type', blank=True, null=True, related_name='usertypes', on_delete=models.CASCADE)  
     licenseNumber = models.CharField(verbose_name='License Number', max_length=120, null=True, blank=True, help_text='Enter you license number.')
-    imageOne = models.ImageField(default='default.jpg', verbose_name='Clinic Image One', upload_to='images', blank=True, null=True, help_text='Upload an image (optional).')
+    imageOne = models.FileField(default='default.jpg', verbose_name='Clinic Image One', upload_to='images', blank=True, null=True, help_text='Upload an image (optional).')#, validators=[validate_file_extension])
     imageTwo = models.ImageField(verbose_name='Clinic Image Two', upload_to='images/', blank=True, null=True, help_text='Upload an image (optional).')
     imageThree = models.ImageField(verbose_name='Clinic Image Three', upload_to='images/', blank=True, null=True, help_text='Upload an image (optional).')
     imageFour = models.ImageField(verbose_name='Clinic Image Four', upload_to='images/', blank=True, null=True, help_text='Upload an image (optional).')
@@ -111,6 +119,8 @@ class Auction(models.Model):
     def get_bid(self):
         if self.currentLowBid is None:
             return str('No Bids Yet')
+        elif self.reservePrice is not None and (self.closed == True and self.active == False and self.winningPrice > self.reservePrice):
+            return 'Reserve price not meet'
         elif self.closed == True and self.active == False and self.winningPrice is not None:
             return 'Winning bid: $' + str("{:,}".format(self.winningPrice))
         elif self.closed == True and self.active == False and self.winningPrice is None:
@@ -132,8 +142,11 @@ class Auction(models.Model):
         num_bids = Bid.objects.filter(auction=self.auctionID).count()
         if num_bids > 0 and self.currentLowBid is not None and self.minimumBidIncrement is not None:
             diff = self.currentLowBid - self.minimumBidIncrement
-            if diff > 0:
+            if diff > 0 and diff % self.minimumBidIncrement == 0:
                 return '$' + str("{:,}".format(diff))
+            elif diff > 0 and diff % self.minimumBidIncrement != 0:
+                result = diff - (diff % self.minimumBidIncrement)
+                return '$' + str("{:,}".format(result))
             else:
                 return 0
         else:
@@ -151,8 +164,7 @@ class Bid(models.Model):
     modifiedBy = models.ForeignKey(User, related_name='bid_modified_by', blank=True, null=True, on_delete=models.CASCADE)
 
     def __str__(self):
-        # return str(self.user)
-        return "123"
+        return str(self.user) + ': $' + str(self.amount)
 
 class Demographic(models.Model):
     clinic = models.ForeignKey(Account, related_name='demogrpahic_clinic', on_delete=models.CASCADE)

@@ -57,7 +57,8 @@ def auction_closed(id):
         print(winningBid.user.first_name)
         print(winningBid.user.email)
         for bid in bids:
-            if bid.user.email is not winningBid.user.email:
+            print('Bid user:' + str(bid.user.email))
+            if bid.user.email != winningBid.user.email:
                 bidding_emails.append({'email': bid.user.email, 'first_name': bid.user.first_name, 'last_name': bid.user.last_name})
         print(bidding_emails)
         auction.winner = winningBid.user
@@ -100,7 +101,7 @@ def auction_closed(id):
                         message = "",
                         html_message = emails.clinic_auction_end(auction.clinic.clinicName),
                         from_email = settings.EMAIL_HOST_USER,
-                        recipient_list = [winningBid.user.email]
+                        recipient_list = [auction.clinic.user.email]
                     )
                 for email in bidding_emails:
                     print(email)

@@ -54,6 +54,7 @@
               {{ user_clinic_form | as_crispy_errors }}
               {{ profile_clinic_form | as_crispy_errors }}
               {{ user_clinic_form | crispy }}
+              {{ form | as_crispy_errors }}
               <div class="row">
                 <div class="mb-3 col-md-4">
                   <span class="clinicField">{{ profile_clinic_form.clinicName | as_crispy_field }}</span>

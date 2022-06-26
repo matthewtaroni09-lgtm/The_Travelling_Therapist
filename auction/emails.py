@@ -4,7 +4,7 @@ from The_Travelling_Therapist.settings import ACTIVE_LINK
 email_header = """<section style="font-size: 16px; margin-bottom: 4rem;">
 </section>"""
 
-email_footer = """<footer>
+email_footer = """<br><footer>
   <img src="https://travelingtherapist.ca/media/images/TTT_LOGO.png" alt="Traveling Therapist Logo">
   <br>
   <a href="travelingtherapist.ca">Click to visit The Traveling Therapist Website</a>
@@ -185,6 +185,6 @@ def auction_created_admin(clinicName, city, province, email, reservePrice, aucti
         Placement Start: """ + placementStart + """<br>
         Placement End: """ + placementEnd + """<br>
         <a href=""" + ACTIVE_LINK + "/admin/auction/auction/" + auctionID + "/change/" + """>Link to auction page</a>
-        </section>"""
+        </section><br><br>"""
     message = message + email_footer
     return message

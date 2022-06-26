@@ -67,6 +67,10 @@ $(document).ready(function () {
         $('#termsButton').css("display", "block");
     }
 
+    if ($('#agreementCheckBox').prop("checked") === true) {
+        $('#submitButton').prop('disabled', false);
+    }
+
     $("#id_user_type").change(function () {
         $('.alert-block').css("display", "none");
     });

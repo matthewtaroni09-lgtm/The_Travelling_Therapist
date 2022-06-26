@@ -50,7 +50,6 @@ def validate_clinic_fields(clinicName, city, province, underEighteen, eighteenTo
             error_list.append(ValidationError("Clinic Areas of Practice values must add to 100%."))
     print("val_clinic_fields"+str(error_list))
     return error_list
-        
 
 class AuctionForm(forms.ModelForm):
     class Meta:
@@ -131,14 +130,6 @@ class AuctionForm(forms.ModelForm):
         friday_val = check_times(fridayStart, fridayEnd, 'Friday')
         saturday_val = check_times(saturdayStart, saturdayEnd, 'Saturday')
         sunday_val = check_times(sundayStart, sundayEnd, 'Sunday')
-
-        print(monday_val)
-        print(tuesday_val)
-        print(wednesday_val)
-        print(thursday_val)
-        print(friday_val)
-        print(saturday_val)
-        print(sunday_val)
 
         error_list = []
         none_count = 0
@@ -360,6 +351,9 @@ class ProfileUpdateClinic(forms.ModelForm):
         MSK = self.cleaned_data.get('MSK')
         neuro = self.cleaned_data.get('neuro')
         cardioResp = self.cleaned_data.get('cardioResp')
+
+        # print("||||||")
+        # print(imageOne)
 
         error_list = []
 
