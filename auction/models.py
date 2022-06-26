@@ -27,18 +27,11 @@ PROVINCES = (
 )
 
 class Account(models.Model):
-    def validate_file_extension(value):
-        
-        if value.file.content_type is not None and (value.file.content_type != 'image/jpg' or value.file.content_type != 'image/jpeg' or value.file.content_type != 'image/png' or value.file.content_type != 'image/hecf'):
-            print("break")
-            print(value.file.content_type)
-            raise ValidationError('Please upload an image of one of the following type: jpg, jpeg, png, hecf')
-
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     clinicName = models.CharField(verbose_name='Clinic Name', max_length=200, blank=True, null=True, help_text='Enter the clinic name.')
     userType = models.ForeignKey('UserType', verbose_name='User Type', blank=True, null=True, related_name='usertypes', on_delete=models.CASCADE)  
     licenseNumber = models.CharField(verbose_name='License Number', max_length=120, null=True, blank=True, help_text='Enter you license number.')
-    imageOne = models.FileField(default='default.jpg', verbose_name='Clinic Image One', upload_to='images', blank=True, null=True, help_text='Upload an image (optional).')#, validators=[validate_file_extension])
+    imageOne = models.ImageField(default='default.jpg', verbose_name='Clinic Image One', upload_to='images', blank=True, null=True, help_text='Upload an image (optional).')
     imageTwo = models.ImageField(verbose_name='Clinic Image Two', upload_to='images/', blank=True, null=True, help_text='Upload an image (optional).')
     imageThree = models.ImageField(verbose_name='Clinic Image Three', upload_to='images/', blank=True, null=True, help_text='Upload an image (optional).')
     imageFour = models.ImageField(verbose_name='Clinic Image Four', upload_to='images/', blank=True, null=True, help_text='Upload an image (optional).')

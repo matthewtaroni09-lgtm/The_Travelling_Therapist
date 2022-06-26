@@ -19,7 +19,6 @@ urlpatterns = [
     path('logout_user', views.logout_user, name="logout"),
     path('auction/<auction_id>', views.view_auction, name="auction"),
     path("contact_us", views.contact, name="contact-us"),
-    path("test", views.test, name="test"),
 
     # AJAX Calls
     path('auction/data/auction/<auction_id>', views.get_auction_end, name="get-auction-end"),

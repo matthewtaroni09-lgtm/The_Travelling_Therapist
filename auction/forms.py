@@ -8,6 +8,7 @@ from .models import PROVINCES, Auction, Bid, Account, Demographic, User, UserTyp
 from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
 import random
 from django.core.exceptions import ValidationError
+import os
 
 def check_times(start_time, end_time, day):
     if (start_time is None and end_time is not None) or (start_time is not None and end_time is None):
@@ -50,6 +51,22 @@ def validate_clinic_fields(clinicName, city, province, underEighteen, eighteenTo
             error_list.append(ValidationError("Clinic Areas of Practice values must add to 100%."))
     print("val_clinic_fields"+str(error_list))
     return error_list
+
+def validate_file_extension(value, image_name): 
+    error_list = []
+    print(type(bool))
+    if isinstance(value, bool) != True and value is not None:
+        print('inside')
+        ext = os.path.splitext(value.name)[1]
+        valid_extensions = ['.jpeg', '.jpg', '.png', '.hecif']
+        if not ext.lower() in valid_extensions:
+            error_list.append(ValidationError(u'Unsupported file extension for ' + str(image_name) + '. Valid file types are' + ', '.join(valid_extensions) + '.'))
+        
+        if value.size > 5242880:
+            error_list.append(ValidationError(u'Max file size exceeded for ' + str(image_name) + ', images must be less than 5 MB.'))
+
+    return error_list
+
 
 class AuctionForm(forms.ModelForm):
     class Meta:
@@ -330,6 +347,7 @@ class ProfileUpdateClinic(forms.ModelForm):
     MSK = forms.IntegerField(required=False, label='% Musculoskeletal', min_value=0, max_value=100)
     neuro = forms.IntegerField(required=False, label='% Neurological', min_value=0, max_value=100)
     cardioResp = forms.IntegerField(required=False, label='% Cardiorespiratory', min_value=0, max_value=100)
+    
     class Meta:
         model = Account
         fields = ['clinicName', 'city', 'province', 'about', 'underEighteen', 'eighteenToSixtyFive', 'overSixtyFive', 'MSK', 'neuro', 'cardioResp', 'imageOne', 'imageTwo', 'imageThree', 'imageFour']
@@ -352,10 +370,23 @@ class ProfileUpdateClinic(forms.ModelForm):
         neuro = self.cleaned_data.get('neuro')
         cardioResp = self.cleaned_data.get('cardioResp')
 
-        # print("||||||")
-        # print(imageOne)
-
         error_list = []
+
+        print('imageOne = ' + str(imageOne))
+        print('imageOne = ' + str(imageTwo))
+        image_errors_one = validate_file_extension(imageOne, 'Clinic Image One')
+        image_errors_two = validate_file_extension(imageTwo, 'Clinic Image Two')
+        image_errors_three = validate_file_extension(imageThree, 'Clinic Image Three')
+        image_errors_four = validate_file_extension(imageFour, 'Clinic Image Four')
+
+        if image_errors_one is not None:
+            error_list.extend(image_errors_one)
+        if image_errors_two is not None:
+            error_list.extend(image_errors_two)
+        if image_errors_three is not None:
+            error_list.extend(image_errors_three)
+        if image_errors_four is not None:
+            error_list.extend(image_errors_four)
 
         if User.objects.exclude(pk=self.instance.pk).filter(username=username).exists():
             error_list.append(f'Username "{username}" is already in use.')
@@ -381,13 +412,3 @@ class ContactForm(forms.Form):
     last_name = forms.CharField(max_length = 50)
     email_address = forms.EmailField(max_length = 150)
     message = forms.CharField(widget = forms.Textarea, max_length = 2000)
-
-class testForm(forms.Form):
-    name = forms.CharField(label="New Pay Frequency", max_length=100, widget=forms.TextInput(attrs={'class': 'input'}))
-
-    def clean_name(self):
-        data = self.cleaned_data.get('name')
-
-        if 'aa' not in data:
-            raise forms.ValidationError('No aa')
-        return data

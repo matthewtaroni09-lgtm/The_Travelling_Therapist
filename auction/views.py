@@ -10,7 +10,7 @@ from django.views.generic import ListView, CreateView
 from The_Travelling_Therapist.settings import ACTIVE_LINK
 
 from .filters import AuctionFilter
-from .forms import RegisterAcount, AuctionForm, BidForm, UserFormClinic, UserFormTherapist, ProfileUpdateClinic, CreateUserForm, PasswordChangingForm, ContactForm, testForm
+from .forms import RegisterAcount, AuctionForm, BidForm, UserFormClinic, UserFormTherapist, ProfileUpdateClinic, CreateUserForm, PasswordChangingForm, ContactForm
 from django.urls import reverse_lazy
 import datetime
 # from datetime import datetime
