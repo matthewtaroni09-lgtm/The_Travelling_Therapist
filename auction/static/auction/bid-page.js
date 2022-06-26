@@ -53,7 +53,7 @@ $(document).ready(function () {
             $("#bidText").text("Reserve price not meet");
         }
         else {
-            $("#bidText").text("Winning Bid: $" + currentLowBid);
+            $("#bidText").text("Winning Bid: $" + currentLowBid.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
         }
     }
 });

@@ -4,27 +4,12 @@ from The_Travelling_Therapist.settings import ACTIVE_LINK
 email_header = """<section style="font-size: 16px; margin-bottom: 4rem;">
 </section>"""
 
-email_footer = """<br><footer>
+email_footer = """<footer>
   <img src="https://travelingtherapist.ca/media/images/TTT_LOGO.png" alt="Traveling Therapist Logo">
   <br>
   <a href="travelingtherapist.ca">Click to visit The Traveling Therapist Website</a>
   <p style="font-size: 10px; color: #848585;">You are receiving this email because you have registered to use The Traveling Therapist website services. Please do not reply to this email. If you wish to contact us then email The Traveling Therapist at info@travelingtherapist.ca. To ensure you continue to receive these emails, add this email address to your email safelist. Your details will not be disclosed or used by third parties for marketing or promotional purposes.</p>
 </footer>"""
-
-def therapist_auction_end_win(first_name, last_name):
-    message = email_header
-    message = message + """<section style="font-size: 16px; margin-bottom: 4rem;">
-        <p>Hello <span class="text-weight-bold">""" + first_name + """ """ + last_name + """</span>,</p>
-        
-        <p>You were the lowest bidder at the end of an auction using The Traveling Therapist. Congratulations!</p>
-        <p>Look for an email from us shortly to match you with the clinic. From that point it is your responsibility to contact the clinic and arrange some of the details of your job like how you will be paid (cheque, deposit, etc.)</p>
-        
-        <p>Thank you and we look forward to having you use our service again soon,</p>
-        <p style="font-weight: 700; padding-top: 0rem; margin-top: 0; line-height: 0;">The Traveling Therapist Team</p>
-
-        </section>"""
-    message = message + email_footer
-    return message
 
 def clinic_reserve_not_met(clinic_name):
     message = email_header
@@ -103,7 +88,7 @@ def clinic_auction_end(clinic_name):
     message = message + email_footer
     return message
 
-def therapist_auction_end_lose(first_name, last_name):
+def therapist_auction_end_lose(first_name, last_name, clinic_name, start_date, end_date):
     message = email_header
     message = message + """<section style="font-size: 16px; margin-bottom: 4rem;">
   <p>Hello <span class="text-weight-bold">""" + first_name + """ """ + last_name + """</span>,</p>
@@ -112,6 +97,11 @@ def therapist_auction_end_lose(first_name, last_name):
   <p>Unfortunately, you were not the lowest bidder, so another therapist was matched with the clinic.</p>
 
   <p>Better luck on your next auction.</p>
+
+  <h3>Auction Details:</h3>
+  <p>Clinic Name: """ + str(clinic_name) + """</p>
+  <p>Therapist Start Date: """ + str(start_date) + """</p>
+  <p>Therapist End Date: """ + str(end_date) + """</p>
   
   <p>Thanks for using our service,</p>
   <p style="font-weight: 700; padding-top: 0rem; margin-top: 0; line-height: 0;">The Traveling Therapist Team</p>
@@ -120,13 +110,18 @@ def therapist_auction_end_lose(first_name, last_name):
     message = message + email_footer
     return message
 
-def therapist_auction_end_win(first_name, last_name):
+def therapist_auction_end_win(first_name, last_name, clinic_name, start_date, end_date):
     message = email_header
     message = message + """<section style="font-size: 16px; margin-bottom: 4rem;">
         <p>Hello <span class="text-weight-bold">""" + first_name + """ """ + last_name + """</span>,</p>
         
         <p>You were the lowest bidder at the end of an auction using The Traveling Therapist. Congratulations!</p>
         <p>Look for an email from us shortly to match you with the clinic. From that point it is your responsibility to contact the clinic and arrange some of the details of your job like how you will be paid (cheque, deposit, etc.)</p>
+
+        <h3>Auction Details:</h3>
+        <p>Clinic Name: """ + str(clinic_name) + """</p>
+        <p>Therapist Start Date: """ + str(start_date) + """</p>
+        <p>Therapist End Date: """ + str(end_date) + """</p>
         
         <p>Thank you and we look forward to having you use our service again soon,</p>
         <p style="font-weight: 700; padding-top: 0rem; margin-top: 0; line-height: 0;">The Traveling Therapist Team</p>
@@ -135,13 +130,18 @@ def therapist_auction_end_win(first_name, last_name):
     message = message + email_footer
     return message
 
-def therapist_auction_not_met(first_name, last_name):
+def therapist_auction_not_met(first_name, last_name, clinic_name, start_date, end_date):
     message = email_header
     message = message + """<section style="font-size: 16px; margin-bottom: 4rem;">
   <p>Hello <span class="text-weight-bold">""" + first_name + """ """ + last_name + """</span>,</p>
   
   <p>You were bidding on an auction using The Traveling Therapist.</p>
   <p>This auction had a reserve price which wasn't met. This means that there was no therapist willing to do this temporary job for a price low enough for the clinic.</p>
+
+  <h3>Auction Details:</h3>
+  <p>Clinic Name: """ + str(clinic_name) + """</p>
+  <p>Therapist Start Date: """ + str(start_date) + """</p>
+  <p>Therapist End Date: """ + str(end_date) + """</p>
    
   <p>This auction may be reposted in the near future - stay tuned!</p>
   <p style="font-weight: 700; padding-top: 0rem; margin-top: 0; line-height: 0;">The Traveling Therapist Team</p>

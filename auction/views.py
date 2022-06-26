@@ -35,22 +35,6 @@ from pytz import timezone
 from django.core import serializers
 from django.contrib import messages # For message alerts
 
-def test(request):
-    
-    if request.method == 'POST':
-        details = testForm(request.POST)
-
-        if details.is_valid():
-            post = details.save(commit=False)
-            post.save()
-            return HttpResponse("data saved")
-        else:
-            return render(request, "auction/test.html", {'form': details})
-    else:
-        form = testForm(None)
-        return render(request, "auction/test.html", {'form': form})
-
-
 class PasswordsChangeView(PasswordChangeView):
     form_class = PasswordChangingForm
     success_url = reverse_lazy('profile')
@@ -87,7 +71,7 @@ class AuctionListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['filter'] = AuctionFilter(self.request.GET, queryset=Auction.objects.filter(active=True).order_by('auctionEnd') | Auction.objects.filter(closed=True).order_by('auctionEnd'))
+        context['filter'] = AuctionFilter(self.request.GET, queryset=Auction.objects.filter(active=True).order_by('-auctionEnd') | Auction.objects.filter(closed=True).order_by('-auctionEnd'))
         return context
 
 # Page Links
@@ -227,7 +211,7 @@ def view_auction(request, auction_id):
             print(auction.currentLowBid)
             if diff.total_seconds() < 60 and (bid.amount <= prev_low_bid or prev_low_bid == 0):
                 new_id = str(uuid.uuid4())
-                auction.auctionEnd = auction.auctionEnd + datetime.timedelta(minutes=1)
+                # auction.auctionEnd = auction.auctionEnd + datetime.timedelta(minutes=1)
                 scheduled_tasks.print_job()
                 try:
                     scheduled_tasks.remove_cron_job(auction.cronID)

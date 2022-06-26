@@ -71,7 +71,7 @@ def auction_closed(id):
                     # Therapist email
                     for bid in bids: 
                         send_mail(
-                                subject = "Auction Ended - Reserve Not Meet",
+                                subject = "Auction Ended - Reserve Not Met",
                                 message = "",
                                 html_message = emails.therapist_auction_not_met(bid.user.first_name, bid.user.last_name),
                                 from_email = settings.EMAIL_HOST_USER,
@@ -79,7 +79,7 @@ def auction_closed(id):
                             )
                     # Clinic email
                     send_mail(
-                            subject = "Auction Ended - Reserve Not Meet",
+                            subject = "Auction Ended - Reserve Not Met",
                             message = "",
                             html_message = emails.clinic_reserve_not_met(auction.clinic.clinicName),
                             from_email = settings.EMAIL_HOST_USER,
@@ -89,9 +89,9 @@ def auction_closed(id):
                 print('send email')
                 # Therapist email
                 send_mail(
-                        subject = "Auction Ended - You are the Winner",
+                        subject = "Auction Ended - You are the Winner2",
                         message = "",
-                        html_message = emails.therapist_auction_end_win(winningBid.user.first_name, winningBid.user.last_name),
+                        html_message = emails.therapist_auction_end_win(winningBid.user.first_name, winningBid.user.last_name, auction.clinic.clinicName, auction.placementStart, auction.placementEnd),
                         from_email = settings.EMAIL_HOST_USER,
                         recipient_list = [winningBid.user.email]
                     )

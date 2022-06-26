@@ -138,7 +138,7 @@ class Auction(models.Model):
             if diff > 0 and diff % self.minimumBidIncrement == 0:
                 return '$' + str("{:,}".format(diff))
             elif diff > 0 and diff % self.minimumBidIncrement != 0:
-                result = diff - (diff % self.minimumBidIncrement)
+                result = self.currentLowBid - (diff % self.minimumBidIncrement)
                 return '$' + str("{:,}".format(result))
             else:
                 return 0
