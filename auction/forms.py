@@ -272,6 +272,20 @@ class RegisterAcount(UserCreationForm):
 
         error_list = []
 
+        image_errors_one = validate_file_extension(imageOne, 'Clinic Image One')
+        image_errors_two = validate_file_extension(imageTwo, 'Clinic Image Two')
+        image_errors_three = validate_file_extension(imageThree, 'Clinic Image Three')
+        image_errors_four = validate_file_extension(imageFour, 'Clinic Image Four')
+
+        if image_errors_one is not None:
+            error_list.extend(image_errors_one)
+        if image_errors_two is not None:
+            error_list.extend(image_errors_two)
+        if image_errors_three is not None:
+            error_list.extend(image_errors_three)
+        if image_errors_four is not None:
+            error_list.extend(image_errors_four)
+
         if User.objects.exclude(pk=self.instance.pk).filter(username=username).exists():
             error_list.append(f'Username "{username}" is already in use.')
 

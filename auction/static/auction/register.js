@@ -98,6 +98,19 @@ $(document).ready(function () {
         userTypeChange();
     }
 
+    if ($('#error_1_id_imageOne').css("display") === "block") {
+        userTypeChange();
+    }
+    if ($('#error_1_id_imageTwo').css("display") === "block") {
+        userTypeChange();
+    }
+    if ($('#error_1_id_imageThree').css("display") === "block") {
+        userTypeChange();
+    }
+    if ($('#error_1_id_imageFour').css("display") === "block") {
+        userTypeChange();
+    }
+
     // Show and hide image inputs
     clearAndHideImageTwo();
     clearAndHideImageThree();

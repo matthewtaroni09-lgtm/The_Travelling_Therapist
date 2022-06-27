@@ -5,7 +5,9 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 import uuid
-from django.core.exceptions import ValidationError
+
+import os, time, random, string
+from uuid import uuid4
 
 from django.dispatch import receiver
 
@@ -26,12 +28,22 @@ PROVINCES = (
     ("Yukon", "Yukon"),
 )
 
+
 class Account(models.Model):
+    def path_and_rename(path):
+        def wrapper(instance, filename):
+            ext = filename.split('.')[-1]
+            f_name = '-'.join(filename.replace('.pdf', '').split() )
+            rand_strings = ''.join( random.choice(string.digits) for i in range(10) )
+            filename = '{}_{}{}.{}'.format(f_name, rand_strings, uuid4().hex, ext)
+            return os.path.join(path, filename)
+        return wrapper
+
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     clinicName = models.CharField(verbose_name='Clinic Name', max_length=200, blank=True, null=True, help_text='Enter the clinic name.')
     userType = models.ForeignKey('UserType', verbose_name='User Type', blank=True, null=True, related_name='usertypes', on_delete=models.CASCADE)  
     licenseNumber = models.CharField(verbose_name='License Number', max_length=120, null=True, blank=True, help_text='Enter you license number.')
-    imageOne = models.ImageField(default='default.jpg', verbose_name='Clinic Image One', upload_to='images', blank=True, null=True, help_text='Upload an image (optional).')
+    imageOne = models.ImageField(default='default.jpg', verbose_name='Clinic Image One', upload_to=path_and_rename('images/'), blank=True, null=True, help_text='Upload an image (optional).')
     imageTwo = models.ImageField(verbose_name='Clinic Image Two', upload_to='images/', blank=True, null=True, help_text='Upload an image (optional).')
     imageThree = models.ImageField(verbose_name='Clinic Image Three', upload_to='images/', blank=True, null=True, help_text='Upload an image (optional).')
     imageFour = models.ImageField(verbose_name='Clinic Image Four', upload_to='images/', blank=True, null=True, help_text='Upload an image (optional).')
@@ -51,6 +63,8 @@ class Account(models.Model):
 
     def __str__(self):
         return str(self.user)
+
+    
 
     @receiver(post_save, sender=User)
     def update_profile_signal(sender, instance, created, **kwargs):

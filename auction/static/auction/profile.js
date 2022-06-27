@@ -2,6 +2,19 @@ $(document).ready(function () {
     if ($('.alert-block').css("display") === "block") {
         $('#profile-tab').tab('show');
     }
+
+    if ($('#error_1_id_imageOne').css("display") === "block") {
+        $('#profile-tab').tab('show');
+    }
+    if ($('#error_1_id_imageTwo').css("display") === "block") {
+        $('#profile-tab').tab('show');
+    }
+    if ($('#error_1_id_imageThree').css("display") === "block") {
+        $('#profile-tab').tab('show');
+    }
+    if ($('#error_1_id_imageFour').css("display") === "block") {
+        $('#profile-tab').tab('show');
+    }
 });
 const getActiveAuctionsClinic = () => {
     $.ajax({
