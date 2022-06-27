@@ -211,7 +211,7 @@ def view_auction(request, auction_id):
             print(auction.currentLowBid)
             if diff.total_seconds() < 60 and (bid.amount <= prev_low_bid or prev_low_bid == 0):
                 new_id = str(uuid.uuid4())
-                # auction.auctionEnd = auction.auctionEnd + datetime.timedelta(minutes=1)
+                auction.auctionEnd = auction.auctionEnd + datetime.timedelta(minutes=1)
                 scheduled_tasks.print_job()
                 try:
                     scheduled_tasks.remove_cron_job(auction.cronID)
