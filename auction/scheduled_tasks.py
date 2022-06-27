@@ -58,8 +58,9 @@ def auction_closed(id):
         print(winningBid.user.email)
         for bid in bids:
             print('Bid user:' + str(bid.user.email))
-            if bid.user.email != winningBid.user.email:
+            if bid.user.email != winningBid.user.email and not any(email_list['email'] == bid.user.email for email_list in bidding_emails):
                 bidding_emails.append({'email': bid.user.email, 'first_name': bid.user.first_name, 'last_name': bid.user.last_name})
+                print(bidding_emails)
         print(bidding_emails)
         auction.winner = winningBid.user
         auction.winningPrice = winningBid.amount
@@ -73,7 +74,7 @@ def auction_closed(id):
                         send_mail(
                                 subject = "Auction Ended - Reserve Not Met",
                                 message = "",
-                                html_message = emails.therapist_auction_not_met(bid.user.first_name, bid.user.last_name),
+                                html_message = emails.therapist_auction_not_met(bid.user.first_name, bid.user.last_name, auction.clinic.clinicName, auction.placementStart, auction.placementEnd),
                                 from_email = settings.EMAIL_HOST_USER,
                                 recipient_list = [bid.user.email]
                             )
@@ -81,7 +82,7 @@ def auction_closed(id):
                     send_mail(
                             subject = "Auction Ended - Reserve Not Met",
                             message = "",
-                            html_message = emails.clinic_reserve_not_met(auction.clinic.clinicName),
+                            html_message = emails.clinic_reserve_not_met(auction.clinic.clinicName, auction.placementStart, auction.placementEnd),
                             from_email = settings.EMAIL_HOST_USER,
                             recipient_list = [winningBid.user.email]
                         )
@@ -89,7 +90,7 @@ def auction_closed(id):
                 print('send email')
                 # Therapist email
                 send_mail(
-                        subject = "Auction Ended - You are the Winner2",
+                        subject = "Auction Ended - You are the Winner",
                         message = "",
                         html_message = emails.therapist_auction_end_win(winningBid.user.first_name, winningBid.user.last_name, auction.clinic.clinicName, auction.placementStart, auction.placementEnd),
                         from_email = settings.EMAIL_HOST_USER,
@@ -99,7 +100,7 @@ def auction_closed(id):
                 send_mail(
                         subject = "Auction Ended",
                         message = "",
-                        html_message = emails.clinic_auction_end(auction.clinic.clinicName),
+                        html_message = emails.clinic_auction_end(auction.clinic.clinicName, auction.placementStart, auction.placementEnd),
                         from_email = settings.EMAIL_HOST_USER,
                         recipient_list = [auction.clinic.user.email]
                     )
@@ -108,7 +109,7 @@ def auction_closed(id):
                     send_mail(
                         subject = "Auction Ended - Better Luck Next Time",
                         message = "",
-                        html_message = emails.therapist_auction_end_lose(email['first_name'], email['last_name']),
+                        html_message = emails.therapist_auction_end_lose(email['first_name'], email['last_name'], auction.clinic.clinicName, auction.placementStart, auction.placementEnd),
                         from_email = settings.EMAIL_HOST_USER,
                         recipient_list = [email['email']]
                     )   
@@ -119,7 +120,7 @@ def auction_closed(id):
             send_mail(
                     subject = "Auction Ended",
                     message = "",
-                    html_message = emails.clinic_no_bids(auction.clinic.clinicName),
+                    html_message = emails.clinic_no_bids(auction.clinic.clinicName, auction.placementStart, auction.placementEnd),
                     from_email = settings.EMAIL_HOST_USER,
                     recipient_list = [auction.clinic.user.email]
                 )

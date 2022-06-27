@@ -27,8 +27,6 @@ PROVINCES = (
     ("Yukon", "Yukon"),
 )
 
-
-
 @deconstructible
 class PathAndRename(object):
     def __init__(self, sub_path):
@@ -67,8 +65,6 @@ class Account(models.Model):
 
     def __str__(self):
         return str(self.user)
-
-    
 
     @receiver(post_save, sender=User)
     def update_profile_signal(sender, instance, created, **kwargs):
@@ -154,12 +150,12 @@ class Auction(models.Model):
         if num_bids > 0 and self.currentLowBid is not None and self.minimumBidIncrement is not None:
             diff = self.currentLowBid - self.minimumBidIncrement
             if diff > 0 and diff % self.minimumBidIncrement == 0:
-                return '$' + str("{:,}".format(diff))
+                return ' less than or equal to $' + str("{:,}".format(diff))
             elif diff > 0 and diff % self.minimumBidIncrement != 0:
                 result = self.currentLowBid - (diff % self.minimumBidIncrement)
-                return '$' + str("{:,}".format(result))
+                return ' less than or equal to $' + str("{:,}".format(result))
             else:
-                return 0
+                return 'Last bid available $0'
         else:
             return 0
 

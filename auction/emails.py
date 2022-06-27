@@ -11,7 +11,7 @@ email_footer = """<footer>
   <p style="font-size: 10px; color: #848585;">You are receiving this email because you have registered to use The Traveling Therapist website services. Please do not reply to this email. If you wish to contact us then email The Traveling Therapist at info@travelingtherapist.ca. To ensure you continue to receive these emails, add this email address to your email safelist. Your details will not be disclosed or used by third parties for marketing or promotional purposes.</p>
 </footer>"""
 
-def clinic_reserve_not_met(clinic_name):
+def clinic_reserve_not_met(clinic_name, start_date, end_date):
     message = email_header
     message = message + """<section style="font-size: 16px; margin-bottom: 4rem;">
   <p>Hello <span class="text-weight-bold">""" + clinic_name + """</span>,</p>
@@ -22,13 +22,17 @@ def clinic_reserve_not_met(clinic_name):
 
   <p>Re-created auctions will still need to be approved by us like any other auction.</p>
 
+  <h3>Auction Details:</h3>
+  <p>Therapist Start Date: """ + str(start_date) + """</p>
+  <p>Therapist End Date: """ + str(end_date) + """</p>
+
   <p>Thanks for using our service - we hope to see you again soon,</p>
   <p style="font-weight: 700; padding-top: 0rem; margin-top: 0; line-height: 0;">The Traveling Therapist Team</p>
 </section>"""
     message = message + email_footer
     return message
 
-def clinic_no_bids(clinic_name):
+def clinic_no_bids(clinic_name, start_date, end_date):
     message = email_header
     message = message + """<section style="font-size: 16px; margin-bottom: 4rem;">
   <p>Hello <span class="text-weight-bold">""" + clinic_name + """</span>,</p>
@@ -38,6 +42,10 @@ def clinic_no_bids(clinic_name):
   <p>Feel free to re-create your auction if you'd like to try to fill this position again.</p>
 
   <p>Re-created auctions will still need to be approved by us like any other auction.</p>
+
+   <h3>Auction Details:</h3>
+  <p>Therapist Start Date: """ + str(start_date) + """</p>
+  <p>Therapist End Date: """ + str(end_date) + """</p>
 
   <p>Thanks for using our service - we hope to see you again soon,</p>
   <p style="font-weight: 700; padding-top: 0rem; margin-top: 0; line-height: 0;">The Traveling Therapist Team</p>
@@ -66,7 +74,7 @@ def clinic_welcome(clinic_name):
     message = message + email_footer
     return message
 
-def clinic_auction_end(clinic_name):
+def clinic_auction_end(clinic_name, start_date, end_date):
     message = email_header
     message = message + """<section style="font-size: 16px; margin-bottom: 4rem;">
   <p>Hello <span class="text-weight-bold">""" + clinic_name + """</span>,</p>
@@ -79,6 +87,10 @@ def clinic_auction_end(clinic_name):
     <li>What you need from them before starting. This could be a copy of their insurance, etc.</li>
     <li>Any site/clinic orientation required on day 1 or in advance of the work term.</li>
   </ul>
+
+   <h3>Auction Details:</h3>
+  <p>Therapist Start Date: """ + str(start_date) + """</p>
+  <p>Therapist End Date: """ + str(end_date) + """</p>
 
   <p>Your card on file will be charged by The Traveling Therapist within the next 24h.</p>
 

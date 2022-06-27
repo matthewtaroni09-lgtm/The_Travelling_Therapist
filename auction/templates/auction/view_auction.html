@@ -75,7 +75,7 @@
                 {{ form.amount|as_crispy_field }}
               </div>
               {% if num_bids > 0%}
-              <p>Next Available Bid: less than or equal to {{ auction.get_max_bid }}</p>
+              <p>Next Available Bid: {{ auction.get_max_bid }}</p>
               {% endif %}
               <div id="warningMessage" class="alert alert-warning" role="alert"></div>
               <small>For more information on the bidding process see our <a href="{% url 'about' %}"
