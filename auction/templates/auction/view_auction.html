@@ -78,7 +78,8 @@
               <p>Next Available Bid: less than or equal to {{ auction.get_max_bid }}</p>
               {% endif %}
               <div id="warningMessage" class="alert alert-warning" role="alert"></div>
-              <small>For more information on the bidding process see our <a href="{% url 'about' %}">FAQ</a></small>
+              <small>For more information on the bidding process see our <a href="{% url 'about' %}"
+                  target="_blank">FAQ</a></small>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 <button id="submitBidButton" type="submit" class="btn btn-primary">Submit Bid</button>
