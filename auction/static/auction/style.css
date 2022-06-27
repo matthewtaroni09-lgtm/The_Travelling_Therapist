@@ -241,3 +241,8 @@ input[type="number"] {
     height: 260px;
     object-fit: contain;
 }
+
+img.status-bar {
+    width: 100%;
+    max-width: 800px;
+}
