@@ -5,8 +5,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 import uuid
-
-import os, time, random, string
+from django.utils.deconstruct import deconstructible
 from uuid import uuid4
 
 from django.dispatch import receiver
@@ -29,24 +28,29 @@ PROVINCES = (
 )
 
 
-class Account(models.Model):
-    def path_and_rename(path):
-        def wrapper(instance, filename):
-            ext = filename.split('.')[-1]
-            f_name = '-'.join(filename.replace('.pdf', '').split() )
-            rand_strings = ''.join( random.choice(string.digits) for i in range(10) )
-            filename = '{}_{}{}.{}'.format(f_name, rand_strings, uuid4().hex, ext)
-            return os.path.join(path, filename)
-        return wrapper
 
+@deconstructible
+class PathAndRename(object):
+    def __init__(self, sub_path):
+        self.path = sub_path
+
+    def __call__(self, instance, filename):
+        ext = filename.split('.')[-1]
+        # set filename as random string
+        filename = '{}.{}'.format(uuid4().hex, ext)
+        # return the whole path to the file
+        return os.path.join(self.path, filename)
+path_and_rename = PathAndRename("images/")
+
+class Account(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     clinicName = models.CharField(verbose_name='Clinic Name', max_length=200, blank=True, null=True, help_text='Enter the clinic name.')
     userType = models.ForeignKey('UserType', verbose_name='User Type', blank=True, null=True, related_name='usertypes', on_delete=models.CASCADE)  
     licenseNumber = models.CharField(verbose_name='License Number', max_length=120, null=True, blank=True, help_text='Enter you license number.')
-    imageOne = models.ImageField(default='default.jpg', verbose_name='Clinic Image One', upload_to=path_and_rename('images/'), blank=True, null=True, help_text='Upload an image (optional).')
-    imageTwo = models.ImageField(verbose_name='Clinic Image Two', upload_to='images/', blank=True, null=True, help_text='Upload an image (optional).')
-    imageThree = models.ImageField(verbose_name='Clinic Image Three', upload_to='images/', blank=True, null=True, help_text='Upload an image (optional).')
-    imageFour = models.ImageField(verbose_name='Clinic Image Four', upload_to='images/', blank=True, null=True, help_text='Upload an image (optional).')
+    imageOne = models.ImageField(default='default.jpg', verbose_name='Clinic Image One', upload_to=path_and_rename, blank=True, null=True, help_text='Upload an image (optional).')
+    imageTwo = models.ImageField(verbose_name='Clinic Image Two', upload_to=path_and_rename, blank=True, null=True, help_text='Upload an image (optional).')
+    imageThree = models.ImageField(verbose_name='Clinic Image Three', upload_to=path_and_rename, blank=True, null=True, help_text='Upload an image (optional).')
+    imageFour = models.ImageField(verbose_name='Clinic Image Four', upload_to=path_and_rename, blank=True, null=True, help_text='Upload an image (optional).')
     city = models.CharField(verbose_name='City', max_length=120, blank=True, null=True, help_text='Enter the city your clinic is in.')
     country = models.CharField(verbose_name='Conutry', max_length=100, blank=True, null=True, help_text='Enter the country your clinic is in.')
     province = models.CharField(verbose_name='Province', help_text='The province the clinic resides in.', blank=True, null=True, max_length=30, choices=PROVINCES)
