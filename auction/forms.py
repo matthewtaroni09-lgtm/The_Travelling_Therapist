@@ -62,8 +62,8 @@ def validate_file_extension(value, image_name):
         if not ext.lower() in valid_extensions:
             error_list.append(ValidationError(u'Unsupported file extension for ' + str(image_name) + '. Valid file types are' + ', '.join(valid_extensions) + '.'))
         
-        if value.size > 5242880:
-            error_list.append(ValidationError(u'Max file size exceeded for ' + str(image_name) + ', images must be less than 5 MB.'))
+        if value.size > 10242880:
+            error_list.append(ValidationError(u'Max file size exceeded for ' + str(image_name) + ', images must be less than 10 MB.'))
 
     return error_list
 
