@@ -50,7 +50,7 @@ $(document).ready(function () {
         $("#bidButton").hide();
         $("#exampleModal").modal("hide");
         if (currentLowBid > reservePrice && reservePrice !== null) {
-            $("#bidText").text("Reserve price not meet");
+            $("#bidText").text("Reserve price not met");
         }
         else {
             $("#bidText").text("Winning Bid: $" + currentLowBid.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
