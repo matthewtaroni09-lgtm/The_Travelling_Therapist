@@ -84,7 +84,7 @@ def auction_closed(id):
                             message = "",
                             html_message = emails.clinic_reserve_not_met(auction.clinic.clinicName, auction.placementStart, auction.placementEnd),
                             from_email = settings.EMAIL_HOST_USER,
-                            recipient_list = [winningBid.user.email]
+                            recipient_list = [auction.clinic.user.email]
                         )
             else:
                 print('send email')
