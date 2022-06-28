@@ -79,6 +79,9 @@ class AuctionListView(ListView):
 def about(request):
     return render(request, 'auction/about.html', {'path': 'about'})
 
+def cookie_policy(request):
+    return render(request, 'auction/cookie_policy.html', {})
+
 def profile(request):
     if request.user.is_authenticated == False:
         return render(request, 'auction/profile.html', {})

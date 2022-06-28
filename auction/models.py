@@ -127,7 +127,7 @@ class Auction(models.Model):
         if self.currentLowBid is None:
             return str('No Bids Yet')
         elif self.reservePrice is not None and (self.closed == True and self.active == False and self.winningPrice > self.reservePrice):
-            return 'Reserve price not meet'
+            return 'Reserve price not met'
         elif self.closed == True and self.active == False and self.winningPrice is not None:
             return 'Winning bid: $' + str("{:,}".format(self.winningPrice))
         elif self.closed == True and self.active == False and self.winningPrice is None:
