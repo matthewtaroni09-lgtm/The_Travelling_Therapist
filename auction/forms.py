@@ -49,14 +49,11 @@ def validate_clinic_fields(clinicName, city, province, underEighteen, eighteenTo
     else:
         if (MSK + neuro + cardioResp) != 100:
             error_list.append(ValidationError("Clinic Areas of Practice values must add to 100%."))
-    print("val_clinic_fields"+str(error_list))
     return error_list
 
 def validate_file_extension(value, image_name): 
     error_list = []
-    print(type(bool))
     if isinstance(value, bool) != True and value is not None:
-        print('inside')
         ext = os.path.splitext(value.name)[1]
         valid_extensions = ['.jpeg', '.jpg', '.png', '.hecif']
         if not ext.lower() in valid_extensions:
@@ -315,7 +312,6 @@ class UserFormClinic(forms.ModelForm):
         fields = ['email']
     
     def clean(self):
-        print("in user")
         email = self.cleaned_data.get('email')
 
         error_list = []
@@ -367,7 +363,6 @@ class ProfileUpdateClinic(forms.ModelForm):
         fields = ['clinicName', 'city', 'province', 'about', 'underEighteen', 'eighteenToSixtyFive', 'overSixtyFive', 'MSK', 'neuro', 'cardioResp', 'imageOne', 'imageTwo', 'imageThree', 'imageFour']
 
     def clean(self):
-        print("in vals")
         clinicName = self.cleaned_data.get('clinicName')
         city = self.cleaned_data.get('city')
         about = self.cleaned_data.get('about')
@@ -386,8 +381,6 @@ class ProfileUpdateClinic(forms.ModelForm):
 
         error_list = []
 
-        print('imageOne = ' + str(imageOne))
-        print('imageOne = ' + str(imageTwo))
         image_errors_one = validate_file_extension(imageOne, 'Clinic Image One')
         image_errors_two = validate_file_extension(imageTwo, 'Clinic Image Two')
         image_errors_three = validate_file_extension(imageThree, 'Clinic Image Three')

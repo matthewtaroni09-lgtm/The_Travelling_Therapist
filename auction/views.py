@@ -13,7 +13,6 @@ from .filters import AuctionFilter
 from .forms import RegisterAcount, AuctionForm, BidForm, UserFormClinic, UserFormTherapist, ProfileUpdateClinic, CreateUserForm, PasswordChangingForm, ContactForm
 from django.urls import reverse_lazy
 import datetime
-# from datetime import datetime
 from . import scheduled_tasks
 from .models import PROVINCES, Account, AdminSettings, Auction, Bid, PracticeArea, User, Account
 from django.contrib.auth.forms import PasswordResetForm

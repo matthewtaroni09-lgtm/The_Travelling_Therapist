@@ -1,3 +1,6 @@
+from pytz import timezone
+import datetime
+import math
 import os
 from tabnanny import verbose
 from unicodedata import category
@@ -158,6 +161,28 @@ class Auction(models.Model):
                 return 'Last bid available $0'
         else:
             return 0
+
+    def get_time_diff(self):
+        distance = ((self.auctionEnd.astimezone(timezone('Canada/Eastern')) - datetime.datetime.now(timezone('utc'))).total_seconds()) * 1000
+        days = math.floor(distance / (1000 * 60 * 60 * 24))
+        hours = math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
+        minutes = math.floor((distance % (1000 * 60 * 60)) / (1000 * 60))
+        seconds = math.floor((distance % (1000 * 60)) / 1000)
+        timeLeft = ''
+
+        if days >= 0 and hours >= 0 and minutes >= 0 and seconds >= 0:
+            if days > 0:
+                timeLeft = timeLeft + str(days) + "d " + str(hours) + "h "
+            elif days == 0 and hours > 0:
+                timeLeft = timeLeft + str(hours) + "h " + str(minutes) + "m "
+            elif days == 0 and hours == 0 and minutes > 0:
+                timeLeft = timeLeft + str(minutes) + "m " + str(seconds) + "s"
+            else:
+                timeLeft = timeLeft + str(seconds) + "s"
+        else:
+            timeLeft = 'Auction Completed'
+        
+        return timeLeft
 
 class Bid(models.Model):
     bidID = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
