@@ -38,7 +38,7 @@
 
 <div class="row mb-3">
   {% for auction in filter.qs %}
-    {% include 'auction/card_active_auction.html' with auction=auction %}
+  {% include 'auction/card_active_auction.html' with auction=auction %}
   {% endfor %}
 </div>
 <!-- End of auction loops -->

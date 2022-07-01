@@ -15,6 +15,9 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <title>The Traveling Therapist</title>
 
+    <!-- Fonts -->
+    <link rel="stylesheet" href="https://use.typekit.net/dla5ohp.css">
+
     <link rel="shortcut icon" type="image/png" href="{% static 'auction/favicon.ico' %}" />
 
     <!-- Google Icons -->
@@ -29,18 +32,6 @@
 
         gtag('config', 'G-GPRVT4HYZD');
     </script>
-
-    <!-- Google Tag Manager -->
-    <!-- <script>(function (w, d, s, l, i) {
-            w[l] = w[l] || []; w[l].push({
-                'gtm.start':
-                    new Date().getTime(), event: 'gtm.js'
-            }); var f = d.getElementsByTagName(s)[0],
-                j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
-                    'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
-        })(window, document, 'script', 'dataLayer', 'GTM-MQW4DK7');</script> -->
-    <!-- End Google Tag Manager -->
-
 </head>
 
 <body>
@@ -59,8 +50,14 @@
 
     <!-- Runs the auction countdown clock -->
     <script src="{% static 'auction/auction.js' %}"></script>
-
     <!-- Main Content -->
+    {% if request.path == '/' %}
+    <!-- <div class="container my-3 py-3 p-md-3">
+        <h3 id="tag-line" class="text-center font-italic">
+            Connecting Therapists and Clinics to Fill Temporary Positions
+        </h3>
+    </div> -->
+    {%endif%}
     <main class="container my-3 py-3 p-md-5 bg-light">
         {% block content %}
         {% endblock %}

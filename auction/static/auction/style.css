@@ -42,6 +42,12 @@
     src: url(Futura-XBlk-BT.ttf);
 }
 
+/* Italic */
+@font-face {
+    font-family: Futura-Italic;
+    src: url(Futura-Book-Italic-font.ttf);
+}
+
 * {
     font-family: Futura-Light, sans-serif;
     letter-spacing: 0.4;
@@ -131,6 +137,10 @@
 
 
 /**************************** 5. PAGES ****************************/
+/* Index */
+#tag-line {
+    font-family: Futura-Italic, sans-serif;
+}
 
 /* About Page */
 .accordion-button:not(.collapsed) {
@@ -152,6 +162,7 @@
     font-size: 2rem !important;
     margin-right: 8px;
 }
+
 .material-icons.medium {
     font-size: 3rem !important;
     margin-right: 16px;
@@ -163,7 +174,8 @@
     color: var(--primary-colour);
 }
 
-.form-control:focus, input:focus {
+.form-control:focus,
+input:focus {
     color: #212529;
     background-color: #fff;
     border-color: var(--secondary-colour);
@@ -187,10 +199,12 @@ input[type="time"] {
     width: 60px !important;
 }
 
-select#id_city, select#id_active {
+select#id_city,
+select#id_active {
     padding: 7px;
     margin-left: 0.5rem;
 }
+
 input#id_clinic {
     padding: 5px;
     margin-left: 0.5rem;

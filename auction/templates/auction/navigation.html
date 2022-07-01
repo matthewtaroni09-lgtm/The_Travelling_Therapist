@@ -10,8 +10,8 @@
         <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link text-weight-normal {% if path == 'home' %}active{% endif %}"
-                        aria-current="page" href="{% url 'index' %}">Home</a>
+                    <a class="nav-link text-weight-normal {% if path == 'home' %}active{% endif %}" aria-current="page"
+                        href="{% url 'index' %}">Home</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link text-weight-normal {% if path == 'about' %}active{% endif %}"
@@ -34,7 +34,7 @@
                 {% else %}
                 <li class="nav-item">
                     <a class="nav-link text-weight-normal {% if path == 'login' %}active{% endif %}"
-                    href="{% url 'login' %}">Login</a>
+                        href="{% url 'login' %}">Login</a>
                 </li>
                 <li class="nav-item">
                     <a class="btn btn-primary {% if path == 'register' %}active{% endif %}"
