@@ -260,3 +260,26 @@ img.status-bar {
     width: 100%;
     max-width: 800px;
 }
+
+.selection-boxes {
+    border: 1px solid rgba(0,0,0,.125);
+    border-radius: calc(0.25rem - 1px);
+    background-color: #fff;
+    text-decoration: none;
+}
+
+.selection-boxes:hover {
+    background-color: #EFEFEF;
+}
+
+#clinicFAQ::before, #therapistFAQ::before {
+    content: "";
+    display: block;
+    height: 100px;
+    visibility: hidden;
+    margin-top: -100px;
+}
+
+.selection-boxes img { 
+    max-width: 100px;
+}
