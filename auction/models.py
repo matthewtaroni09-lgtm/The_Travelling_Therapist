@@ -199,12 +199,12 @@ class Bid(models.Model):
         return str(self.user) + ': $' + str(self.amount)
 
 class Demographic(models.Model):
-    clinic = models.ForeignKey(Account, related_name='demogrpahic_clinic', on_delete=models.CASCADE)
+    auction = models.ForeignKey(Auction, related_name='demogrpahic_auction', on_delete=models.CASCADE, default=1)
     category = models.ForeignKey('DemographicType', related_name='category', on_delete=models.CASCADE)
-    percentage = models.IntegerField(verbose_name='Percentage', help_text='Enter the percentage your clinic works with the given demographic.')  
+    percentage = models.IntegerField(verbose_name='Percentage')  
 
     def __str__(self):
-        return str(self.clinic.clinicName) + " - " + str(self.category) + ": " + str(self.percentage) + "%"
+        return str(self.auction.clinic) + " - " + str(self.category) + ": " + str(self.percentage) + "%"
 
     def get_category(self):
         return str(self.category)
@@ -225,12 +225,12 @@ class PayFrequency(models.Model):
         return str(self.name)
 
 class PracticeArea(models.Model):
-    clinic = models.ForeignKey(Account, related_name='practice_area_clinic', on_delete=models.CASCADE)
+    auction = models.ForeignKey(Auction, related_name='practice_area_auction', on_delete=models.CASCADE, default=1)
     category = models.ForeignKey('PracticeAreaType', related_name='practice_area_type', on_delete=models.CASCADE)
-    percetnage = models.IntegerField(verbose_name='Percentage', help_text='Enter the percentage your clinic works with the given demographic.')  
+    percentage = models.IntegerField(verbose_name='Percentage') 
 
     def __str__(self):
-        return str(self.clinic.clinicName) + " - " + str(self.category) + ": " + str(self.percetnage) + "%"
+        return str(self.auction.clinic) + " - " + str(self.category) + ": " + str(self.percentage) + "%"
 
     def get_category(self):
         return str(self.category)
@@ -240,6 +240,7 @@ class PracticeArea(models.Model):
 
 class PracticeAreaType(models.Model):
     name = models.CharField(verbose_name='Practice Area', max_length=200, help_text='Select a practice area.')
+    userType = models.ForeignKey('UserType', related_name='practice_area_user_type', on_delete=models.CASCADE, default=1)
 
     def __str__(self):
         return str(self.name)

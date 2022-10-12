@@ -4,11 +4,12 @@ from operator import mod
 from pyexpat import model
 from tkinter import Widget
 from django import forms
-from .models import PROVINCES, Auction, Bid, Account, Demographic, User, UserType
+from .models import PROVINCES, Auction, Bid, Account, Demographic, DemographicType, PracticeArea, PracticeAreaType, User, UserType
 from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
 import random
 from django.core.exceptions import ValidationError
 import os
+from django.forms import inlineformset_factory
 
 def check_times(start_time, end_time, day):
     if (start_time is None and end_time is not None) or (start_time is not None and end_time is None):
@@ -23,7 +24,7 @@ def check_times(start_time, end_time, day):
     else: 
         return ''
 
-def validate_clinic_fields(clinicName, city, province, underEighteen, eighteenToSixtyFive, overSixtyFive, MSK, neuro, cardioResp):
+def validate_clinic_fields(clinicName, city, province):
     error_list = []
     if clinicName == '' or clinicName is None:
         error_list.append(ValidationError("Please enter a clinic name."))
@@ -34,21 +35,21 @@ def validate_clinic_fields(clinicName, city, province, underEighteen, eighteenTo
     if province == '' or province is None:
         error_list.append(ValidationError("Please enter a province."))
 
-    if underEighteen is None or eighteenToSixtyFive is None or overSixtyFive is None:
-        error_list.append(ValidationError("Please enter a value for all Clinic Demographics. If one of the age groups does not apply put in a 0."))
-    elif underEighteen < 0 or eighteenToSixtyFive < 0 or overSixtyFive < 0:
-        error_list.append(ValidationError("Please enter a positive value for all Clinic Demographics. If one of the age groups does not apply put in a 0."))
-    else:
-        if (underEighteen + eighteenToSixtyFive + overSixtyFive) != 100:
-            error_list.append(ValidationError("Clinic Demographics values must add to 100%."))
+    # if underEighteen is None or eighteenToSixtyFive is None or overSixtyFive is None:
+    #     error_list.append(ValidationError("Please enter a value for all Clinic Demographics. If one of the age groups does not apply put in a 0."))
+    # elif underEighteen < 0 or eighteenToSixtyFive < 0 or overSixtyFive < 0:
+    #     error_list.append(ValidationError("Please enter a positive value for all Clinic Demographics. If one of the age groups does not apply put in a 0."))
+    # else:
+    #     if (underEighteen + eighteenToSixtyFive + overSixtyFive) != 100:
+    #         error_list.append(ValidationError("Clinic Demographics values must add to 100%."))
 
-    if MSK is None or neuro is None or cardioResp is None:
-        error_list.append(ValidationError("Please enter a value for all Clinic Areas of Practice. If one of the areas does not apply put in a 0."))
-    elif MSK < 0 or neuro < 0 or cardioResp < 0:
-        error_list.append(ValidationError("Please enter a positive value for all Clinic Areas of Practice. If one of the areas does not apply put in a 0."))
-    else:
-        if (MSK + neuro + cardioResp) != 100:
-            error_list.append(ValidationError("Clinic Areas of Practice values must add to 100%."))
+    # if MSK is None or neuro is None or cardioResp is None:
+    #     error_list.append(ValidationError("Please enter a value for all Clinic Areas of Practice. If one of the areas does not apply put in a 0."))
+    # elif MSK < 0 or neuro < 0 or cardioResp < 0:
+    #     error_list.append(ValidationError("Please enter a positive value for all Clinic Areas of Practice. If one of the areas does not apply put in a 0."))
+    # else:
+    #     if (MSK + neuro + cardioResp) != 100:
+    #         error_list.append(ValidationError("Clinic Areas of Practice values must add to 100%."))
     return error_list
 
 def validate_file_extension(value, image_name): 
@@ -88,18 +89,18 @@ class AuctionForm(forms.ModelForm):
             'sundayStart',
             'sundayEnd',
             'comments',
-            'MSK',
-            'neuro',
-            'cardioResp',
-            'underEightteen',
-            'eightteenToSixtyFive',
-            'overSixtyFive'
+        #     'MSK',
+        #     'neuro',
+        #     'cardioResp',
+        #     'underEightteen',
+        #     'eightteenToSixtyFive',
+        #     'overSixtyFive'
         )
         # labels = {}
 
         widgets = {
-            'placementStart': forms.DateInput(format=('%Y-%m-%d'), attrs={'class': 'form-control', 'placeholder': 'Select a date', 'type': 'date'}),
-            'placementEnd': forms.DateInput(format=('%Y-%m-%d'), attrs={'class': 'form-control', 'placeholder': 'Select a date', 'type': 'date'}),
+            'placementStart': forms.DateInput(format=('%Y-%m-%d'), attrs={'class': 'form-control', 'placeholder': 'Select a date', 'type': 'date', 'value': '2022-01-01'}),
+            'placementEnd': forms.DateInput(format=('%Y-%m-%d'), attrs={'class': 'form-control', 'placeholder': 'Select a date', 'type': 'date', 'value': '2022-01-02'}),
             'mondayStart': forms.TimeInput(attrs={'class': 'form-control', 'placeholder': 'Select a date', 'type': 'time'}),
             'mondayEnd': forms.TimeInput(attrs={'class': 'form-control', 'placeholder': 'Select a date', 'type': 'time'}),
             'tuesdayStart': forms.TimeInput(attrs={'class': 'form-control', 'placeholder': 'Select a date', 'type': 'time'}),
@@ -236,16 +237,16 @@ class RegisterAcount(UserCreationForm):
     imageTwo = forms.ImageField(required=False, label='Image 2')
     imageThree = forms.ImageField(required=False, label='Image 3')
     imageFour = forms.ImageField(required=False, label='Image 4')
-    underEighteen = forms.IntegerField(required=False, label='% Under 18', min_value=0, max_value=100)
-    eighteenToSixtyFive = forms.IntegerField(required=False, label='% 18 - 65', min_value=0, max_value=100)
-    overSixtyFive = forms.IntegerField(required=False, label='% Over 65', min_value=0, max_value=100)
-    MSK = forms.IntegerField(required=False, label='% Musculoskeletal', min_value=0, max_value=100)
-    neuro = forms.IntegerField(required=False, label='% Neurological', min_value=0, max_value=100)
-    cardioResp = forms.IntegerField(required=False, label='% Cardiorespiratory', min_value=0, max_value=100)
+    # underEighteen = forms.IntegerField(required=False, label='% Under 18', min_value=0, max_value=100)
+    # eighteenToSixtyFive = forms.IntegerField(required=False, label='% 18 - 65', min_value=0, max_value=100)
+    # overSixtyFive = forms.IntegerField(required=False, label='% Over 65', min_value=0, max_value=100)
+    # MSK = forms.IntegerField(required=False, label='% Musculoskeletal', min_value=0, max_value=100)
+    # neuro = forms.IntegerField(required=False, label='% Neurological', min_value=0, max_value=100)
+    # cardioResp = forms.IntegerField(required=False, label='% Cardiorespiratory', min_value=0, max_value=100)
 
     class Meta:
         model = User
-        fields = ('user_type', 'clinicName', 'first_name', 'last_name', 'username', 'city', 'province', 'about', 'underEighteen', 'eighteenToSixtyFive', 'overSixtyFive', 'MSK', 'neuro', 'cardioResp', 'password1' ,'password2', 'imageOne', 'imageTwo', 'imageThree', 'imageFour')
+        fields = ('user_type', 'clinicName', 'first_name', 'last_name', 'username', 'city', 'province', 'about', 'password1' ,'password2', 'imageOne', 'imageTwo', 'imageThree', 'imageFour')
 
     def clean(self):
         userType = self.cleaned_data.get('user_type')
@@ -260,12 +261,12 @@ class RegisterAcount(UserCreationForm):
         imageTwo = self.cleaned_data.get('imageTwo')
         imageThree = self.cleaned_data.get('imageThree')
         imageFour = self.cleaned_data.get('imageFour')
-        underEighteen = self.cleaned_data.get('underEighteen')
-        eighteenToSixtyFive = self.cleaned_data.get('eighteenToSixtyFive')
-        overSixtyFive = self.cleaned_data.get('overSixtyFive')
-        MSK = self.cleaned_data.get('MSK')
-        neuro = self.cleaned_data.get('neuro')
-        cardioResp = self.cleaned_data.get('cardioResp')
+        # underEighteen = self.cleaned_data.get('underEighteen')
+        # eighteenToSixtyFive = self.cleaned_data.get('eighteenToSixtyFive')
+        # overSixtyFive = self.cleaned_data.get('overSixtyFive')
+        # MSK = self.cleaned_data.get('MSK')
+        # neuro = self.cleaned_data.get('neuro')
+        # cardioResp = self.cleaned_data.get('cardioResp')
 
         error_list = []
 
@@ -287,7 +288,7 @@ class RegisterAcount(UserCreationForm):
             error_list.append(f'Username "{username}" is already in use.')
 
         if str(userType).split(' ')[-1] == "Clinic":
-            errors = validate_clinic_fields(clinicName, city, province, underEighteen, eighteenToSixtyFive, overSixtyFive, MSK, neuro, cardioResp)
+            errors = validate_clinic_fields(clinicName, city, province)
             if errors is not None:
                 error_list.extend(errors)
         else:
@@ -351,16 +352,16 @@ class UserFormTherapist(forms.ModelForm):
             raise forms.ValidationError(error_list)
 
 class ProfileUpdateClinic(forms.ModelForm):
-    underEighteen = forms.IntegerField(required=False, label='% Under 18', min_value=0, max_value=100)
-    eighteenToSixtyFive = forms.IntegerField(required=False, label='% 18 - 65', min_value=0, max_value=100)
-    overSixtyFive = forms.IntegerField(required=False, label='% Over 65', min_value=0, max_value=100)
-    MSK = forms.IntegerField(required=False, label='% Musculoskeletal', min_value=0, max_value=100)
-    neuro = forms.IntegerField(required=False, label='% Neurological', min_value=0, max_value=100)
-    cardioResp = forms.IntegerField(required=False, label='% Cardiorespiratory', min_value=0, max_value=100)
+    # underEighteen = forms.IntegerField(required=False, label='% Under 18', min_value=0, max_value=100)
+    # eighteenToSixtyFive = forms.IntegerField(required=False, label='% 18 - 65', min_value=0, max_value=100)
+    # overSixtyFive = forms.IntegerField(required=False, label='% Over 65', min_value=0, max_value=100)
+    # MSK = forms.IntegerField(required=False, label='% Musculoskeletal', min_value=0, max_value=100)
+    # neuro = forms.IntegerField(required=False, label='% Neurological', min_value=0, max_value=100)
+    # cardioResp = forms.IntegerField(required=False, label='% Cardiorespiratory', min_value=0, max_value=100)
     
     class Meta:
         model = Account
-        fields = ['clinicName', 'city', 'province', 'about', 'underEighteen', 'eighteenToSixtyFive', 'overSixtyFive', 'MSK', 'neuro', 'cardioResp', 'imageOne', 'imageTwo', 'imageThree', 'imageFour']
+        fields = ['clinicName', 'city', 'province', 'about', 'imageOne', 'imageTwo', 'imageThree', 'imageFour']
 
     def clean(self):
         clinicName = self.cleaned_data.get('clinicName')
@@ -372,12 +373,12 @@ class ProfileUpdateClinic(forms.ModelForm):
         imageTwo = self.cleaned_data.get('imageTwo')
         imageThree = self.cleaned_data.get('imageThree')
         imageFour = self.cleaned_data.get('imageFour')
-        underEighteen = self.cleaned_data.get('underEighteen')
-        eighteenToSixtyFive = self.cleaned_data.get('eighteenToSixtyFive')
-        overSixtyFive = self.cleaned_data.get('overSixtyFive')
-        MSK = self.cleaned_data.get('MSK')
-        neuro = self.cleaned_data.get('neuro')
-        cardioResp = self.cleaned_data.get('cardioResp')
+        # underEighteen = self.cleaned_data.get('underEighteen')
+        # eighteenToSixtyFive = self.cleaned_data.get('eighteenToSixtyFive')
+        # overSixtyFive = self.cleaned_data.get('overSixtyFive')
+        # MSK = self.cleaned_data.get('MSK')
+        # neuro = self.cleaned_data.get('neuro')
+        # cardioResp = self.cleaned_data.get('cardioResp')
 
         error_list = []
 
@@ -398,7 +399,7 @@ class ProfileUpdateClinic(forms.ModelForm):
         if User.objects.exclude(pk=self.instance.pk).filter(username=username).exists():
             error_list.append(f'Username "{username}" is already in use.')
 
-        errors = validate_clinic_fields(clinicName, city, province, underEighteen, eighteenToSixtyFive, overSixtyFive, MSK, neuro, cardioResp)
+        errors = validate_clinic_fields(clinicName, city, province)
         if errors is not None:
             error_list.extend(errors)
     
@@ -419,3 +420,40 @@ class ContactForm(forms.Form):
     last_name = forms.CharField(max_length = 50)
     email_address = forms.EmailField(max_length = 150)
     message = forms.CharField(widget = forms.Textarea, max_length = 2000)
+
+class DemographicForm(forms.ModelForm):
+    class Meta:
+        model = Demographic
+        fields = ['category', 'percentage']
+
+    
+
+    def clean(self):
+        # print('self')
+        # print(self)
+        # print('inside form clean Demo')
+        percentage = self.cleaned_data.get('percentage')
+        error_list = []
+        if percentage > 100:
+            error_list.append(ValidationError("Each demographic bust be less than 100%."))
+
+        if len(error_list) > 0:
+            raise forms.ValidationError(error_list)
+
+class PracticeAreaForm(forms.ModelForm):
+    class Meta:
+        model = PracticeArea
+        fields = ['category', 'percentage']
+
+    def clean(self):
+        print('inside form clean AP')
+        print(self.cleaned_data.get('percentage'))
+        percentage = self.cleaned_data.get('percentage')
+        error_list = []
+
+        if percentage > 100:
+            error_list.append(ValidationError("Each area of practice must be less than 100%."))
+
+        if len(error_list) > 0:
+            raise forms.ValidationError(error_list)
+

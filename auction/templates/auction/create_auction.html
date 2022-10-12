@@ -17,6 +17,10 @@
       <h1 class="text-large text-weight-normal mb-5">Create New Auction Post</h1>
       {% csrf_token %}
       {{ form|as_crispy_errors }}
+
+      <div class="alert alert-block alert-danger">
+        <ul id="errorList"></ul>
+      </div>
       <div class="row">
         <div class="mb-3 col-md-6">
           {{ form.placementStart|as_crispy_field }}
@@ -97,18 +101,41 @@
           </div>
         </div>
         <div class="mb-3">
+          <h3 class="fs-5 my-3 text-weight-normal">Demographics</h3>
+          {{ formset_demographic.management_form}}
+          {% for formset in formset_demographic %}
+          <div class="input-group mb-3 align-items-center">
+            <div class="d-flex gap-3 mt-2 mt-sm-0">
+              {{ formset }}
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        <div class="mb-3">
+          <h3 class="fs-5 my-3 text-weight-normal">Areas of Practice</h3>
+          {{ formset_practice.management_form }}
+          {% for formset in formset_practice %}
+          <div class="input-group mb-3 align-items-center">
+            <div class="d-flex gap-3 mt-2 mt-sm-0">
+              {{ formset }}
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        <div class="mb-3">
           {{ form.comments|as_crispy_field }}
         </div>
-        <div>
-          <button type="submit" class="btn btn-primary">Create Auction</button>
-        </div>
+      </div>
+      <div>
+        <button id="submitButton" type="submit" class="btn btn-primary">Create Auction</button>
       </div>
   </div>
-  </form>
-  {% else %}
-  <p>Only {{ max_forms }} active auctions are allowed at a time. Contact info@travelingtherapist.ca for more
-    information on our Pro plan.</p>
-  {% endif %}
+</div>
+</form>
+{% else %}
+<p>Only {{ max_forms }} active auctions are allowed at a time. Contact info@travelingtherapist.ca for more
+  information on our Pro plan.</p>
+{% endif %}
 </div>
 <!-- </div> -->
 <script src="{% static 'auction/create_auction.js' %}"></script>

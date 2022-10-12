@@ -169,6 +169,15 @@
     color: #0AEAA9;
 }
 
+/* Creare Auctio Page */
+.errorlist.nonfield {
+    display: none;
+}
+
+#errorList {
+    margin-bottom: 0px;
+}
+
 /**************************** 6. MISC ****************************/
 .nav-link {
     color: var(--primary-colour);
@@ -262,7 +271,7 @@ img.status-bar {
 }
 
 .selection-boxes {
-    border: 1px solid rgba(0,0,0,.125);
+    border: 1px solid rgba(0, 0, 0, .125);
     border-radius: calc(0.25rem - 1px);
     background-color: #fff;
     text-decoration: none;
@@ -272,7 +281,8 @@ img.status-bar {
     background-color: #EFEFEF;
 }
 
-#clinicFAQ::before, #therapistFAQ::before {
+#clinicFAQ::before,
+#therapistFAQ::before {
     content: "";
     display: block;
     height: 100px;
@@ -280,6 +290,6 @@ img.status-bar {
     margin-top: -100px;
 }
 
-.selection-boxes img { 
+.selection-boxes img {
     max-width: 100px;
 }

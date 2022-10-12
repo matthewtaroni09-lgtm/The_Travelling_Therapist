@@ -1,4 +1,40 @@
 $(document).ready(function () {
+    let practiceTypes = [];
+    let usedTypes = [];
+    // $('.alert.alert-block.alert-danger').hide();
+    $.ajax({
+        type: "GET",
+        url: "/auction/data/get_practice_types",
+        success: function (response) {
+            for (let i = 0; i < response.data.length; i++) {
+                practiceTypes.push(response.data[i].name);
+            }
+            $('[id^=id_demogrpahic_auction-]').each(function (i, el) {
+                if ($(this).is('select')) {
+                    $(this).attr("disabled", true);
+                    $(this).val(parseInt($(this).attr('id').match(/\d/)[0]) + 1);
+                }
+            });
+            $('[id^=id_practice_area_auction-]').each(function (i, el) {
+                if ($(this).is('select')) {
+                    let index = 0;
+                    $(this).attr("disabled", true);
+                    $(this).find('option').each(function (i, el) {
+                        if (practiceTypes.includes($(this).text()) && !usedTypes.includes(i)) {
+                            index = i;
+                            usedTypes.push(index)
+                            return false;
+                        }
+                    });
+                    $(this).val(index);
+                }
+            });
+        },
+        error: function (error) {
+            console.log('error: ', error);
+        }
+    });
+
     $('#id_placementStart').change(function () {
         getDateDiff();
     });
@@ -8,6 +44,60 @@ $(document).ready(function () {
     $('.clearButton').click(function () {
         $(this).parent().find('input[type=time]')[0].value = '';
         $(this).parent().find('input[type=time]')[1].value = '';
+    });
+    //Django cannot get the values from disabled fields so re-enabled them on submit
+    $("#submitButton").click(function () {
+        let errorList = '';
+        let demographicTotal = 0;
+        let practiceTotal = 0;
+        let demographicCategory = '';
+        let practiceCategory = '';
+        $('[id^=id_demogrpahic_auction-]').each(function (i, el) {
+            if ($(this).is('select')) {
+                demographicCategory = $(this).find(":selected").text();
+            }
+            if ($(this).attr('type') === 'number') {
+                if ($(this).val() === '') {
+                    errorList += '<li>Please enter a value for ' + demographicCategory + '.</li>';
+                }
+                else if (parseInt($(this).val()) > 100) {
+                    errorList += '<li>' + demographicCategory + ' must be less than 100%.</li>';
+                }
+                demographicTotal += parseInt($(this).val());
+            }
+        });
+        if (demographicTotal !== 100) {
+            errorList += '<li>Demographic percentages must add up to 100%</li>';
+        }
+
+        $('[id^=id_practice_area_auction-]').each(function (i, el) {
+            if ($(this).is('select')) {
+                practiceCategory = $(this).find(":selected").text();
+            }
+            if ($(this).attr('type') === 'number') {
+                if ($(this).val() === '') {
+                    errorList += '<li>Please enter a value for ' + practiceCategory + '.</li>';
+                }
+                else if (parseInt($(this).val()) > 100) {
+                    errorList += '<li>' + practiceCategory + ' must be less than 100%.</li>';
+                }
+                practiceTotal += parseInt($(this).val());
+            }
+        });
+        if (practiceTotal !== 100) {
+            errorList += '<li>Practice area percentages must add up to 100%</li>';
+        }
+        console.log(practiceTotal);
+        console.log(errorList);
+
+        if (errorList !== '') {
+            $('.alert.alert-block.alert-danger').show();
+            $('#errorList').html(errorList);
+            window.scrollTo(0, 0);
+            return false;
+        }
+
+        $("form :disabled").removeAttr('disabled');
     });
 });
 

@@ -44,6 +44,12 @@ class AccountInline(admin.StackedInline):
 class CustomizedUserAdmin(UserAdmin):
     inlines = (AccountInline,)
 
+@admin.register(PracticeAreaType)
+class PracticeAreaTypeAdmin(admin.ModelAdmin):
+    list_display = ('name', 'userType')
+    ordering = ('name', )
+    search_fields = ('name', 'userType')
+
 
 admin.site.unregister(User)
 admin.site.register(User, CustomizedUserAdmin)
@@ -52,6 +58,5 @@ admin.site.register(Demographic)
 admin.site.register(DemographicType)
 admin.site.register(PayFrequency)
 admin.site.register(PracticeArea)
-admin.site.register(PracticeAreaType)
 admin.site.register(ProMember)
 admin.site.register(AdminSettings)

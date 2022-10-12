@@ -70,11 +70,15 @@ const getAuction = () => {
             countDown(auctionEndDateTime, auctionID);
 
             //Demographics Chart
-            const demographicsLabels = [
-                'Under 18',
-                '18 - 65',
-                'Over 65',
-            ];
+            const demographicsLabels = []
+            for (let demographic of response.data.demographic_types) {
+                demographicsLabels.push(demographic)
+            }
+
+            const demographicsValues = []
+            for (let value of response.data.demographic_percentages) {
+                demographicsValues.push(value)
+            }
 
             const data = {
                 labels: demographicsLabels,
@@ -90,7 +94,7 @@ const getAuction = () => {
                         '#0ABBEA',
                         '#A90AEA'
                     ],
-                    data: [response.data.demogrpahics.Under18, response.data.demogrpahics.eighteenToSixtyFive, response.data.demogrpahics.Over65],
+                    data: demographicsValues,
                 }]
             };
 
@@ -128,11 +132,15 @@ const getAuction = () => {
             );
 
             // Area of Practice Chart
-            const areasOfPracticeLabels = [
-                'Musculoskeletal',
-                'Neurological',
-                'Cardiorespiratory',
-            ];
+            const areasOfPracticeLabels = []
+            for (let practice of response.data.practice_area_types) {
+                areasOfPracticeLabels.push(practice)
+            }
+
+            const areaOfPracticeValues = []
+            for (let value of response.data.practice_area_percentages) {
+                areaOfPracticeValues.push(value)
+            }
 
             const areasOfPracticeData = {
                 labels: areasOfPracticeLabels,
@@ -148,7 +156,7 @@ const getAuction = () => {
                         '#0ABBEA',
                         '#A90AEA'
                     ],
-                    data: [response.data.practiceAreas.MSK, response.data.practiceAreas.Neuro, response.data.practiceAreas.CardioResp],
+                    data: areaOfPracticeValues,
                 }]
             };
 

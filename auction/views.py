@@ -1,6 +1,8 @@
+from asyncio.format_helpers import _format_args_and_kwargs
 import re
 from unicodedata import category
 import uuid
+from wsgiref.simple_server import demo_app
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
@@ -10,11 +12,11 @@ from django.views.generic import ListView, CreateView
 from The_Travelling_Therapist.settings import ACTIVE_LINK
 
 from .filters import AuctionFilter
-from .forms import RegisterAcount, AuctionForm, BidForm, UserFormClinic, UserFormTherapist, ProfileUpdateClinic, CreateUserForm, PasswordChangingForm, ContactForm
+from .forms import RegisterAcount, AuctionForm, BidForm, UserFormClinic, UserFormTherapist, ProfileUpdateClinic, CreateUserForm, PasswordChangingForm, ContactForm, DemographicForm, PracticeAreaForm
 from django.urls import reverse_lazy
 import datetime
 from . import scheduled_tasks
-from .models import PROVINCES, Account, AdminSettings, Auction, Bid, PracticeArea, User, Account
+from .models import PROVINCES, Account, AdminSettings, Auction, Bid, Demographic, DemographicType, PracticeArea, PracticeAreaType, User, Account, UserType
 from django.contrib.auth.forms import PasswordResetForm
 from django.utils.http import urlsafe_base64_encode
 from django.contrib.auth.tokens import default_token_generator
@@ -33,6 +35,9 @@ from . import emails
 from pytz import timezone
 from django.core import serializers
 from django.contrib import messages # For message alerts
+from django.forms import inlineformset_factory
+from django.forms import formset_factory
+from functools import partial, wraps
 
 class PasswordsChangeView(PasswordChangeView):
     form_class = PasswordChangingForm
@@ -63,6 +68,21 @@ def contact(request):
     else:
         form = ContactForm(None)
         return render(request, "auction/contact_us.html", {'form': form})
+
+def test2(request):
+    max = DemographicType.objects.all().count()
+    auction = Auction.objects.get(pk='28b927fb59a646e794e94bd48cc88e0a')
+    demographic_form_set = inlineformset_factory(Auction, Demographic, fields=('category', 'percentage'), max_num=max, can_delete=False, extra=1)
+
+    if request.method == 'POST':
+        formset = demographic_form_set(request.POST, instance=auction)
+        if formset.is_valid():
+            formset.save()
+            # return redirect("auction/test2.html")
+            return render(request, "auction/test2.html", {'formset' : formset})
+    formset = demographic_form_set(instance=auction)
+
+    return render(request, "auction/test2.html", {'formset' : formset})
 
 class AuctionListView(ListView):
     model = Auction
@@ -172,6 +192,15 @@ def profile(request):
 
 def view_auction(request, auction_id):
     auction = Auction.objects.get(pk=auction_id)
+    d = Demographic.objects.values('auction').filter(auction_id=auction_id).values()
+    for p in d:
+        print(p['percentage'])
+    pr = PracticeAreaType.objects.values('name').filter(userType=1).values()
+    for h in pr:
+        print(h['name'])
+    pt = PracticeArea.objects.values('auction').filter(auction_id=auction_id).values()
+    for j in pt:
+        print(j['percentage'])
     num_bids = Bid.objects.filter(auction=auction_id).count()
     num_biders = Bid.objects.values('user').filter(auction=auction_id).distinct().count()
     auction_change = False
@@ -250,30 +279,53 @@ def view_auction(request, auction_id):
     
 def get_auction_end(request, auction_id):
     auction = Auction.objects.get(pk=auction_id)
-    account = Account.objects.get(user=auction.clinic.user)
-    demogrpahics = {}
-    practiceAreas = {}
 
-    demogrpahics.update({'Under18': account.underEighteen})
-    demogrpahics.update({'eighteenToSixtyFive': account.eighteenToSixtyFive})
-    demogrpahics.update({'Over65': account.overSixtyFive})
-    practiceAreas.update({'MSK': account.MSK})
-    practiceAreas.update({'Neuro': account.neuro})
-    practiceAreas.update({'CardioResp': account.cardioResp})
+    demographic_obj = Demographic.objects.filter(auction__auctionID = auction_id)
+    demographic_type = DemographicType.objects.all()
+    demographic_types = []
+    demographic_percentages = []
+
+    practice_area_obj = PracticeArea.objects.filter(auction__auctionID = auction_id)
+    practice_area_type = PracticeAreaType.objects.filter(userType=request.user.account.userType)
+    practice_area_types = []
+    practice_area_percentages = []
+
+    for obj in demographic_obj:
+        demographic_percentages.append(obj.percentage)
+
+    for type in demographic_type:
+        demographic_types.append(type.name)
+
+    for obj in practice_area_obj:
+        practice_area_percentages.append(obj.percentage)
+
+    for type in practice_area_type:
+        practice_area_types.append(type.name)
+
+    # Check to make sure that there are the same number of labels as values
+    if len(demographic_percentages) != len(demographic_types):
+        demographic_percentages = [0]
+        demographic_types = [0]
 
     data = {
         'auctionStart': auction.auctionStart,
         'auctionEnd': auction.auctionEnd,
         'currentLowBid': auction.currentLowBid,
         'clinic': auction.clinic.clinicName,
-        'demogrpahics': demogrpahics,
-        'practiceAreas': practiceAreas
+        'demographic_percentages': demographic_percentages,
+        'demographic_types': demographic_types,
+        'practice_area_percentages': practice_area_percentages,
+        'practice_area_types': practice_area_types,
     }
     return JsonResponse({'data': data})
 
 def get_all_auctions(request):
     auction_list = list(Auction.objects.filter(Q(active=True) | Q(closed=True)).values())
     return JsonResponse({'data': auction_list})
+
+def get_practice_types(request):
+    practice_area_type = list(PracticeAreaType.objects.filter(userType=request.user.account.userType).values())
+    return JsonResponse({'data': practice_area_type})
 
 def get_active_auctions_clinic(request):
     active_auctions_list = ''
@@ -331,10 +383,17 @@ def create_auction(request):
     submitted_auction = False
     parameter = {}
     max_auctions = AdminSettings.objects.all()[0]
-    print(active_auctions_list.count())
+    max_demographics = DemographicType.objects.all().count()
+    # Areas of practice are specific to a user tpye so get the user's type
+    print(request.user.account.userType)
+    max_practice_areas = PracticeAreaType.objects.filter(userType=request.user.account.userType.id).count()
+    demographic_form_set = inlineformset_factory(Auction, Demographic, form=DemographicForm, fields=('category', 'percentage'), max_num=max_demographics, extra=max_demographics, can_delete=False, help_texts=None)
+    practice_area_form_set = inlineformset_factory(Auction, PracticeArea, form=PracticeAreaForm, fields=('category', 'percentage'), max_num=max_practice_areas, extra=max_practice_areas, can_delete=False)
     if active_auctions_list.count() <= max_auctions.numAllowedAuctions:
         if request.method == "POST":
             form = AuctionForm(request.POST, request.FILES)
+            formset_demographic = demographic_form_set(queryset=Demographic.objects.none())
+            formset_practice = practice_area_form_set(queryset=PracticeArea.objects.none())
             if form.is_valid():
                 auction = form.save(commit=False)
                 auction.clinic = request.user.account
@@ -346,6 +405,23 @@ def create_auction(request):
                 auction.createdBy = request.user
                 auction.modifiedBy = request.user
                 auction.save()
+                formset_demographic = demographic_form_set(request.POST, instance=auction, queryset=Demographic.objects.none())
+                formset_practice = practice_area_form_set(request.POST, instance=auction, queryset=PracticeArea.objects.none())
+            
+                if formset_practice.is_valid() and formset_demographic.is_valid():
+                    formset_practice.save()
+                    formset_demographic.save()
+        
+                    parameter.update({
+                    'active_auctions_list': active_auctions_list,
+                    'form': form,
+                    'formset_demographic': formset_demographic,
+                    'formset_practice': formset_practice,
+                    'submitted_auction': submitted_auction,
+                    'show_form': True
+                    })
+                    return render(request, 'auction/create_auction.html', parameter)
+
                 if admin.sendEmails:
                     # Therapist email
                     send_mail(
@@ -355,30 +431,37 @@ def create_auction(request):
                         from_email = settings.EMAIL_HOST_USER,
                         recipient_list = ('loribine@gmail.com', 'info@travelingtherapist.ca')
                     )
-                print(str(auction.auctionEnd.year) + ", " + str(auction.auctionEnd.month) + ", " + str(auction.auctionEnd.day) + ", " + str(auction.auctionEnd.hour) + ", " + str(auction.auctionEnd.minute))
-                print(auction.auctionID)
                 scheduled_tasks.start(auction.auctionEnd.year, auction.auctionEnd.month, auction.auctionEnd.day, auction.auctionEnd.hour, auction.auctionEnd.minute, auction.auctionEnd.second, str(auction.auctionID))
                 return HttpResponseRedirect('/profile?submitted=True')
             else:
-                # if 'submitted' in request.GET:
-                #     submitted_auction = True
+                print('after fail')
+                formset_demographic = demographic_form_set(request.POST, instance=auction, queryset=Demographic.objects.none())
+                formset_practice = practice_area_form_set(request.POST, instance=auction, queryset=PracticeArea.objects.none())
                 parameter.update({
                     'active_auctions_list': active_auctions_list,
                     'form': form,
+                    'formset_demographic': formset_demographic,
+                    'formset_practice': formset_practice,
                     'submitted_auction': submitted_auction,
                     'show_form': True
                 })
                 return render(request, 'auction/create_auction.html', parameter)
         else:
+            print("2222")
             form = AuctionForm(None)
+            formset_demographic = demographic_form_set(queryset=Demographic.objects.none())
+            formset_practice = practice_area_form_set(queryset=PracticeArea.objects.none())
             parameter.update({
                 'active_auctions_list': active_auctions_list,
                 'form': form,
+                'formset_demographic': formset_demographic,
+                'formset_practice': formset_practice,
                 'submitted_auction': submitted_auction,
                 'show_form': True
             })
             return render(request, 'auction/create_auction.html', parameter)
     else:
+        print("3333")
         form = AuctionForm()
         parameter.update({
             'active_auctions_list': active_auctions_list,
@@ -407,12 +490,12 @@ def register(request):
             user.account.imageTwo = form.cleaned_data.get('imageTwo')
             user.account.imageThree = form.cleaned_data.get('imageThree')
             user.account.imageFour = form.cleaned_data.get('imageFour')
-            user.account.underEighteen = form.cleaned_data.get('underEighteen')
-            user.account.eighteenToSixtyFive = form.cleaned_data.get('eighteenToSixtyFive')
-            user.account.overSixtyFive = form.cleaned_data.get('overSixtyFive')
-            user.account.MSK = form.cleaned_data.get('MSK')
-            user.account.neuro = form.cleaned_data.get('neuro')
-            user.account.cardioResp = form.cleaned_data.get('cardioResp')
+            # user.account.underEighteen = form.cleaned_data.get('underEighteen')
+            # user.account.eighteenToSixtyFive = form.cleaned_data.get('eighteenToSixtyFive')
+            # user.account.overSixtyFive = form.cleaned_data.get('overSixtyFive')
+            # user.account.MSK = form.cleaned_data.get('MSK')
+            # user.account.neuro = form.cleaned_data.get('neuro')
+            # user.account.cardioResp = form.cleaned_data.get('cardioResp')
             user.save()
             
             if admin.sendEmails:
@@ -423,7 +506,7 @@ def register(request):
                             message = "",
                             html_message = emails.clinic_welcome(user.account.clinicName),
                             from_email = settings.EMAIL_HOST_USER,
-                            recipient_list = [user.email]
+                            recipient_list = [user.email, "info@travelingtherapist.ca"]
                         )
                 else:
                     # Therapist email
@@ -432,7 +515,7 @@ def register(request):
                             message = "",
                             html_message = emails.therapist_welcome(user.first_name, user.last_name),
                             from_email = settings.EMAIL_HOST_USER,
-                            recipient_list = [user.email]
+                            recipient_list = [user.email, "info@travelingtherapist.ca"]
                         )
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=user.username, password=raw_password)
