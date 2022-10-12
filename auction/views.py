@@ -408,19 +408,19 @@ def create_auction(request):
                 formset_demographic = demographic_form_set(request.POST, instance=auction, queryset=Demographic.objects.none())
                 formset_practice = practice_area_form_set(request.POST, instance=auction, queryset=PracticeArea.objects.none())
             
-                if formset_practice.is_valid() and formset_demographic.is_valid():
-                    formset_practice.save()
-                    formset_demographic.save()
-        
-                    parameter.update({
-                    'active_auctions_list': active_auctions_list,
-                    'form': form,
-                    'formset_demographic': formset_demographic,
-                    'formset_practice': formset_practice,
-                    'submitted_auction': submitted_auction,
-                    'show_form': True
-                    })
-                    return render(request, 'auction/create_auction.html', parameter)
+                # if formset_practice.is_valid() and formset_demographic.is_valid():
+                formset_practice.save()
+                formset_demographic.save()
+    
+                parameter.update({
+                'active_auctions_list': active_auctions_list,
+                'form': form,
+                'formset_demographic': formset_demographic,
+                'formset_practice': formset_practice,
+                'submitted_auction': submitted_auction,
+                'show_form': True
+                })
+                # return render(request, 'auction/create_auction.html', parameter)
 
                 if admin.sendEmails:
                     # Therapist email
@@ -434,9 +434,6 @@ def create_auction(request):
                 scheduled_tasks.start(auction.auctionEnd.year, auction.auctionEnd.month, auction.auctionEnd.day, auction.auctionEnd.hour, auction.auctionEnd.minute, auction.auctionEnd.second, str(auction.auctionID))
                 return HttpResponseRedirect('/profile?submitted=True')
             else:
-                print('after fail')
-                formset_demographic = demographic_form_set(request.POST, instance=auction, queryset=Demographic.objects.none())
-                formset_practice = practice_area_form_set(request.POST, instance=auction, queryset=PracticeArea.objects.none())
                 parameter.update({
                     'active_auctions_list': active_auctions_list,
                     'form': form,
