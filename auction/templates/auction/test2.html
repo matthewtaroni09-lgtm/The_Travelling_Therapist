@@ -1,17 +1,12 @@
 {% extends 'auction/base.html' %}
 {% load crispy_forms_tags %}
 {% block content %}
-<div class="mx-auto my-4 text-center">
-    <h1>Contact Us</h1>
-    <p>Use this contact form to send us any questions or feedback here.!!</p>
-</div>
-<div class="container">
-    <form action="" method="post">
-        {% csrf_token %}
-        <div id="forms">
-            {{ formset.as_p }}
-        </div>
-        <input type="submit" />
-    </form>
-</div>
+{% csrf_token %}
+<h1>Create books for {{ author.name }}</h1>
+
+<button type="button" hx-get="{% url 'create-book-form' %}" hx-target="#bookforms" hx-swap="beforeend">
+    Add form
+</button>
+
+<div id="bookforms"></div>
 {% endblock %}

@@ -1,0 +1,4 @@
+{% csrf_token %}
+{% for auction in auction %}
+{% include 'auction/card_active_auction.html' with auction=auction %}
+{% endfor %}

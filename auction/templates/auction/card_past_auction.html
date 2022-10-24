@@ -7,11 +7,7 @@
         <p class="m-0 ms-4 text-white"># Bids:<span class="ms-2 text-white">{{auction.get_num_bids}}</span></p>
       </div>
       <p class="text-weight-thin mb-0">{{ auction.placementStart }} - {{ auction.placementEnd }}</p>
-      {% if auction.userType %}
-      <p class="text-weight-thin mb-0">{{ auction.get_position_type }}</p>
-      {% else %}
-      <p class="text-weight-thin mb-0">{{ auction.get_position_type }}</p>
-      {% endif %}
+      <p class="text-weight-thin mb-0">Temporary {{ auction.type }}</p>
       <p class="text-weight-thin mb-0">
         {{auction.city }}{{auction.clinic.city}}, {{auction.province}}{{auction.clinic.province }}
       </p>

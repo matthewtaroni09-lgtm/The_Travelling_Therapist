@@ -17,12 +17,12 @@ for (const fields of therapistFields) {
 }
 termsButton.style.display = 'none';
 
-function userTypeChange() {
-    let userType = document.getElementById("id_user_type");
-    let userTypeValue = userType.options[userType.selectedIndex].text
+function userTypeChange(userType) {
+    // let userType = document.getElementById("id_user_type");
+    // let userTypeValue = userType.options[userType.selectedIndex].text
 
     //Show clinic fields
-    if (userTypeValue.split(" ")[1] === "Clinic") {
+    if (userType === "Clinic") {
         for (const fields of combinedFields) {
             fields.style.display = 'block';
         }
@@ -35,7 +35,7 @@ function userTypeChange() {
         termsButton.style.display = 'block';
     }
     //If nothing is selected hide fields
-    else if (userTypeValue === "---------") {
+    else if (userType === "---------") {
         for (const fields of combinedFields) {
             fields.style.display = 'none';
         }
@@ -63,6 +63,32 @@ function userTypeChange() {
 
 $(document).ready(function () {
     //$('#submitButton').prop('disabled', false);
+    let clinicVal = '';
+    $('#id_user_type option').each(function () {
+        if ($(this).text() == 'Clinic') {
+            clinicVal = $(this).val();
+        }
+    });
+
+    $("#clinicButton").click(function () {
+        userTypeChange("Clinic");
+        $("#clinicButton").css("background-color", "#0AEAA9");
+        $("#therapistButton").css("background-color", "#FFFFFF");
+        $('#id_user_type').append($('<option>', {
+            value: clinicVal,
+            text: 'Clinic'
+        }));
+        $('#id_user_type').val(clinicVal);
+        $('#div_id_user_type').css("display", "none");
+    });
+    $("#therapistButton").click(function () {
+        userTypeChange("Therapist");
+        $("#clinicButton").css("background-color", "#FFFFFF");
+        $("#therapistButton").css("background-color", "#0AEAA9");
+        //Clinic is not a selectable option. If the user selects clinic it will be picked automatically
+        $("#id_user_type option[value='" + clinicVal + "']").remove();
+    });
+
     if ($("#id_user_type :selected").text() !== "---------") {
         $('#termsButton').css("display", "block");
     }

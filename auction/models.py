@@ -43,10 +43,16 @@ class PathAndRename(object):
         return os.path.join(self.path, filename)
 path_and_rename = PathAndRename("images/")
 
+class UserType(models.Model):
+    name = models.CharField(verbose_name='Therapist Type', max_length=200, help_text='Select a therapist type')
+
+    def __str__(self):
+        return self.name
+
 class Account(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     clinicName = models.CharField(verbose_name='Clinic Name', max_length=200, blank=True, null=True, help_text='Enter the clinic name.')
-    userType = models.ForeignKey('UserType', verbose_name='User Type', blank=True, null=True, related_name='usertypes', on_delete=models.CASCADE)  
+    userType = models.ForeignKey(UserType, verbose_name='User Type', blank=True, null=True, related_name='usertypes', on_delete=models.CASCADE)  
     licenseNumber = models.CharField(verbose_name='License Number', max_length=120, null=True, blank=True, help_text='Enter you license number.')
     imageOne = models.ImageField(default='default.jpg', verbose_name='Clinic Image One', upload_to=path_and_rename, blank=True, null=True, help_text='Upload an image (optional).')
     imageTwo = models.ImageField(verbose_name='Clinic Image Two', upload_to=path_and_rename, blank=True, null=True, help_text='Upload an image (optional).')
@@ -65,6 +71,8 @@ class Account(models.Model):
     practiceArea = models.ManyToManyField('PracticeArea', blank=True)
     demographic = models.ManyToManyField('Demographic', blank=True)
     pro = models.BooleanField(verbose_name='Pro Member', null=True, blank=True)
+    remember_auction_data = models.BooleanField(verbose_name='Do you want your data to be pre-populated for your next auction?', null=True, blank=True)
+    auction_message_displayed = models.BooleanField(verbose_name='Auction Message Displayed', null=True, blank=True)
 
     def __str__(self):
         return str(self.user)
@@ -81,7 +89,7 @@ class Account(models.Model):
 
 class Auction(models.Model):
     auctionID = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    clinic = models.ForeignKey(Account, related_name='auction_clinic', on_delete=models.CASCADE)  
+    clinic = models.ForeignKey(Account, related_name='auction_clinic', on_delete=models.CASCADE)
     auctionStart = models.DateTimeField(verbose_name='Auction Start', help_text='Enter the start date of the auction.')
     auctionEnd = models.DateTimeField(verbose_name='Auction End', help_text='Enter the end date of the auction.')
     placementStart = models.DateField(verbose_name='Therapist Start Date', help_text='Enter the start date of the placement.')
@@ -122,9 +130,10 @@ class Auction(models.Model):
     createdBy = models.ForeignKey(User, related_name='auction_created_by', blank=True, null=True, on_delete=models.CASCADE)
     modified = models.DateTimeField(verbose_name='Modified Time', null=True, blank=True)
     modifiedBy = models.ForeignKey(User, related_name='auction_modified_by', blank=True, null=True, on_delete=models.CASCADE)
+    type = models.ForeignKey(UserType, verbose_name='Auction Type', related_name='auction_type', on_delete=models.CASCADE)
 
     def __str__(self):
-        return str(self.clinic.clinicName) + ": " + str(self.auctionStart.strftime("%m/%d/%Y"))
+        return str(self.clinic.clinicName) + ": " + str(self.auctionStart.strftime("%m/%d/%Y %H:%M"))
 
     def get_bid(self):
         if self.currentLowBid is None:
@@ -240,7 +249,7 @@ class PracticeArea(models.Model):
 
 class PracticeAreaType(models.Model):
     name = models.CharField(verbose_name='Practice Area', max_length=200, help_text='Select a practice area.')
-    userType = models.ForeignKey('UserType', related_name='practice_area_user_type', on_delete=models.CASCADE, default=1)
+    userType = models.ForeignKey(UserType, related_name='practice_area_user_type', on_delete=models.CASCADE, default=1)
 
     def __str__(self):
         return str(self.name)
@@ -252,12 +261,6 @@ class ProMember(models.Model):
 
     def __str__(self):
         return str(self.clinic)
-
-class UserType(models.Model):
-    name = models.CharField(verbose_name='User Type', max_length=200, help_text='Select a user type')
-
-    def __str__(self):
-        return self.name
 
 class AdminSettings(models.Model):
     sendEmails = models.BooleanField(verbose_name='Send Emails', help_text='Turns on and off emails. If checked emails will send.')

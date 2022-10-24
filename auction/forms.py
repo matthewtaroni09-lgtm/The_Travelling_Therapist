@@ -1,3 +1,4 @@
+from dataclasses import field
 from datetime import datetime, timedelta
 import email
 from operator import mod
@@ -70,6 +71,7 @@ class AuctionForm(forms.ModelForm):
     class Meta:
         model = Auction
         fields = ( 
+            'type',
             'placementStart', 
             'placementEnd', 
             'reservePrice',
@@ -426,12 +428,7 @@ class DemographicForm(forms.ModelForm):
         model = Demographic
         fields = ['category', 'percentage']
 
-    
-
     def clean(self):
-        # print('self')
-        # print(self)
-        # print('inside form clean Demo')
         percentage = self.cleaned_data.get('percentage')
         error_list = []
         if percentage > 100:
@@ -456,4 +453,9 @@ class PracticeAreaForm(forms.ModelForm):
 
         if len(error_list) > 0:
             raise forms.ValidationError(error_list)
+
+class AuctionAccountForm(forms.ModelForm):
+    class Meta:
+        model = Account
+        fields = ['remember_auction_data']
 

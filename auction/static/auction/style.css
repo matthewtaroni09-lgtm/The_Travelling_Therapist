@@ -142,6 +142,16 @@
     font-family: Futura-Italic, sans-serif;
 }
 
+#allAuctionsLink {
+    text-decoration: none;
+    font-size: 13px;
+    color: var(--dark-colour)
+}
+
+#allAuctionsLink:hover {
+    color: grey
+}
+
 /* About Page */
 .accordion-button:not(.collapsed) {
     color: var(--dark-colour);
@@ -169,7 +179,7 @@
     color: #0AEAA9;
 }
 
-/* Creare Auctio Page */
+/* Creare Auction Page */
 .errorlist.nonfield {
     display: none;
 }
@@ -177,6 +187,10 @@
 #errorList {
     margin-bottom: 0px;
 }
+
+/* #practiceAreaDiv {
+    display: none;
+} */
 
 /**************************** 6. MISC ****************************/
 .nav-link {

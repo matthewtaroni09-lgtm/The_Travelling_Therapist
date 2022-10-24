@@ -9,19 +9,35 @@
 <div class="row">
   <div class="col-md-6 offset-md-3">
     <form method="post" enctype="multipart/form-data" class="d-flex flex-column gap-3">
-      <h5>Select an account type to get started:</h5>
+      <h5>Are you signing up as a clinic or a therpaist?</h5>
+
+      <div class="row  align-items-center">
+        <div class="col-sm-1"></div>
+        <a href="#" id="clinicButton" class="col-sm-4 selection-boxes d-flex flex-column align-items-center gap-2 p-4">
+          <img class="img-fluid" src="/media/images/clinic.png" alt="Clinic office as a cartoon">
+          <h4>Clinics</h4>
+        </a>
+        <div class="col-sm-2"></div>
+        <a href="#" id="therapistButton"
+          class="col-sm-4 selection-boxes d-flex flex-column align-items-center gap-2 p-4">
+          <img class="img-fluid" src="/media/images/therapy.png" alt="Therapist as a cartoon">
+          <h4>Therapists</h4>
+        </a>
+        <div class="col-sm-1"></div>
+      </div>
+
       {% csrf_token %}
       {{ form | as_crispy_errors }}
-      {{ form.user_type | as_crispy_field }}
       <span class="clinicField">{{ form.clinicName | as_crispy_field }}</span>
       <span class="clinicField">{{ form.city | as_crispy_field }}</span>
       <span class="clinicField">{{ form.province | as_crispy_field }}</span>
       <span class="clinicField">{{ form.about | as_crispy_field }}</span>
-      <p class="combinedFields">Images must be 10 MB or less and in one of the following formats: jpg, jpeg or png.</p>
+      <p class="clinicField">Images must be 10 MB or less and in one of the following formats: jpg, jpeg or png.</p>
       <span class="clinicField">{{ form.imageOne | as_crispy_field }}</span>
       <span class="clinicField">{{ form.imageTwo | as_crispy_field }}</span>
       <span class="clinicField">{{ form.imageThree | as_crispy_field }}</span>
       <span class="clinicField">{{ form.imageFour | as_crispy_field }}</span>
+      <span class="combinedFields">{{ form.user_type | as_crispy_field }}</span>
       <span class="therapistField">{{ form.first_name | as_crispy_field }}</span>
       <span class="therapistField">{{ form.last_name | as_crispy_field }}</span>
       <span class="combinedFields">{{ form.username | as_crispy_field }}</span>
@@ -34,7 +50,7 @@
       <p class="combinedFields"><small>Terms and Conditions must be agreed to before an account can be
           created.</small></p>
       <div>
-        <button type="submit" disabled id="submitButton" class="btn btn-primary">Create Account</button>
+        <button type="submit" disabled id="submitButton" class="btn btn-primary combinedFields">Create Account</button>
       </div>
     </form>
   </div>
