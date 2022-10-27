@@ -15,7 +15,7 @@ class AuctionAdmin(admin.ModelAdmin):
     list_display = ('auctionID', 'clinic', 'auctionStart', 'auctionEnd', 'active', 'closed', 'placementStart', 'placementEnd', 'winner', 'winningPrice')
     # Reverse alpahbetical order -name
     ordering = ('auctionID', )
-    search_fields = ('auctionID', 'clinic')
+    search_fields = ('auctionID',)
     inlines = [BidInline]
     exclude = ['startingBid', 'underEightteen', 'eightteenToSixtyFive', 'overSixtyFive', 'MSK', 'neuro', 'cardioResp']
 
@@ -30,7 +30,7 @@ class AccountInline(admin.StackedInline):
     model = Account
     can_delete = False
     verbose_name_plural = 'Accounts'
-    exclude = ['practiceArea', 'demographic', 'licenseNumber']
+    exclude = ['practiceArea', 'demographic', 'licenseNumber', 'underEighteen', 'eighteenToSixtyFive', 'overSixtyFive', 'MSK', 'neuro', 'cardioResp']
 
     # def formfield_for_manytomany(self, db_field, request, **kwargs):
     #     print("heee" + db_field.name)
@@ -43,6 +43,7 @@ class AccountInline(admin.StackedInline):
 
 class CustomizedUserAdmin(UserAdmin):
     inlines = (AccountInline,)
+    list_display = ('username', 'email', 'first_name', 'last_name')
 
 @admin.register(PracticeAreaType)
 class PracticeAreaTypeAdmin(admin.ModelAdmin):
@@ -50,6 +51,10 @@ class PracticeAreaTypeAdmin(admin.ModelAdmin):
     ordering = ('name', )
     search_fields = ('name', 'userType')
 
+class CustomUserAdmin(UserAdmin):
+    def __init__(self, *args, **kwargs):
+        super(UserAdmin,self).__init__(*args, **kwargs)
+        UserAdmin.list_display = list(UserAdmin.list_display) + ['userType']
 
 admin.site.unregister(User)
 admin.site.register(User, CustomizedUserAdmin)

@@ -1,9 +1,11 @@
 {% if remember_last_auction %}
 {{ formset_practice.management_form}}
 {% for formset in formset_practice %}
+<p>FRIST</p>
 <div class="input-group mb-3 align-items-center">
     <div class="d-flex gap-3 mt-2 mt-sm-0">
         {{ formset }}
+
     </div>
 </div>
 {% endfor %}
@@ -12,6 +14,7 @@
 
 {{ formset_practice.management_form }}
 {% for formset in formset_practice %}
+<p>SECOND</p>
 <div class="d-flex gap-3 mt-2 mt-sm-0 mb-3">
     <label for="id_practice_area_auction-{{forloop.counter0}}-category">Category:</label>
     <select name="practice_area_auction-{{forloop.counter0}}-category"

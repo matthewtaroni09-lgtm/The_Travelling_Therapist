@@ -455,6 +455,8 @@ class PracticeAreaForm(forms.ModelForm):
             raise forms.ValidationError(error_list)
 
 class AuctionAccountForm(forms.ModelForm):
+    remember_auction_data = forms.BooleanField(required=False, label="Remember auction information for next time?")
+
     class Meta:
         model = Account
         fields = ['remember_auction_data']

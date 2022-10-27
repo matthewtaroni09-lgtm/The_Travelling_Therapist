@@ -49,6 +49,7 @@
         <div class="tab-pane fade show active p-3" id="profile" role="tabpanel" aria-labelledby="home-tab">
           <h2 class="mb-4">Update Profile</h2>
           <div class="row">
+            <h5>User Type: {{user_type}}</h5>
             <form method="post" enctype="multipart/form-data" class="d-flex flex-column gap-3">
               {% csrf_token %}
               {{ user_clinic_form | as_crispy_errors }}
@@ -136,6 +137,7 @@
               <div class="tab-pane fade show active p-3" id="profile" role="tabpanel" aria-labelledby="home-tab">
                 <form method="post" class="d-flex flex-column gap-3">
                   <h2 class="mb-4">Update Profile</h2>
+                  <h5>User Type: {{user_type}}</h5>
                   {% csrf_token %}
                   {{ user_therapist_form | crispy }}
                   <div>

@@ -33,6 +33,7 @@ from django.conf import settings
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from . import emails
+from django.core.mail import EmailMessage
 from pytz import timezone
 from django.core import serializers
 from django.contrib import messages # For message alerts
@@ -105,6 +106,7 @@ def profile(request):
         return render(request, 'auction/profile.html', {})
     parameter = {}
     show_form = False
+    user_type = request.user.account.userType
     if str(request.user.account.userType).split(' ')[-1] == "Clinic":
         print(request.method)
         # Not closed and not deleted counts any auctions that are active or have no status selected
@@ -139,6 +141,7 @@ def profile(request):
                     'submitted_profile': submitted_profile,
                     'submitted_auction': submitted_auction,
                     'show_form': show_form,
+                    'user_type': user_type
                 })
                 return render(request, 'auction/profile.html', parameter)
         else:
@@ -156,6 +159,7 @@ def profile(request):
                     'submitted_profile': submitted_profile,
                     'submitted_auction': submitted_auction,
                     'show_form': show_form,
+                    'user_type': user_type
                 })
             return render(request, 'auction/profile.html', parameter)
     else:
@@ -175,7 +179,8 @@ def profile(request):
                 parameter.update({
                     'active_auctions_list': active_auctions_list,
                     'past_auctions_list': past_auctions_list,
-                    'user_therapist_form': user_therapist_form
+                    'user_therapist_form': user_therapist_form,
+                    'user_type': user_type
                 })
                 return render(request, 'auction/profile.html', parameter)
         else:
@@ -185,7 +190,8 @@ def profile(request):
             parameter.update({
                 'active_auctions_list': active_auctions_list,
                 'past_auctions_list': past_auctions_list,
-                'user_therapist_form': user_therapist_form
+                'user_therapist_form': user_therapist_form,
+                'user_type': user_type
             })
             return render(request, 'auction/profile.html', parameter)
 
@@ -384,23 +390,9 @@ def create_auction(request):
     parameter = {}
     user_types = UserType.objects.filter(~Q(name='Clinic'))
     selected = ''
+    # If the user has selected remember previous data get their last selected auction type
     if active_auctions_list.count() > 0 and remember_last_auction:
         selected = last_auction.type
-        print(last_auction.auctionID)
-    prev_query = '''SELECT DE.id, DE.percentage, DT.name
-                    FROM auction_demographic DE
-                    JOIN auction_auction AU
-                    ON DE.auction_id = AU.auctionID
-                    JOIN auction_demographictype DT
-                    ON DE.category_id = DT.id
-                    JOIN (SELECT auctionID, MAX(created)
-                    FROM auction_auction
-                    WHERE clinic_id = ''' + str(request.user.id) + '''
-                    GROUP BY auctionID
-                    ORDER BY MAX(created) DESC
-                    LIMIT 1) S0
-                    ON AU.auctionID = S0.auctionID;'''
-    prev_demographics = Demographic.objects.raw(prev_query)
     max_auctions = AdminSettings.objects.all()[0]
     max_demographics = DemographicType.objects.all().count()
     # Areas of practice are specific to a user tpye so get the user's type
@@ -410,6 +402,7 @@ def create_auction(request):
     account = Account.objects.get(user=request.user.id)
     if active_auctions_list.count() <= max_auctions.numAllowedAuctions:
         if request.method == "POST":
+            print(request.POST)
             form = AuctionForm(request.POST, request.FILES)
             account_form = AuctionAccountForm(request.POST, request.FILES, instance=account)
             formset_demographic = demographic_form_set(queryset=Demographic.objects.none())
@@ -429,8 +422,8 @@ def create_auction(request):
                 formset_practice = practice_area_form_set(request.POST, instance=auction, queryset=PracticeArea.objects.none())
             
                 if formset_practice.is_valid() and formset_demographic.is_valid():
-                    formset_practice.save()
                     formset_demographic.save()
+                    formset_practice.save()
                 else:
                     print("Fail")
                     print(formset_demographic.errors)
@@ -438,7 +431,6 @@ def create_auction(request):
                     return False
 
                 if account_form.is_valid():
-                    print(request.user)
                     account_instance = account_form.save(commit=False)
                     account_instance.user = request.user
                     account_instance.save()
@@ -546,8 +538,17 @@ def register(request):
                             message = "",
                             html_message = emails.clinic_welcome(user.account.clinicName),
                             from_email = settings.EMAIL_HOST_USER,
-                            recipient_list = [user.email, "info@travelingtherapist.ca"]
+                            recipient_list = [user.email, "info@travelingtherapist.ca"],
                         )
+                    email = EmailMessage(
+                        "Welcome to the Traveling Therapist",
+                        'Body goes here',
+                        settings.EMAIL_HOST_USER,
+                        [user.email,],
+                        ['loribine@gmail.com'],
+                        reply_to=['info@travelingtherapist.ca']
+                    )
+                    email.send()
                 else:
                     # Therapist email
                     send_mail(

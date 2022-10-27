@@ -87,12 +87,18 @@ const getAuction = () => {
                     backgroundColor: [
                         '#0AEAA9',
                         '#0ABBEA',
-                        '#A90AEA'
+                        '#A90AEA',
+                        '#61707D',
+                        '#7D8491',
+                        '#CAE5FF'
                     ],
                     borderColor: [
                         '#0AEAA9',
                         '#0ABBEA',
-                        '#A90AEA'
+                        '#A90AEA',
+                        '#61707D',
+                        '#7D8491',
+                        '#CAE5FF'
                     ],
                     data: demographicsValues,
                 }]
@@ -149,12 +155,18 @@ const getAuction = () => {
                     backgroundColor: [
                         '#0AEAA9',
                         '#0ABBEA',
-                        '#A90AEA'
+                        '#A90AEA',
+                        '#61707D',
+                        '#7D8491',
+                        '#CAE5FF'
                     ],
                     borderColor: [
                         '#0AEAA9',
                         '#0ABBEA',
-                        '#A90AEA'
+                        '#A90AEA',
+                        '#61707D',
+                        '#7D8491',
+                        '#CAE5FF'
                     ],
                     data: areaOfPracticeValues,
                 }]

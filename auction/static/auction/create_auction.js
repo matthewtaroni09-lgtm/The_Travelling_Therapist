@@ -27,10 +27,6 @@ $(document).ready(function () {
         }
     });
     $("#id_type option[value='" + clinicVal + "']").remove();
-
-
-
-
 });
 
 $('#id_type').change(function () {

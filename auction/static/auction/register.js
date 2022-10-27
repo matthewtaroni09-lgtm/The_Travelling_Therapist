@@ -79,7 +79,6 @@ $(document).ready(function () {
             text: 'Clinic'
         }));
         $('#id_user_type').val(clinicVal);
-        $('#div_id_user_type').css("display", "none");
     });
     $("#therapistButton").click(function () {
         userTypeChange("Therapist");

@@ -1,23 +1,16 @@
-// $(document).ready(function () {
-//     $("#allAuctionsLink").click(function () {
-//         $('#allAuctionsModal').modal('toggle');
-//     });
 const modal = new bootstrap.Modal(document.getElementById("modal"))
 htmx.on("htmx:afterSwap", (e) => {
-    // Response targeting #dialog => show the modal
-    // if (e.detail.target.id == "dialog") {
-    modal.show()
-    // }
+    modal.show();
 })
 
 htmx.on("htmx:beforeSwap", (e) => {
-    // Empty response targeting #dialog => hide the modal
-    // if (e.detail.target.id == "dialog" && !e.detail.xhr.response) {
-    modal.hide()
-    // e.detail.shouldSwap = false
-    // }
+    modal.hide();
 })
-//});
+
+$("#modalXButton").click(function () {
+    modal.hide();
+});
+
 const getAuctionIndex = () => {
     $.ajax({
         type: "GET",
