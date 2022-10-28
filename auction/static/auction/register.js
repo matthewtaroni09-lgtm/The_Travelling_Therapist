@@ -63,6 +63,12 @@ function userTypeChange(userType) {
 
 $(document).ready(function () {
     //$('#submitButton').prop('disabled', false);
+
+    userType = $('#userTypeHiddenInput').val();
+    if ($('.alert-block').css("display") === "block") {
+        userTypeChange(userType);
+    }
+
     let clinicVal = '';
     $('#id_user_type option').each(function () {
         if ($(this).text() == 'Clinic') {
@@ -119,21 +125,17 @@ $(document).ready(function () {
         }
     });
 
-    if ($('.alert-block').css("display") === "block") {
-        userTypeChange();
-    }
-
     if ($('#error_1_id_imageOne').css("display") === "block") {
-        userTypeChange();
+        userTypeChange(userType);
     }
     if ($('#error_1_id_imageTwo').css("display") === "block") {
-        userTypeChange();
+        userTypeChange(userType);
     }
     if ($('#error_1_id_imageThree').css("display") === "block") {
-        userTypeChange();
+        userTypeChange(userType);
     }
     if ($('#error_1_id_imageFour').css("display") === "block") {
-        userTypeChange();
+        userTypeChange(userType);
     }
 
     // Show and hide image inputs

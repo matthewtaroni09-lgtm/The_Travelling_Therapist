@@ -32,18 +32,15 @@ class AccountInline(admin.StackedInline):
     verbose_name_plural = 'Accounts'
     exclude = ['practiceArea', 'demographic', 'licenseNumber', 'underEighteen', 'eighteenToSixtyFive', 'overSixtyFive', 'MSK', 'neuro', 'cardioResp']
 
-    # def formfield_for_manytomany(self, db_field, request, **kwargs):
-    #     print("heee" + db_field.name)
-    #     if db_field.name == "demographic":
-    #         print(request.user)
-    #         # print("tttt" + str(self.get_fields('username')))
-    #         #print(request.resolver_match.kwargs['object_id'])
-    #         kwargs["queryset"] = Demographic.objects.filter(clinic=request.resolver_match.kwargs['object_id'])
-    #     return super(AccountInline, self).formfield_for_manytomany(db_field, request, **kwargs)
-
 class CustomizedUserAdmin(UserAdmin):
     inlines = (AccountInline,)
-    list_display = ('username', 'email', 'first_name', 'last_name')
+    list_display = ('username', 'clinic_name', 'first_name', 'last_name', 'user_type')
+
+    def clinic_name(self, obj: Account) -> str:
+        return obj.account.clinicName
+
+    def user_type(self, obj: Account) -> str:
+        return obj.account.userType
 
 @admin.register(PracticeAreaType)
 class PracticeAreaTypeAdmin(admin.ModelAdmin):

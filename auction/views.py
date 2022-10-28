@@ -1,5 +1,4 @@
 from asyncio.format_helpers import _format_args_and_kwargs
-from msilib import type_binary
 import re
 from unicodedata import category
 import uuid
@@ -165,8 +164,8 @@ def profile(request):
     else:
         print(request.method)
         user_id = str(request.user.id)
-        active_auctions_list = Bid.objects.raw('SELECT DISTINCT AA.auctionID, AB.bidID, AA.placementStart, AA.placementEnd, AA.clinic_id, AA.currentLowBid, AA.winningPrice, AC.user_id , AC.clinicName, AC.city, AC.province, AC.about, AC.imageOne, AC.imageTwo, UT.name "userType", count(*) "get_num_bids", CASE WHEN AA.currentLowBid IS NULL THEN "No Bids Yet" WHEN AA.closed = 1 AND AA.active = 0 and AA.winningPrice IS NOT NULL THEN CONCAT("Winning Bid: $", AA.winningPrice) WHEN AA.closed = 1 AND AA.active = 0 and AA.winningPrice IS NULL THEN "No winner" ELSE CONCAT("Current Low Bid: $", AA.currentLowBid) END "get_bid", CASE WHEN UT.name = "Physiotherapy Clinic" THEN "Temporary Physiotherapist" ELSE "" END "get_position_type" FROM auction_auction AA LEFT JOIN auction_bid AB ON AA.auctionID = AB.auction_id LEFT JOIN auction_account AC ON AA.clinic_id = AC.id LEFT JOIN auction_usertype UT ON AC.userType_id = UT.id WHERE AB.user_id = ' + user_id + ' AND AA.active = 1 AND AA.closed = 0 AND AA.deleted = 0 GROUP BY auctionID, AA.placementStart, AA.placementEnd, AA.clinic_id, AC.user_id , AC.clinicName, AC.city, AC.about, AC.imageOne, AC.imageTwo, UT.name;')
-        past_auctions_list = Bid.objects.raw('SELECT DISTINCT AA.auctionID, AB.bidID, AA.placementStart, AA.placementEnd, AA.clinic_id, AA.winningPrice, AC.user_id , AC.clinicName, AC.city, AC.province, AC.about, AC.imageOne, AC.imageTwo, UT.name "userType", count(*) "get_num_bids", CASE WHEN UT.name = "Physiotherapy Clinic" THEN "Temporary Physiotherapist" ELSE "" END "get_position_type" FROM auction_auction AA LEFT JOIN auction_bid AB ON AA.auctionID = AB.auction_id LEFT JOIN auction_account AC ON AA.clinic_id = AC.id LEFT JOIN auction_usertype UT ON AC.userType_id = UT.id WHERE AB.user_id = ' + user_id + ' AND AA.active = 0 AND AA.closed = 1 AND AA.deleted = 0 GROUP BY auctionID, AA.placementStart, AA.placementEnd, AA.clinic_id, AC.user_id , AC.clinicName, AC.city, AC.about, AC.imageOne, AC.imageTwo, UT.name;')
+        active_auctions_list = Bid.objects.raw('SELECT DISTINCT AA.auctionID, AB.bidID, AA.placementStart, AA.placementEnd, AA.clinic_id, AA.currentLowBid, AA.winningPrice, AC.user_id , AC.clinicName, AC.city, AC.province, AC.about, AC.imageOne, AC.imageTwo, UT.name "userType", count(*) "get_num_bids", CASE WHEN AA.currentLowBid IS NULL THEN "No Bids Yet" WHEN AA.closed = 1 AND AA.active = 0 and AA.winningPrice IS NOT NULL THEN CONCAT("Winning Bid: $", AA.winningPrice) WHEN AA.closed = 1 AND AA.active = 0 and AA.winningPrice IS NULL THEN "No winner" ELSE CONCAT("Current Low Bid: $", AA.currentLowBid) END "get_bid", CASE WHEN UT.name = "Physiotherapy Clinic" THEN "Temporary Physiotherapist" ELSE "" END "get_position_type" FROM auction_auction AA LEFT JOIN auction_bid AB ON AA.auctionID = AB.auction_id LEFT JOIN auction_account AC ON AA.clinic_id = AC.id LEFT JOIN auction_usertype UT ON AC.userType_id = UT.id WHERE AB.user_id = ' + user_id + ' AND AA.active = 1 AND AA.closed = 0 AND AA.deleted = 0 GROUP BY auctionID, AA.placementStart, AB.bidID, AA.placementEnd, AA.clinic_id, AC.user_id , AC.clinicName, AC.city, AC.about, AC.imageOne, AC.imageTwo, UT.name;')
+        past_auctions_list = Bid.objects.raw('SELECT DISTINCT AA.auctionID, AB.bidID, AA.placementStart, AA.placementEnd, AA.clinic_id, AA.winningPrice, AC.user_id , AC.clinicName, AC.city, AC.province, AC.about, AC.imageOne, AC.imageTwo, UT.name "userType", count(*) "get_num_bids", CASE WHEN UT.name = "Physiotherapy Clinic" THEN "Temporary Physiotherapist" ELSE "" END "get_position_type" FROM auction_auction AA LEFT JOIN auction_bid AB ON AA.auctionID = AB.auction_id LEFT JOIN auction_account AC ON AA.clinic_id = AC.id LEFT JOIN auction_usertype UT ON AC.userType_id = UT.id WHERE AB.user_id = ' + user_id + ' AND AA.active = 0 AND AA.closed = 1 AND AA.deleted = 0 GROUP BY auctionID, AA.placementStart, AA.placementEnd, AA.clinic_id, AB.bidID, AC.user_id , AC.clinicName, AC.city, AC.about, AC.imageOne, AC.imageTwo, UT.name;')
         if request.method == 'POST':
             user_therapist_form = UserFormTherapist(request.POST, instance=request.user)
             if user_therapist_form.is_valid():
@@ -533,38 +532,48 @@ def register(request):
             if admin.sendEmails:
                 if str(user.account.userType).split(' ')[-1] == "Clinic":
                     # Clinic email
-                    send_mail(
-                            subject = "Welcome to the Traveling Therapist",
-                            message = "",
-                            html_message = emails.clinic_welcome(user.account.clinicName),
-                            from_email = settings.EMAIL_HOST_USER,
-                            recipient_list = [user.email, "info@travelingtherapist.ca"],
-                        )
+                    # send_mail(
+                    #         subject = "Welcome to the Traveling Therapist",
+                    #         message = "",
+                    #         html_message = emails.clinic_welcome(user.account.clinicName),
+                    #         from_email = settings.EMAIL_HOST_USER,
+                    #         recipient_list = [user.email, "info@travelingtherapist.ca"],
+                    #     )
                     email = EmailMessage(
                         "Welcome to the Traveling Therapist",
-                        'Body goes here',
+                        emails.clinic_welcome(user.account.clinicName),
                         settings.EMAIL_HOST_USER,
-                        [user.email,],
-                        ['loribine@gmail.com'],
+                        [user.email],
+                        ['info@travelingtherapist.ca'],
                         reply_to=['info@travelingtherapist.ca']
                     )
                     email.send()
                 else:
                     # Therapist email
-                    send_mail(
-                            subject = "Welcome to the Traveling Therapist",
-                            message = "",
-                            html_message = emails.therapist_welcome(user.first_name, user.last_name),
-                            from_email = settings.EMAIL_HOST_USER,
-                            recipient_list = [user.email, "info@travelingtherapist.ca"]
-                        )
+                    # send_mail(
+                    #         subject = "Welcome to the Traveling Therapist",
+                    #         message = "",
+                    #         html_message = emails.therapist_welcome(user.first_name, user.last_name),
+                    #         from_email = settings.EMAIL_HOST_USER,
+                    #         recipient_list = [user.email, "info@travelingtherapist.ca"]
+                    #     )
+                    email = EmailMessage(
+                        "Welcome to the Traveling Therapist",
+                        emails.therapist_welcome(user.first_name, user.last_name),
+                        settings.EMAIL_HOST_USER,
+                        [user.email],
+                        ['info@travelingtherapist.ca'],
+                        reply_to=['info@travelingtherapist.ca']
+                    )
+                    email.send()
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=user.username, password=raw_password)
             login(request, user)
             return redirect('index')
         else:
             print("not valid")
-            return render(request, 'auction/register.html', {'form': form})
+            print()
+            return render(request, 'auction/register.html', {'form': form, 'user_type': form.cleaned_data.get('user_type')})
     else:
         print('outside')
         form = RegisterAcount(None)

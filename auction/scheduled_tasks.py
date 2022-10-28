@@ -2,6 +2,7 @@ from pathlib import Path
 from apscheduler.schedulers.background import BackgroundScheduler
 from datetime import datetime
 from django.core.mail import send_mail
+from django.core.mail import EmailMessage
 from django.conf import settings
 from django.http import JsonResponse, HttpResponse
 from .models import Account, Auction, Bid, User, Account, AdminSettings
@@ -71,58 +72,112 @@ def auction_closed(id):
                 if winningBid.amount > auction.reservePrice:
                     # Therapist email
                     for bid in bids: 
-                        send_mail(
-                                subject = "Auction Ended - Reserve Not Met",
-                                message = "",
-                                html_message = emails.therapist_auction_not_met(bid.user.first_name, bid.user.last_name, auction.clinic.clinicName, auction.placementStart, auction.placementEnd),
-                                from_email = settings.EMAIL_HOST_USER,
-                                recipient_list = [bid.user.email]
-                            )
-                    # Clinic email
-                    send_mail(
-                            subject = "Auction Ended - Reserve Not Met",
-                            message = "",
-                            html_message = emails.clinic_reserve_not_met(auction.clinic.clinicName, auction.placementStart, auction.placementEnd),
-                            from_email = settings.EMAIL_HOST_USER,
-                            recipient_list = [auction.clinic.user.email]
+                        # send_mail(
+                        #         subject = "Auction Ended - Reserve Not Met",
+                        #         message = "",
+                        #         html_message = emails.therapist_auction_not_met(bid.user.first_name, bid.user.last_name, auction.clinic.clinicName, auction.placementStart, auction.placementEnd),
+                        #         from_email = settings.EMAIL_HOST_USER,
+                        #         recipient_list = [bid.user.email]
+                        #     )
+                        email = EmailMessage(
+                            "Auction Ended - Reserve Not Met",
+                            emails.therapist_auction_not_met(bid.user.first_name, bid.user.last_name, auction.clinic.clinicName, auction.placementStart, auction.placementEnd),
+                            settings.EMAIL_HOST_USER,
+                            [bid.user.email],
+                            ['info@travelingtherapist.ca'],
+                            reply_to=['info@travelingtherapist.ca']
                         )
+                        email.send()
+                    # Clinic email
+                    # send_mail(
+                    #         subject = "Auction Ended - Reserve Not Met",
+                    #         message = "",
+                    #         html_message = emails.clinic_reserve_not_met(auction.clinic.clinicName, auction.placementStart, auction.placementEnd),
+                    #         from_email = settings.EMAIL_HOST_USER,
+                    #         recipient_list = [auction.clinic.user.email]
+                    #     )
+                    email = EmailMessage(
+                            "Auction Ended - Reserve Not Met",
+                            emails.clinic_reserve_not_met(auction.clinic.clinicName, auction.placementStart, auction.placementEnd),
+                            settings.EMAIL_HOST_USER,
+                            [auction.clinic.user.email],
+                            ['info@travelingtherapist.ca'],
+                            reply_to=['info@travelingtherapist.ca']
+                        )
+                    email.send()
             else:
                 print('send email')
                 # Therapist email
-                send_mail(
-                        subject = "Auction Ended - You are the Winner",
-                        message = "",
-                        html_message = emails.therapist_auction_end_win(winningBid.user.first_name, winningBid.user.last_name, auction.clinic.clinicName, auction.placementStart, auction.placementEnd),
-                        from_email = settings.EMAIL_HOST_USER,
-                        recipient_list = [winningBid.user.email]
-                    )
+                # send_mail(
+                #         subject = "Auction Ended - You are the Winner",
+                #         message = "",
+                #         html_message = emails.therapist_auction_end_win(winningBid.user.first_name, winningBid.user.last_name, auction.clinic.clinicName, auction.placementStart, auction.placementEnd),
+                #         from_email = settings.EMAIL_HOST_USER,
+                #         recipient_list = [winningBid.user.email]
+                #     )
+                email = EmailMessage(
+                    "Auction Ended - You are the Winner",
+                    emails.therapist_auction_end_win(winningBid.user.first_name, winningBid.user.last_name, auction.clinic.clinicName, auction.placementStart, auction.placementEnd),
+                    settings.EMAIL_HOST_USER,
+                    [winningBid.user.email],
+                    ['info@travelingtherapist.ca'],
+                    reply_to=['info@travelingtherapist.ca']
+                )
+                email.send()
                 # Clinic email
-                send_mail(
-                        subject = "Auction Ended",
-                        message = "",
-                        html_message = emails.clinic_auction_end(auction.clinic.clinicName, auction.placementStart, auction.placementEnd),
-                        from_email = settings.EMAIL_HOST_USER,
-                        recipient_list = [auction.clinic.user.email]
-                    )
+                # send_mail(
+                #         subject = "Auction Ended",
+                #         message = "",
+                #         html_message = emails.clinic_auction_end(auction.clinic.clinicName, auction.placementStart, auction.placementEnd),
+                #         from_email = settings.EMAIL_HOST_USER,
+                #         recipient_list = [auction.clinic.user.email]
+                #     )
+                email = EmailMessage(
+                    "Auction Ended",
+                    emails.clinic_auction_end(auction.clinic.clinicName, auction.placementStart, auction.placementEnd),
+                    settings.EMAIL_HOST_USER,
+                    [auction.clinic.user.email],
+                    ['info@travelingtherapist.ca'],
+                    reply_to=['info@travelingtherapist.ca']
+                )
+                email.send()
                 for email in bidding_emails:
                     print(email)
-                    send_mail(
-                        subject = "Auction Ended - Better Luck Next Time",
-                        message = "",
-                        html_message = emails.therapist_auction_end_lose(email['first_name'], email['last_name'], auction.clinic.clinicName, auction.placementStart, auction.placementEnd),
-                        from_email = settings.EMAIL_HOST_USER,
-                        recipient_list = [email['email']]
-                    )   
+                    # send_mail(
+                    #     subject = "Auction Ended - Better Luck Next Time",
+                    #     message = "",
+                    #     html_message = emails.therapist_auction_end_lose(email['first_name'], email['last_name'], auction.clinic.clinicName, auction.placementStart, auction.placementEnd),
+                    #     from_email = settings.EMAIL_HOST_USER,
+                    #     recipient_list = [email['email']]
+                    # )   
+                    email = EmailMessage(
+                        "Auction Ended - Better Luck Next Time",
+                        emails.therapist_auction_end_lose(email['first_name'], email['last_name'], auction.clinic.clinicName, auction.placementStart, auction.placementEnd),
+                        settings.EMAIL_HOST_USER,
+                        [email['email']],
+                        ['info@travelingtherapist.ca'],
+                        reply_to=['info@travelingtherapist.ca']
+                    )
+                    email.send()
     else:
         print("no winner")
         auction.save()
         if admin.sendEmails:
-            send_mail(
-                    subject = "Auction Ended",
-                    message = "",
-                    html_message = emails.clinic_no_bids(auction.clinic.clinicName, auction.placementStart, auction.placementEnd),
-                    from_email = settings.EMAIL_HOST_USER,
-                    recipient_list = [auction.clinic.user.email]
+            # send_mail(
+            #         subject = "Auction Ended",
+            #         message = "",
+            #         html_message = emails.clinic_no_bids(auction.clinic.clinicName, auction.placementStart, auction.placementEnd),
+            #         from_email = settings.EMAIL_HOST_USER,
+            #         recipient_list = [auction.clinic.user.email]
+            #     )
+            email = EmailMessage(
+                    "Auction Ended",
+                    emails.clinic_no_bids(auction.clinic.clinicName, auction.placementStart, auction.placementEnd),
+                    settings.EMAIL_HOST_USER,
+                    [auction.clinic.user.email],
+                    ['info@travelingtherapist.ca'],
+                    reply_to=['info@travelingtherapist.ca']
                 )
+            email.send()
     
     return JsonResponse({'data': "success"})
