@@ -95,8 +95,12 @@
   <!-- Static Images -->
   <div class="row d-none d-sm-inline-flex my-3">
     <div class="col-9">
+      {% if auction.clinic.imageOne %}
       <img src="/media/{{ auction.clinic.imageOne }}" class="img-fluid pt-3" alt="Image of Clinic"
         style="height: 600px;width: 990px;object-fit: contain;">
+      {% else %}
+      <img src="/media/images/no-image.jpg" class="card-img-top card-image" alt="Image of Clinic">
+      {% endif %}
     </div>
     <div class="col-3">
       {% if auction.clinic.imageTwo %}
