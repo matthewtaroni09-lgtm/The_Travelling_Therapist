@@ -44,12 +44,20 @@
           {% endfor %}
         </div>
       </div>
-
       <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
         <div class="tab-pane fade show active p-3" id="profile" role="tabpanel" aria-labelledby="home-tab">
           <h2 class="mb-4">Update Profile</h2>
+          {% if user.account.imageOne %}
+          <div class="row mb-3 col-md-4">
+            <img src="/media/{{ user.account.imageOne }}" class="card-img-top card-image" alt="Image of Clinic">
+          </div>
+          {% else %}
+          <div class="row mb-3 col-md-4">
+            <img src="/media/images/no-image.jpg" class="card-img-top card-image" alt="Image of Clinic">
+          </div>
+          {% endif %}
           <div class="row">
-            <h5>User Type: {{user_type}}</h5>
+            <h5>User Type: {{user.account.userType}}</h5>
             <form method="post" enctype="multipart/form-data" class="d-flex flex-column gap-3">
               {% csrf_token %}
               {{ user_clinic_form | as_crispy_errors }}
@@ -137,7 +145,7 @@
               <div class="tab-pane fade show active p-3" id="profile" role="tabpanel" aria-labelledby="home-tab">
                 <form method="post" class="d-flex flex-column gap-3">
                   <h2 class="mb-4">Update Profile</h2>
-                  <h5>User Type: {{user_type}}</h5>
+                  <h5>User Type: {{user.account.userType}}</h5>
                   {% csrf_token %}
                   {{ user_therapist_form | crispy }}
                   <div>
