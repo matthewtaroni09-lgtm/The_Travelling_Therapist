@@ -142,14 +142,27 @@
     font-family: Futura-Italic, sans-serif;
 }
 
-#allAuctionsLink {
+#allAuctionsLink,
+#selectAuctionsLink {
     text-decoration: none;
     font-size: 13px;
     color: var(--dark-colour)
 }
 
+#selectAuctionsLink {
+    display: none;
+}
+
 #allAuctionsLink:hover {
     color: grey
+}
+
+#whiteSpaceRow {
+    width: 100vw;
+    margin-left: 50%;
+    transform: translateX(-50%);
+    max-width: 111%;
+    height: 30px;
 }
 
 /* About Page */
@@ -188,9 +201,15 @@
     margin-bottom: 0px;
 }
 
-/* #practiceAreaDiv {
+/* View Auction Page */
+#bidModalSubFooter {
     display: none;
-} */
+    background-color: var(--secondary-colour);
+}
+
+#modalSubFooterButtonDiv {
+    float: right;
+}
 
 /**************************** 6. MISC ****************************/
 .nav-link {
@@ -306,4 +325,17 @@ img.status-bar {
 
 .selection-boxes img {
     max-width: 100px;
+}
+
+/* Hide the arrows in number fields */
+/* chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* FireFox */
+input[type=number] {
+    -moz-appearance: textfield;
 }

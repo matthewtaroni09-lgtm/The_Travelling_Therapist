@@ -148,14 +148,15 @@ def therapist_auction_not_met(first_name, last_name, clinic_name, start_date, en
   <p>Hello <span class="text-weight-bold">""" + first_name + """ """ + last_name + """</span>,</p>
   
   <p>You were bidding on an auction using The Traveling Therapist.</p>
-  <p>This auction had a reserve price which wasn't met. This means that there was no therapist willing to do this temporary job for a price low enough for the clinic.</p>
+  <p>This auction ended with a reserve price which wasn't met. This means that there was no therapist willing to do this temporary job for a price low enough for the clinic.</p>
+  <p>This auction may be reposted in the near future - stay tuned!</p>
+  <p>Not sure what the reserve price is? Check out our FAQ page <a href="https://travelingtherapist.ca/about">here</a>.</p>
 
   <h3>Auction Details:</h3>
   <p>Clinic Name: """ + str(clinic_name) + """</p>
   <p>Therapist Start Date: """ + str(start_date) + """</p>
   <p>Therapist End Date: """ + str(end_date) + """</p>
-   
-  <p>This auction may be reposted in the near future - stay tuned!</p>
+  
   <p style="font-weight: 700; padding-top: 0rem; margin-top: 0; line-height: 0;">The Traveling Therapist Team</p>
 
 </section>

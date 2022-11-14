@@ -73,8 +73,15 @@ def contact(request):
         return render(request, "auction/contact_us.html", {'form': form})
 
 def view_all_auctions(request):
-    films = Auction.objects.filter(active=True).order_by('-auctionEnd') | Auction.objects.filter(closed=True).order_by('-auctionEnd')
-    return render(request, 'auction/partials/auction_list.html', {'auction': films})
+    auctions = ''
+    auctions = Auction.objects.filter(active=True).order_by('-auctionEnd') | Auction.objects.filter(closed=True).order_by('-auctionEnd')
+    return render(request, 'auction/partials/auction_list.html', {'auction': auctions})
+
+def view_user_auctions(request):
+    auctions = ''
+    user_type = request.user.account.userType
+    auctions = Auction.objects.filter(active=True, type=user_type).order_by('-auctionEnd') | Auction.objects.filter(closed=True, type=user_type).order_by('-auctionEnd')
+    return render(request, 'auction/partials/auction_list.html', {'auction': auctions})
 
 class AuctionListView(ListView):
     model = Auction
@@ -403,7 +410,6 @@ def create_auction(request):
     account = Account.objects.get(user=request.user.id)
     if active_auctions_list.count() <= max_auctions.numAllowedAuctions:
         if request.method == "POST":
-            print(request.POST)
             form = AuctionForm(request.POST, request.FILES)
             account_form = AuctionAccountForm(request.POST, request.FILES, instance=account)
             formset_demographic = demographic_form_set(queryset=Demographic.objects.none())
@@ -596,8 +602,6 @@ def logout_user(request):
     logout(request)
     # messages.success(request, ("Logged out"))
     return redirect('index')
-
-
 
 def password_reset_request(request):
 	if request.method == "POST":

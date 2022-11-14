@@ -1,5 +1,5 @@
 {% extends 'auction/base.html' %}
-
+{% csrf_token %}s
 {% load static %}
 {% block content %}
 <!-- Content Start -->
@@ -41,14 +41,15 @@
       new
       environments with new clinical populations and network in the process.</p>
   </div>
+  <div id="whiteSpaceRow" class="row bg-white"></div>
   <div class="row">
     <div class="col">
       {% if user.is_authenticated %}
       {% if user.account.get_split_user_type == 'Clinic' %}
-      <h1 class="text-small text-weight-light text-md-end">Welcome, {{ user.account.clinicName }}</h>
+      <h1 class="text-small text-weight-light text-md-end my-3">Welcome, {{ user.account.clinicName }}</h>
         <h2 class="text-large text-weight-normal">Auctions</h2>
         {% else %}
-        <h1 class="text-small text-weight-light text-md-end">Welcome, {{ user.first_name }} {{ user.last_name }}
+        <h1 class="text-small text-weight-light text-md-end my-3">Welcome, {{ user.first_name }} {{ user.last_name }}
           </h>
           <h2 class="text-large text-weight-normal">Auctions</h2>
           {% endif %}
@@ -72,8 +73,9 @@
     {% if user.is_authenticated %}
     {% if user.account.get_split_user_type != 'Clinic' %}
     {% csrf_token %}
-    <a id="allAuctionsLink" class="m-2" hx-post="{% url 'view-all-auctions' %}" hx-target='#auctionListDiv'
-      hx-trigger="click">See all auctions</a>
+    <a id="allAuctionsLink" class="m-2">See all auctions</a>
+    <a id="selectAuctionsLink" class="m-2" hx-post="{% url 'view-user-auctions' %}" hx-target='#auctionListDiv'
+      hx-trigger="click">Only show auctions I can bid on</a>
     {% endif %}
     {% endif %}
   </form>
@@ -96,8 +98,20 @@
           registered as multiple kinds of therapists please logout and sign in with a different account.
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Procced Anyway</button>
-          <a class="btn btn-primary" href="{% url 'logout' %}">Logout</a>
+          <form method="GET">
+            {% if user.is_authenticated %}
+            {% if user.account.get_split_user_type != 'Clinic' %}
+            {% csrf_token %}
+            <button id="allAuctionsButton" type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+              hx-post="{% url 'view-all-auctions' %}" hx-target='#auctionListDiv' hx-trigger="click">Procced
+              Anyway</button>
+            <button id="selectAuctionsButton" type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+              hx-post="{% url 'view-user-auctions' %}" hx-target='#auctionListDiv' hx-trigger="click">Procced
+              Anyway</button>
+            <a class="btn btn-primary" href="{% url 'logout' %}">Logout</a>
+            {% endif %}
+            {% endif %}
+          </form>
         </div>
       </div>
     </div>

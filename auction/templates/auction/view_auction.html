@@ -74,14 +74,25 @@
                 {{ form.amount|as_crispy_field }}
               </div>
               {% if num_bids > 0%}
-              <p>Next Available Bid: {{ auction.get_max_bid }}</p>
+              <p>{{ auction.get_max_bid }}</p>
               {% endif %}
               <div id="warningMessage" class="alert alert-warning" role="alert"></div>
               <small>For more information on the bidding process see our <a href="{% url 'about' %}"
                   target="_blank">FAQ</a></small>
               <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button id="submitBidButton" type="submit" class="btn btn-primary">Submit Bid</button>
+                <button id="closeButton" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button id="submitBidButton" type="button" class="btn btn-primary">Submit Bid</button>
+                <hr>
+                <div id="bidModalSubFooter" class="border border-dark rounded p-3">
+                  <p>Please double check your bid value entered. You will only have 24h to contact us by email if you
+                    have a typo you'd like
+                    to correct.</p>
+                  <div id="modalSubFooterButtonDiv">
+                    <button id="closeButtonSubFooter" type="button" class="btn btn-secondary"
+                      data-bs-dismiss="modal">Close</button>
+                    <button id="confirmBidButton" type="submit" class="btn btn-primary">Confirm Bid</button>
+                  </div>
+                </div>
               </div>
             </form>
           </div>

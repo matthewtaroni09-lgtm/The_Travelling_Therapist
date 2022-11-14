@@ -11,6 +11,21 @@ $(document).ready(function () {
     let auctionEnd = "";
     let reservePrice = 0;
 
+    $("#submitBidButton").click(function () {
+        if ($("#id_amount").val() !== '') {
+            $("#bidModalSubFooter").show();
+            $("#closeButton").prop('disabled', true);
+            $("#submitBidButton").prop('disabled', true);
+        }
+    });
+
+    $("#closeButtonSubFooter").click(function () {
+        $("#id_amount").val('');
+        $("#closeButton").prop('disabled', false);
+        $("#submitBidButton").prop('disabled', false);
+        $("#bidModalSubFooter").hide();
+    });
+
     if ($('#error_1_id_amount').css("display") === "block") {
         $("#exampleModal").modal("show");
     }

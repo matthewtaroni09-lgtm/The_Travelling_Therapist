@@ -1,14 +1,23 @@
 const modal = new bootstrap.Modal(document.getElementById("modal"))
-htmx.on("htmx:afterSwap", (e) => {
-    modal.show();
-})
-
-htmx.on("htmx:beforeSwap", (e) => {
-    modal.hide();
-})
 
 $("#modalXButton").click(function () {
     modal.hide();
+});
+
+$("#allAuctionsLink").click(function () {
+    modal.show();
+    $("#allAuctionsButton").show();
+    $("#selectAuctionsButton").hide();
+});
+$("#selectAuctionsLink").click(function () {
+    // modal.show();
+    $("#allAuctionsLink").show();
+    $("#selectAuctionsLink").hide();
+});
+
+$("#allAuctionsButton").click(function () {
+    $("#allAuctionsLink").hide();
+    $("#selectAuctionsLink").show();
 });
 
 const getAuctionIndex = () => {

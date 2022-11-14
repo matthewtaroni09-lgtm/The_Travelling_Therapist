@@ -94,11 +94,11 @@ $("#submitButton").click(function () {
         wednesdayEnd = new Date('1970-01-01T' + $("#id_wednesdayEnd").val() + 'Z');
     }
 
-    if ($("#id_thrusdayStart").val() !== '') {
-        thursdayStart = new Date('1970-01-01T' + $("#id_thrusdayStart").val() + 'Z');
+    if ($("#id_thursdayStart").val() !== '') {
+        thursdayStart = new Date('1970-01-01T' + $("#id_thursdayStart").val() + 'Z');
     }
-    if ($("#id_thrusdayEnd").val() !== '') {
-        thursdayEnd = new Date('1970-01-01T' + $("#id_thrusdayEnd").val() + 'Z');
+    if ($("#id_thursdayEnd").val() !== '') {
+        thursdayEnd = new Date('1970-01-01T' + $("#id_thursdayEnd").val() + 'Z');
     }
 
     if ($("#id_fridayStart").val() !== '') {
@@ -133,6 +133,20 @@ $("#submitButton").click(function () {
     var now = new Date();
     let oneYear = new Date(now);
     oneYear.setDate(now.getDate() + 365)
+
+    if (days_between(placementStart, placementEnd, false) === 0) {
+        errorList += '<li>The placement must be at least one day long.</li>';
+    }
+    else {
+        if (days_between(placementStart, now, false) < 0) {
+            errorList += '<li>Therapist Start Date cannot be in the past.</li>';
+        }
+
+        if (days_between(placementEnd, now, false) < 0) {
+            errorList += '<li>Therapist End Date cannot be in the past.</li>';
+        }
+    }
+
     if (placementStart === NaN) {
         errorList += '<li>Please enter a valid Therapist Start Date.</li>';
     }
@@ -145,7 +159,7 @@ $("#submitButton").click(function () {
     if (placementStart > oneYear) {
         errorList += '<li>Placements must start within the next 12 months.</li>';
     }
-    if (days_between(placementStart, placementEnd) > 730) {
+    if (days_between(placementStart, placementEnd, true) > 730) {
         errorList += '<li>Placements must be less than two years.</li>';
     }
 
@@ -171,52 +185,57 @@ $("#submitButton").click(function () {
     let sundayVal = check_times(sundayStart, sundayEnd, 'Sunday');
 
     if (mondayVal === 'None') {
-        noneCount = noneCount + 1
+        noneCount++;
     }
     else if (mondayVal != '' && mondayVal != 'None') {
         errorList += mondayVal;
     }
 
     if (tuesdayVal === 'None') {
-        noneCount = noneCount + 1
+        noneCount++;
     }
     else if (tuesdayVal != '' && tuesdayVal != 'None') {
         errorList += tuesdayVal;
     }
 
     if (wednesdayVal === 'None') {
-        noneCount = noneCount + 1
+        noneCount++;
     }
     else if (wednesdayVal != '' && wednesdayVal != 'None') {
         errorList += wednesdayVal;
     }
 
     if (thursdayVal === 'None') {
-        noneCount = noneCount + 1
+        noneCount++;
     }
     else if (thursdayVal != '' && thursdayVal != 'None') {
         errorList += thursdayVal;
     }
 
     if (fridayVal === 'None') {
-        noneCount = noneCount + 1
+        noneCount++;
     }
     else if (fridayVal != '' && fridayVal != 'None') {
         errorList += fridayVal;
     }
 
     if (saturdayVal === 'None') {
-        noneCount = noneCount + 1
+        noneCount++;
     }
     else if (saturdayVal != '' && saturdayVal != 'None') {
         errorList += saturdayVal;
     }
 
     if (sundayVal === 'None') {
-        noneCount = noneCount + 1
+        noneCount++;
     }
     else if (sundayVal != '' && sundayVal != 'None') {
         errorList += sundayVal;
+    }
+
+    //All day's have been left blank
+    if (noneCount === 7) {
+        errorList += '<li>Please enter a schedule for at least one day.</li>';
     }
 
     //Validate Demographics
@@ -230,6 +249,9 @@ $("#submitButton").click(function () {
             }
             else if (parseInt($(this).val()) > 100) {
                 errorList += '<li>' + demographicCategory + ' must be less than 100%.</li>';
+            }
+            else if (parseInt($(this).val()) < 0) {
+                errorList += '<li>' + demographicCategory + ' cannot be negative.</li>';
             }
             demographicTotal += parseInt($(this).val());
         }
@@ -249,6 +271,9 @@ $("#submitButton").click(function () {
             }
             else if (parseInt($(this).val()) > 100) {
                 errorList += '<li>' + practiceCategory + ' must be less than 100%.</li>';
+            }
+            else if (parseInt($(this).val()) < 0) {
+                errorList += '<li>' + practiceCategory + ' cannot be negative.</li>';
             }
             practiceTotal += parseInt($(this).val());
         }
@@ -284,7 +309,7 @@ function getDateDiff() {
         endDate = new Date(end[0], end[1] - 1, end[2]);
     }
 
-    let dateDiff = days_between(startDate, endDate);
+    let dateDiff = days_between(startDate, endDate, true);
     if (dateDiff < 30) {
         $("#id_payFrequency option[value='3']").remove();
     }
@@ -324,12 +349,17 @@ function check_times(start_time, end_time, day) {
     }
 }
 
-function days_between(date1, date2) {
+function days_between(date1, date2, abs) {
     // The number of milliseconds in one day
     const ONE_DAY = 1000 * 60 * 60 * 24;
-
-    // Calculate the difference in milliseconds
-    const differenceMs = Math.abs(date1 - date2);
+    let differenceMs = '';
+    if (abs) {
+        // Calculate the difference in milliseconds
+        differenceMs = Math.abs(date1 - date2);
+    }
+    else {
+        differenceMs = date1 - date2;
+    }
 
     // Convert back to days and return
     return Math.round(differenceMs / ONE_DAY);

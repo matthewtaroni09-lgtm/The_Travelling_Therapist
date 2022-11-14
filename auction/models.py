@@ -92,8 +92,8 @@ class Auction(models.Model):
     clinic = models.ForeignKey(Account, related_name='auction_clinic', on_delete=models.CASCADE)
     auctionStart = models.DateTimeField(verbose_name='Auction Start', help_text='Enter the start date of the auction.')
     auctionEnd = models.DateTimeField(verbose_name='Auction End', help_text='Enter the end date of the auction.')
-    placementStart = models.DateField(verbose_name='Therapist Start Date', help_text='Enter the start date of the placement.')
-    placementEnd = models.DateField(verbose_name='Therapist End Date', help_text='Enter the end date of the placement.')
+    placementStart = models.DateField(verbose_name='Therapist Start Date', help_text='Enter the start date of the placement.', default=datetime.date.today)
+    placementEnd = models.DateField(verbose_name='Therapist End Date', help_text='Enter the end date of the placement.', default=datetime.date.today)
     mondayStart = models.TimeField(verbose_name='Start Time', null=True, blank=True, default='09:00')
     mondayEnd = models.TimeField(verbose_name='End Time', null=True, blank=True, default='17:00')
     tuesdayStart = models.TimeField(verbose_name='Start Time', null=True, blank=True, default='09:00')
@@ -162,10 +162,10 @@ class Auction(models.Model):
         if num_bids > 0 and self.currentLowBid is not None and self.minimumBidIncrement is not None:
             diff = self.currentLowBid - self.minimumBidIncrement
             if diff > 0 and diff % self.minimumBidIncrement == 0:
-                return ' less than or equal to $' + str("{:,}".format(diff))
+                return 'Next Available Bid: less than or equal to $' + str("{:,}".format(diff))
             elif diff > 0 and diff % self.minimumBidIncrement != 0:
                 result = self.currentLowBid - (diff % self.minimumBidIncrement)
-                return ' less than or equal to $' + str("{:,}".format(result))
+                return 'Next Available Bid: less than or equal to $' + str("{:,}".format(result))
             else:
                 return 'Last bid available $0'
         else:
