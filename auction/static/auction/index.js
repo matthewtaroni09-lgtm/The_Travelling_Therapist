@@ -10,7 +10,6 @@ $("#allAuctionsLink").click(function () {
     $("#selectAuctionsButton").hide();
 });
 $("#selectAuctionsLink").click(function () {
-    // modal.show();
     $("#allAuctionsLink").show();
     $("#selectAuctionsLink").hide();
 });
