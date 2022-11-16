@@ -235,7 +235,7 @@ $("#submitButton").click(function () {
 
     //All day's have been left blank
     if (noneCount === 7) {
-        errorList += '<li>Please enter a schedule for at least one day.</li>';
+        errorList += "<li>You're trying to create a posting, but you've left the therapist schedule blank.  This would indicate to bidding therapists that they have a start and end date, but no days to actual be at your clinic. Please complete at least 1 day showing the start and end time for the therapist before you can submit your auction.</li>";
     }
 
     //Validate Demographics
