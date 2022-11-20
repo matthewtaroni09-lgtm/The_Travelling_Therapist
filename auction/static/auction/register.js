@@ -33,6 +33,7 @@ function userTypeChange(userType) {
             fields.style.display = 'none';
         }
         termsButton.style.display = 'block';
+        $("#clinicButton").css("background-color", "#0AEAA9");
     }
     //If nothing is selected hide fields
     else if (userType === "---------") {
@@ -46,6 +47,7 @@ function userTypeChange(userType) {
             fields.style.display = 'none';
         }
         termsButton.style.display = 'none';
+        $("#therapistButton").css("background-color", "#0AEAA9");
     }
     else {
         for (const fields of combinedFields) {
@@ -58,14 +60,15 @@ function userTypeChange(userType) {
             fields.style.display = 'block';
         }
         termsButton.style.display = 'block';
+        $("#clinicButton").css("background-color", "#FFFFFF");
+        $("#therapistButton").css("background-color", "#FFFFFF");
     }
 }
 
 $(document).ready(function () {
-    //$('#submitButton').prop('disabled', false);
-
+    let userType = "";
     userType = $('#userTypeHiddenInput').val();
-    if ($('.alert-block').css("display") === "block") {
+    if (userType !== "") {
         userTypeChange(userType);
     }
 
