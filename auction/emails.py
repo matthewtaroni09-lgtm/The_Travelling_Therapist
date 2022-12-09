@@ -62,8 +62,8 @@ def clinic_welcome(clinic_name):
   <p>Below are some quick access links for using The Traveling Therapist service:</p>
 
   <ol>
-    <li><a href="thetravelingtherapist.com">Login</a>: login, create an auction, and view the progress of your existing auctions once on the site.</li>
-    <li><a href="thetravelingtherapist.com/about">FAQ</a>: interested in trying our service? See how it all works and answers to the most common questions we receive from therapists and clinics, here.</li>
+    <li><a href="travelingtherapist.ca">Login</a>: login, create an auction, and view the progress of your existing auctions once on the site.</li>
+    <li><a href="travelingtherapist.ca/about">FAQ</a>: interested in trying our service? See how it all works and answers to the most common questions we receive from therapists and clinics, here.</li>
     <li>Questions for us? Feel free to reach out to us here info@travelingtherapist.ca, and we will get back to you as soon as possible.</li>
   </ol>
    
@@ -173,8 +173,8 @@ def therapist_welcome(first_name, last_name):
   <p>Below are some quick access links for using The Traveling Therapist service:</p>
 
   <ol>
-    <li><a href="thetravelingtherapist.com">Login</a>: view temporary therapist listings, bid, and change your profile details here.</li>
-    <li><a href="thetravelingtherapist.com/about">FAQ</a>: interested in trying our service? See how it all works and answers to the most common questions we receive from therapists and clinics, here.</li>
+    <li><a href="travelingtherapist.ca">Login</a>: view temporary therapist listings, bid, and change your profile details here.</li>
+    <li><a href="travelingtherapist.ca/about">FAQ</a>: interested in trying our service? See how it all works and answers to the most common questions we receive from therapists and clinics, here.</li>
     <li>Questions for us? Feel free to reach out to us here info@travelingtherapist.ca, and we will get back to you as soon as possible.</li>
   </ol>
    
