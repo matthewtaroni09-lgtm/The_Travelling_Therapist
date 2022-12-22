@@ -222,8 +222,11 @@ class BidForm(forms.ModelForm):
 
     def clean_amount(self):
         amount = self.cleaned_data.get("amount")
-        if amount > 0 and self.max_bid > 0 and amount % self.min_bid_increment != 0:
-            raise forms.ValidationError("Bids must be in increments of $" + str(self.min_bid_increment) + ".")
+        print(str(amount) + "  " + str(self.max_bid))
+        # if amount > 0 and self.max_bid > 0:
+        #     raise forms.ValidationError("Bids must be in increments of $" + str(self.min_bid_increment) + ".")
+        if amount == 0:
+            raise forms.ValidationError("Bids must be greater than $0.")
         return amount 
 
 class RegisterAcount(UserCreationForm):
@@ -239,12 +242,6 @@ class RegisterAcount(UserCreationForm):
     imageTwo = forms.ImageField(required=False, label='Image 2')
     imageThree = forms.ImageField(required=False, label='Image 3')
     imageFour = forms.ImageField(required=False, label='Image 4')
-    # underEighteen = forms.IntegerField(required=False, label='% Under 18', min_value=0, max_value=100)
-    # eighteenToSixtyFive = forms.IntegerField(required=False, label='% 18 - 65', min_value=0, max_value=100)
-    # overSixtyFive = forms.IntegerField(required=False, label='% Over 65', min_value=0, max_value=100)
-    # MSK = forms.IntegerField(required=False, label='% Musculoskeletal', min_value=0, max_value=100)
-    # neuro = forms.IntegerField(required=False, label='% Neurological', min_value=0, max_value=100)
-    # cardioResp = forms.IntegerField(required=False, label='% Cardiorespiratory', min_value=0, max_value=100)
 
     class Meta:
         model = User

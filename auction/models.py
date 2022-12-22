@@ -162,12 +162,12 @@ class Auction(models.Model):
         if num_bids > 0 and self.currentLowBid is not None and self.minimumBidIncrement is not None:
             diff = self.currentLowBid - self.minimumBidIncrement
             if diff > 0 and diff % self.minimumBidIncrement == 0:
-                return 'Next Available Bid: less than or equal to $' + str("{:,}".format(diff))
+                return 'Next Available Bid: ≤ $' + str("{:,}".format(diff))
             elif diff > 0 and diff % self.minimumBidIncrement != 0:
                 result = self.currentLowBid - (diff % self.minimumBidIncrement)
-                return 'Next Available Bid: less than or equal to $' + str("{:,}".format(result))
+                return 'Next Available Bid: ≤ $' + str("{:,}".format(result))
             else:
-                return 'Last bid available $0'
+                return 'Last bid available $1'
         else:
             return 0
 

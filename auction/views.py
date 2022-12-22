@@ -637,7 +637,11 @@ def password_reset_request(request):
 # -------------- Utility --------------
 def set_bid_increment(amount):
     min_increment = 0
-    if amount <= 15000:
+    print('A = ')
+    print(amount)
+    if amount <= 100:
+        min_increment = 1
+    elif amount <= 15000:
         min_increment = 100
     elif amount > 15000 and amount <= 50000:
         min_increment = 250
