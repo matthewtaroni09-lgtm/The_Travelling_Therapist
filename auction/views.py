@@ -213,10 +213,10 @@ def view_auction(request, auction_id):
 
     if num_bids > 0 and auction.currentLowBid is not None and auction.minimumBidIncrement is not None:
         diff = auction.currentLowBid - auction.minimumBidIncrement
-        if diff > 0:
-            max_bid = diff
-        else:
-            max_bid = 0
+        if diff > 0 and diff % auction.minimumBidIncrement == 0:
+                max_bid = diff
+        elif diff > 0 and diff % auction.minimumBidIncrement != 0:
+            max_bid = auction.currentLowBid - (diff % auction.minimumBidIncrement)
     else:
         max_bid = 0
 
@@ -637,13 +637,11 @@ def password_reset_request(request):
 # -------------- Utility --------------
 def set_bid_increment(amount):
     min_increment = 0
-    print('A = ')
-    print(amount)
     if amount <= 100:
         min_increment = 1
-    elif amount <= 15000:
+    elif amount > 100 and amount <= 10000:
         min_increment = 100
-    elif amount > 15000 and amount <= 50000:
+    elif amount > 10000 and amount <= 25000:
         min_increment = 250
     else:
         min_increment = 500

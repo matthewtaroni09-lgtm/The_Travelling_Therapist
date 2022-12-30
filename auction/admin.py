@@ -25,6 +25,27 @@ class BidAdmin(admin.ModelAdmin):
     ordering = ('bidID', )
     search_fields = ('bidID', 'auction')
 
+    # Delete bids from the overview page
+    def delete_queryset(self, request, queryset):
+        delete_bid(queryset)
+
+    # Delete bids from the bid detail page
+    def delete_model(self, request, obj):
+        print('==========================delete_model==========================')
+        print(obj)
+
+        """
+        you can do anything here BEFORE deleting the object
+        """
+        delete_bid()
+        # obj.delete()
+
+        """
+        you can do anything here AFTER deleting the object
+        """
+
+        print('==========================delete_model==========================')
+
 class AccountInline(admin.StackedInline):
     readonly_fields = ('id',)
     model = Account
@@ -62,3 +83,31 @@ admin.site.register(PayFrequency)
 admin.site.register(PracticeArea)
 admin.site.register(ProMember)
 admin.site.register(AdminSettings)
+
+def delete_bid(queryset):
+    auctionID = queryset[0].auction.auctionID
+    queryset.delete()
+    min_bid = 999999999
+    min_increment = 0
+    updated = False
+    auction = Auction.objects.get(auctionID=auctionID)
+    bids = Bid.objects.filter(auction=auctionID)
+    for bid in bids:
+        print(bid.amount)
+        if bid.amount < min_bid:
+            min_bid = bid.amount
+    auction.currentLowBid = min_bid
+
+    if min_bid <= 100:
+        min_increment = 1
+    elif min_bid <= 10000:
+        min_increment = 100
+    elif min_bid > 25000 and min_bid <= 25000:
+        min_increment = 250
+    else:
+        min_increment = 500
+
+    if min_increment != auction.minimumBidIncrement:
+        auction.minimumBidIncrement = min_increment
+
+    auction.save()

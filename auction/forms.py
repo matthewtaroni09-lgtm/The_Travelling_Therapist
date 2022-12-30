@@ -223,8 +223,8 @@ class BidForm(forms.ModelForm):
     def clean_amount(self):
         amount = self.cleaned_data.get("amount")
         print(str(amount) + "  " + str(self.max_bid))
-        # if amount > 0 and self.max_bid > 0:
-        #     raise forms.ValidationError("Bids must be in increments of $" + str(self.min_bid_increment) + ".")
+        if amount > 0 and amount > self.max_bid and self.max_bid != 0:
+            raise forms.ValidationError("Bids must be less than the next bid increment  $" + str(self.min_bid_increment) + ".")
         if amount == 0:
             raise forms.ValidationError("Bids must be greater than $0.")
         return amount 
