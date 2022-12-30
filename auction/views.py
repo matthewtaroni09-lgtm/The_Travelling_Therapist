@@ -323,6 +323,17 @@ def get_auction_end(request, auction_id):
     }
     return JsonResponse({'data': data})
 
+def check_provinces(request):
+    # if the auction is active and the province of the clinic and user do not match show a pop-up
+    auction = Auction.objects.get(auctionID=request.GET['auctionID'])
+    province_check = True
+    if auction.clinic.province != '' or request.user.account.province != '':
+        if auction.clinic.province != request.user.account.province and auction.active:
+            province_check = False
+    else:
+        province_check = False
+    return JsonResponse({'province_check': province_check})
+
 def get_all_auctions(request):
     auction_list = list(Auction.objects.filter(Q(active=True) | Q(closed=True)).values())
     return JsonResponse({'data': auction_list})

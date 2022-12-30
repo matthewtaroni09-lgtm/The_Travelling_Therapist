@@ -15,6 +15,26 @@ let auctionStartDateTime = 0;
 let auctionEndDateTime = 0;
 let reservePrice = 0;
 
+$(document).ready(function () {
+    //Check if the province of the clinic matches the province of the therapist, if not show pop-p
+    $.ajax({
+        type: "GET",
+        url: "/auction/data/check_provinces",
+        data: {
+            'auctionID': auctionID
+        },
+        success: function (response) {
+            console.log(response);
+            if (!response.province_check) {
+                $("#provinceWarningModal").modal('show');
+            }
+        },
+        error: function (error) {
+            console.log('error: ', error);
+        }
+    });
+});
+
 const getCookie = (name) => {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
