@@ -32,6 +32,13 @@ const getCookie = (name) => {
 }
 const csrftoken = getCookie('csrftoken');
 
+$(document).keypress(
+    function (event) {
+        if (event.which == '13') {
+            event.preventDefault();
+        }
+    });
+
 $(document).ready(function () {
     //Check if the province of the clinic matches the province of the therapist, if not show pop-p
     let page = $("#pageTitle").text();

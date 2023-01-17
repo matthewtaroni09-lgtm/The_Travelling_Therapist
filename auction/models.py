@@ -161,13 +161,15 @@ class Auction(models.Model):
         num_bids = Bid.objects.filter(auction=self.auctionID).count()
         if num_bids > 0 and self.currentLowBid is not None and self.minimumBidIncrement is not None:
             diff = self.currentLowBid - self.minimumBidIncrement
-            if diff > 0 and diff % self.minimumBidIncrement == 0:
+            if diff > 0 and diff % self.minimumBidIncrement == 0 and self.currentLowBid > 2:
                 return 'Next Available Bid: ≤ $' + str("{:,}".format(diff))
-            elif diff > 0 and diff % self.minimumBidIncrement != 0:
+            elif diff > 0 and diff % self.minimumBidIncrement != 0 and self.currentLowBid > 2:
                 result = self.currentLowBid - (diff % self.minimumBidIncrement)
                 return 'Next Available Bid: ≤ $' + str("{:,}".format(result))
+            elif self.currentLowBid == 2:
+                return 'Last bid available: $1'
             else:
-                return 'Last bid available $1'
+                return 'Lowest possible bid has been reached: $1'
         else:
             return 0
 

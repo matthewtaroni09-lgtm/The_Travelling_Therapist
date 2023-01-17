@@ -5,6 +5,7 @@
 {% if user.is_authenticated %}
 <!-- Clinic -->
 <!-- Content Start -->
+<p id="pageTitle" class="d-none">Profile</p>
 {% if user.account.get_split_user_type == 'Clinic' %}
 <div class="row">
   <div>
