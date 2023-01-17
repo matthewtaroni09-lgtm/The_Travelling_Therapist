@@ -47,6 +47,12 @@ $(document).ready(function () {
             let subtractMilliSecondsValue = auctionEnd.getTime() - currentTime;
             console.log(subtractMilliSecondsValue);
             setTimeout(auctionEnded, subtractMilliSecondsValue);
+
+            if (currentLowBid == 1) {
+                $("#submitBidButton").prop("disabled", true);
+                $("#id_amount").prop("disabled", true);
+                $("#id_amount").attr('placeholder', 'Lowest Bid Reached');;
+            }
         },
         error: function (error) {
             console.log('error: ', error);
