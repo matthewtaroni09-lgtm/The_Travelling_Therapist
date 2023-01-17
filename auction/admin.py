@@ -2,7 +2,7 @@ from tabnanny import verbose
 from unicodedata import category
 from django import forms
 from django.contrib import admin
-from .models import Auction, Bid, Account, PayFrequency, PracticeArea, PracticeAreaType, ProMember, UserType, Demographic, DemographicType, ProMember, AdminSettings
+from .models import Auction, Bid, Account, PayFrequency, PracticeArea, PracticeAreaType, ProMember, UserType, Demographic, DemographicType, ProMember, AdminSettings, Page, PopupMessage, MessageAcknowledgement
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
 
@@ -74,6 +74,14 @@ class CustomUserAdmin(UserAdmin):
         super(UserAdmin,self).__init__(*args, **kwargs)
         UserAdmin.list_display = list(UserAdmin.list_display) + ['userType']
 
+@admin.register(PopupMessage)
+class PopupMessageAdmin(admin.ModelAdmin):
+    list_display = ('page', 'message', 'title', 'active', 'show_unauthenticated_users')
+
+@admin.register(MessageAcknowledgement)
+class MessageAcknowledgementAdmin(admin.ModelAdmin):
+    list_display = ('user', 'popup', 'acknowledged')
+
 admin.site.unregister(User)
 admin.site.register(User, CustomizedUserAdmin)
 admin.site.register(UserType)
@@ -83,6 +91,7 @@ admin.site.register(PayFrequency)
 admin.site.register(PracticeArea)
 admin.site.register(ProMember)
 admin.site.register(AdminSettings)
+admin.site.register(Page)
 
 def delete_bid(queryset):
     auctionID = queryset[0].auction.auctionID

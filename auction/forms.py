@@ -5,7 +5,7 @@ from operator import mod
 from pyexpat import model
 from tkinter import Widget
 from django import forms
-from .models import PROVINCES, Auction, Bid, Account, Demographic, DemographicType, PracticeArea, PracticeAreaType, User, UserType
+from .models import PROVINCES, Auction, Bid, Account, Demographic, DemographicType, PracticeArea, PracticeAreaType, User, UserType, MessageAcknowledgement
 from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
 import random
 from django.core.exceptions import ValidationError
@@ -457,4 +457,11 @@ class AuctionAccountForm(forms.ModelForm):
     class Meta:
         model = Account
         fields = ['remember_auction_data']
+
+class MessageAcknowledgementForm(forms.ModelForm):
+    acknowledged = forms.BooleanField(required=False, label="Remember auction information for next time?")
+
+    class Meta:
+        model = MessageAcknowledgement
+        fields = ['acknowledged']
 

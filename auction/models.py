@@ -269,5 +269,28 @@ class AdminSettings(models.Model):
     def __str__(self):
         return 'Admin Settings'
 
+class Page(models.Model):
+    page = models.CharField(verbose_name='Page', max_length=200, help_text='Name of the page.')
+
+    def __str__(self):
+       return str(self.page)
+
+class PopupMessage(models.Model):
+    page = models.ForeignKey(Page, related_name='page_popup_message', on_delete=models.CASCADE)
+    message = models.CharField(verbose_name='Popup Message', max_length=5000, help_text='Message to be displayed in the popup.')
+    active = models.BooleanField(verbose_name='Active', help_text='Is the popup currently active.')
+    title = models.CharField(verbose_name='Popup Box Title', max_length=5000, help_text='The title of the popup box.')
+    show_unauthenticated_users = models.BooleanField(verbose_name='Show to Non-logged in users', help_text='Should the pop-up be shown to non-users.')
+
+    def __str__(self):
+        return str(self.page) + ' | ' + str(self.message)
+
+class MessageAcknowledgement(models.Model):
+    user = models.ForeignKey(User, related_name='user_message_acknowledgement', on_delete=models.CASCADE)
+    popup = models.ForeignKey(PopupMessage, related_name='user_message_acknowledgement', on_delete=models.CASCADE)
+    acknowledged = models.BooleanField(verbose_name='Acknowledged', help_text='Has the popup been acknowledged.')
+
+    def __str__(self):
+        return str(self.user) + ' | ' + str(self.popup)
 
 

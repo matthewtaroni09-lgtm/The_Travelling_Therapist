@@ -12,11 +12,11 @@ from django.views.generic import ListView, CreateView
 from The_Travelling_Therapist.settings import ACTIVE_LINK
 
 from .filters import AuctionFilter
-from .forms import RegisterAcount, AuctionForm, BidForm, UserFormClinic, UserFormTherapist, ProfileUpdateClinic, CreateUserForm, PasswordChangingForm, ContactForm, DemographicForm, PracticeAreaForm, AuctionAccountForm
+from .forms import RegisterAcount, AuctionForm, BidForm, UserFormClinic, UserFormTherapist, ProfileUpdateClinic, CreateUserForm, PasswordChangingForm, ContactForm, DemographicForm, PracticeAreaForm, AuctionAccountForm, MessageAcknowledgementForm
 from django.urls import reverse_lazy
 import datetime
 from . import scheduled_tasks
-from .models import PROVINCES, Account, AdminSettings, Auction, Bid, Demographic, DemographicType, PracticeArea, PracticeAreaType, User, Account, UserType
+from .models import PROVINCES, Account, AdminSettings, Auction, Bid, Demographic, DemographicType, PracticeArea, PracticeAreaType, User, Account, UserType, PopupMessage, MessageAcknowledgement, Page
 from django.contrib.auth.forms import PasswordResetForm
 from django.utils.http import urlsafe_base64_encode
 from django.contrib.auth.tokens import default_token_generator
@@ -333,6 +333,65 @@ def check_provinces(request):
     else:
         province_check = False
     return JsonResponse({'province_check': province_check})
+
+def get_popups(request): 
+    request_page = request.GET['page']
+    page = Page.objects.get(page = request_page)
+    user = request.user
+    message = ''
+    title = ''
+    popups = ''
+    acknowledged = False
+    print(request.user)
+    if request.user.is_authenticated == True:
+        popups = PopupMessage.objects.filter(page = page, active = True)
+    else:
+        popups = PopupMessage.objects.filter(page = page, active = True, show_unauthenticated_users = True)
+    
+    print(popups)
+
+    if popups.count() > 0: 
+        for popup in popups:
+            try:
+                message_acknowledgement = MessageAcknowledgement.objects.get(user = user, popup = popup)
+                acknowledged = message_acknowledgement.acknowledged
+            except:
+                acknowledged = False
+            
+            if acknowledged == False:
+                message = message + " " + popup.message
+                title = title + " " + popup.title
+
+    return JsonResponse({'title': title, 'message': message})
+
+def set_acknowledgement(request):
+    if request.user.is_authenticated == True:
+        request_page = request.POST['page']
+        page = Page.objects.get(page = request_page)
+        popups = PopupMessage.objects.filter(page = page, active = True)
+
+        for popup in popups:
+            message_acknowledgement = MessageAcknowledgement.objects.filter(user=request.user, popup = popup)
+            print(message_acknowledgement.count())
+            form = ''
+            if message_acknowledgement.count() > 0:
+                # There should only be one entry per pop-up per user
+                form = MessageAcknowledgementForm(request.POST, instance=message_acknowledgement[0])
+                print("in count > 0")
+                if form.is_valid():
+                    acknowledgement = form.save(commit=False)
+                    acknowledgement.acknowledged = True
+                    acknowledgement.save()
+            else:
+                form = MessageAcknowledgementForm(request.POST)
+                print("in count = 0")
+                if form.is_valid():
+                    acknowledgement = form.save(commit=False)
+                    acknowledgement.user = request.user
+                    acknowledgement.popup = popup
+                    acknowledgement.acknowledged = True
+                    acknowledgement.save()
+    return HttpResponse(json.dumps('Success'), content_type="application/json")
 
 def get_all_auctions(request):
     auction_list = list(Auction.objects.filter(Q(active=True) | Q(closed=True)).values())

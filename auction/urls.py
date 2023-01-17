@@ -31,6 +31,8 @@ urlpatterns = [
     path("auction/data/view_auction_data", views.get_view_auction_data, name="get-active-view-auction-data"), 
     path("auction/data/get_practice_types", views.get_practice_types, name="get-practice-types"), 
     path("auction/data/check_provinces", views.check_provinces, name="check-provinces"), 
+    path("auction/data/get_popups", views.get_popups, name="get-popups"), 
+    path("auction/data/set_acknowledgement", views.set_acknowledgement, name="set-acknowledgement"), 
     
     path("password_reset", views.password_reset_request, name="password_reset"),
     path("password", PasswordsChangeView.as_view(template_name="auction/registration/change_password.html"), name="change-password")
