@@ -4,6 +4,7 @@ let currentLowBid = 0
 
 $(document).ready(function () {
     $("#warningMessage").hide();
+    // $("#submitBidButton").prop("disabled", true);
     let max_bid = 0;
     let currentLowBid = 0;
     let url = $(location).attr('href').split("/");
@@ -61,11 +62,36 @@ $(document).ready(function () {
 
     $("#id_amount").change(function () {
         $("#warningMessage").hide();
-        if (parseInt($("#id_amount").val()) > currentLowBid && currentLowBid !== 0 && currentLowBid !== null) {
-            $("#warningMessage").text("Your bid is over the current minimum bid and will not be considered for determing the winner of the auction. Click Submit if you would like to proceed anyway.")
-            $("#warningMessage").show();
+        $("#warningMessage").removeClass("alert-warning");
+        $("#warningMessage").removeClass("alert-danger");
+        if ($("#id_amount").val().includes(".")) {
+            bidError("Danger", "Please enter only whole numbers.");
+        }
+        else if (parseInt($("#id_amount").val()) > currentLowBid && currentLowBid !== 0 && currentLowBid !== null) {
+            bidError("Warning", "Your bid is over the current minimum bid and will not be considered for determing the winner of the auction.Click Submit if you would like to proceed anyway.");
+        }
+        else if (parseInt($("#id_amount").val()) <= 0) {
+            bidError("Danger", "Bids must be above $0.");
+        }
+        else {
+            $("#submitBidButton").prop("disabled", false);
         }
     });
+
+    function bidError(alert, message) {
+        let alertType = "";
+        if (alert == "Danger") {
+            alertType = "alert-danger";
+            $("#submitBidButton").prop("disabled", true);
+        }
+        else {
+            alertType = "alert-warning";
+            $("#submitBidButton").prop("disabled", false);
+        }
+        $("#warningMessage").addClass(alertType);
+        $("#warningMessage").text(message)
+        $("#warningMessage").show();
+    }
 
     function auctionEnded() {
         $("#bidButton").hide();
