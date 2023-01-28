@@ -41,6 +41,7 @@ from django.forms import formset_factory
 from functools import partial, wraps
 from django.http import JsonResponse
 import json
+import requests
 
 class PasswordsChangeView(PasswordChangeView):
     form_class = PasswordChangingForm
@@ -51,26 +52,38 @@ def contact(request):
     if request.method == 'POST':
         form = ContactForm(request.POST)
         if form.is_valid():
-            subject = "Website Inquiry" 
-            body = {
-            'first_name': form.cleaned_data['first_name'], 
-            'last_name': form.cleaned_data['last_name'], 
-            'email': form.cleaned_data['email_address'], 
-            'message':form.cleaned_data['message'], 
+            recaptcha_response = request.POST.get('g-recaptcha-response')
+            data = {
+            'secret': settings.GOOGLE_RECAPTCHA_SECRET_KEY,
+            'response': recaptcha_response
             }
-            message = "\n".join(body.values())
+            r = requests.post('https://www.google.com/recaptcha/api/siteverify', data=data)
+            result = r.json()
 
-            try:
-                if admin.sendEmails:
-                    send_mail(subject, message, 'info@travelingtherapist.ca', [form.cleaned_data['email_address']]) 
-            except BadHeaderError:
-                return HttpResponse('Invalid header found.')
-            return redirect ("index")
+            print(result)
+            if result['success']:
+                subject = "Website Inquiry" 
+                body = {
+                'first_name': form.cleaned_data['first_name'], 
+                'last_name': form.cleaned_data['last_name'], 
+                'email': form.cleaned_data['email_address'], 
+                'message':form.cleaned_data['message'], 
+                }
+                message = "\n".join(body.values())
+
+                try:
+                    if admin.sendEmails:
+                        send_mail(subject, message, 'info@travelingtherapist.ca', [form.cleaned_data['email_address']]) 
+                except BadHeaderError:
+                    return HttpResponse('Invalid header found.')
+                return redirect ("index")
+            else:
+                messages.error(request, 'Invalid reCAPTCHA. Please try again.')
         else:
             return render(request, "auction/contact_us.html", {'form': form})
     else:
         form = ContactForm(None)
-        return render(request, "auction/contact_us.html", {'form': form})
+        return render(request, "auction/contact_us.html", {'form': form, 'recaptcha_site_key':settings.GOOGLE_RECAPTCHA_SITE_KEY})
 
 def view_all_auctions(request):
     auctions = ''

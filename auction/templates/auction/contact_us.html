@@ -1,6 +1,14 @@
 {% extends 'auction/base.html' %}
 {% load crispy_forms_tags %}
 {% block content %}
+<script>
+    //global grecaptcha
+    grecaptcha.ready(function () {
+        grecaptcha.execute('6LfotjMkAAAAANJiaG4WTtN1quRBByReYZ2XBGbV', { action: "/contact/" }).then(function (token) {
+            document.getElementById('g-recaptcha-response').value = token;
+        });
+    });
+</script>
 <p id="pageTitle" class="d-none">Contact_Us</p>
 <div class="mx-auto my-4 text-center">
     <h1>Contact Us</h1>
@@ -10,6 +18,7 @@
     <form action="" method="post">
         {% csrf_token %}
         {{ form | crispy }}
+        <input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response">
         <button class="btn btn-primary my-3" type="submit">Send message</button>
     </form>
 </div>
