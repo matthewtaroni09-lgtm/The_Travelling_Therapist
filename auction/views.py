@@ -240,6 +240,7 @@ def view_auction(request, auction_id):
                 auction.minimumBidIncrement = set_bid_increment(bid.amount)
                 auction.currentLowBid = bid.amount
                 auction_change = True
+            # A timezone must be specifiedin order to make the subtraction
             diff = auction.auctionEnd - datetime.datetime.now(timezone('utc'))
             print(diff)
             print(bid.amount)
@@ -252,9 +253,7 @@ def view_auction(request, auction_id):
                     scheduled_tasks.remove_cron_job(auction.cronID)
                 except:
                     print("fail")
-                auctionEndEST = auction.auctionEnd.astimezone(timezone('Canada/Eastern'))
-                print(auctionEndEST)
-                scheduled_tasks.restart(auctionEndEST.year, auctionEndEST.month, auctionEndEST.day, auctionEndEST.hour, auctionEndEST.minute, auctionEndEST.second, new_id, str(auction.auctionID))
+                scheduled_tasks.restart(auction.auctionEnd.year, auction.auctionEnd.month, auction.auctionEnd.day, auction.auctionEnd.hour, auction.auctionEnd.minute, auction.auctionEnd.second, new_id, str(auction.auctionID))
                 auction.cronID = new_id
                 auction_change = True
             if auction_change:
@@ -487,8 +486,8 @@ def create_auction(request):
             if form.is_valid():
                 auction = form.save(commit=False)
                 auction.clinic = request.user.account
-                auction.auctionStart = datetime.datetime.now(timezone('US/Eastern'))
-                auction.auctionEnd = datetime.datetime.now(timezone('US/Eastern')) + datetime.timedelta(seconds=settings.DEAFULT_AUCTION_LENGTH)
+                auction.auctionStart = datetime.datetime.now()
+                auction.auctionEnd = datetime.datetime.now() + datetime.timedelta(seconds=settings.DEAFULT_AUCTION_LENGTH)
                 auction.closed = False
                 auction.active = settings.DEFAULT_AUCTION_ACTIVE
                 auction.deleted = False
