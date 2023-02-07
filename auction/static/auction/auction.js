@@ -45,7 +45,7 @@ $(document).ready(function () {
             console.log(response);
             if (response.message != "") {
                 $("#modalTitle").text(response.title);
-                $("#modalParagraph").text(response.message);
+                $("#modalParagraph").html(response.message);
                 $("#popupModal").modal('show');
             }
         },
