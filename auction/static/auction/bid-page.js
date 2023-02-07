@@ -12,6 +12,14 @@ $(document).ready(function () {
     let auctionEnd = "";
     let reservePrice = 0;
 
+    $(document).keypress(
+        function (event) {
+            if (event.which == '13') {
+                event.preventDefault();
+            }
+        });
+
+
     $("#submitBidButton").click(function () {
         if ($("#id_amount").val() !== '') {
             $("#bidModalSubFooter").show();
