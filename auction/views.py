@@ -108,7 +108,8 @@ class AuctionListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        if self.request.user.is_authenticated == True:
+        # Super users should see all auction types
+        if self.request.user.is_authenticated == True and self.request.user.is_superuser == False:
             user_type = self.request.user.account.userType
             if str(user_type) != 'Clinic':
                 context['filter'] = AuctionFilter(self.request.GET, queryset=Auction.objects.filter(active=True, type=user_type).order_by('-auctionEnd') | Auction.objects.filter(closed=True, type=user_type).order_by('-auctionEnd'))
@@ -548,13 +549,22 @@ def create_auction(request):
                 # return render(request, 'auction/create_auction.html', parameter)
 
                 if admin.sendEmails:
-                    # Therapist email
+                    # Admin email
                     send_mail(
                         subject = "Auction Created",
                         message = "",
                         html_message = emails.auction_created_admin(str(auction.clinic.clinicName), str(auction.clinic.city), str(auction.clinic.province), str(auction.clinic.user.email), str(auction.reservePrice), str(auction.auctionStart), str(auction.auctionEnd), str(auction.placementStart), str(auction.placementEnd), str(auction.auctionID)),
                         from_email = settings.EMAIL_HOST_USER,
                         recipient_list = ('loribine@gmail.com', 'info@travelingtherapist.ca')
+                    )
+
+                    # Clinic email
+                    send_mail(
+                        subject = "Auction Created",
+                        message = "",
+                        html_message = emails.clinic_auction_created(str(auction.clinic.clinicName)),
+                        from_email = settings.EMAIL_HOST_USER,
+                        recipient_list = (auction.clinic.user.email, 'loribine@gmail.com')#'info@travelingtherapist.ca')
                     )
                 scheduled_tasks.start(auction.auctionEnd.year, auction.auctionEnd.month, auction.auctionEnd.day, auction.auctionEnd.hour, auction.auctionEnd.minute, auction.auctionEnd.second, str(auction.auctionID))
                 return HttpResponseRedirect('/profile?submitted=True')

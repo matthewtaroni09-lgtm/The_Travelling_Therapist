@@ -100,6 +100,22 @@ def clinic_auction_end(clinic_name, start_date, end_date):
     message = message + email_footer
     return message
 
+def clinic_auction_created(clinic_name):
+    message = email_header
+    message = message + """<section style="font-size: 16px; margin-bottom: 4rem;">
+  <p>Hello <span class="text-weight-bold">""" + clinic_name + """</span>,</p>
+  
+  <p>Thank you for creating an auction on our site! We will review the details of your auction and connect with you to collect payment information before your ad can be live on our site. Full details on this can be found on our <a href="https://travelingtherapist.ca/about">FAQ page</a>.</p>
+
+  <p>Your card on file will be charged by The Traveling Therapist within the next 24h.</p>
+
+  <p>Look for us to reach out in the next 24-48h to get this moving for you.</p>
+  <br>
+  <p style="font-weight: 700; padding-top: 0rem; margin-top: 0; line-height: 0;">Thanks for being part of The Traveling Therapist family.</p>
+</section>"""
+    message = message + email_footer
+    return message
+
 def therapist_auction_end_lose(first_name, last_name, clinic_name, start_date, end_date):
     message = email_header
     message = message + """<section style="font-size: 16px; margin-bottom: 4rem;">
