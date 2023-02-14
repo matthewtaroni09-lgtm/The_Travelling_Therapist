@@ -159,8 +159,8 @@ $("#submitButton").click(function () {
     if (placementStart > oneYear) {
         errorList += '<li>Placements must start within the next 12 months.</li>';
     }
-    if (days_between(placementStart, placementEnd, true) > 730) {
-        errorList += '<li>Placements must be less than two years.</li>';
+    if (days_between(placementStart, placementEnd, true) > 548) {
+        errorList += '<li>Looks like you are trying to create an ad for an opening longer than 18 months! Please contact us to help you set this up.</li>';
     }
 
     //Validate Reserve price

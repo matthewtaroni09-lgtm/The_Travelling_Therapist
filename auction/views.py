@@ -225,8 +225,6 @@ def profile(request):
 
 def view_auction(request, auction_id):
     auction = Auction.objects.get(pk=auction_id)
-    print("lllll")
-    print(auction.comments)
     num_bids = Bid.objects.filter(auction=auction_id).count()
     num_biders = Bid.objects.values('user').filter(auction=auction_id).distinct().count()
     auction_change = False
