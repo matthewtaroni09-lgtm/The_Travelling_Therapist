@@ -225,6 +225,8 @@ def profile(request):
 
 def view_auction(request, auction_id):
     auction = Auction.objects.get(pk=auction_id)
+    print("lllll")
+    print(auction.comments)
     num_bids = Bid.objects.filter(auction=auction_id).count()
     num_biders = Bid.objects.values('user').filter(auction=auction_id).distinct().count()
     auction_change = False
@@ -262,9 +264,6 @@ def view_auction(request, auction_id):
                 auction_change = True
             # A timezone must be specifiedin order to make the subtraction
             diff = auction.auctionEnd - datetime.datetime.now(timezone('utc'))
-            print(diff)
-            print(bid.amount)
-            print(auction.currentLowBid)
             if diff.total_seconds() < 60 and (bid.amount <= prev_low_bid or prev_low_bid == 0):
                 new_id = str(uuid.uuid4())
                 auction.auctionEnd = auction.auctionEnd + datetime.timedelta(minutes=1)
