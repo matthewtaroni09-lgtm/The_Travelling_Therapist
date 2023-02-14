@@ -5,6 +5,9 @@ from django.contrib import admin
 from .models import Auction, Bid, Account, PayFrequency, PracticeArea, PracticeAreaType, ProMember, UserType, Demographic, DemographicType, ProMember, AdminSettings, Page, PopupMessage, MessageAcknowledgement
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
+from django.core.mail import send_mail
+from django.conf import settings
+from . import emails
 
 class BidInline(admin.TabularInline):
     model = Bid
@@ -18,6 +21,20 @@ class AuctionAdmin(admin.ModelAdmin):
     search_fields = ('auctionID',)
     inlines = [BidInline]
     exclude = ['startingBid', 'underEightteen', 'eightteenToSixtyFive', 'overSixtyFive', 'MSK', 'neuro', 'cardioResp']
+
+    def save_model(self, request, obj, form, change):
+        admin = AdminSettings.objects.all()[:1].get()
+        auction = Auction.objects.get(pk=obj.auctionID)
+        print(auction.active)
+        if not obj.active and admin.sendEmails and not auction.active:
+            send_mail(
+                subject = str(obj.clinic.clinicName) + " Your Auction is Live!",
+                message = "",
+                html_message = emails.clinic_auction_live(str(obj.clinic.clinicName)),
+                from_email = settings.EMAIL_HOST_USER,
+                recipient_list = (obj.clinic.user.email, 'loribine@gmail.com')#'info@travelingtherapist.ca')
+            )
+        super().save_model(request, obj, form, change)
 
 @admin.register(Bid)
 class BidAdmin(admin.ModelAdmin):
