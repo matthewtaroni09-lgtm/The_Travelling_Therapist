@@ -27,7 +27,7 @@ class AuctionAdmin(admin.ModelAdmin):
         auction = Auction.objects.get(pk=obj.auctionID)
         print("auction = " + str(auction.active))
         print("obj = " + str(obj.active))
-        if not obj.active and admin.sendEmails and not auction.active:
+        if obj.active and admin.sendEmails and not auction.active:
             send_mail(
                 subject = str(obj.clinic.clinicName) + " Your Auction is Live!",
                 message = "",
