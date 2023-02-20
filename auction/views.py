@@ -548,7 +548,7 @@ def create_auction(request):
                 if admin.sendEmails:
                     # Admin email
                     send_mail(
-                        subject = "Auction Created",
+                        subject = "Auction Created - Admin Details",
                         message = "",
                         html_message = emails.auction_created_admin(str(auction.clinic.clinicName), str(auction.clinic.city), str(auction.clinic.province), str(auction.clinic.user.email), str(auction.reservePrice), str(auction.auctionStart), str(auction.auctionEnd), str(auction.placementStart), str(auction.placementEnd), str(auction.auctionID)),
                         from_email = settings.EMAIL_HOST_USER,
@@ -557,7 +557,7 @@ def create_auction(request):
 
                     # Clinic email
                     send_mail(
-                        subject = "Auction Created",
+                        subject = "Your has been Auction Created",
                         message = "",
                         html_message = emails.clinic_auction_created(str(auction.clinic.clinicName)),
                         from_email = settings.EMAIL_HOST_USER,
