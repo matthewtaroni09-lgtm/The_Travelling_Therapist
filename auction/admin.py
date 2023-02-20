@@ -25,14 +25,15 @@ class AuctionAdmin(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
         admin = AdminSettings.objects.all()[:1].get()
         auction = Auction.objects.get(pk=obj.auctionID)
-        print(auction.active)
+        print("auction = " + str(auction.active))
+        print("obj = " + str(obj.active))
         if not obj.active and admin.sendEmails and not auction.active:
             send_mail(
                 subject = str(obj.clinic.clinicName) + " Your Auction is Live!",
                 message = "",
                 html_message = emails.clinic_auction_live(str(obj.clinic.clinicName)),
                 from_email = settings.EMAIL_HOST_USER,
-                recipient_list = (obj.clinic.user.email, 'loribine@gmail.com')#'info@travelingtherapist.ca')
+                recipient_list = (obj.clinic.user.email, 'info@travelingtherapist.ca')
             )
         super().save_model(request, obj, form, change)
 
