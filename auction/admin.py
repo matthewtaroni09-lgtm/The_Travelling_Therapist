@@ -80,6 +80,7 @@ class CustomizedUserAdmin(UserAdmin):
 
     def user_type(self, obj: Account) -> str:
         return obj.account.userType
+        
 
 @admin.register(PracticeAreaType)
 class PracticeAreaTypeAdmin(admin.ModelAdmin):

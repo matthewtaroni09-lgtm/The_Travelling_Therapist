@@ -107,7 +107,7 @@ def clinic_auction_created(clinic_name):
   
   <p>Thank you for creating an auction on our site! We will review the details of your auction and connect with you to collect payment information before your ad can be live on our site. Full details on this can be found on our <a href="https://travelingtherapist.ca/about">FAQ page</a>.</p>
 
-  <p>Your card on file will be charged by The Traveling Therapist within the next 24h.</p>
+  <p>Look for us to reach out within the next 24h.</p>
 
   <p>Look for us to reach out in the next 24-48h to get this moving for you.</p>
   <br>
