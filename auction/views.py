@@ -73,7 +73,7 @@ def contact(request):
 
                 try:
                     if admin.sendEmails:
-                        send_mail(subject, message, 'info@travelingtherapist.ca', [form.cleaned_data['email_address']]) 
+                        send_mail(subject, message, 'info@travelingtherapist.ca', ['info@travelingtherapist.ca']) 
                 except BadHeaderError:
                     return HttpResponse('Invalid header found.')
                 return redirect ("index")

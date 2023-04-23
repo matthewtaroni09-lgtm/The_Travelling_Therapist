@@ -17,10 +17,7 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <iframe width="100%" height="415" src="https://www.youtube.com/embed/CHEZcJaw49E"
-              title="YouTube video player" frameborder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowfullscreen></iframe>
+            <iframe width="100%" height="415" src="https://www.youtube.com/embed/CHEZcJaw49E" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -47,10 +44,11 @@
     <div class="col">
       {% if user.is_authenticated %}
       {% if user.account.get_split_user_type == 'Clinic' %}
-      <h1 class="text-small text-weight-light text-md-end my-3">Welcome, {{ user.account.clinicName }}</h>
+      <h1 id="welcomeClinicHeading" class="text-small text-weight-light text-md-end my-3">Welcome, {{user.account.clinicName }}
+        </h>
         <h2 class="text-large text-weight-normal">Auctions</h2>
         {% else %}
-        <h1 class="text-small text-weight-light text-md-end my-3">Welcome, {{ user.first_name }} {{ user.last_name }}
+        <h1 id="welcomeTherapistHeading" class="text-small text-weight-light text-md-end my-3">Welcome, {{user.first_name }} {{user.last_name }}
           </h>
           <h2 class="text-large text-weight-normal">Auctions</h2>
           {% endif %}
@@ -75,16 +73,14 @@
     {% if user.account.get_split_user_type != 'Clinic' %}
     {% csrf_token %}
     <a id="allAuctionsLink" class="m-2">See all auctions</a>
-    <a id="selectAuctionsLink" class="m-2" hx-post="{% url 'view-user-auctions' %}" hx-target='#auctionListDiv'
-      hx-trigger="click">Only show auctions I can bid on</a>
+    <a id="selectAuctionsLink" class="m-2" hx-post="{% url 'view-user-auctions' %}" hx-target='#auctionListDiv' hx-trigger="click">Only show auctions I can bid on</a>
     {% endif %}
     {% endif %}
   </form>
   <!-- Search Box End -->
 
   <!-- Modal -->
-  <div id="modal" class="modal fade" id="allAuctionsModal" tabindex="-1" role="dialog"
-    aria-labelledby="allAuctionsModalLabel" aria-hidden="true">
+  <div id="modal" class="modal fade" id="allAuctionsModal" tabindex="-1" role="dialog" aria-labelledby="allAuctionsModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -103,11 +99,9 @@
             {% if user.is_authenticated %}
             {% if user.account.get_split_user_type != 'Clinic' %}
             {% csrf_token %}
-            <button id="allAuctionsButton" type="button" class="btn btn-secondary" data-bs-dismiss="modal"
-              hx-post="{% url 'view-all-auctions' %}" hx-target='#auctionListDiv' hx-trigger="click">Procced
+            <button id="allAuctionsButton" type="button" class="btn btn-secondary" data-bs-dismiss="modal" hx-post="{% url 'view-all-auctions' %}" hx-target='#auctionListDiv' hx-trigger="click">Procced
               Anyway</button>
-            <button id="selectAuctionsButton" type="button" class="btn btn-secondary" data-bs-dismiss="modal"
-              hx-post="{% url 'view-user-auctions' %}" hx-target='#auctionListDiv' hx-trigger="click">Procced
+            <button id="selectAuctionsButton" type="button" class="btn btn-secondary" data-bs-dismiss="modal" hx-post="{% url 'view-user-auctions' %}" hx-target='#auctionListDiv' hx-trigger="click">Procced
               Anyway</button>
             <a class="btn btn-primary" href="{% url 'logout' %}">Logout</a>
             {% endif %}
