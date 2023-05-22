@@ -43,6 +43,8 @@ from django.http import JsonResponse
 import json
 import requests
 
+#Test comment
+
 class PasswordsChangeView(PasswordChangeView):
     form_class = PasswordChangingForm
     success_url = reverse_lazy('profile')
