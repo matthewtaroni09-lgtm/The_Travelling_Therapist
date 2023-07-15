@@ -3,42 +3,35 @@
         <a class="navbar-brand" href="{% url 'index' %}">
             <img src="/media/images/TTT_LOGO.png" alt="Traveling Therapist Logo" class="img-fluid banner-logo">
         </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02"
-            aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link text-weight-normal {% if path == 'home' %}active{% endif %}" aria-current="page"
-                        href="{% url 'index' %}">Home</a>
+                    <a class="nav-link text-weight-normal {% if path == 'home' %}active{% endif %}" aria-current="page" href="{% url 'index' %}">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-weight-normal {% if path == 'about' %}active{% endif %}"
-                        href="{% url 'about' %}">About/FAQ</a>
+                    <a class="nav-link text-weight-normal {% if path == 'about' %}active{% endif %}" href="{% url 'about' %}">About/FAQ</a>
                 </li>
                 {% if user.is_authenticated %}
                 {% if user.account.get_split_user_type == 'Clinic' %}
                 <li class="nav-item">
-                    <a class="nav-link text-weight-normal {% if path == 'create-auction' %}active{% endif %}"
-                        href="{% url 'create-auction' %}">Create Auction</a>
+                    <a class="nav-link text-weight-normal {% if path == 'create-auction' %}active{% endif %}" href="{% url 'create-auction-hourly' %}">Create Auction</a>
                 </li>
                 {% endif %}
                 <li class="nav-item">
-                    <a class="nav-link text-weight-normal {% if path == 'profile' %}active{% endif %}"
-                        href="{% url 'profile' %}">Profile</a>
+                    <a class="nav-link text-weight-normal {% if path == 'profile' %}active{% endif %}" href="{% url 'profile' %}">Profile</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link text-weight-normal" href="{% url 'logout' %}">Logout</a>
                 </li>
                 {% else %}
                 <li class="nav-item">
-                    <a class="nav-link text-weight-normal {% if path == 'login' %}active{% endif %}"
-                        href="{% url 'login' %}">Login</a>
+                    <a class="nav-link text-weight-normal {% if path == 'login' %}active{% endif %}" href="{% url 'login' %}">Login</a>
                 </li>
                 <li class="nav-item">
-                    <a class="btn btn-primary {% if path == 'register' %}active{% endif %}"
-                        href="{% url 'register' %}">Sign Up</a>
+                    <a class="btn btn-primary {% if path == 'register' %}active{% endif %}" href="{% url 'register' %}">Sign Up</a>
                 </li>
                 {% endif %}
             </ul>

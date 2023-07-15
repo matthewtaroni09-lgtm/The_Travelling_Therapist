@@ -299,6 +299,80 @@ def view_auction(request, auction_id):
             }
         return render(request, 'auction/view_auction.html', context)
     
+def view_auction_hourly(request, auction_id):
+    auction = Auction.objects.get(pk=auction_id)
+    num_bids = Bid.objects.filter(auction=auction_id).count()
+    num_biders = Bid.objects.values('user').filter(auction=auction_id).distinct().count()
+    auction_change = False
+    submitted = False
+    max_bid = 0
+
+    if num_bids > 0 and auction.currentLowBid is not None and auction.minimumBidIncrement is not None:
+        diff = auction.currentLowBid - auction.minimumBidIncrement
+        if diff > 0 and diff % auction.minimumBidIncrement == 0:
+                max_bid = diff
+        elif diff > 0 and diff % auction.minimumBidIncrement != 0:
+            max_bid = auction.currentLowBid - (diff % auction.minimumBidIncrement)
+    else:
+        max_bid = 0
+
+    if request.method == 'POST':
+        form = BidForm(request.POST, max_bid=max_bid, min_bid_increment=auction.minimumBidIncrement)
+        if form.is_valid():
+            bid = form.save(commit=False)
+            bid.auction = auction
+            bid.user = request.user
+            bid.active = True
+            bid.createdBy = request.user
+            if auction.currentLowBid is None:
+                prev_low_bid = 0
+            else:
+                prev_low_bid = auction.currentLowBid
+            if auction.currentLowBid is not None and bid.amount < auction.currentLowBid:
+                auction.currentLowBid = bid.amount
+                auction.minimumBidIncrement = set_bid_increment(bid.amount)
+                auction_change = True
+            if num_bids == 0:
+                auction.minimumBidIncrement = set_bid_increment(bid.amount)
+                auction.currentLowBid = bid.amount
+                auction_change = True
+            # A timezone must be specifiedin order to make the subtraction
+            diff = auction.auctionEnd - datetime.datetime.now(timezone('utc'))
+            if diff.total_seconds() < 60 and (bid.amount <= prev_low_bid or prev_low_bid == 0):
+                new_id = str(uuid.uuid4())
+                auction.auctionEnd = auction.auctionEnd + datetime.timedelta(minutes=1)
+                scheduled_tasks.print_job()
+                try:
+                    scheduled_tasks.remove_cron_job(auction.cronID)
+                except:
+                    print("fail")
+                scheduled_tasks.restart(auction.auctionEnd.year, auction.auctionEnd.month, auction.auctionEnd.day, auction.auctionEnd.hour, auction.auctionEnd.minute, auction.auctionEnd.second, new_id, str(auction.auctionID))
+                auction.cronID = new_id
+                auction_change = True
+            if auction_change:
+                auction.save()
+            bid.save()
+            return HttpResponseRedirect('/auction_hourly/' + str(auction.auctionID))
+        else:
+            context = {
+                'auction': auction,
+                'form': form,
+                'submitted': submitted,
+                'num_bids': num_bids,
+                'num_biders': num_biders
+            }
+            return render(request, 'auction/view_auction_hourly.html', context)
+    else:
+        form = BidForm(None)
+        context = {
+                'auction': auction,
+                'form': form,
+                'submitted': submitted,
+                'num_bids': num_bids,
+                'num_biders': num_biders
+            }
+        return render(request, 'auction/view_auction_hourly.html', context)
+    
 def get_auction_end(request, auction_id):
     auction = Auction.objects.get(pk=auction_id)
 
@@ -611,6 +685,144 @@ def create_auction(request):
             'max_forms': max_auctions.numAllowedAuctions
         })
         return render(request, 'auction/create_auction.html', parameter)
+    
+def create_auction_hourly(request):
+    if request.user.is_authenticated == False:
+        return render(request, 'auction/create_auction_hourly.html', {})
+    admin = AdminSettings.objects.all()[:1].get()
+    # Not closed and not deleted counts any auctions that are active or have no status selected
+    active_auctions_list = Auction.objects.filter(closed=False, deleted=False, clinic=request.user.account)
+    last_auction = Auction.objects.filter(deleted=False, clinic=request.user.account).order_by('-created').first()
+    remember_last_auction = Account.objects.filter(user=request.user).values().first()['remember_auction_data']
+    submitted_auction = False
+    parameter = {}
+    user_types = UserType.objects.filter(~Q(name='Clinic'))
+    selected = ''
+    # If the user has selected remember previous data get their last selected auction type
+    if active_auctions_list.count() > 0 and remember_last_auction:
+        selected = last_auction.type
+    max_auctions = AdminSettings.objects.all()[0]
+    max_demographics = DemographicType.objects.all().count()
+    # Areas of practice are specific to a user tpye so get the user's type
+    max_practice_areas = 0 #PracticeAreaType.objects.all().count()
+    demographic_form_set = inlineformset_factory(Auction, Demographic, form=DemographicForm, fields=('category', 'percentage'), max_num=max_demographics, extra=max_demographics, can_delete=False, help_texts=None)
+    practice_area_form_set = inlineformset_factory(Auction, PracticeArea, form=PracticeAreaForm, fields=('category', 'percentage'), max_num=max_practice_areas, extra=max_practice_areas, can_delete=False)
+    account = Account.objects.get(user=request.user.id)
+    if active_auctions_list.count() <= max_auctions.numAllowedAuctions:
+        if request.method == "POST":
+            form = AuctionForm(request.POST, request.FILES)
+            account_form = AuctionAccountForm(request.POST, request.FILES, instance=account)
+            formset_demographic = demographic_form_set(queryset=Demographic.objects.none())
+            formset_practice = practice_area_form_set(queryset=PracticeArea.objects.none())
+            if form.is_valid():
+                auction = form.save(commit=False)
+                auction.clinic = request.user.account
+                auction.auctionStart = datetime.datetime.now()
+                auction.auctionEnd = datetime.datetime.now() + datetime.timedelta(seconds=settings.DEAFULT_AUCTION_LENGTH)
+                auction.closed = False
+                auction.active = settings.DEFAULT_AUCTION_ACTIVE
+                auction.deleted = False
+                auction.createdBy = request.user
+                auction.modifiedBy = request.user
+                auction.save()
+                formset_demographic = demographic_form_set(request.POST, instance=auction, queryset=Demographic.objects.none())
+                formset_practice = practice_area_form_set(request.POST, instance=auction, queryset=PracticeArea.objects.none())
+            
+                if formset_practice.is_valid() and formset_demographic.is_valid():
+                    formset_demographic.save()
+                    formset_practice.save()
+                else:
+                    print("Fail")
+                    print(formset_demographic.errors)
+                    print(formset_practice.errors)
+                    return False
+
+                if account_form.is_valid():
+                    account_instance = account_form.save(commit=False)
+                    account_instance.user = request.user
+                    account_instance.save()
+                else:
+                    print("Fail")
+                    print(account_form.errors)
+                    return False
+    
+                parameter.update({
+                'active_auctions_list': active_auctions_list,
+                'form': form,
+                'account_form': account_form,
+                'formset_demographic': formset_demographic,
+                'formset_practice': formset_practice,
+                'submitted_auction': submitted_auction,
+                'show_form': True,
+                'user_types': user_types,
+                'selected': selected
+                })
+                # return render(request, 'auction/create_auction.html', parameter)
+
+                if admin.sendEmails:
+                    # Admin email
+                    send_mail(
+                        subject = "Auction Created - Admin Details",
+                        message = "",
+                        html_message = emails.auction_created_admin(str(auction.clinic.clinicName), str(auction.clinic.city), str(auction.clinic.province), str(auction.clinic.user.email), str(auction.reservePrice), str(auction.auctionStart), str(auction.auctionEnd), str(auction.placementStart), str(auction.placementEnd), str(auction.auctionID)),
+                        from_email = settings.EMAIL_HOST_USER,
+                        recipient_list = ('loribine@gmail.com', 'info@travelingtherapist.ca')
+                    )
+
+                    # Clinic email
+                    send_mail(
+                        subject = "Your has been Auction Created",
+                        message = "",
+                        html_message = emails.clinic_auction_created(str(auction.clinic.clinicName)),
+                        from_email = settings.EMAIL_HOST_USER,
+                        recipient_list = (auction.clinic.user.email, 'info@travelingtherapist.ca')
+                    )
+                scheduled_tasks.start(auction.auctionEnd.year, auction.auctionEnd.month, auction.auctionEnd.day, auction.auctionEnd.hour, auction.auctionEnd.minute, auction.auctionEnd.second, str(auction.auctionID))
+                return HttpResponseRedirect('/profile?submitted=True')
+            else:
+                parameter.update({
+                    'active_auctions_list': active_auctions_list,
+                    'form': form,
+                    'formset_demographic': formset_demographic,
+                    'formset_practice': formset_practice,
+                    'submitted_auction': submitted_auction,
+                    'show_form': True,
+                    'user_types': user_types,
+                    'selected': selected
+                })
+                return render(request, 'auction/create_auction_hourly.html', parameter)
+        else:
+            # New Form
+            account_form = AuctionAccountForm(instance=account)
+            if remember_last_auction:
+                form = AuctionForm(instance=last_auction)
+                formset_demographic = demographic_form_set(instance=last_auction)
+                formset_practice = practice_area_form_set(instance=last_auction)
+            else:
+                form = AuctionForm()
+                formset_demographic = demographic_form_set(queryset=None)
+                formset_practice = practice_area_form_set(queryset=None)
+            parameter.update({
+                'active_auctions_list': active_auctions_list,
+                'form': form,
+                'account_form': account_form,
+                'formset_demographic': formset_demographic,
+                'formset_practice': formset_practice,
+                'submitted_auction': submitted_auction,
+                'show_form': True,
+                'user_types': user_types,
+                'selected': selected,
+                'remember_last_auction': remember_last_auction
+            })
+            return render(request, 'auction/create_auction_hourly.html', parameter)
+    else:
+        form = AuctionForm()
+        parameter.update({
+            'active_auctions_list': active_auctions_list,
+            'show_form': False,
+            'max_forms': max_auctions.numAllowedAuctions
+        })
+        return render(request, 'auction/create_auction_hourly.html', parameter)
 
 # @login_required
 # @transaction.atomic

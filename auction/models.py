@@ -131,6 +131,8 @@ class Auction(models.Model):
     modified = models.DateTimeField(verbose_name='Modified Time', null=True, blank=True)
     modifiedBy = models.ForeignKey(User, related_name='auction_modified_by', blank=True, null=True, on_delete=models.CASCADE)
     type = models.ForeignKey(UserType, verbose_name='Auction Type', related_name='auction_type', on_delete=models.CASCADE)
+    hourlyWage = models.IntegerField(verbose_name='Hourly Wage', blank=True, null=True)
+    hours = models.IntegerField(verbose_name='Minimum Work Hours', blank=True, null=True, help_text='The minimum number of hours garenteed per day.')
 
     def __str__(self):
         return str(self.clinic.clinicName) + ": " + str(self.auctionStart.strftime("%m/%d/%Y %H:%M"))

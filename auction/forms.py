@@ -91,6 +91,7 @@ class AuctionForm(forms.ModelForm):
             'sundayStart',
             'sundayEnd',
             'comments',
+            'hours'
         #     'MSK',
         #     'neuro',
         #     'cardioResp',
