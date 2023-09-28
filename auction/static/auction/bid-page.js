@@ -19,6 +19,11 @@ $(document).ready(function () {
             }
         });
 
+    $('#splitCompSlider').slider({
+        formatter: function (value) {
+            return 'Current value: ' + value;
+        }
+    });
 
     $("#submitBidButton").click(function () {
         if ($("#id_amount").val() !== '') {

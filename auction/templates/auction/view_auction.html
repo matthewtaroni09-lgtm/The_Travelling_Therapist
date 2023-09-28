@@ -11,14 +11,10 @@
   <!-- 350 x 280 -->
   <div id="carouselExampleIndicators" class="carousel slide my-3 d-sm-none" data-bs-ride="carousel">
     <div class="carousel-indicators">
-      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active"
-        aria-current="true" aria-label="Slide 1"></button>
-      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"
-        aria-label="Slide 2"></button>
-      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"
-        aria-label="Slide 3"></button>
-      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="3"
-        aria-label="Slide 4"></button>
+      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="3" aria-label="Slide 4"></button>
     </div>
     <div class="carousel-inner">
       <div class="carousel-item active">
@@ -34,13 +30,11 @@
         <img src="/media/{{ auction.clinic.imageFour }}" class="d-block w-100" alt="Clinic 4">
       </div>
     </div>
-    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
-      data-bs-slide="prev">
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
       <span class="carousel-control-prev-icon" aria-hidden="true"></span>
       <span class="visually-hidden">Previous</span>
     </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
-      data-bs-slide="next">
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
       <span class="carousel-control-next-icon" aria-hidden="true"></span>
       <span class="visually-hidden">Next</span>
     </button>
@@ -48,17 +42,14 @@
 
   <div class="d-flex">
     <section class="d-inline-flex align-items-center text-white bg-dark py-2 px-3 me-3 rounded">
-      <span class="material-icons small text-white">schedule</span><time id="auctionTimer-{{ auction.auctionID }}"
-        class="m-0 d-flex me-3 text-white">{{ auction.get_time_diff }}</time>
+      <span class="material-icons small text-white">schedule</span><time id="auctionTimer-{{ auction.auctionID }}" class="m-0 d-flex me-3 text-white">{{ auction.get_time_diff }}</time>
       <p id="bidText" class="m-0 text-white">{{ auction.get_bid }}</p>
       <p class="m-0 mx-4 d-none d-lg-block text-white"># Bids:<span class="ms-2 text-white">{{ num_bids }}</span></p>
-      <p class="m-0 me-4 d-none d-lg-block text-white"># of Therapists Bidding:<span
-          class="ms-2 text-white">{{num_biders}}</span></p>
+      <p class="m-0 me-4 d-none d-lg-block text-white"># of Therapists Bidding:<span class="ms-2 text-white">{{num_biders}}</span></p>
     </section>
 
     {%if user.is_authenticated and user.account.userType == auction.type and auction.active%}
-    <button id="bidButton" type="button" class="btn-lg btn-primary" data-bs-toggle="modal"
-      data-bs-target="#exampleModal" data-bs-whatever="@mdo">Bid</button>
+    <button id="bidButton" type="button" class="btn-lg btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">Bid</button>
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -73,12 +64,14 @@
                 {% csrf_token %}
                 {{ form.amount|as_crispy_field }}
               </div>
+              <div class="mb-3">
+                <b>0</b> <input id="splitCompSlider" type="range" class="span2" value="10" data-slider-min="0" data-slider-max="100" data-slider-step="1" /> <b>100</b>
+              </div>
               {% if num_bids > 0%}
               <p>{{ auction.get_max_bid }}</p>
               {% endif %}
               <div id="warningMessage" class="alert" role="alert"></div>
-              <small>For more information on the bidding process see our <a href="{% url 'about' %}"
-                  target="_blank">FAQ</a></small>
+              <small>For more information on the bidding process see our <a href="{% url 'about' %}" target="_blank">FAQ</a></small>
               <div class="modal-footer">
                 <button id="closeButton" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 <button id="submitBidButton" type="button" class="btn btn-primary">Submit Bid</button>
@@ -88,8 +81,7 @@
                     have a typo you'd like
                     to correct.</p>
                   <div id="modalSubFooterButtonDiv">
-                    <button id="closeButtonSubFooter" type="button" class="btn btn-secondary"
-                      data-bs-dismiss="modal">Close</button>
+                    <button id="closeButtonSubFooter" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     <button id="confirmBidButton" type="submit" class="btn btn-primary">Confirm Bid</button>
                   </div>
                 </div>
@@ -107,8 +99,7 @@
   <div class="row d-none d-sm-inline-flex my-3">
     <div class="col-9">
       {% if auction.clinic.imageOne %}
-      <img src="/media/{{ auction.clinic.imageOne }}" class="img-fluid pt-3" alt="Image of Clinic"
-        style="height: 600px;width: 990px;object-fit: contain;">
+      <img src="/media/{{ auction.clinic.imageOne }}" class="img-fluid pt-3" alt="Image of Clinic" style="height: 600px;width: 990px;object-fit: contain;">
       {% else %}
       <img src="/media/images/no-image.jpg" class="card-img-top card-image" alt="Image of Clinic">
       {% endif %}
@@ -132,16 +123,24 @@
     <p class="col-8 text-weight-light border mb-0 py-2">{{ auction.clinic.clinicName }}</p>
   </div>
   <div class="row w-100 mx-auto">
-    <p class="col-4 text-weight-bold border mb-0 py-2 bg-light">Town/ City</p>
-    <p class="col-8 text-weight-light border mb-0 py-2">{{ auction.clinic.city }}</p>
-  </div>
-  <div class="row w-100 mx-auto">
-    <p class="col-4 text-weight-bold border mb-0 py-2 bg-light">Province</p>
-    <p class="col-8 text-weight-light border mb-0 py-2">{{ auction.clinic.province }}</p>
+    <p class="col-4 text-weight-bold border mb-0 py-2 bg-light">Clinic Location</p>
+    <p class="col-8 text-weight-light border mb-0 py-2">{{ auction.clinic.city }}, {{ auction.clinic.province }}</p>
   </div>
   <div class="row w-100 mx-auto">
     <p class="col-4 text-weight-bold border mb-0 py-2 bg-light">Dates of Coverage</p>
     <p class="col-8 text-weight-light border mb-0 py-2">{{ auction.placementStart }} - {{ auction.placementEnd }}</p>
+  </div>
+  <div class="row w-100 mx-auto">
+    <p class="col-4 text-weight-bold border mb-0 py-2 bg-light">Rate for Treatments</p>
+    <p class="col-3 text-weight-light border mb-0 py-2">${{ auction.treatmentCost }}</p>
+    <p class="col-3 text-weight-bold border mb-0 py-2 bg-light">Minimum # of Treatments</p>
+    <p class="col-2 text-weight-light border mb-0 py-2">{{ auction.treatmentMin }}</p>
+  </div>
+  <div class="row w-100 mx-auto">
+    <p class="col-4 text-weight-bold border mb-0 py-2 bg-light">Rate for Assessments</p>
+    <p class="col-3 text-weight-light border mb-0 py-2">${{ auction.assessmentCost }}</p>
+    <p class="col-3 text-weight-bold border mb-0 py-2 bg-light">Minimum # of Assessments</p>
+    <p class="col-2 text-weight-light border mb-0 py-2">{{ auction.assessmentMin }}</p>
   </div>
   <div class="row w-100 mx-auto">
     <div class="col-4  border mb-0 py-2">
@@ -189,10 +188,6 @@
     <p class="col-4 text-weight-bold border mb-0 py-2 bg-light">Pay Frequency</p>
     <p class="col-8 text-weight-light border mb-0 py-2">{{ auction.payFrequency }}</p>
   </div>
-  <!-- <div class="row w-100 mx-auto">
-      <p class="col-4 text-weight-bold border mb-0 py-2 bg-light">Area of Practice</p>
-      <p class="col-8 text-weight-light border mb-0 py-2"></p>
-    </div> -->
   <div class="row w-100 mx-auto">
     <div class="col-md-6 border">
       <div class="offset-2 col-8">
