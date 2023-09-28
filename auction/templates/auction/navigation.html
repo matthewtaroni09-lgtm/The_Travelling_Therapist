@@ -17,7 +17,7 @@
                 {% if user.is_authenticated %}
                 {% if user.account.get_split_user_type == 'Clinic' %}
                 <li class="nav-item">
-                    <a class="nav-link text-weight-normal {% if path == 'create-auction' %}active{% endif %}" href="{% url 'create-auction-hourly' %}">Create Auction</a>
+                    <a class="nav-link text-weight-normal {% if path == 'create-auction' %}active{% endif %}" href="{% url 'create-auction' %}">Create Auction</a>
                 </li>
                 {% endif %}
                 <li class="nav-item">
