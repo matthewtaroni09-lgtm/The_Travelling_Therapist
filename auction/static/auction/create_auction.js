@@ -1,5 +1,12 @@
 $(document).ready(function () {
-    $('.alert.alert-block.alert-danger').hide();
+    // $('.alert.alert-block.alert-danger').hide();
+
+    $("#paymentTypeButtonGroup :input").change(function () {
+        console.log(this); // points to the clicked input button
+        $(this).parent().removeClass('btn-disabled');
+        $(this).parent().addClass('btn-primary');
+    });
+
     $('[id^=id_demogrpahic_auction-]').each(function (i, el) {
         if ($(this).is('select')) {
             $(this).attr("disabled", true);

@@ -75,7 +75,12 @@ class AuctionForm(forms.ModelForm):
             'placementStart', 
             'placementEnd', 
             'reservePrice',
-            'payFrequency', 
+            'payFrequency',
+            # 'paymentType',
+            'treatmentCost',
+            'treatmentMin',
+            'assessmentCost',
+            'assessmentMin',
             'mondayStart', 
             'mondayEnd',
             'tuesdayStart',
@@ -91,14 +96,7 @@ class AuctionForm(forms.ModelForm):
             'sundayStart',
             'sundayEnd',
             'comments',
-        #     'MSK',
-        #     'neuro',
-        #     'cardioResp',
-        #     'underEightteen',
-        #     'eightteenToSixtyFive',
-        #     'overSixtyFive'
         )
-        # labels = {}
 
         widgets = {
             'placementStart': forms.DateInput(format=('%Y-%m-%d'), attrs={'class': 'form-control', 'placeholder': 'Select a date', 'type': 'date', 'value': '2022-01-01'}),

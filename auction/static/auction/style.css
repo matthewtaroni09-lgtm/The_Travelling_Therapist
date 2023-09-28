@@ -128,13 +128,13 @@
 
 .btn-primary:hover,
 .btn-primary:focus,
-.btn-primary:disabled {
+.btn-primary:disabled,
+.btn-disabled {
     background-color: var(--secondary-colour);
     border-color: var(--dark-colour);
     color: var(--dark-colour);
     transition: 0.2s ease-in-out;
 }
-
 
 /**************************** 5. PAGES ****************************/
 /* Index */

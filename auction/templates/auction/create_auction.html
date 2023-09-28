@@ -27,8 +27,7 @@
           <th><label for="id_demogrpahic_auction-"></label></th>
           <td>
             <input type="number" name="demogrpahic_auction-" id="id_demogrpahic_auction-" value={{ f.percentage }}>
-            <input type="hidden" name="demogrpahic_auction-" id="id_demogrpahic_auction-"><input type="hidden"
-              name="demogrpahic_auction-" id="id_demogrpahic_auction-">
+            <input type="hidden" name="demogrpahic_auction-" id="id_demogrpahic_auction-"><input type="hidden" name="demogrpahic_auction-" id="id_demogrpahic_auction-">
           </td>
         </tr>
       </div>
@@ -45,9 +44,7 @@
       <div class="row">
         <div class="mb-12 col-md-12">
           <label>What Type of Therapist are you looking for?</label>
-          <select name="type" class="select form-control" required="" id="id_type"
-            hx-post="{% url 'get-practice-types' %}" hx-target='#practiceAreaDiv' hx-trigger="click"
-            hx-include="[name='type']">
+          <select name="type" class="select form-control" required="" id="id_type" hx-post="{% url 'get-practice-types' %}" hx-target='#practiceAreaDiv' hx-trigger="click" hx-include="[name='type']">
             <option value="0">---------</option>
             {% for user in user_types %}
             {% if user.name == selected.name %}
@@ -58,6 +55,16 @@
             {% endfor %}
           </select>
         </div>
+
+        <div id="paymentTypeButtonGroup" class="btn-group" data-toggle="buttons">
+          <label class="btn btn-disabled">
+            <input type="radio" class="btn-check" name="options" id="option1" autocomplete="off">Flat Fee
+          </label>
+          <label class="btn btn-disabled">
+            <input type="radio" class="btn-check" name="options" id="option2" autocomplete="off">Split Compensation
+          </label>
+        </div>
+
         <div class="mb-3 col-md-6">
           {{ form.placementStart|as_crispy_field }}
         </div>
@@ -74,6 +81,19 @@
         <div class="mb-3 col-md-6">
           {{ form.payFrequency|as_crispy_field }}
         </div>
+        <div class="mb-3 col-md-6">
+          {{ form.treatmentCost|as_crispy_field }}
+        </div>
+        <div class="mb-3 col-md-6">
+          {{ form.treatmentMin|as_crispy_field }}
+        </div>
+        <div class="mb-3 col-md-6">
+          {{ form.assessmentCost|as_crispy_field }}
+        </div>
+        <div class="mb-3 col-md-6">
+          {{ form.assessmentMin|as_crispy_field }}
+        </div>
+
         <div class="mb-3">
           <h3 class="fs-5 my-3 text-weight-normal">Therapist Schedule <span class="text-weight-thin fs-6">*Leave day
               blank to indicate days the therapist will not be working</span>
