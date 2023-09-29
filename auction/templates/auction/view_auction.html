@@ -127,9 +127,14 @@
     <p class="col-8 text-weight-light border mb-0 py-2">{{ auction.clinic.city }}, {{ auction.clinic.province }}</p>
   </div>
   <div class="row w-100 mx-auto">
+    <p class="col-4 text-weight-bold border mb-0 py-2 bg-light">Payment Type</p>
+    <p class="col-8 text-weight-light border mb-0 py-2">{{ payment_type }}</p>
+  </div>
+  <div class="row w-100 mx-auto">
     <p class="col-4 text-weight-bold border mb-0 py-2 bg-light">Dates of Coverage</p>
     <p class="col-8 text-weight-light border mb-0 py-2">{{ auction.placementStart }} - {{ auction.placementEnd }}</p>
   </div>
+  {% if payment_type == "Split Compensation" %}
   <div class="row w-100 mx-auto">
     <p class="col-4 text-weight-bold border mb-0 py-2 bg-light">Rate for Treatments</p>
     <p class="col-3 text-weight-light border mb-0 py-2">${{ auction.treatmentCost }}</p>
@@ -142,6 +147,11 @@
     <p class="col-3 text-weight-bold border mb-0 py-2 bg-light">Minimum # of Assessments</p>
     <p class="col-2 text-weight-light border mb-0 py-2">{{ auction.assessmentMin }}</p>
   </div>
+  <div class="row w-100 mx-auto">
+    <p class="col-4 text-weight-bold border mb-0 py-2 bg-light">Daily Minimum</p>
+    <p class="col-8 text-weight-light border mb-0 py-2">${{ daily_minimum }}</p>
+  </div>
+  {% endif %}
   <div class="row w-100 mx-auto">
     <div class="col-4  border mb-0 py-2">
       <p class="text-weight-bold bg-light">Days Working</p>

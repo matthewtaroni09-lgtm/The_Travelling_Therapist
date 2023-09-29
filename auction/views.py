@@ -229,6 +229,9 @@ def view_auction(request, auction_id):
     auction = Auction.objects.get(pk=auction_id)
     num_bids = Bid.objects.filter(auction=auction_id).count()
     num_biders = Bid.objects.values('user').filter(auction=auction_id).distinct().count()
+    payment_type = str(auction.paymentType)
+    daily_minimum = (auction.assessmentCost * auction.assessmentMin) + (auction.treatmentCost * auction.treatmentMin)
+    print(daily_minimum)
     auction_change = False
     submitted = False
     max_bid = 0
@@ -280,22 +283,28 @@ def view_auction(request, auction_id):
             bid.save()
             return HttpResponseRedirect('/auction/' + str(auction.auctionID))
         else:
+            print(payment_type)
             context = {
                 'auction': auction,
                 'form': form,
                 'submitted': submitted,
                 'num_bids': num_bids,
-                'num_biders': num_biders
+                'num_biders': num_biders,
+                'payment_type': payment_type,
+                'daily_minimum': daily_minimum
             }
             return render(request, 'auction/view_auction.html', context)
     else:
+        print(payment_type)
         form = BidForm(None)
         context = {
                 'auction': auction,
                 'form': form,
                 'submitted': submitted,
                 'num_bids': num_bids,
-                'num_biders': num_biders
+                'num_biders': num_biders,
+                'payment_type': payment_type,
+                'daily_minimum': daily_minimum
             }
         return render(request, 'auction/view_auction.html', context)
     
