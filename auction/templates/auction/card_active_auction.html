@@ -6,19 +6,15 @@
       {% else %}
       <img src="/media/images/no-image.jpg" class="card-img-top card-image" alt="Image of Clinic">
       {% endif %}
-      <div
-        class="d-flex text-align-center align-items-center bg-dark p-2 rounded position-absolute bottom-0 start-0 text-x-small">
-        <span class="material-icons small text-white">schedule</span><time id="auctionTimer-{{ auction.auctionID }}"
-          class="m-0 d-flex me-3 text-white">{{ auction.get_time_diff }}</time>
+      <div class="d-flex text-align-center align-items-center bg-dark p-2 rounded position-absolute bottom-0 start-0 text-x-small">
+        <span class="material-icons small text-white">schedule</span><time id="auctionTimer-{{ auction.auctionID }}" class="m-0 d-flex me-3 text-white">{{ auction.get_time_diff }}</time>
         <p class="m-0 text-white">{{ auction.get_bid }}</p>
-        <!-- <p class="m-0 d-none d-lg-block text-white">
-          # Bids:<span class="ms-2 text-white">{{ auction.get_num_bids }}</span>
-        </p> -->
       </div>
     </div>
     <div class="card-body">
       <h2 class="card-title">{{ auction.clinic.clinicName }}{{ auction.clinicName }}</h2>
       <p class="text-weight-thin mb-0">{{ auction.placementStart }} - {{ auction.placementEnd }}</p>
+      <p class="text-weight-thin mb-0"><b>{{ auction.paymentType }}</b></p>
       <p class="text-weight-thin mb-0">Temporary {{ auction.type }}</p>
       <p class="text-weight-thin mb-0">
         {{auction.city}}{{auction.clinic.city}}, {{auction.province}}{{auction.clinic.province}}</p>
