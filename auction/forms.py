@@ -258,12 +258,6 @@ class RegisterAcount(UserCreationForm):
         imageTwo = self.cleaned_data.get('imageTwo')
         imageThree = self.cleaned_data.get('imageThree')
         imageFour = self.cleaned_data.get('imageFour')
-        # underEighteen = self.cleaned_data.get('underEighteen')
-        # eighteenToSixtyFive = self.cleaned_data.get('eighteenToSixtyFive')
-        # overSixtyFive = self.cleaned_data.get('overSixtyFive')
-        # MSK = self.cleaned_data.get('MSK')
-        # neuro = self.cleaned_data.get('neuro')
-        # cardioResp = self.cleaned_data.get('cardioResp')
 
         error_list = []
 

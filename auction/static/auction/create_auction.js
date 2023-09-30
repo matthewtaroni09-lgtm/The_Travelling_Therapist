@@ -1,10 +1,47 @@
 $(document).ready(function () {
     // $('.alert.alert-block.alert-danger').hide();
+    // $('.splitCompFields').hide();
 
     $("#paymentTypeButtonGroup :input").change(function () {
         console.log(this); // points to the clicked input button
-        $(this).parent().removeClass('btn-disabled');
-        $(this).parent().addClass('btn-primary');
+        $('#flatFeeButton').removeClass('btn-disabled');
+        $('#flatFeeButton').removeClass('btn-primary');
+        $('#splitCompButton').removeClass('btn-disabled');
+        $('#splitCompButton').removeClass('btn-primary');
+
+        if ($(this).parent().attr("id") === 'flatFeeButton') {
+            $('#flatFeeButton').addClass('btn-primary');
+            $('#splitCompButton').addClass('btn-disabled');
+            $('.splitCompFields').hide();
+            $("label[for='id_reservePrice']").text('Reserve Price');
+        }
+        else {
+            $('#splitCompButton').addClass('btn-primary');
+            $('#flatFeeButton').addClass('btn-disabled');
+            $('.splitCompFields').show();
+            $("label[for='id_reservePrice']").text('Reserve Split');
+        }
+    });
+
+    const currencyFormatter = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+    });
+
+    $('#id_treatmentCost, #id_treatmentMin, #id_assessmentCost, #id_assessmentMin').change(function () {
+        let treatmentCost = $('#id_treatmentCost').val();
+        let treatmentMin = $('#id_treatmentMin').val();
+        let assessmentCost = $('#id_assessmentCost').val();
+        let assessmentMin = $('#id_assessmentMin').val();
+        let dailyMin = 0;
+
+        if (treatmentCost !== '' && treatmentMin !== '' && assessmentCost !== '' && assessmentMin !== '') {
+            dailyMin = (parseFloat(treatmentCost) * parseFloat(treatmentMin)) + (parseFloat(assessmentCost) * parseFloat(assessmentMin));
+            $('#dailyMinimum').text('Daily Minimum: ' + currencyFormatter.format(dailyMin));
+        }
+        else {
+            $('#dailyMinimum').text('Daily Minimum: $-');
+        }
     });
 
     $('[id^=id_demogrpahic_auction-]').each(function (i, el) {

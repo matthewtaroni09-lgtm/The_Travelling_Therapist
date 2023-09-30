@@ -60,15 +60,20 @@
           <div class="modal-body">
             <form method="post">
               <p>{{ auction.get_bid }}</p>
+              {% csrf_token %}
+              {% if payment_type == "Flat Fee" %}
               <div class="mb-3">
-                {% csrf_token %}
                 {{ form.amount|as_crispy_field }}
-              </div>
-              <div class="mb-3">
-                <b>0</b> <input id="splitCompSlider" type="range" class="span2" value="10" data-slider-min="0" data-slider-max="100" data-slider-step="1" /> <b>100</b>
               </div>
               {% if num_bids > 0%}
               <p>{{ auction.get_max_bid }}</p>
+              {% endif %}
+              {% else %}
+              <div class="mb-3">
+                <span id="currentBidPercentage">{{ auction.currentLowBid }}%</span>
+                <br>
+                0<input id="splitCompSlider" type="range" class="span2" value={{ auction.currentLowBid }} data-slider-min="0" data-slider-max="100" data-slider-step="1" />100%
+              </div>
               {% endif %}
               <div id="warningMessage" class="alert" role="alert"></div>
               <small>For more information on the bidding process see our <a href="{% url 'about' %}" target="_blank">FAQ</a></small>

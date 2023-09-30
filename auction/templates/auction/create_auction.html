@@ -57,10 +57,10 @@
         </div>
 
         <div id="paymentTypeButtonGroup" class="btn-group" data-toggle="buttons">
-          <label class="btn btn-disabled">
+          <label id="flatFeeButton" class="btn btn-disabled">
             <input type="radio" class="btn-check" name="options" id="option1" autocomplete="off">Flat Fee
           </label>
-          <label class="btn btn-disabled">
+          <label id="splitCompButton" class="btn btn-disabled">
             <input type="radio" class="btn-check" name="options" id="option2" autocomplete="off">Split Compensation
           </label>
         </div>
@@ -81,19 +81,21 @@
         <div class="mb-3 col-md-6">
           {{ form.payFrequency|as_crispy_field }}
         </div>
-        <div class="mb-3 col-md-6">
+        <div class="mb-3 col-md-6 splitCompFields">
           {{ form.treatmentCost|as_crispy_field }}
         </div>
-        <div class="mb-3 col-md-6">
+        <div class="mb-3 col-md-6 splitCompFields">
           {{ form.treatmentMin|as_crispy_field }}
         </div>
-        <div class="mb-3 col-md-6">
+        <div class="mb-3 col-md-6 splitCompFields">
           {{ form.assessmentCost|as_crispy_field }}
         </div>
-        <div class="mb-3 col-md-6">
+        <div class="mb-3 col-md-6 splitCompFields">
           {{ form.assessmentMin|as_crispy_field }}
         </div>
-
+        <div class="mb-3 col-md-6 splitCompFields">
+          <p id="dailyMinimum">Daily Minimum: $-</p>
+        </div>
         <div class="mb-3">
           <h3 class="fs-5 my-3 text-weight-normal">Therapist Schedule <span class="text-weight-thin fs-6">*Leave day
               blank to indicate days the therapist will not be working</span>

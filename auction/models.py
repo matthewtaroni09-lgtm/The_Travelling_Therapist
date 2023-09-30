@@ -147,16 +147,23 @@ class Auction(models.Model):
         return str(self.clinic.clinicName) + ": " + str(self.auctionStart.strftime("%m/%d/%Y %H:%M"))
 
     def get_bid(self):
+        print(self.paymentType)
         if self.currentLowBid is None:
             return str('No Bids Yet')
         elif self.reservePrice is not None and (self.closed == True and self.active == False and self.winningPrice > self.reservePrice):
             return 'Reserve price not met'
         elif self.closed == True and self.active == False and self.winningPrice is not None:
-            return 'Winning bid: $' + str("{:,}".format(self.winningPrice))
+            if str(self.paymentType) == 'Flat Fee':
+                return 'Winning bid: $' + str("{:,}".format(self.winningPrice))
+            elif str(self.paymentType) == 'Split Compensation':
+                return 'Winning bid: ' + str("{:,}".format(self.winningPrice)) + '%'
         elif self.closed == True and self.active == False and self.winningPrice is None:
             return 'No winner'
         else:
-            return 'Current Low Bid: $' + str("{:,}".format(self.currentLowBid))
+            if str(self.paymentType) == 'Flat Fee':
+                return 'Current Low Bid: $' + str("{:,}".format(self.currentLowBid))
+            elif str(self.paymentType) == 'Split Compensation':
+                return 'Current Low Bid: ' + str("{:,}".format(self.currentLowBid)) + '%'
 
     def get_num_bids(self):
         num_bids = Bid.objects.filter(auction=self.auctionID, active=True).count()

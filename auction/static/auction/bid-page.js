@@ -44,6 +44,18 @@ $(document).ready(function () {
         $("#exampleModal").modal("show");
     }
 
+    // Update slider current value
+    $('#splitCompSlider').slider({
+        formatter: function (value) {
+            return value;
+        }
+    }).on('change', change); // Change the 'change' to any other event slide, slideStart, etc.
+
+
+    function change(e) {
+        $('#currentBidPercentage').html($(this).val() + "%");
+    }
+
     $.ajax({
         type: "GET",
         url: "/auction/data/view_auction_data",
@@ -57,10 +69,10 @@ $(document).ready(function () {
             auctionEnd = new Date(response.auctionEnd);
             reservePrice = response.reservePrice;
 
-            let currentTime = new Date().getTime()
-            let subtractMilliSecondsValue = auctionEnd.getTime() - currentTime;
-            console.log(subtractMilliSecondsValue);
-            setTimeout(auctionEnded, subtractMilliSecondsValue);
+            // let currentTime = new Date().getTime()
+            // let subtractMilliSecondsValue = auctionEnd.getTime() - currentTime;
+            // console.log(subtractMilliSecondsValue);
+            // setTimeout(auctionEnded, subtractMilliSecondsValue);
 
             if (currentLowBid == 1) {
                 $("#submitBidButton").prop("disabled", true);

@@ -15,7 +15,7 @@ class BidInline(admin.TabularInline):
 @admin.register(Auction)
 class AuctionAdmin(admin.ModelAdmin):
     readonly_fields = ('cronID',)
-    list_display = ('auctionID', 'clinic', 'auctionStart', 'auctionEnd', 'active', 'closed', 'placementStart', 'placementEnd', 'winner', 'winningPrice')
+    list_display = ('auctionID', 'clinic', 'paymentType', 'auctionStart', 'auctionEnd', 'active', 'closed', 'placementStart', 'placementEnd', 'winner', 'winningPrice')
     # Reverse alpahbetical order -name
     ordering = ('auctionID', )
     search_fields = ('auctionID',)

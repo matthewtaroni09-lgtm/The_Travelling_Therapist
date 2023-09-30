@@ -246,13 +246,16 @@ def view_auction(request, auction_id):
         max_bid = 0
 
     if request.method == 'POST':
+        print('post')
         form = BidForm(request.POST, max_bid=max_bid, min_bid_increment=auction.minimumBidIncrement)
+        print(form.errors)
         if form.is_valid():
             bid = form.save(commit=False)
             bid.auction = auction
             bid.user = request.user
             bid.active = True
             bid.createdBy = request.user
+            bid.amount = 10
             if auction.currentLowBid is None:
                 prev_low_bid = 0
             else:
@@ -283,7 +286,7 @@ def view_auction(request, auction_id):
             bid.save()
             return HttpResponseRedirect('/auction/' + str(auction.auctionID))
         else:
-            print(payment_type)
+            print('else')
             context = {
                 'auction': auction,
                 'form': form,
@@ -295,7 +298,6 @@ def view_auction(request, auction_id):
             }
             return render(request, 'auction/view_auction.html', context)
     else:
-        print(payment_type)
         form = BidForm(None)
         context = {
                 'auction': auction,
