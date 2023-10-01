@@ -76,7 +76,7 @@ class AuctionForm(forms.ModelForm):
             'placementEnd', 
             'reservePrice',
             'payFrequency',
-            # 'paymentType',
+            'paymentType',
             'treatmentCost',
             'treatmentMin',
             'assessmentCost',
@@ -217,6 +217,7 @@ class BidForm(forms.ModelForm):
     class Meta:
         model = Bid
         fields = ('amount', )
+        
 
     def clean_amount(self):
         amount = self.cleaned_data.get("amount")

@@ -1,32 +1,24 @@
+const currencyFormatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+});
+
 $(document).ready(function () {
-    // $('.alert.alert-block.alert-danger').hide();
+    $('.alert.alert-block.alert-danger').hide();
     // $('.splitCompFields').hide();
 
-    $("#paymentTypeButtonGroup :input").change(function () {
-        console.log(this); // points to the clicked input button
-        $('#flatFeeButton').removeClass('btn-disabled');
-        $('#flatFeeButton').removeClass('btn-primary');
-        $('#splitCompButton').removeClass('btn-disabled');
-        $('#splitCompButton').removeClass('btn-primary');
-
-        if ($(this).parent().attr("id") === 'flatFeeButton') {
-            $('#flatFeeButton').addClass('btn-primary');
-            $('#splitCompButton').addClass('btn-disabled');
-            $('.splitCompFields').hide();
-            $("label[for='id_reservePrice']").text('Reserve Price');
-        }
-        else {
-            $('#splitCompButton').addClass('btn-primary');
-            $('#flatFeeButton').addClass('btn-disabled');
+    $('#id_paymentType').change(function () {
+        if ($('#id_paymentType').find(":selected").text() === 'Split Compensation') {
             $('.splitCompFields').show();
             $("label[for='id_reservePrice']").text('Reserve Split');
         }
+        else {
+            $('.splitCompFields').hide();
+            $("label[for='id_reservePrice']").text('Reserve Price');
+        }
     });
 
-    const currencyFormatter = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-    });
+
 
     $('#id_treatmentCost, #id_treatmentMin, #id_assessmentCost, #id_assessmentMin').change(function () {
         let treatmentCost = $('#id_treatmentCost').val();
@@ -343,6 +335,8 @@ function getDateDiff() {
     let end = "";
     let startDate = "";
     let endDate = "";
+    let contractCost = 0
+
     if ($('#id_placementStart')[0].value != "") {
         start = $('#id_placementStart')[0].value.split("-");
         startDate = new Date(start[0], start[1] - 1, start[2]);
@@ -370,6 +364,18 @@ function getDateDiff() {
                 text: "Monthly"
             }));
         }
+    }
+    if ($('#id_paymentType').find(":selected").text() === 'Split Compensation' && endDate > startDate) {
+        if (dateDiff * 25 < 300) {
+            contractCost = 300;
+        }
+        else if (dateDiff * 25 > 5000) {
+            contractCost = 5000;
+        }
+        else {
+            contractCost = dateDiff * 25;
+        }
+        $('#contractCost').text('Contract Cost: ' + currencyFormatter.format(contractCost) + ' + HST');
     }
 }
 
@@ -409,3 +415,25 @@ function days_between(date1, date2, abs) {
     return Math.round(differenceMs / ONE_DAY);
 
 }
+
+// *******For payment type button group*******
+// $("#paymentTypeButtonGroup :input").change(function () {
+//     console.log(this); // points to the clicked input button
+//     $('#flatFeeButton').removeClass('btn-disabled');
+//     $('#flatFeeButton').removeClass('btn-primary');
+//     $('#splitCompButton').removeClass('btn-disabled');
+//     $('#splitCompButton').removeClass('btn-primary');
+
+//     if ($(this).parent().attr("id") === 'flatFeeButton') {
+//         $('#flatFeeButton').addClass('btn-primary');
+//         $('#splitCompButton').addClass('btn-disabled');
+//         $('.splitCompFields').hide();
+//         $("label[for='id_reservePrice']").text('Reserve Price');
+//     }
+//     else {
+//         $('#splitCompButton').addClass('btn-primary');
+//         $('#flatFeeButton').addClass('btn-disabled');
+//         $('.splitCompFields').show();
+//         $("label[for='id_reservePrice']").text('Reserve Split');
+//     }
+// });

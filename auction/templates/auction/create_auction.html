@@ -56,15 +56,18 @@
           </select>
         </div>
 
-        <div id="paymentTypeButtonGroup" class="btn-group" data-toggle="buttons">
+        <!-- <div id="paymentTypeButtonGroup" class="btn-group" data-toggle="buttons">
           <label id="flatFeeButton" class="btn btn-disabled">
             <input type="radio" class="btn-check" name="options" id="option1" autocomplete="off">Flat Fee
           </label>
           <label id="splitCompButton" class="btn btn-disabled">
             <input type="radio" class="btn-check" name="options" id="option2" autocomplete="off">Split Compensation
           </label>
-        </div>
+        </div> -->
 
+        <div class="mb-12 col-md-12">
+          {{ form.paymentType|as_crispy_field }}
+        </div>
         <div class="mb-3 col-md-6">
           {{ form.placementStart|as_crispy_field }}
         </div>
@@ -95,6 +98,9 @@
         </div>
         <div class="mb-3 col-md-6 splitCompFields">
           <p id="dailyMinimum">Daily Minimum: $-</p>
+        </div>
+        <div class="mb-3 col-md-6 splitCompFields">
+          <p id="contractCost">Contract Cost: $-</p>
         </div>
         <div class="mb-3">
           <h3 class="fs-5 my-3 text-weight-normal">Therapist Schedule <span class="text-weight-thin fs-6">*Leave day

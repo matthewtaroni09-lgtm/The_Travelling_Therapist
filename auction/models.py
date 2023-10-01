@@ -225,7 +225,7 @@ class Bid(models.Model):
     modifiedBy = models.ForeignKey(User, related_name='bid_modified_by', blank=True, null=True, on_delete=models.CASCADE)
 
     def __str__(self):
-        return str(self.user) + ': $' + str(self.amount)
+        return str(self.user) #+ ': $' + str(self.amount)
 
 class Demographic(models.Model):
     auction = models.ForeignKey(Auction, related_name='demogrpahic_auction', on_delete=models.CASCADE, default=1)
