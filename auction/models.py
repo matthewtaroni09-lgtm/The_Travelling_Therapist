@@ -143,6 +143,7 @@ class Auction(models.Model):
     treatmentMin = models.FloatField(verbose_name='Minimum # of Treatments', blank=True, null=True)
     assessmentCost = models.IntegerField(verbose_name='Assessment Cost', blank=True, null=True)
     assessmentMin = models.FloatField(verbose_name='Minimum # of Assessments', blank=True, null=True)
+    invoiceNumber = models.IntegerField(verbose_name='Invoice Number', blank=True, null=True)
 
     def __str__(self):
         return str(self.clinic.clinicName) + ": " + str(self.auctionStart.strftime("%m/%d/%Y %H:%M"))

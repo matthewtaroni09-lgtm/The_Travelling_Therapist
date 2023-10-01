@@ -508,7 +508,6 @@ def create_auction(request):
     demographic_form_set = inlineformset_factory(Auction, Demographic, form=DemographicForm, fields=('category', 'percentage'), max_num=max_demographics, extra=max_demographics, can_delete=False, help_texts=None)
     practice_area_form_set = inlineformset_factory(Auction, PracticeArea, form=PracticeAreaForm, fields=('category', 'percentage'), max_num=max_practice_areas, extra=max_practice_areas, can_delete=False)
     account = Account.objects.get(user=request.user.id)
-    # payment_type = PaymentType.objects.all()[0]
     if active_auctions_list.count() <= max_auctions.numAllowedAuctions:
         print("in")
         if request.method == "POST":
@@ -524,12 +523,12 @@ def create_auction(request):
                 auction.clinic = request.user.account
                 auction.auctionStart = datetime.datetime.now()
                 auction.auctionEnd = datetime.datetime.now() + datetime.timedelta(seconds=admin.defaultAuctionLength)
-                # auction.paymentType = payment_type
                 auction.closed = False
                 auction.active = settings.DEFAULT_AUCTION_ACTIVE
                 auction.deleted = False
                 auction.createdBy = request.user
                 auction.modifiedBy = request.user
+                auction.invoiceNumber = get_next_invoice_number()
                 auction.save()
                 formset_demographic = demographic_form_set(request.POST, instance=auction, queryset=Demographic.objects.none())
                 formset_practice = practice_area_form_set(request.POST, instance=auction, queryset=PracticeArea.objects.none())
@@ -768,3 +767,11 @@ def set_bid_increment(amount):
     else:
         min_increment = 500
     return min_increment
+
+def get_next_invoice_number():
+    auctions = Auction.objects.all()
+    max = 0
+    for auction in auctions:
+        if auction.invoiceNumber > max:
+            max = auction.invoiceNumber
+    return max + 1
