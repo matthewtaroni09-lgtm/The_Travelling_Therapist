@@ -20,6 +20,11 @@
                     <a class="nav-link text-weight-normal {% if path == 'create-auction' %}active{% endif %}" href="{% url 'create-auction' %}">Create Auction</a>
                 </li>
                 {% endif %}
+                {% if user.is_staff %}
+                <li class="nav-item">
+                    <a class="nav-link text-weight-normal {% if path == 'admin-summary' %}active{% endif %}" href="{% url 'admin-summary' %}">Admin Summary</a>
+                </li>
+                {% endif %}
                 <li class="nav-item">
                     <a class="nav-link text-weight-normal {% if path == 'profile' %}active{% endif %}" href="{% url 'profile' %}">Profile</a>
                 </li>

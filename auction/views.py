@@ -486,6 +486,29 @@ def get_demographics(request, clinic_id):
     print(account.demographic)
     return JsonResponse({'data': data})
 
+def admin_summary(request):
+    accounts = Account.objects.all()
+    auctions = Auction.objects.all()
+    bids = Bid.objects.all()
+    user_types = UserType.objects.all()
+    user_types_count = {}
+
+    for type in user_types:
+        count = 0
+        for account in accounts:
+            if account.userType == type:
+                count = count + 1
+        user_types_count[type] = count
+
+    print(user_types_count)
+            
+    context = {
+        'user_types_count': user_types_count,
+        'auction_count': auctions.__len__,
+        'bid_count': bids.__len__,
+    }
+    return render(request, 'auction/admin_summary.html', context)
+
 def create_auction(request):
     if request.user.is_authenticated == False:
         return render(request, 'auction/create_auction.html', {})

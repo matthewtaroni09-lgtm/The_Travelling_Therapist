@@ -27,6 +27,10 @@ urlpatterns = [
     path('reset/done/', auth_views.PasswordResetCompleteView.as_view(template_name='auction/password/password_reset_complete.html'), name='password_reset_complete'),      
 ]
 
+admin.site.index_title = 'The Traveling Therapist'
+admin.site.site_header = 'The Traveling Therapist Admin'
+admin.site.site_title = 'The Traveling Therapist'
+
 if settings.DEBUG:  # new
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

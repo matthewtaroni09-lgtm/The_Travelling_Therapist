@@ -24,6 +24,7 @@ urlpatterns = [
     path("view_user_auctions", views.view_user_auctions, name="view-user-auctions"),
     path("terms_and_conditions", views.terms_and_conditions, name="terms-and-conditions"),
     path("privacy_policy", views.privacy_policy, name="privacy-policy"),
+    path("admin_summary", views.admin_summary, name="admin-summary"),
 
     # AJAX Calls
     path('auction/data/auction/<auction_id>', views.get_auction_end, name="get-auction-end"),
