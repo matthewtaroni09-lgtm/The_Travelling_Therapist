@@ -230,8 +230,9 @@ def view_auction(request, auction_id):
     num_bids = Bid.objects.filter(auction=auction_id).count()
     num_biders = Bid.objects.values('user').filter(auction=auction_id).distinct().count()
     payment_type = str(auction.paymentType)
-    daily_minimum = (auction.assessmentCost * auction.assessmentMin) + (auction.treatmentCost * auction.treatmentMin)
-    print(daily_minimum)
+    daily_minimum = 0
+    if payment_type == 'Fee Split':
+        daily_minimum = (auction.assessmentCost * auction.assessmentMin) + (auction.treatmentCost * auction.treatmentMin)
     auction_change = False
     submitted = False
     max_bid = 0
@@ -507,7 +508,7 @@ def create_auction(request):
     demographic_form_set = inlineformset_factory(Auction, Demographic, form=DemographicForm, fields=('category', 'percentage'), max_num=max_demographics, extra=max_demographics, can_delete=False, help_texts=None)
     practice_area_form_set = inlineformset_factory(Auction, PracticeArea, form=PracticeAreaForm, fields=('category', 'percentage'), max_num=max_practice_areas, extra=max_practice_areas, can_delete=False)
     account = Account.objects.get(user=request.user.id)
-    payment_type = PaymentType.objects.all()[0]
+    # payment_type = PaymentType.objects.all()[0]
     if active_auctions_list.count() <= max_auctions.numAllowedAuctions:
         print("in")
         if request.method == "POST":
@@ -522,8 +523,8 @@ def create_auction(request):
                 auction = form.save(commit=False)
                 auction.clinic = request.user.account
                 auction.auctionStart = datetime.datetime.now()
-                auction.auctionEnd = datetime.datetime.now() + datetime.timedelta(seconds=settings.DEAFULT_AUCTION_LENGTH)
-                auction.paymentType = payment_type
+                auction.auctionEnd = datetime.datetime.now() + datetime.timedelta(seconds=admin.defaultAuctionLength)
+                # auction.paymentType = payment_type
                 auction.closed = False
                 auction.active = settings.DEFAULT_AUCTION_ACTIVE
                 auction.deleted = False
