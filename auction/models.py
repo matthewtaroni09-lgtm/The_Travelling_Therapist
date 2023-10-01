@@ -45,6 +45,7 @@ path_and_rename = PathAndRename("images/")
 
 class UserType(models.Model):
     name = models.CharField(verbose_name='Therapist Type', max_length=200, help_text='Select a therapist type')
+    feeSplit = models.BooleanField(verbose_name='Allowed Fee Split', help_text='If checked this user type will be allowed to select fee split as a payment type.')
 
     def __str__(self):
         return self.name

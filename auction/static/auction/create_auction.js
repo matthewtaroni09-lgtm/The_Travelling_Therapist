@@ -5,20 +5,18 @@ const currencyFormatter = new Intl.NumberFormat('en-US', {
 
 $(document).ready(function () {
     $('.alert.alert-block.alert-danger').hide();
-    // $('.splitCompFields').hide();
+    $('.feeSplitFields').hide();
 
     $('#id_paymentType').change(function () {
-        if ($('#id_paymentType').find(":selected").text() === 'Split Compensation') {
-            $('.splitCompFields').show();
+        if ($('#id_paymentType').find(":selected").text() === 'Fee Split') {
+            $('.feeSplitFields').show();
             $("label[for='id_reservePrice']").text('Reserve Split');
         }
         else {
-            $('.splitCompFields').hide();
+            $('.feeSplitFields').hide();
             $("label[for='id_reservePrice']").text('Reserve Price');
         }
     });
-
-
 
     $('#id_treatmentCost, #id_treatmentMin, #id_assessmentCost, #id_assessmentMin').change(function () {
         let treatmentCost = $('#id_treatmentCost').val();
@@ -67,6 +65,40 @@ $(document).ready(function () {
 
 $('#id_type').change(function () {
     $("#optionsMessage").hide();
+    $('.feeSplitFields').hide();
+    $.ajax({
+        type: "GET",
+        url: "/auction/data/check_user_payment_type",
+        data: {
+            'name': $('#id_type').find(":selected").text()
+        },
+        success: function (response) {
+            console.log(response);
+            if (!response.feeSplit) {
+                $("#id_paymentType option[value='1']").remove();
+                $('#id_paymentType option[value=2]').attr('selected', 'selected');
+            }
+            else {
+                $('#id_paymentType').val('');
+                let feeSplitPresent = false;
+                $("#id_paymentType > option").each(function () {
+                    if (this.text == "Fee Split") {
+                        feeSplitPresent = true;
+                    }
+                });
+                if (!feeSplitPresent) {
+                    $('#id_paymentType').append($('<option>', {
+                        value: 1,
+                        text: "Fee Split"
+                    }));
+                }
+            }
+
+        },
+        error: function (error) {
+            console.log('error: ', error);
+        }
+    });
 });
 $('#id_placementStart').change(function () {
     getDateDiff();
@@ -365,7 +397,7 @@ function getDateDiff() {
             }));
         }
     }
-    if ($('#id_paymentType').find(":selected").text() === 'Split Compensation' && endDate > startDate) {
+    if ($('#id_paymentType').find(":selected").text() === 'Fee Split' && endDate > startDate) {
         if (dateDiff * 25 < 300) {
             contractCost = 300;
         }
@@ -421,19 +453,19 @@ function days_between(date1, date2, abs) {
 //     console.log(this); // points to the clicked input button
 //     $('#flatFeeButton').removeClass('btn-disabled');
 //     $('#flatFeeButton').removeClass('btn-primary');
-//     $('#splitCompButton').removeClass('btn-disabled');
-//     $('#splitCompButton').removeClass('btn-primary');
+//     $('#feeSplitButton').removeClass('btn-disabled');
+//     $('#feeSplitButton').removeClass('btn-primary');
 
 //     if ($(this).parent().attr("id") === 'flatFeeButton') {
 //         $('#flatFeeButton').addClass('btn-primary');
-//         $('#splitCompButton').addClass('btn-disabled');
-//         $('.splitCompFields').hide();
+//         $('#feeSplitButton').addClass('btn-disabled');
+//         $('.feeSplitFields').hide();
 //         $("label[for='id_reservePrice']").text('Reserve Price');
 //     }
 //     else {
-//         $('#splitCompButton').addClass('btn-primary');
+//         $('#feeSplitButton').addClass('btn-primary');
 //         $('#flatFeeButton').addClass('btn-disabled');
-//         $('.splitCompFields').show();
+//         $('.feeSplitFields').show();
 //         $("label[for='id_reservePrice']").text('Reserve Split');
 //     }
 // });

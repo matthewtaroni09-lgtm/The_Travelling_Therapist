@@ -476,7 +476,7 @@ def get_view_auction_data(request):
         'minimumBidIncrement': auction.minimumBidIncrement,
         'auctionEnd': auction.auctionEnd,
         'reservePrice': auction.reservePrice
-        })
+    })
 
 def get_demographics(request, clinic_id):
     account = Account.objects.get(pk=clinic_id)
@@ -629,7 +629,13 @@ def create_auction(request):
             'max_forms': max_auctions.numAllowedAuctions
         })
         return render(request, 'auction/create_auction.html', parameter)
-    
+
+def check_user_payment_type(request):
+    user_type = UserType.objects.get(name=request.GET['name'])
+    return JsonResponse({
+        'feeSplit': user_type.feeSplit
+    })
+
 # @login_required
 # @transaction.atomic
 def register(request):

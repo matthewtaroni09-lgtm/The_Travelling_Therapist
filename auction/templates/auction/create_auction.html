@@ -60,7 +60,7 @@
           <label id="flatFeeButton" class="btn btn-disabled">
             <input type="radio" class="btn-check" name="options" id="option1" autocomplete="off">Flat Fee
           </label>
-          <label id="splitCompButton" class="btn btn-disabled">
+          <label id="feeSplitButton" class="btn btn-disabled">
             <input type="radio" class="btn-check" name="options" id="option2" autocomplete="off">Split Compensation
           </label>
         </div> -->
@@ -84,22 +84,22 @@
         <div class="mb-3 col-md-6">
           {{ form.payFrequency|as_crispy_field }}
         </div>
-        <div class="mb-3 col-md-6 splitCompFields">
+        <div class="mb-3 col-md-6 feeSplitFields">
           {{ form.treatmentCost|as_crispy_field }}
         </div>
-        <div class="mb-3 col-md-6 splitCompFields">
+        <div class="mb-3 col-md-6 feeSplitFields">
           {{ form.treatmentMin|as_crispy_field }}
         </div>
-        <div class="mb-3 col-md-6 splitCompFields">
+        <div class="mb-3 col-md-6 feeSplitFields">
           {{ form.assessmentCost|as_crispy_field }}
         </div>
-        <div class="mb-3 col-md-6 splitCompFields">
+        <div class="mb-3 col-md-6 feeSplitFields">
           {{ form.assessmentMin|as_crispy_field }}
         </div>
-        <div class="mb-3 col-md-6 splitCompFields">
+        <div class="mb-3 col-md-6 feeSplitFields">
           <p id="dailyMinimum">Daily Minimum: $-</p>
         </div>
-        <div class="mb-3 col-md-6 splitCompFields">
+        <div class="mb-3 col-md-6 feeSplitFields">
           <p id="contractCost">Contract Cost: $-</p>
         </div>
         <div class="mb-3">
