@@ -85,22 +85,22 @@
           {{ form.payFrequency|as_crispy_field }}
         </div>
         <div class="mb-3 col-md-6 feeSplitFields">
-          {{ form.treatmentCost|as_crispy_field }}
-        </div>
-        <div class="mb-3 col-md-6 feeSplitFields">
           {{ form.treatmentMin|as_crispy_field }}
         </div>
         <div class="mb-3 col-md-6 feeSplitFields">
-          {{ form.assessmentCost|as_crispy_field }}
+          {{ form.treatmentCost|as_crispy_field }}
         </div>
         <div class="mb-3 col-md-6 feeSplitFields">
           {{ form.assessmentMin|as_crispy_field }}
         </div>
         <div class="mb-3 col-md-6 feeSplitFields">
-          <p id="dailyMinimum">Daily Minimum: $-</p>
+          {{ form.assessmentCost|as_crispy_field }}
         </div>
         <div class="mb-3 col-md-6 feeSplitFields">
-          <p id="contractCost">Contract Cost: $-</p>
+          <p id="dailyMinimum">Daily Minimum for your temporary position: $-</p>
+        </div>
+        <div class="mb-3 col-md-6 feeSplitFields">
+          <p id="contractCost">Contract Price if matched: $-</p>
         </div>
         <div class="mb-3">
           <h3 class="fs-5 my-3 text-weight-normal">Therapist Schedule <span class="text-weight-thin fs-6">*Leave day

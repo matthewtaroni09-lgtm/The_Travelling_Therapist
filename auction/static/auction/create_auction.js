@@ -24,13 +24,20 @@ $(document).ready(function () {
         let assessmentCost = $('#id_assessmentCost').val();
         let assessmentMin = $('#id_assessmentMin').val();
         let dailyMin = 0;
+        let userType = '';
 
         if (treatmentCost !== '' && treatmentMin !== '' && assessmentCost !== '' && assessmentMin !== '') {
+            if ($('#id_type').find(":selected").text() === '---------') {
+                userType = 'position: ';
+            }
+            else {
+                userType = $('#id_type').find(":selected").text();
+            }
             dailyMin = (parseFloat(treatmentCost) * parseFloat(treatmentMin)) + (parseFloat(assessmentCost) * parseFloat(assessmentMin));
-            $('#dailyMinimum').text('Daily Minimum: ' + currencyFormatter.format(dailyMin));
+            $('#dailyMinimum').text('Daily Minimum for your temporary ' + userType + '  : ' + currencyFormatter.format(dailyMin));
         }
         else {
-            $('#dailyMinimum').text('Daily Minimum: $-');
+            $('#dailyMinimum').text('Daily Minimum for your temporary position: $-');
         }
     });
 
@@ -77,9 +84,11 @@ $('#id_type').change(function () {
             if (!response.feeSplit) {
                 $("#id_paymentType option[value='1']").remove();
                 $('#id_paymentType option[value=2]').attr('selected', 'selected');
+                $('#id_paymentType').attr('disabled', 'disabled');
             }
             else {
                 $('#id_paymentType').val('');
+                $('#id_paymentType').removeAttr('disabled');
                 let feeSplitPresent = false;
                 $("#id_paymentType > option").each(function () {
                     if (this.text == "Fee Split") {
@@ -407,7 +416,7 @@ function getDateDiff() {
         else {
             contractCost = dateDiff * 25;
         }
-        $('#contractCost').text('Contract Cost: ' + currencyFormatter.format(contractCost) + ' + HST');
+        $('#contractCost').text('Contract price if matched: ' + currencyFormatter.format(contractCost) + ' + HST');
     }
 }
 

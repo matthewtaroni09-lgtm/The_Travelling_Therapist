@@ -143,7 +143,7 @@ class Auction(models.Model):
     treatmentMin = models.FloatField(verbose_name='Minimum # of Treatments', blank=True, null=True)
     assessmentCost = models.IntegerField(verbose_name='Assessment Cost', blank=True, null=True)
     assessmentMin = models.FloatField(verbose_name='Minimum # of Assessments', blank=True, null=True)
-    invoiceNumber = models.IntegerField(verbose_name='Invoice Number', blank=True, null=True)
+    auctionNumber = models.IntegerField(verbose_name='Auction Number', blank=True, null=True)
 
     def __str__(self):
         return str(self.clinic.clinicName) + ": " + str(self.auctionStart.strftime("%m/%d/%Y %H:%M"))
@@ -157,14 +157,14 @@ class Auction(models.Model):
         elif self.closed == True and self.active == False and self.winningPrice is not None:
             if str(self.paymentType) == 'Flat Fee':
                 return 'Winning bid: $' + str("{:,}".format(self.winningPrice))
-            elif str(self.paymentType) == 'Split Compensation':
+            elif str(self.paymentType) == 'Fee Split':
                 return 'Winning bid: ' + str("{:,}".format(self.winningPrice)) + '%'
         elif self.closed == True and self.active == False and self.winningPrice is None:
             return 'No winner'
         else:
             if str(self.paymentType) == 'Flat Fee':
                 return 'Current Low Bid: $' + str("{:,}".format(self.currentLowBid))
-            elif str(self.paymentType) == 'Split Compensation':
+            elif str(self.paymentType) == 'Fee Split':
                 return 'Current Low Bid: ' + str("{:,}".format(self.currentLowBid)) + '%'
 
     def get_num_bids(self):
@@ -182,14 +182,26 @@ class Auction(models.Model):
         if num_bids > 0 and self.currentLowBid is not None and self.minimumBidIncrement is not None:
             diff = self.currentLowBid - self.minimumBidIncrement
             if diff > 0 and diff % self.minimumBidIncrement == 0 and self.currentLowBid > 2:
-                return 'Next Available Bid: ≤ $' + str("{:,}".format(diff))
+                if str(self.paymentType) == 'Flat Fee':
+                    return 'Next Available Bid: ≤ $' + str("{:,}".format(diff))
+                elif str(self.paymentType) == 'Fee Split':
+                    return 'Next Available Bid: ≤ ' + str("{:,}".format(diff)) + "%"
             elif diff > 0 and diff % self.minimumBidIncrement != 0 and self.currentLowBid > 2:
                 result = self.currentLowBid - (diff % self.minimumBidIncrement)
-                return 'Next Available Bid: ≤ $' + str("{:,}".format(result))
+                if str(self.paymentType) == 'Flat Fee':
+                    return 'Next Available Bid: ≤ $' + str("{:,}".format(result))
+                elif str(self.paymentType) == 'Fee Split':
+                    return 'Next Available Bid: ≤ ' + str("{:,}".format(result)) + "%"
             elif self.currentLowBid == 2:
-                return 'Last bid available: $1'
+                if str(self.paymentType) == 'Flat Fee':
+                    return 'Last bid available: $1'
+                elif str(self.paymentType) == 'Fee Split':
+                    return 'Last bid available: 1%'
             else:
-                return 'Lowest possible bid has been reached: $1'
+                if str(self.paymentType) == 'Flat Fee':
+                    return 'Lowest possible bid has been reached: $1'
+                elif str(self.paymentType) == 'Fee Split':
+                    return 'Lowest possible bid has been reached: 1%'
         else:
             return 0
 
@@ -315,5 +327,3 @@ class MessageAcknowledgement(models.Model):
 
     def __str__(self):
         return str(self.user) + ' | ' + str(self.popup)
-
-

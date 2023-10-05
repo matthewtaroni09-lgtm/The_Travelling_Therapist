@@ -256,7 +256,6 @@ def view_auction(request, auction_id):
             bid.user = request.user
             bid.active = True
             bid.createdBy = request.user
-            bid.amount = 10
             if auction.currentLowBid is None:
                 prev_low_bid = 0
             else:

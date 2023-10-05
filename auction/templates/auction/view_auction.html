@@ -61,19 +61,11 @@
             <form method="post">
               <p>{{ auction.get_bid }}</p>
               {% csrf_token %}
-              {% if payment_type == "Flat Fee" %}
               <div class="mb-3">
                 {{ form.amount|as_crispy_field }}
               </div>
-              {% if num_bids > 0%}
+              {% if num_bids > 0 and payment_type == "Flat Fee" %}
               <p>{{ auction.get_max_bid }}</p>
-              {% endif %}
-              {% else %}
-              <div class="mb-3">
-                <span id="currentBidPercentage">{{ auction.currentLowBid }}%</span>
-                <br>
-                0<input id="splitCompSlider" type="range" class="span2" value={{ auction.currentLowBid }} data-slider-min="0" data-slider-max="100" data-slider-step="1" />100%
-              </div>
               {% endif %}
               <div id="warningMessage" class="alert" role="alert"></div>
               <small>For more information on the bidding process see our <a href="{% url 'about' %}" target="_blank">FAQ</a></small>
@@ -123,17 +115,11 @@
   </div>
   <!-- Image Section End -->
 
-  <div class="row w-100 mx-auto mt-3">
+  <div class="row w-100 mx-auto">
     <p class="col-4 text-weight-bold border mb-0 py-2 bg-light">Clinic Name</p>
-    <p class="col-8 text-weight-light border mb-0 py-2">{{ auction.clinic.clinicName }}</p>
-  </div>
-  <div class="row w-100 mx-auto">
-    <p class="col-4 text-weight-bold border mb-0 py-2 bg-light">Clinic Location</p>
-    <p class="col-8 text-weight-light border mb-0 py-2">{{ auction.clinic.city }}, {{ auction.clinic.province }}</p>
-  </div>
-  <div class="row w-100 mx-auto">
-    <p class="col-4 text-weight-bold border mb-0 py-2 bg-light">Invoice Number</p>
-    <p class="col-8 text-weight-light border mb-0 py-2">{{ auction.invoiceNumber }}</p>
+    <p class="col-3 text-weight-light border mb-0 py-2">{{ auction.clinic.clinicName }}</p>
+    <p class="col-3 text-weight-bold border mb-0 py-2 bg-light">Clinic Location</p>
+    <p class="col-2 text-weight-light border mb-0 py-2">{{ auction.clinic.city }}, {{ auction.clinic.province }}</p>
   </div>
   <div class="row w-100 mx-auto">
     <p class="col-4 text-weight-bold border mb-0 py-2 bg-light">Payment Type</p>
@@ -141,16 +127,16 @@
   </div>
   {% if payment_type == "Fee Split" %}
   <div class="row w-100 mx-auto">
-    <p class="col-4 text-weight-bold border mb-0 py-2 bg-light">Rate for Treatments</p>
-    <p class="col-3 text-weight-light border mb-0 py-2">${{ auction.treatmentCost }}</p>
-    <p class="col-3 text-weight-bold border mb-0 py-2 bg-light">Minimum # of Treatments</p>
-    <p class="col-2 text-weight-light border mb-0 py-2">{{ auction.treatmentMin }}</p>
+    <p class="col-4 text-weight-bold border mb-0 py-2 bg-light">Minimum # of Treatments</p>
+    <p class="col-3 text-weight-light border mb-0 py-2">{{ auction.treatmentMin }}</p>
+    <p class="col-3 text-weight-bold border mb-0 py-2 bg-light">Rate for Treatments</p>
+    <p class="col-2 text-weight-light border mb-0 py-2">${{ auction.treatmentCost }}</p>
   </div>
   <div class="row w-100 mx-auto">
-    <p class="col-4 text-weight-bold border mb-0 py-2 bg-light">Rate for Assessments</p>
-    <p class="col-3 text-weight-light border mb-0 py-2">${{ auction.assessmentCost }}</p>
-    <p class="col-3 text-weight-bold border mb-0 py-2 bg-light">Minimum # of Assessments</p>
-    <p class="col-2 text-weight-light border mb-0 py-2">{{ auction.assessmentMin }}</p>
+    <p class="col-4 text-weight-bold border mb-0 py-2 bg-light">Minimum # of Assessments</p>
+    <p class="col-3 text-weight-light border mb-0 py-2">{{ auction.assessmentMin }}</p>
+    <p class="col-3 text-weight-bold border mb-0 py-2 bg-light">Rate for Assessments</p>
+    <p class="col-2 text-weight-light border mb-0 py-2">${{ auction.assessmentCost }}</p>
   </div>
   <div class="row w-100 mx-auto">
     <p class="col-4 text-weight-bold border mb-0 py-2 bg-light">Daily Minimum</p>
