@@ -14,7 +14,7 @@ from uuid import uuid4
 from django.dispatch import receiver
 
 PROVINCES = (
-    ("", "---------"),
+    ("", "----------"),
     ("Alberta", "Alberta"),
     ("British Columbia", "British Columbia"),
     ("Manitoba", "Manitoba"),
