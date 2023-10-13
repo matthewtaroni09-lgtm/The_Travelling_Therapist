@@ -217,7 +217,6 @@ class BidForm(forms.ModelForm):
     class Meta:
         model = Bid
         fields = ('amount', )
-        
 
     def clean_amount(self):
         amount = self.cleaned_data.get("amount")

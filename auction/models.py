@@ -139,10 +139,10 @@ class Auction(models.Model):
     modifiedBy = models.ForeignKey(User, related_name='auction_modified_by', blank=True, null=True, on_delete=models.CASCADE)
     type = models.ForeignKey(UserType, verbose_name='Auction Type', related_name='auction_type', on_delete=models.CASCADE)
     paymentType = models.ForeignKey('PaymentType', verbose_name='Payment Type ', related_name='payment_type', on_delete=models.CASCADE)
-    treatmentCost = models.IntegerField(verbose_name='Treatment Cost', blank=True, null=True)
-    treatmentMin = models.FloatField(verbose_name='Minimum # of Treatments', blank=True, null=True)
-    assessmentCost = models.IntegerField(verbose_name='Assessment Cost', blank=True, null=True)
-    assessmentMin = models.FloatField(verbose_name='Minimum # of Assessments', blank=True, null=True)
+    treatmentCost = models.FloatField(verbose_name='Treatment Cost', blank=True, null=True)
+    treatmentMin = models.IntegerField(verbose_name='Minimum # of Treatments', blank=True, null=True)
+    assessmentCost = models.FloatField(verbose_name='Assessment Cost', blank=True, null=True)
+    assessmentMin = models.IntegerField(verbose_name='Minimum # of Assessments', blank=True, null=True)
     auctionNumber = models.IntegerField(verbose_name='Auction Number', blank=True, null=True)
 
     def __str__(self):
