@@ -550,7 +550,7 @@ def create_auction(request):
                 auction.deleted = False
                 auction.createdBy = request.user
                 auction.modifiedBy = request.user
-                auction.invoiceNumber = get_next_invoice_number()
+                auction.auctionNumber = get_next_auction_number()
                 auction.save()
                 formset_demographic = demographic_form_set(request.POST, instance=auction, queryset=Demographic.objects.none())
                 formset_practice = practice_area_form_set(request.POST, instance=auction, queryset=PracticeArea.objects.none())
@@ -790,10 +790,10 @@ def set_bid_increment(amount):
         min_increment = 500
     return min_increment
 
-def get_next_invoice_number():
+def get_next_auction_number():
     auctions = Auction.objects.all()
     max = 0
     for auction in auctions:
-        if auction.invoiceNumber > max:
-            max = auction.invoiceNumber
+        if int(auction.auctionNumber) > max:
+            max = int(auction.auctionNumber)
     return max + 1
