@@ -231,7 +231,7 @@ class Bid(models.Model):
     bidID = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     auction = models.ForeignKey(Auction, related_name='auction', on_delete=models.CASCADE) 
     user = models.ForeignKey(User, related_name='user', blank=True, null=True, on_delete=models.CASCADE) 
-    amount = models.IntegerField(verbose_name='Amount', help_text='Enter the amount you would like to bid.')
+    amount = models.IntegerField(verbose_name='Amount1', help_text='Enter the amount you would like to bid.')
     active = models.BooleanField(verbose_name='Active Bid')
     created = models.DateTimeField(verbose_name='Created Time', auto_now_add=True)
     createdBy = models.ForeignKey(User, related_name='bid_created_by', blank=True, null=True, on_delete=models.CASCADE)

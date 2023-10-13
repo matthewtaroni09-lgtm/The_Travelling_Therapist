@@ -248,7 +248,7 @@ def view_auction(request, auction_id):
 
     if request.method == 'POST':
         print('post')
-        form = BidForm(request.POST, max_bid=max_bid, min_bid_increment=auction.minimumBidIncrement)
+        form = BidForm(request.POST, max_bid=max_bid, min_bid_increment=auction.minimumBidIncrement, payment_type=payment_type)
         print(form.errors)
         if form.is_valid():
             bid = form.save(commit=False)
@@ -298,7 +298,7 @@ def view_auction(request, auction_id):
             }
             return render(request, 'auction/view_auction.html', context)
     else:
-        form = BidForm(None)
+        form = BidForm(payment_type=payment_type)
         context = {
                 'auction': auction,
                 'form': form,
@@ -475,7 +475,8 @@ def get_view_auction_data(request):
         'currentLowBid': auction.currentLowBid,
         'minimumBidIncrement': auction.minimumBidIncrement,
         'auctionEnd': auction.auctionEnd,
-        'reservePrice': auction.reservePrice
+        'reservePrice': auction.reservePrice,
+        'paymentType': str(auction.paymentType)
     })
 
 def get_demographics(request, clinic_id):

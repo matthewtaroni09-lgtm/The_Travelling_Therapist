@@ -1,6 +1,7 @@
 const URL = window.location.href;
 const auctionID = URL.substring(URL.lastIndexOf('/') + 1);
-let currentLowBid = 0
+let currentLowBid = 0;
+let paymentType = '';
 
 $(document).ready(function () {
     $("#warningMessage").hide();
@@ -68,16 +69,12 @@ $(document).ready(function () {
             currentLowBid = response.currentLowBid;
             auctionEnd = new Date(response.auctionEnd);
             reservePrice = response.reservePrice;
-
-            // let currentTime = new Date().getTime()
-            // let subtractMilliSecondsValue = auctionEnd.getTime() - currentTime;
-            // console.log(subtractMilliSecondsValue);
-            // setTimeout(auctionEnded, subtractMilliSecondsValue);
+            paymentType = response.paymentType;
 
             if (currentLowBid == 1) {
                 $("#submitBidButton").prop("disabled", true);
                 $("#id_amount").prop("disabled", true);
-                $("#id_amount").attr('placeholder', 'Lowest Bid Reached');;
+                $("#id_amount").attr('placeholder', 'Lowest Bid Reached');
             }
         },
         error: function (error) {
@@ -93,10 +90,18 @@ $(document).ready(function () {
             bidError("Danger", "Please enter only whole numbers.");
         }
         else if (parseInt($("#id_amount").val()) > currentLowBid && currentLowBid !== 0 && currentLowBid !== null) {
-            bidError("Warning", "Your bid is over the current minimum bid and will not be considered for determing the winner of the auction.Click Submit if you would like to proceed anyway.");
+            bidError("Warning", "Your bid is over the current minimum bid and will not be considered for determing the winner of the auction. Click Submit if you would like to proceed anyway.");
         }
         else if (parseInt($("#id_amount").val()) <= 0) {
-            bidError("Danger", "Bids must be above $0.");
+            if (paymentType === "Fee Split") {
+                bidError("Danger", "Bids must be above 0%.");
+            }
+            else {
+                bidError("Danger", "Bids must be above $0.");
+            }
+        }
+        else if (parseInt($("#id_amount").val()) > 100 && paymentType === "Fee Split") {
+            bidError("Danger", "Bids must be less than 100%.");
         }
         else {
             $("#submitBidButton").prop("disabled", false);
