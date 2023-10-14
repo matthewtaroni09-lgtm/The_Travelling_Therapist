@@ -26,7 +26,7 @@ $(document).ready(function () {
         let dailyMin = 0;
         let userType = '';
 
-        if (treatmentCost !== '' && treatmentMin !== '' && assessmentCost !== '' && assessmentMin !== '') {
+        if (treatmentCost !== '' && treatmentMin !== '' && assessmentCost !== '' && assessmentMin !== '' && dailyMin > 0) {
             if ($('#id_type').find(":selected").text() === '---------') {
                 userType = 'position: ';
             }
@@ -206,6 +206,14 @@ $("#submitButton").click(function () {
     let demographicCategory = '';
     let practiceCategory = '';
 
+    let treatmentCost = $('#id_treatmentCost').val();
+    let treatmentMin = $('#id_treatmentMin').val();
+    let assessmentCost = $('#id_assessmentCost').val();
+    let assessmentMin = $('#id_assessmentMin').val();
+
+    let costMax = 500;
+    let sessionMax = 15;
+
     //Validate Start/End date
     var now = new Date();
     let oneYear = new Date(now);
@@ -250,6 +258,50 @@ $("#submitButton").click(function () {
         if (reservePrice > 25000) {
             errorList += "<li>Reserve price must be less than $25,000.</li>";
         }
+    }
+    
+    //Treatment Cost
+    if(treatmentCost === ""){
+        errorList += "<li>Please enter a Treatment Cost.</li>";
+    }
+    if(treatmentCost > costMax && treatmentCost !== ""){
+        errorList += "<li>Treatment costs cannot exceed " + currencyFormatter.format(costMax) + "</li>";
+    }
+    if(treatmentCost < 1 && treatmentCost !== ""){
+        errorList += "<li>Treatment costs must be at least $1.</li>";
+    }
+
+    //Minimum # of Treatments
+    if(treatmentMin === ""){
+        errorList += "<li>Please enter a Minimum Number of Treatments.</li>";
+    }
+    if(treatmentMin > sessionMax && treatmentMin !== ""){
+        errorList += "<li>Minimum number of Treatment sessions cannot exceed " + sessionMax + "</li>";
+    }
+    if(treatmentMin < 1 && treatmentMin !== ""){
+        errorList += "<li>Minimum number of Treatment sessions cannot be negative.</li>";
+    }
+
+    //Assessment Cost
+    if(assessmentCost === ""){
+        errorList += "<li>Please enter a Assessment Cost.</li>";
+    }
+    if(assessmentCost > costMax && assessmentCost !== ""){
+        errorList += "<li>Assessment costs cannot exceed " + currencyFormatter.format(costMax) + "</li>";
+    }
+    if(assessmentCost < 1 && assessmentCost !== ""){
+        errorList += "<li>Assessment costs must be at least $1.</li>";
+    }
+
+    //Minimum # of Assessments
+    if(assessmentMin === ""){
+        errorList += "<li>Please enter a Minimum Number of Assessments.</li>";
+    }
+    if(assessmentMin > sessionMax && assessmentMin !== ""){
+        errorList += "<li>Minimum Number of Assessments cannot exceed " + sessionMax + "</li>";
+    }
+    if(assessmentMin < 1 && assessmentMin !== ""){
+        errorList += "<li>Minimum number of Assessments sessions cannot be negative.</li>";
     }
 
     //Validate Therapist Scheudle
