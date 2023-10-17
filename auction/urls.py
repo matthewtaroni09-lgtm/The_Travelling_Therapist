@@ -21,6 +21,7 @@ urlpatterns = [
     path("contact_us", views.contact, name="contact-us"),
     path("cookie_policy", views.cookie_policy, name="cookie-policy"),
     path("view_all_auctions", views.view_all_auctions, name="view-all-auctions"),
+    path("auction_search", views.auction_search, name="auction-search"),
     path("view_user_auctions", views.view_user_auctions, name="view-user-auctions"),
     path("terms_and_conditions", views.terms_and_conditions, name="terms-and-conditions"),
     path("privacy_policy", views.privacy_policy, name="privacy-policy"),

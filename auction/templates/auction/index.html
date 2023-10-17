@@ -115,6 +115,11 @@
   <!-- Start of auction loops  -->
 
   <div id="auctionListDiv" class="row mb-3">
+    <form method="POST">
+      {% csrf_token %}
+      <input type="search" name="search"></input>
+      <button id="search" type="button" class="btn btn-secondary" hx-post="{% url 'auction-search' %}" hx-include="[name='search']" hx-target='#auctionListDiv' hx-trigger="click">Search</button>
+    </form>
     {% include 'auction/partials/auction_list.html' %}
     {% for auction in filter.qs %}
     {% include 'auction/card_active_auction.html' with auction=auction %}

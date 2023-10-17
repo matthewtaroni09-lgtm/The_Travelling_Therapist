@@ -12,7 +12,7 @@ class AuctionFilter(django_filters.FilterSet):
     location_list = ()
     location_check_list = []
     AUCTION_STATUSES = (
-        (True, 'Active'),
+        (True, 'Active!'),
         (False, 'Closed'),
     )
 
@@ -24,10 +24,11 @@ class AuctionFilter(django_filters.FilterSet):
             location_check_list.append(auction.clinic.city)
 
     city = django_filters.ChoiceFilter(label='City', field_name='clinic__city', choices=location_list)
-    active = django_filters.ChoiceFilter(label='Auction Status', field_name='active', choices=AUCTION_STATUSES)
+    paymentType = django_filters.ChoiceFilter(label='Payment Type', field_name='paymentType', choices=AUCTION_STATUSES)
+    active = django_filters.ChoiceFilter(label='Auction Status!', field_name='active', choices=AUCTION_STATUSES)
     clinic = django_filters.CharFilter(label='Clinic', field_name='clinic__clinicName', lookup_expr='icontains', widget=forms.TextInput(attrs={
             'placeholder': 'Search auctions'}))
    
     class Meta:
         model = Auction
-        fields = ['city', 'active', 'clinic']
+        fields = ['city', 'active', 'clinic', 'paymentType']

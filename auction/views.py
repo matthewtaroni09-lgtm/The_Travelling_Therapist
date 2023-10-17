@@ -92,6 +92,14 @@ def view_all_auctions(request):
     auctions = Auction.objects.filter(active=True).order_by('-auctionEnd') | Auction.objects.filter(closed=True).order_by('-auctionEnd')
     return render(request, 'auction/partials/auction_list.html', {'auction': auctions})
 
+def auction_search(request):
+    print('in search')
+    print(request.POST.get('search'))
+    auctionNum = request.POST.get('search')
+    auctions = ''
+    auctions = Auction.objects.filter(auctionNumber=auctionNum)
+    return render(request, 'auction/partials/auction_list.html', {'auction': auctions})
+
 def terms_and_conditions(request):
     return render(request, 'auction/terms_and_conditions.html', {})
 
