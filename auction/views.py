@@ -94,10 +94,16 @@ def view_all_auctions(request):
 
 def auction_search(request):
     print('in search')
-    print(request.POST.get('search'))
+    print(request.POST.get('citySelect'))
     auctionNum = request.POST.get('search')
+    city = request.POST.get('citySelect')
+    print(city)
     auctions = ''
-    auctions = Auction.objects.filter(auctionNumber=auctionNum)
+    # auctions = Auction.objects.filter(auctionNumber=auctionNum)
+    a = Auction.objects.all()
+    for y in a:
+        print(y.clinic.city)
+    auctions = Auction.objects.filter(clinic__city=city)
     return render(request, 'auction/partials/auction_list.html', {'auction': auctions})
 
 def terms_and_conditions(request):

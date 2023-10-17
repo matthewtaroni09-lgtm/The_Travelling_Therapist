@@ -118,7 +118,12 @@
     <form method="POST">
       {% csrf_token %}
       <input type="search" name="search"></input>
-      <button id="search" type="button" class="btn btn-secondary" hx-post="{% url 'auction-search' %}" hx-include="[name='search']" hx-target='#auctionListDiv' hx-trigger="click">Search</button>
+      <select name="citySelect" id="citySelect">
+        <option value="Hamilton">Hamilton</option>
+        <option value="Burlington">Burlington</option>
+        <option value="Oakville">Oakville</option>
+      </select>
+      <button id="search" type="button" class="btn btn-secondary" hx-post="{% url 'auction-search' %}" hx-include="[name='citySelect']" hx-target='#auctionListDiv' hx-trigger="click">Search</button>
     </form>
     {% include 'auction/partials/auction_list.html' %}
     {% for auction in filter.qs %}
