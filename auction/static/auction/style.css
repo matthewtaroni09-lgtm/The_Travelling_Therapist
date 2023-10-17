@@ -211,6 +211,10 @@
     float: right;
 }
 
+#contractCost {
+    display: inline-block;
+}
+
 /**************************** 6. MISC ****************************/
 .nav-link {
     color: var(--primary-colour);
