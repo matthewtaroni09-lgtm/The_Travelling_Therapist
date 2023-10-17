@@ -14,17 +14,39 @@
 <h2 class="my-5 text-weight-normal mb-3">Frequently Asked Questions</h2>
 
 <div class="row my-5 p-3 gap-3 gap-sm-0 pb-5 align-items-center">
-  <div class="col-sm-1"></div>
-  <a href="#clinicFAQ" class="col-sm-4 selection-boxes d-flex flex-column align-items-center gap-2 p-4">
+  <!-- <div class="col-sm-1"></div> -->
+  <a href="#clinicFAQ" class="col-sm-4 selection-boxes d-flex flex-column align-items-center gap-2 p-4 m-2">
     <img class="img-fluid" src="/media/images/clinic.png" alt="Clinic office as a cartoon">
     <h4>Clinics</h4>
   </a>
-  <div class="col-sm-2"></div>
-  <a href="#therapistFAQ" class="col-sm-4 selection-boxes d-flex flex-column align-items-center gap-2 p-4">
+  <!-- <div class="col-sm-1"></div> -->
+  <a href="#therapistFAQ" class="col-sm-4 selection-boxes d-flex flex-column align-items-center gap-2 p-4 m-2">
+    <img class="img-fluid" src="/media/images/therapy.png" alt="Therapist as a cartoon">
+    <h4>Therapists</h4>
+  </a>
+  <!-- <div class="col-sm-1"></div> -->
+  <a href="#therapistFAQ" class="col-sm-4 selection-boxes d-flex flex-column align-items-center gap-2 p-4 m-2">
+    <img class="img-fluid" src="/media/images/therapy.png" alt="Therapist as a cartoon">
+    <h4>Therapists</h4>
+  </a>
+</div>
+
+<div class="row align-items-center">
+  <!-- <div class="col-sm-1"></div> -->
+  <a href="#clinicFAQ" class="col-3 selection-boxes align-items-center p-4 m-1">
+    <img class="img-fluid" src="/media/images/clinic.png" alt="Clinic office as a cartoon">
+    <h4>Clinics</h4>
+  </a>
+  <div class="col-sm-1"></div>
+  <a href="#therapistFAQ" class="col-3 selection-boxes align-items-center p-4 m-1">
     <img class="img-fluid" src="/media/images/therapy.png" alt="Therapist as a cartoon">
     <h4>Therapists</h4>
   </a>
   <div class="col-sm-1"></div>
+  <a href="#therapistFAQ" class="col-3 selection-boxes align-items-center p-4 m-1">
+    <img class="img-fluid" src="/media/images/therapy.png" alt="Therapist as a cartoon">
+    <h4>Therapists</h4>
+  </a>
 </div>
 
 <h3 id="clinicFAQ">Clinics</h3>
@@ -356,6 +378,22 @@
       </p>
     </div>
   </div>
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="headingN">
+      <button class="accordion-button text-weight-normal collapsed" type="button" data-bs-toggle="collapse"
+        data-bs-target="#collapseN" aria-expanded="false" aria-controls="collapseM">
+        How is my total cost calculated for fee split auctions?
+      </button>
+    </h2>
+    <div id="collapseN" class="accordion-collapse collapse" aria-labelledby="headingN"
+      data-bs-parent="#clinicAccordian">
+      <p class="accordion-body text-weight-light">
+        Clinics are invoiced $25+HST per day the contract is set to cover for, inclusive of the start and end date. This means if the coverage is for 8 weeks, the invoice would be $1,400+HST (25/day *56 days). Fee split auctions have the same floor and ceiling prices as fixed fee auctions at $300+HST and $5,000+HST respectively. This means any fee split posting shorter than 12 days of coverage are still invoiced $300+HST and those longer than 200 days are invoiced $5,000+HST. 
+        <br><br>
+        Please note that the number of days of coverage does not necessarily equal the number of days you have your healthcare worker set to work for. In the above example, the coverage and invoice total is 56 days. Irrespective of how many of those days you have your worker set to work for.
+      </p>
+    </div>
+  </div>
 </div>
 <!-- Clinic Accordian End -->
 
@@ -596,6 +634,30 @@
   </div>
 </div>
 <!-- Therapist Accordian End -->
+
+<h3 id="unregulatedFAQ" class="mt-5">Unregulated Healthcare Professionals</h3>
+<!-- Unregulated Accordian Start -->
+<div class="accordion" id="unregulatedAccordian">
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="heading1">
+      <button class="accordion-button text-weight-normal" type="button" data-bs-toggle="collapse"
+        data-bs-target="#collapse1" aria-expanded="true" aria-controls="collapse1">
+        I am an unregulated Healthcare Professional. What do I need to know before using The Traveling Therapist?
+      </button>
+    </h2>
+    <div id="collapse1" class="accordion-collapse collapse show" aria-labelledby="heading1"
+      data-bs-parent="#unregulatedAccordian">
+      <p class="accordion-body text-weight-light">
+        Please see our <a href="https://www.youtube.com/watch?v=CHEZcJaw49E&t=5s" target="_blank">FAQ video</a> to understand how "The Traveling Therapist" service works. 
+        <br><br>
+        The process for using The Traveling Therapist is much the same as it would be for a regulated Healthcare worker. A consideration we have come across for some using our service is the fact that you might work as both a PTA and a PSW. If this is the case, you will need to create a separate account for each user type when using The Traveling Therapist. This is because a PTA cannot bid on a PSW posting, and vice versa. 
+        <br><br>
+        Please ensure you read the <a data-bs-toggle="modal" data-bs-target="#tandcModal" class="mb-0">Terms & Conditions</a> so you understand your responsibilities in advance of using our service. This includes ensuring you are register as the correct user type when you sign up to ensure you can only bid on auctions relevant to you.
+      </p>
+    </div>
+  </div>
+</div>
+<!-- Unregulated Accordian End -->
 
 <!-- Content End -->
 <script src="{% static 'auction/index.js' %}"></script>
