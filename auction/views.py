@@ -93,18 +93,65 @@ def view_all_auctions(request):
     return render(request, 'auction/partials/auction_list.html', {'auction': auctions})
 
 def auction_search(request):
-    print('in search')
-    print(request.POST.get('citySelect'))
-    auctionNum = request.POST.get('search')
     city = request.POST.get('citySelect')
-    print(city)
-    auctions = ''
-    # auctions = Auction.objects.filter(auctionNumber=auctionNum)
-    a = Auction.objects.all()
-    for y in a:
-        print(y.clinic.city)
-    auctions = Auction.objects.filter(clinic__city=city)
+    payment_type_select = request.POST.get('paymentTypeSelect')
+    status_select = request.POST.get('statusSelect')
+    print(status_select)
+
+    city_fitler = ''
+    payment_type_fitler = ''
+    status_select_fitler = ''
+
+    if city == '0':
+        city_fitler = Q()
+    else:
+        city_fitler = Q(clinic__city=city)
+
+    if payment_type_select == '0':
+        payment_type_fitler = Q()
+    else:
+        payment_type_fitler = Q(paymentType__name=payment_type_select)
+
+    if status_select == '0':
+        status_select_fitler = Q()
+    else:
+        if status_select == 'Active':
+            status_select_fitler = Q(active=True)
+        elif status_select == 'Closed':
+            status_select_fitler = Q(closed=True)
+        else:
+            status_select_fitler = Q()
+    
+    filter = city_fitler & payment_type_fitler & status_select_fitler
+    auctions = Auction.objects.filter(filter)
     return render(request, 'auction/partials/auction_list.html', {'auction': auctions})
+
+def index(request):
+    auctions = Auction.objects.filter(deleted=False)
+    cities = []
+    payment_types = []
+    statuses = []
+    for auction in auctions:
+        if auction.clinic.city not in cities:
+            cities.append(auction.clinic.city)
+        if auction.paymentType not in payment_types:
+            payment_types.append(auction.paymentType)
+        
+        status = ''
+        if auction.active:
+            status = 'Active'
+        elif auction.closed:
+            status = 'Closed'
+        if status not in statuses:
+            statuses.append(status)
+
+    context = {
+        'auctions': auctions,
+        'cities': cities,
+        'payment_types': payment_types,
+        'statuses': statuses
+    }
+    return render(request, 'auction/index.html', context)
 
 def terms_and_conditions(request):
     return render(request, 'auction/terms_and_conditions.html', {})
@@ -118,22 +165,22 @@ def view_user_auctions(request):
     auctions = Auction.objects.filter(active=True, type=user_type).order_by('-auctionEnd') | Auction.objects.filter(closed=True, type=user_type).order_by('-auctionEnd')
     return render(request, 'auction/partials/auction_list.html', {'auction': auctions})
 
-class AuctionListView(ListView):
-    model = Auction
-    template_name = 'auction/index.html'
+# class AuctionListView(ListView):
+#     model = Auction
+#     template_name = 'auction/index.html'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        # Super users should see all auction types
-        if self.request.user.is_authenticated == True and self.request.user.is_superuser == False:
-            user_type = self.request.user.account.userType
-            if str(user_type) != 'Clinic':
-                context['filter'] = AuctionFilter(self.request.GET, queryset=Auction.objects.filter(active=True, type=user_type).order_by('-auctionEnd') | Auction.objects.filter(closed=True, type=user_type).order_by('-auctionEnd'))
-            else:
-                context['filter'] = AuctionFilter(self.request.GET, queryset=Auction.objects.filter(active=True).order_by('-auctionEnd') | Auction.objects.filter(closed=True).order_by('-auctionEnd'))
-        else:
-            context['filter'] = AuctionFilter(self.request.GET, queryset=Auction.objects.filter(active=True).order_by('-auctionEnd') | Auction.objects.filter(closed=True).order_by('-auctionEnd'))
-        return context
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         # Super users should see all auction types
+#         if self.request.user.is_authenticated == True and self.request.user.is_superuser == False:
+#             user_type = self.request.user.account.userType
+#             if str(user_type) != 'Clinic':
+#                 context['filter'] = AuctionFilter(self.request.GET, queryset=Auction.objects.filter(active=True, type=user_type).order_by('-auctionEnd') | Auction.objects.filter(closed=True, type=user_type).order_by('-auctionEnd'))
+#             else:
+#                 context['filter'] = AuctionFilter(self.request.GET, queryset=Auction.objects.filter(active=True).order_by('-auctionEnd') | Auction.objects.filter(closed=True).order_by('-auctionEnd'))
+#         else:
+#             context['filter'] = AuctionFilter(self.request.GET, queryset=Auction.objects.filter(active=True).order_by('-auctionEnd') | Auction.objects.filter(closed=True).order_by('-auctionEnd'))
+#         return context
 
 # Page Links
 

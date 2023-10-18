@@ -10,7 +10,8 @@ from .views import PasswordsChangeView
 
 urlpatterns = [
     # Page Links
-    path('', views.AuctionListView.as_view(), name="index"),
+    # path('', views.AuctionListView.as_view(), name="index"),
+    path('', views.index, name="index"),
     path("about", views.about, name="about"),
     path("profile", views.profile, name="profile"),
     path("create_auction", views.create_auction, name="create-auction"),
@@ -22,6 +23,7 @@ urlpatterns = [
     path("cookie_policy", views.cookie_policy, name="cookie-policy"),
     path("view_all_auctions", views.view_all_auctions, name="view-all-auctions"),
     path("auction_search", views.auction_search, name="auction-search"),
+    # path("get_search_all_auctions", views.get_search_all_auctions, name="get-search-all-auctions"),
     path("view_user_auctions", views.view_user_auctions, name="view-user-auctions"),
     path("terms_and_conditions", views.terms_and_conditions, name="terms-and-conditions"),
     path("privacy_policy", views.privacy_policy, name="privacy-policy"),
