@@ -1,4 +1,14 @@
 {% csrf_token %}
+{% if auction_search == False %}
 {% for auction in auction %}
 {% include 'auction/card_active_auction.html' with auction=auction %}
 {% endfor %}
+{% else %}
+{% if length > 0 and auction_search %}
+{% for auction in auction %}
+{% include 'auction/card_active_auction.html' with auction=auction %}
+{% endfor %}
+{% else %}
+<p>There are no auctions that match your search criteria.</p>
+{% endif %}
+{% endif %}

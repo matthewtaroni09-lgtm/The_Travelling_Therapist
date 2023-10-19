@@ -96,22 +96,26 @@ def auction_search(request):
     city = request.POST.get('citySelect')
     payment_type_select = request.POST.get('paymentTypeSelect')
     status_select = request.POST.get('statusSelect')
-    print(status_select)
+    clinic_input = request.POST.get('clinicInput')
 
     city_fitler = ''
     payment_type_fitler = ''
     status_select_fitler = ''
+    clinic_fitler = ''
 
+    # Filter city
     if city == '0':
         city_fitler = Q()
     else:
         city_fitler = Q(clinic__city=city)
 
+    # Filter payment types    
     if payment_type_select == '0':
         payment_type_fitler = Q()
     else:
         payment_type_fitler = Q(paymentType__name=payment_type_select)
 
+    # Filter statues
     if status_select == '0':
         status_select_fitler = Q()
     else:
@@ -121,10 +125,15 @@ def auction_search(request):
             status_select_fitler = Q(closed=True)
         else:
             status_select_fitler = Q()
+    # Filter clinic search
+    if clinic_input == '':
+        clinic_fitler = Q()
+    else:
+        clinic_fitler = Q(clinic__clinicName__icontains=clinic_input)
     
-    filter = city_fitler & payment_type_fitler & status_select_fitler
+    filter = city_fitler & payment_type_fitler & status_select_fitler & clinic_fitler
     auctions = Auction.objects.filter(filter)
-    return render(request, 'auction/partials/auction_list.html', {'auction': auctions})
+    return render(request, 'auction/partials/auction_list.html', {'auction': auctions, 'length': len(auctions), 'auction_search': True})
 
 def index(request):
     auctions = Auction.objects.filter(deleted=False)
@@ -149,7 +158,8 @@ def index(request):
         'auctions': auctions,
         'cities': cities,
         'payment_types': payment_types,
-        'statuses': statuses
+        'statuses': statuses,
+        'auction_search': False
     }
     return render(request, 'auction/index.html', context)
 

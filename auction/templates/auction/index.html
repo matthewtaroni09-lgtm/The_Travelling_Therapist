@@ -93,27 +93,49 @@
 
   <!-- Search Start -->
   <form method="POST">
-    {% csrf_token %}
-    <input type="search" name="search"></input>
-    <select name="citySelect" id="citySelect">
-      <option value="0">--------</option>
-      {% for city in cities %}
-      <option value="{{city}}">{{ city }}</option>
-      {% endfor %}
-    </select>
-    <select name="paymentTypeSelect" id="paymentTypeSelect">
-      <option value="0">--------</option>
-      {% for payment_type in payment_types %}
-      <option value="{{payment_type}}">{{ payment_type }}</option>
-      {% endfor %}
-    </select>
-    <select name="statusSelect" id="statusSelect">
-      <option value="0">--------</option>
-      {% for status in statuses %}
-      <option value="{{status}}">{{ status }}</option>
-      {% endfor %}
-    </select>
-    <button id="search" type="button" class="btn btn-primary mt-3 mt-md-0 ms-md-4" hx-post="{% url 'auction-search' %}" hx-include="[name='citySelect']" hx-target='#auctionListDiv' hx-trigger="click">Search</button>
+    <div class="row">
+      {% csrf_token %}
+      <!-- Clinic Name -->
+      <div class="col-md-3">
+        <label class="form-label">Clinic Name</label>
+        <input type="clinicInput" name="clinicInput" class="form-control"></input>
+      </div>
+      <!-- City -->
+      <div class="col-md-3">
+        <label class="form-label">City</label>
+        <select name="citySelect" id="citySelect" class="form-control">
+          <option value="0">--------</option>
+          {% for city in cities %}
+          <option value="{{city}}">{{ city }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <!-- Payment Type -->
+      <div class="col-md-3">
+        <label class="form-label">Payment Type</label>
+        <select name="paymentTypeSelect" id="paymentTypeSelect" class="form-control">
+          <option value="0">--------</option>
+          {% for payment_type in payment_types %}
+          <option value="{{payment_type}}">{{ payment_type }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <!-- Status -->
+      <div class="col-md-3">
+        <label class="form-label">Status</label>
+        <select name="statusSelect" id="statusSelect" class="form-control">
+          <option value="0">--------</option>
+          {% for status in statuses %}
+          <option value="{{status}}">{{ status }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-3">
+        <button id="search" type="button" class="btn btn-primary mt-2" hx-post="{% url 'auction-search' %}" hx-include="[name='citySelect']" hx-target='#auctionListDiv' hx-trigger="click">Search</button>
+      </div>
+    </div>
   </form>
   <!-- Search End -->
   <!-- Start of auction loops  -->
