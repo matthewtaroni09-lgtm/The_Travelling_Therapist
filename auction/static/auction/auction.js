@@ -116,7 +116,10 @@ function countDown(date, auctionID) {
             }
         }
         else {
-            document.getElementById("auctionTimer-" + auctionID).innerHTML = "Auction Completed";
+            // If the length is 0 then that auction card has been filtered out
+            if ($('#auctionTimer-' + auctionID).length > 0) {
+                document.getElementById("auctionTimer-" + auctionID).innerHTML = "Auction Completed";
+            }
         }
     }, 1000);
 }
