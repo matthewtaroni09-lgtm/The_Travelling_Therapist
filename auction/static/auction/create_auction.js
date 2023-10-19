@@ -3,10 +3,14 @@ const currencyFormatter = new Intl.NumberFormat('en-US', {
     currency: 'USD',
 });
 
+var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+    return new bootstrap.Tooltip(tooltipTriggerEl)
+});
+
 $(document).ready(function () {
-    $('[data-toggle="tooltip"]').tooltip();
     $('.alert.alert-block.alert-danger').hide();
-    $('.feeSplitFields').hide();
+    // $('.feeSplitFields').hide();
 
     $('#id_paymentType').change(function () {
         if ($('#id_paymentType').find(":selected").text() === 'Fee Split') {

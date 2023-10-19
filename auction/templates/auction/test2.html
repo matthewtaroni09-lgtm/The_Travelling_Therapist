@@ -1,12 +1,19 @@
 {% extends 'auction/base.html' %}
+{% load static %}
 {% load crispy_forms_tags %}
 {% block content %}
-{% csrf_token %}
-<h1>Create books for {{ author.name }}</h1>
 
-<button type="button" hx-get="{% url 'create-book-form' %}" hx-target="#bookforms" hx-swap="beforeend">
-    Add form
-</button>
+<div class="container mt-3">
+    <h3>Tooltip Example</h3>
 
-<div id="bookforms"></div>
+    <img src="/media/images/info.svg" alt="Traveling Therapist Logo" data-bs-toggle="tooltip" data-bs-title="This is the price that will be due from the clinic if there is a match.">
+</div>
+
+<script>
+    // Initialize tooltips
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+</script>
 {% endblock %}

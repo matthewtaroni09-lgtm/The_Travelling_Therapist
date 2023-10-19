@@ -55,16 +55,6 @@
             {% endfor %}
           </select>
         </div>
-
-        <!-- <div id="paymentTypeButtonGroup" class="btn-group" data-toggle="buttons">
-          <label id="flatFeeButton" class="btn btn-disabled">
-            <input type="radio" class="btn-check" name="options" id="option1" autocomplete="off">Flat Fee
-          </label>
-          <label id="feeSplitButton" class="btn btn-disabled">
-            <input type="radio" class="btn-check" name="options" id="option2" autocomplete="off">Split Compensation
-          </label>
-        </div> -->
-
         <div class="mb-12 col-md-12">
           {{ form.paymentType|as_crispy_field }}
         </div>
@@ -100,7 +90,7 @@
           <p id="dailyMinimum">Daily Minimum for your temporary position: $-</p>
         </div>
         <div class="mb-3 col-md-6 feeSplitFields">
-          <img src="/media/images/info.svg" alt="Traveling Therapist Logo" data-toggle="tooltip" data-placement="top" title="This is the price that will be due from the clinic if there is a match.">
+          <img src="/media/images/info.svg" alt="Traveling Therapist Logo" data-bs-toggle="modal" data-bs-target="#costModal">
           <p id="contractCost">Contract Price if matched: $-</p>
         </div>
         <div class="mb-3">
@@ -195,6 +185,27 @@
 <p>Only {{ max_forms }} active auctions are allowed at a time. Contact info@travelingtherapist.ca for more
   information on our Pro plan.</p>
 {% endif %}
+</div>
+<!-- The Modal -->
+<div class="modal" id="costModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Contract Price</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <!-- Modal body -->
+      <div class="modal-body">
+        This represents the price that would be paid if the auction was a match.
+      </div>
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+
+    </div>
+  </div>
 </div>
 <!-- </div> -->
 <script src="{% static 'auction/create_auction.js' %}"></script>

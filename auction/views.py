@@ -169,6 +169,9 @@ def terms_and_conditions(request):
 def privacy_policy(request):
     return render(request, 'auction/privacy_policy.html', {})
 
+def test(request):
+    return render(request, 'auction/test2.html', {})
+
 def view_user_auctions(request):
     auctions = ''
     user_type = request.user.account.userType
