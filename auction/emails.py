@@ -11,14 +11,21 @@ email_footer = """<footer>
   <p style="font-size: 10px; color: #848585;">You are receiving this email because you have registered to use The Traveling Therapist website services. Please do not reply to this email. If you wish to contact us then email The Traveling Therapist at info@travelingtherapist.ca. To ensure you continue to receive these emails, add this email address to your email safelist. Your details will not be disclosed or used by third parties for marketing or promotional purposes.</p>
 </footer>"""
 
-def clinic_reserve_not_met(clinic_name, start_date, end_date):
+def clinic_reserve_not_met(clinic_name, start_date, end_date, payment_type):
     message = email_header
+    reserve_type = ''
+    if payment_type == 'Flat Fee':
+        reserve_type = 'reserve price'
+    elif payment_type == 'Fee Split':
+        reserve_type = 'reserve split'
+    else:
+        reserve_type = 'reserve price'
     message = message + """<section style="font-size: 16px; margin-bottom: 4rem;">
   <p>Hello <span class="text-weight-bold">""" + clinic_name + """</span>,</p>
   
   <p>Your auction has reached an end, and no therapist bid low enough to reach your reserve value. As such there will be no match made at this time.</p>
 
-  <p>Feel free to re-create your auction with no reserve price or a higher reserve price if you'd like to try to fill this position again. Auctions with no reserve price generally receive more attention and bids than those with reserve prices set, but of course this decision is entirely yours.</p>
+  <p>Feel free to re-create your auction with no """ + reserve_type + """ or a higher """ + payment_type + """ if you'd like to try to fill this position again. Auctions with no reserve price generally receive more attention and bids than those with reserve (prices/fee splits) set, but of course this decision is entirely yours.</p>
 
   <p>Re-created auctions will still need to be approved by us like any other auction.</p>
 
@@ -107,8 +114,6 @@ def clinic_auction_created(clinic_name):
   
   <p>Thank you for creating an auction on our site! We will review the details of your auction and connect with you to collect payment information before your ad can be live on our site. Full details on this can be found on our <a href="https://travelingtherapist.ca/about">FAQ page</a>.</p>
 
-  <p>Look for us to reach out within the next 24h.</p>
-
   <p>Look for us to reach out in the next 24-48h to get this moving for you.</p>
   <br>
   <p style="font-weight: 700; padding-top: 0rem; margin-top: 0; line-height: 0;">Thanks for being part of The Traveling Therapist family.</p>
@@ -174,13 +179,20 @@ def therapist_auction_end_win(first_name, last_name, clinic_name, start_date, en
     message = message + email_footer
     return message
 
-def therapist_auction_not_met(first_name, last_name, clinic_name, start_date, end_date):
+def therapist_auction_not_met(first_name, last_name, clinic_name, start_date, end_date, payment_type):
     message = email_header
+    reserve_type = ''
+    if payment_type == 'Flat Fee':
+        reserve_type = 'reserve price'
+    elif payment_type == 'Fee Split':
+        reserve_type = 'reserve split'
+    else:
+        reserve_type = 'reserve price'
     message = message + """<section style="font-size: 16px; margin-bottom: 4rem;">
   <p>Hello <span class="text-weight-bold">""" + first_name + """ """ + last_name + """</span>,</p>
   
   <p>You were bidding on an auction using The Traveling Therapist.</p>
-  <p>This auction ended with a reserve price which wasn't met. This means that there was no therapist willing to do this temporary job for a price low enough for the clinic.</p>
+  <p>This auction ended with a """ + reserve_type +  """  which wasn't met. This means that there was no therapist willing to do this temporary job for a """ + reserve_type +  """ low enough for the clinic.</p>
   <p>This auction may be reposted in the near future - stay tuned!</p>
   <p>Not sure what the reserve price is? Check out our FAQ page <a href="https://travelingtherapist.ca/about">here</a>.</p>
 
