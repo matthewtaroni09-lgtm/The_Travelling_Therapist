@@ -146,6 +146,13 @@ const getAuction = () => {
             currentLowBid = response.data.currentLowBid;
             countDown(auctionEndDateTime, auctionID);
 
+            if (response.data.practice_area_valid) {
+                $('#demographicAOPDiv').removeClass('d-none');
+            }
+            else {
+                $('#demographicsOnlyDiv').removeClass('d-none');
+            }
+
             //Demographics Chart
             const demographicsLabels = []
             for (let demographic of response.data.demographic_types) {
@@ -209,10 +216,19 @@ const getAuction = () => {
                 }
             };
 
-            const demographics = new Chart(
-                document.getElementById('demographics'),
-                config
-            );
+            if (response.data.practice_area_valid) {
+                const demographics = new Chart(
+                    document.getElementById('demographics'),
+                    config
+                );
+            }
+            else {
+                const demographics = new Chart(
+                    document.getElementById('demographicsOnly'),
+                    config
+                );
+            }
+
 
             // Area of Practice Chart
             const areasOfPracticeLabels = []

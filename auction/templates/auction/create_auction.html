@@ -44,7 +44,7 @@
       <div class="row">
         <div class="mb-12 col-md-12">
           <label>What Type of Therapist are you looking for?</label>
-          <select name="type" class="select form-control" required="" id="id_type" hx-post="{% url 'get-practice-types' %}" hx-target='#practiceAreaDiv' hx-trigger="click" hx-include="[name='type']">
+          <select name="type" class="select form-control" required="" id="id_type">
             <option value="0">---------</option>
             {% for user in user_types %}
             {% if user.name == selected.name %}
@@ -167,6 +167,11 @@
           {% endfor %}
         </div>
         <h3 class="fs-5 my-3 text-weight-normal">Areas of Practice</h3>
+        <div id="practiceAreaCheckBoxDiv" class="mb-3 d-none">
+          <input type="checkbox" id="practiceAreaCheckBox" hx-post="{% url 'get-practice-types' %}" hx-target='#practiceAreaDiv' hx-trigger="click" hx-include="[name='type']">
+          <label id="practiceAreaCheckBoxLabel" class="form-label">Would you like to provide Practice Area Information?</label>
+        </div>
+
         <p id="optionsMessage">Practice Area options will de displayed once the auction type is selected.</p>
         <div id="practiceAreaDiv" class="mb-3">
           {% include 'auction/partials/practice_areas.html' %}

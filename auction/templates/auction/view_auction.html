@@ -193,7 +193,7 @@
     <p class="col-4 text-weight-bold border mb-0 py-2 bg-light">Pay Frequency</p>
     <p class="col-8 text-weight-light border mb-0 py-2">{{ auction.payFrequency }}</p>
   </div>
-  <div class="row w-100 mx-auto">
+  <div id="demographicAOPDiv" class="row w-100 mx-auto d-none">
     <div class="col-md-6 border">
       <div class="offset-2 col-8">
         <canvas id="demographics"></canvas>
@@ -202,6 +202,13 @@
     <div class="col-md-6 border">
       <div class="offset-2 col-8">
         <canvas id="areaOfPractice"></canvas>
+      </div>
+    </div>
+  </div>
+  <div id="demographicsOnlyDiv" class="row w-100 mx-auto">
+    <div class="col-md-12 border">
+      <div class="col-sm-12 col-lg-5 offset-lg-3">
+        <canvas id="demographicsOnly"></canvas>
       </div>
     </div>
   </div>

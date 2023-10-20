@@ -386,6 +386,7 @@ def view_auction(request, auction_id):
     
 def get_auction_end(request, auction_id):
     auction = Auction.objects.get(pk=auction_id)
+    practice_area_valid = True
 
     demographic_obj = Demographic.objects.filter(auction__auctionID = auction_id)
     demographic_type = DemographicType.objects.all()
@@ -414,6 +415,10 @@ def get_auction_end(request, auction_id):
         demographic_percentages = [0]
         demographic_types = [0]
 
+    # If the user has not entered any practice area pass this to the front-end so the graph is not shown 
+    if len(practice_area_obj) == 0:
+        practice_area_valid = False
+
     data = {
         'auctionStart': auction.auctionStart,
         'auctionEnd': auction.auctionEnd,
@@ -423,6 +428,7 @@ def get_auction_end(request, auction_id):
         'demographic_types': demographic_types,
         'practice_area_percentages': practice_area_percentages,
         'practice_area_types': practice_area_types,
+        'practice_area_valid': practice_area_valid
     }
     return JsonResponse({'data': data})
 

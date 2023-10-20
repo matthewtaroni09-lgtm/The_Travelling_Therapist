@@ -448,11 +448,13 @@ class PracticeAreaForm(forms.ModelForm):
         percentage = self.cleaned_data.get('percentage')
         error_list = []
 
-        if percentage > 100:
-            error_list.append(ValidationError("Each area of practice must be less than 100%."))
+        # If percentage is None the user has not entered a value so the validation can be skipped
+        if percentage is not None:
+            if percentage > 100:
+                error_list.append(ValidationError("Each area of practice must be less than 100%."))
 
-        if len(error_list) > 0:
-            raise forms.ValidationError(error_list)
+            if len(error_list) > 0:
+                raise forms.ValidationError(error_list)
 
 class AuctionAccountForm(forms.ModelForm):
     remember_auction_data = forms.BooleanField(required=False, label="Remember auction information for next time?")

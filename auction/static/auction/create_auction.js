@@ -10,7 +10,7 @@ var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
 
 $(document).ready(function () {
     $('.alert.alert-block.alert-danger').hide();
-    // $('.feeSplitFields').hide();
+    $('.feeSplitFields').hide();
 
     $('#id_paymentType').change(function () {
         if ($('#id_paymentType').find(":selected").text() === 'Fee Split') {
@@ -24,6 +24,11 @@ $(document).ready(function () {
     });
 
     $('#id_treatmentCost, #id_treatmentMin, #id_assessmentCost, #id_assessmentMin').change(function () {
+        // If a negative number is entered blank out that input
+        if ($(this).val() < 0) {
+            $(this).val('');
+        }
+
         let treatmentCost = $('#id_treatmentCost').val();
         let treatmentMin = $('#id_treatmentMin').val();
         let assessmentCost = $('#id_assessmentCost').val();
@@ -31,7 +36,7 @@ $(document).ready(function () {
         let dailyMin = 0;
         let userType = '';
 
-        if (treatmentCost !== '' && treatmentMin !== '' && assessmentCost !== '' && assessmentMin !== '' && dailyMin > 0) {
+        if (treatmentCost !== '' && treatmentMin !== '' && assessmentCost !== '' && assessmentMin !== '') {
             if ($('#id_type').find(":selected").text() === '---------') {
                 userType = 'position: ';
             }
@@ -39,7 +44,12 @@ $(document).ready(function () {
                 userType = $('#id_type').find(":selected").text();
             }
             dailyMin = (parseFloat(treatmentCost) * parseFloat(treatmentMin)) + (parseFloat(assessmentCost) * parseFloat(assessmentMin));
-            $('#dailyMinimum').text('Daily Minimum for your temporary ' + userType + '  : ' + currencyFormatter.format(dailyMin));
+            if (dailyMin < 0) {
+                $('#dailyMinimum').text('Daily Minimum for your temporary position: $-');
+            }
+            else {
+                $('#dailyMinimum').text('Daily Minimum for your temporary ' + userType + '  : ' + currencyFormatter.format(dailyMin));
+            }
         }
         else {
             $('#dailyMinimum').text('Daily Minimum for your temporary position: $-');
@@ -65,6 +75,15 @@ $(document).ready(function () {
         }
     });
 
+    $("#practiceAreaCheckBox").change(function () {
+        if (this.checked) {
+            $('#practiceAreaDiv').show();
+        }
+        else {
+            $('#practiceAreaDiv').hide();
+        }
+    });
+
     //Clinic is not a selectable option. If the user selects clinic it will be picked automatically
     let clinicVal = '';
     $('#id_type option').each(function () {
@@ -78,6 +97,13 @@ $(document).ready(function () {
 $('#id_type').change(function () {
     $("#optionsMessage").hide();
     $('.feeSplitFields').hide();
+    $('#practiceAreaCheckBoxDiv').removeClass('d-none');
+
+    if ($("#practiceAreaCheckBox").is(':checked')) {
+        $('#practiceAreaDiv').hide();
+        $('#practiceAreaCheckBox').prop('checked', false);
+    }
+
     $.ajax({
         type: "GET",
         url: "/auction/data/check_user_payment_type",
@@ -317,7 +343,7 @@ $("#submitButton").click(function () {
     }
 
 
-    //Validate Therapist Scheudle
+    //Validate Therapist Schedule
     let mondayVal = check_times(mondayStart, mondayEnd, 'Monday');
     let tuesdayVal = check_times(tuesdayStart, tuesdayEnd, 'Tuesday');
     let wednesdayVal = check_times(wednesdayStart, wednesdayEnd, 'Wednesday');
@@ -403,28 +429,30 @@ $("#submitButton").click(function () {
     }
 
     //Validate Areas of Practice
-    $('[id^=id_practice_area_auction-]').each(function (i, el) {
-        if ($(this).is('select')) {
-            practiceCategory = $(this).find(":selected").text();
+    if ($("#practiceAreaCheckBox").is(':checked')) {
+        $('[id^=id_practice_area_auction-]').each(function (i, el) {
+            if ($(this).is('select')) {
+                practiceCategory = $(this).find(":selected").text();
+            }
+            if ($(this).attr('type') === 'number') {
+                if ($(this).val() === '') {
+                    errorList += '<li>Please enter a value for ' + practiceCategory + '.</li>';
+                }
+                else if (parseInt($(this).val()) > 100) {
+                    errorList += '<li>' + practiceCategory + ' must be less than 100%.</li>';
+                }
+                else if (parseInt($(this).val()) < 0) {
+                    errorList += '<li>' + practiceCategory + ' cannot be negative.</li>';
+                }
+                practiceTotal += parseInt($(this).val());
+            }
+        });
+        if (practiceTotal !== 100) {
+            errorList += '<li>Practice area percentages must add up to 100%.</li>';
         }
-        if ($(this).attr('type') === 'number') {
-            if ($(this).val() === '') {
-                errorList += '<li>Please enter a value for ' + practiceCategory + '.</li>';
-            }
-            else if (parseInt($(this).val()) > 100) {
-                errorList += '<li>' + practiceCategory + ' must be less than 100%.</li>';
-            }
-            else if (parseInt($(this).val()) < 0) {
-                errorList += '<li>' + practiceCategory + ' cannot be negative.</li>';
-            }
-            practiceTotal += parseInt($(this).val());
-        }
-    });
-    if (practiceTotal !== 100) {
-        errorList += '<li>Practice area percentages must add up to 100%.</li>';
+        console.log(practiceTotal);
+        console.log(errorList);
     }
-    console.log(practiceTotal);
-    console.log(errorList);
 
     if (errorList !== '') {
         $('.alert.alert-block.alert-danger').show();
