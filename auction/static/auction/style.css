@@ -344,3 +344,25 @@ input::-webkit-inner-spin-button {
 input[type=number] {
     -moz-appearance: textfield;
 }
+
+.triangle {
+    border-style: solid;
+    border-width: 0 95px 95px 0;
+    border-color: transparent var(--primary-colour) transparent;
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 1;
+}
+
+.triangleText {
+    position: absolute;
+    top: 20px;
+    right: -90px;
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    transform: rotate(45deg);
+    z-index: 1;
+}

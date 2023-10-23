@@ -1,5 +1,6 @@
 <div class="col-sm-6 col-lg-4">
   <a class="card mt-4 text-decoration-none text-dark" href="{% url 'auction' auction.auctionID %}">
+    <div class="triangle"><span class="triangleText"><b>{{ auction.paymentType }}</b></span></div>
     <div class="position-relative">
       {% if auction.clinic.imageOne%}
       <img src="/media/{{ auction.clinic.imageOne }}" class="card-img-top card-image" alt="Image of Clinic">
@@ -14,7 +15,6 @@
     <div class="card-body">
       <h2 class="card-title">{{ auction.clinic.clinicName }}{{ auction.clinicName }}</h2>
       <p class="text-weight-thin mb-0">{{ auction.placementStart }} - {{ auction.placementEnd }}</p>
-      <p class="text-weight-thin mb-0"><b>{{ auction.paymentType }}</b></p>
       <p class="text-weight-thin mb-0">Temporary {{ auction.type }}</p>
       <p class="text-weight-thin mb-0">
         {{auction.city}}{{auction.clinic.city}}, {{auction.province}}{{auction.clinic.province}}</p>
