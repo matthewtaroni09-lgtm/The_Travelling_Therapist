@@ -71,8 +71,8 @@
           <p>{{error}}</p>
           {% endfor %}
         </div>
+        <!-- Spacer to keep the fee split fields in the same section -->
         <div class="mb-3 col-md-6">
-          {{ form.payFrequency|as_crispy_field }}
         </div>
         <div class="mb-3 col-md-6 feeSplitFields">
           {{ form.treatmentMin|as_crispy_field }}

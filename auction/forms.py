@@ -75,7 +75,6 @@ class AuctionForm(forms.ModelForm):
             'placementStart', 
             'placementEnd', 
             'reservePrice',
-            'payFrequency',
             'paymentType',
             'treatmentCost',
             'treatmentMin',

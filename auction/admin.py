@@ -20,7 +20,7 @@ class AuctionAdmin(admin.ModelAdmin):
     ordering = ('auctionID', )
     search_fields = ('auctionID',)
     inlines = [BidInline]
-    exclude = ['startingBid', 'underEightteen', 'eightteenToSixtyFive', 'overSixtyFive', 'MSK', 'neuro', 'cardioResp']
+    exclude = ['startingBid', 'underEightteen', 'eightteenToSixtyFive', 'overSixtyFive', 'MSK', 'neuro', 'cardioResp', 'payFrequency']
 
     def save_model(self, request, obj, form, change):
         admin = AdminSettings.objects.all()[:1].get()
@@ -107,7 +107,7 @@ admin.site.register(User, CustomizedUserAdmin)
 admin.site.register(UserType)
 admin.site.register(Demographic)
 admin.site.register(DemographicType)
-admin.site.register(PayFrequency)
+# admin.site.register(PayFrequency)
 admin.site.register(PracticeArea)
 admin.site.register(ProMember)
 admin.site.register(AdminSettings)

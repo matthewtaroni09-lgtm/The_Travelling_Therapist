@@ -482,23 +482,23 @@ function getDateDiff() {
     }
 
     let dateDiff = days_between(startDate, endDate, true);
-    if (dateDiff < 30) {
-        $("#id_payFrequency option[value='3']").remove();
-    }
-    else {
-        let monthlyPresent = false;
-        $("#id_payFrequency > option").each(function () {
-            if (this.text == "Monthly") {
-                monthlyPresent = true;
-            }
-        });
-        if (!monthlyPresent) {
-            $('#id_payFrequency').append($('<option>', {
-                value: 3,
-                text: "Monthly"
-            }));
-        }
-    }
+    // if (dateDiff < 30) {
+    //     $("#id_payFrequency option[value='3']").remove();
+    // }
+    // else {
+    //     let monthlyPresent = false;
+    //     $("#id_payFrequency > option").each(function () {
+    //         if (this.text == "Monthly") {
+    //             monthlyPresent = true;
+    //         }
+    //     });
+    //     if (!monthlyPresent) {
+    //         $('#id_payFrequency').append($('<option>', {
+    //             value: 3,
+    //             text: "Monthly"
+    //         }));
+    //     }
+    // }
     if ($('#id_paymentType').find(":selected").text() === 'Fee Split' && endDate > startDate) {
         if (dateDiff * 25 < 300) {
             contractCost = 300;
@@ -549,25 +549,3 @@ function days_between(date1, date2, abs) {
     return Math.round(differenceMs / ONE_DAY);
 
 }
-
-// *******For payment type button group*******
-// $("#paymentTypeButtonGroup :input").change(function () {
-//     console.log(this); // points to the clicked input button
-//     $('#flatFeeButton').removeClass('btn-disabled');
-//     $('#flatFeeButton').removeClass('btn-primary');
-//     $('#feeSplitButton').removeClass('btn-disabled');
-//     $('#feeSplitButton').removeClass('btn-primary');
-
-//     if ($(this).parent().attr("id") === 'flatFeeButton') {
-//         $('#flatFeeButton').addClass('btn-primary');
-//         $('#feeSplitButton').addClass('btn-disabled');
-//         $('.feeSplitFields').hide();
-//         $("label[for='id_reservePrice']").text('Reserve Price');
-//     }
-//     else {
-//         $('#feeSplitButton').addClass('btn-primary');
-//         $('#flatFeeButton').addClass('btn-disabled');
-//         $('.feeSplitFields').show();
-//         $("label[for='id_reservePrice']").text('Reserve Split');
-//     }
-// });
