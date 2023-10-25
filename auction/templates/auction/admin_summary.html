@@ -8,6 +8,10 @@
 {% for key, value in user_types_count.items %}
 {{ key }}: {{ value }}<br>
 {% endfor %}
+<p><b>Total Number of Users (Excluding Admins): {{ total_users_non_staff }}</b>
+    <br>
+    <b>Total Number of Admins: {{ total_users_staff }}</b>
+</p>
 
 <br>
 <p>Number of auctions: {{ auction_count }}</p>

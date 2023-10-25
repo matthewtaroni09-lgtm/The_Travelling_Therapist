@@ -567,7 +567,8 @@ def get_demographics(request, clinic_id):
     return JsonResponse({'data': data})
 
 def admin_summary(request):
-    accounts = Account.objects.all()
+    accounts_non_staff = Account.objects.filter(user__is_staff=False)
+    accounts_staff = Account.objects.filter(user__is_staff=True)
     auctions = Auction.objects.all()
     bids = Bid.objects.all()
     user_types = UserType.objects.all()
@@ -575,7 +576,7 @@ def admin_summary(request):
 
     for type in user_types:
         count = 0
-        for account in accounts:
+        for account in accounts_non_staff:
             if account.userType == type:
                 count = count + 1
         user_types_count[type] = count
@@ -583,6 +584,8 @@ def admin_summary(request):
     print(user_types_count)
             
     context = {
+        'total_users_non_staff': accounts_non_staff.__len__,
+        'total_users_staff': accounts_staff.__len__,
         'user_types_count': user_types_count,
         'auction_count': auctions.__len__,
         'bid_count': bids.__len__,
