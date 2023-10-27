@@ -638,6 +638,8 @@ def create_auction(request):
                 auction.save()
                 formset_demographic = demographic_form_set(request.POST, instance=auction, queryset=Demographic.objects.none())
                 formset_practice = practice_area_form_set(request.POST, instance=auction, queryset=PracticeArea.objects.none())
+                print('AOP')
+                # print(formset_practice.empty_form)
             
                 if formset_practice.is_valid() and formset_demographic.is_valid():
                     formset_demographic.save()

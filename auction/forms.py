@@ -441,19 +441,26 @@ class PracticeAreaForm(forms.ModelForm):
         model = PracticeArea
         fields = ['category', 'percentage']
 
+    def __init__(self, *arg, **kwarg):
+        super(PracticeAreaForm, self).__init__(*arg, **kwarg)
+        self.empty_permitted = True
+
     def clean(self):
-        print('inside form clean AP')
-        print(self.cleaned_data.get('percentage'))
-        percentage = self.cleaned_data.get('percentage')
-        error_list = []
+        print('in clean')
+        if self.empty_permitted and not self.has_changed():
+            print('inclean')
+            percentage = self.cleaned_data.get('percentage')
+            error_list = []
 
-        # If percentage is None the user has not entered a value so the validation can be skipped
-        if percentage is not None:
-            if percentage > 100:
-                error_list.append(ValidationError("Each area of practice must be less than 100%."))
+            # If percentage is None the user has not entered a value so the validation can be skipped
+            if percentage is not None:
+                if percentage > 100:
+                    error_list.append(ValidationError("Each area of practice must be less than 100%."))
 
-            if len(error_list) > 0:
-                raise forms.ValidationError(error_list)
+                if len(error_list) > 0:
+                    raise forms.ValidationError(error_list)
+        else:
+            return True
 
 class AuctionAccountForm(forms.ModelForm):
     remember_auction_data = forms.BooleanField(required=False, label="Remember auction information for next time?")
