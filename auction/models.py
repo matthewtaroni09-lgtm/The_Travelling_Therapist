@@ -151,7 +151,7 @@ class Auction(models.Model):
     def get_bid(self):
         print(self.paymentType)
         if self.currentLowBid is None:
-            return str('No Bids Yet')
+            return str('0 bids')
         elif self.reservePrice is not None and (self.closed == True and self.active == False and self.winningPrice > self.reservePrice):
             return 'Reserve price not met'
         elif self.closed == True and self.active == False and self.winningPrice is not None:
@@ -163,9 +163,9 @@ class Auction(models.Model):
             return 'No winner'
         else:
             if str(self.paymentType) == 'Flat Fee':
-                return 'Current Low Bid: $' + str("{:,}".format(self.currentLowBid))
+                return 'Low Bid: $' + str("{:,}".format(self.currentLowBid))
             elif str(self.paymentType) == 'Fee Split':
-                return 'Current Low Bid: ' + str("{:,}".format(self.currentLowBid)) + '%'
+                return 'Low Bid: ' + str("{:,}".format(self.currentLowBid)) + '%'
 
     def get_num_bids(self):
         num_bids = Bid.objects.filter(auction=self.auctionID, active=True).count()
