@@ -315,7 +315,7 @@ $("#submitButton").click(function () {
         if (treatmentMin > sessionMax && treatmentMin !== "") {
             errorList += "<li>Minimum number of Treatment sessions cannot exceed " + sessionMax + "</li>";
         }
-        if (treatmentMin < 1 && treatmentMin !== "") {
+        if (treatmentMin < 0 && treatmentMin !== "") {
             errorList += "<li>Minimum number of Treatment sessions cannot be negative.</li>";
         }
 
@@ -326,7 +326,7 @@ $("#submitButton").click(function () {
         if (assessmentCost > costMax && assessmentCost !== "") {
             errorList += "<li>Assessment costs cannot exceed " + currencyFormatter.format(costMax) + "</li>";
         }
-        if (assessmentCost < 1 && assessmentCost !== "") {
+        if (assessmentCost < 0 && assessmentCost !== "") {
             errorList += "<li>Assessment costs must be at least $1.</li>";
         }
 
