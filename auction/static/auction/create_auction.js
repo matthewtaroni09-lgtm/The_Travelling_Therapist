@@ -56,6 +56,16 @@ $(document).ready(function () {
         }
     });
 
+    // Prevent decimal numbers from being added to the number of treatments/assessments
+    $('#id_treatmentMin, #id_assessmentMin').on('keyup', function (e) {
+        if (e.which === 46) return false;
+    }).on('input', function () {
+        var self = this;
+        setTimeout(function () {
+            if (self.value.indexOf('.') != -1) self.value = parseInt(self.value, 10);
+        }, 0);
+    });
+
     $('[id^=id_demogrpahic_auction-]').each(function (i, el) {
         if ($(this).is('select')) {
             $(this).attr("disabled", true);
@@ -247,7 +257,7 @@ $("#submitButton").click(function () {
     let assessmentMin = $('#id_assessmentMin').val();
 
     let costMax = 500;
-    let sessionMax = 15;
+    let sessionMax = 10;
 
     //Validate Start/End date
     var now = new Date();
@@ -284,14 +294,29 @@ $("#submitButton").click(function () {
     }
 
     //Validate Reserve price
-    if (reservePrice !== "") {
-        if (reservePrice <= 0) {
-            errorList += "<li>Reserve price cannot be 0 or less. If no reserve price is desired leave the field blank.</li>";
-        }
+    let reserve = '';
+    let reserveCapital = '';
+    if ($('#id_paymentType').find(":selected").text() === 'Fee Split') {
+        reserve = 'reserve split';
+        reserveCapital = 'Reserve split';
+    }
+    else {
+        reserve = 'reserve price';
+        reserveCapital = 'Reserve price';
     }
     if (reservePrice !== "") {
+        if (reservePrice <= 0) {
+            errorList += "<li>" + reserveCapital + " cannot be 0 or less. If no " + reserve + " is desired leave the field blank.</li>";
+        }
+    }
+    if (reservePrice !== "" && $('#id_paymentType').find(":selected").text() === 'Flat Fee') {
         if (reservePrice > 25000) {
-            errorList += "<li>Reserve price must be less than $25,000.</li>";
+            errorList += "<li>" + reserveCapital + " must be less than $25,000.</li>";
+        }
+    }
+    if (reservePrice !== "" && $('#id_paymentType').find(":selected").text() === 'Fee Split') {
+        if (reservePrice > 100) {
+            errorList += "<li>" + reserveCapital + " cannot be greater than 100%.</li>";
         }
     }
 
