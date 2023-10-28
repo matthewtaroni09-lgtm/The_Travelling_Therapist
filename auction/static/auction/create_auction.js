@@ -11,6 +11,7 @@ var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
 $(document).ready(function () {
     $('.alert.alert-block.alert-danger').hide();
     $('.feeSplitFields').hide();
+    greyOutFields(true);
     // Prevent pressing enter from submitting the form
     $(document).keypress(
         function (event) {
@@ -111,44 +112,56 @@ $(document).ready(function () {
     $("#id_type option[value='" + clinicVal + "']").remove();
 });
 
-$('#id_type').change(function () {
-    $("#optionsMessage").hide();
-    $('.feeSplitFields').hide();
-    $('#practiceAreaCheckBoxDiv').removeClass('d-none');
-
-    if ($("#practiceAreaCheckBox").is(':checked')) {
-        $('#practiceAreaDiv').hide();
-        $('#practiceAreaCheckBox').prop('checked', false);
+$('#id_paymentType').change(function () {
+    if ($('#id_paymenttype').find(":selected").text() != '---------' && $('#id_type').find(":selected").text() != '---------') {
+        greyOutFields(false);
     }
+});
 
-    $.ajax({
-        type: "GET",
-        url: "/auction/data/check_user_payment_type",
-        data: {
-            'name': $('#id_type').find(":selected").text()
-        },
-        success: function (response) {
-            console.log(response);
-            if (!response.feeSplit) {
-                $("#id_paymentType").val("2");
-                $('#id_paymentType').attr('disabled', 'disabled');
-            }
-            else {
-                $('#id_paymentType').val('');
-                $('#id_paymentType').removeAttr('disabled');
-                let feeSplitPresent = false;
-                $("#id_paymentType > option").each(function () {
-                    if (this.text == "Fee Split") {
-                        feeSplitPresent = true;
-                    }
-                });
-            }
+$('#id_type').change(function () {
+    if ($('#id_type').find(":selected").text() != '---------') {
+        $("#optionsMessage").hide();
+        $('.feeSplitFields').hide();
+        $('#practiceAreaCheckBoxDiv').removeClass('d-none');
 
-        },
-        error: function (error) {
-            console.log('error: ', error);
+        if ($("#practiceAreaCheckBox").is(':checked')) {
+            $('#practiceAreaDiv').hide();
+            $('#practiceAreaCheckBox').prop('checked', false);
         }
-    });
+
+        if ($('#id_paymentType').find(":selected").text() != '---------') {
+            greyOutFields(false);
+        }
+
+        $.ajax({
+            type: "GET",
+            url: "/auction/data/check_user_payment_type",
+            data: {
+                'name': $('#id_type').find(":selected").text()
+            },
+            success: function (response) {
+                console.log(response);
+                if (!response.feeSplit) {
+                    $("#id_paymentType").val("2");
+                    $('#id_paymentType').attr('disabled', 'disabled');
+                }
+                else {
+                    $('#id_paymentType').val('');
+                    $('#id_paymentType').removeAttr('disabled');
+                    let feeSplitPresent = false;
+                    $("#id_paymentType > option").each(function () {
+                        if (this.text == "Fee Split") {
+                            feeSplitPresent = true;
+                        }
+                    });
+                }
+
+            },
+            error: function (error) {
+                console.log('error: ', error);
+            }
+        });
+    }
 });
 $('#id_placementStart').change(function () {
     getDateDiff();
@@ -488,6 +501,10 @@ $("#submitButton").click(function () {
     //Django cannot get the values from disabled fields so re-enabled them on submit
     $("form :disabled").removeAttr('disabled');
 });
+
+function greyOutFields(val) {
+    $("#id_placementStart, #id_placementEnd, #id_reservePrice, #id_demogrpahic_auction-0-percentage, #id_demogrpahic_auction-1-percentage, #id_demogrpahic_auction-2-percentage").attr("disabled", val);
+}
 
 function getDateDiff() {
     let start = "";
