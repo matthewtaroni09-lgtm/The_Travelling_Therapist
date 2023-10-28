@@ -74,7 +74,7 @@ class AccountInline(admin.StackedInline):
 class CustomizedUserAdmin(UserAdmin):
     inlines = (AccountInline,)
     list_display = ('username', 'clinic_name', 'first_name', 'last_name', 'user_type')
-    search_fields = ['username', 'first_name', 'last_name']
+    search_fields = ['username', 'first_name', 'last_name', 'account__clinicName']
 
     def clinic_name(self, obj: Account) -> str:
         return obj.account.clinicName
