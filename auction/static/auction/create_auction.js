@@ -11,6 +11,13 @@ var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
 $(document).ready(function () {
     $('.alert.alert-block.alert-danger').hide();
     $('.feeSplitFields').hide();
+    // Prevent pressing enter from submitting the form
+    $(document).keypress(
+        function (event) {
+            if (event.which == '13') {
+                event.preventDefault();
+            }
+        });
 
     $('#id_paymentType').change(function () {
         if ($('#id_paymentType').find(":selected").text() === 'Fee Split') {
@@ -57,7 +64,7 @@ $(document).ready(function () {
     });
 
     // Prevent decimal numbers from being added to the number of treatments/assessments
-    $('#id_treatmentMin, #id_assessmentMin').on('keyup', function (e) {
+    $('#id_treatmentMin, #id_assessmentMin, #id_reservePrice').on('keyup', function (e) {
         if (e.which === 46) return false;
     }).on('input', function () {
         var self = this;
@@ -123,8 +130,7 @@ $('#id_type').change(function () {
         success: function (response) {
             console.log(response);
             if (!response.feeSplit) {
-                $("#id_paymentType option[value='1']").remove();
-                $('#id_paymentType option[value=2]').attr('selected', 'selected');
+                $("#id_paymentType").val("2");
                 $('#id_paymentType').attr('disabled', 'disabled');
             }
             else {
@@ -136,12 +142,6 @@ $('#id_type').change(function () {
                         feeSplitPresent = true;
                     }
                 });
-                if (!feeSplitPresent) {
-                    $('#id_paymentType').append($('<option>', {
-                        value: 1,
-                        text: "Fee Split"
-                    }));
-                }
             }
 
         },
