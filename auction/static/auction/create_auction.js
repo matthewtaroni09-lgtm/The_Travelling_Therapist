@@ -98,7 +98,10 @@ $(document).ready(function () {
             $('#practiceAreaDiv').show();
         }
         else {
-            $('#practiceAreaDiv').hide();
+            $('#practiceAreaDiv').remove();
+            // $('.aop').remove();
+            // $('#id_practice_area_auction-TOTAL_FORMS').val(0);
+            // $('#id_practice_area_auction-MAX_NUM_FORMS').val(0);
         }
     });
 

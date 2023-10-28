@@ -268,9 +268,9 @@ class PayFrequency(models.Model):
         return str(self.name)
 
 class PracticeArea(models.Model):
-    auction = models.ForeignKey(Auction, related_name='practice_area_auction', on_delete=models.CASCADE, default=1)
-    category = models.ForeignKey('PracticeAreaType', related_name='practice_area_type', on_delete=models.CASCADE)
-    percentage = models.IntegerField(verbose_name='Percentage') 
+    auction = models.ForeignKey(Auction, related_name='practice_area_auction', on_delete=models.CASCADE, default=1, null=True, blank=True,)
+    category = models.ForeignKey('PracticeAreaType', related_name='practice_area_type', on_delete=models.CASCADE, null=True, blank=True,)
+    percentage = models.IntegerField(verbose_name='Percentage', null=True, blank=True,) 
 
     def __str__(self):
         return str(self.auction.clinic) + " - " + str(self.category) + ": " + str(self.percentage) + "%"
@@ -327,3 +327,10 @@ class MessageAcknowledgement(models.Model):
 
     def __str__(self):
         return str(self.user) + ' | ' + str(self.popup)
+    
+class Number(models.Model):
+    category = models.CharField(verbose_name='Cateogry', max_length=200, help_text='Cateogry for the number.')
+    currentValue = models.IntegerField(verbose_name='Current Counter Value', help_text="The counter's current value.")
+
+    def __str__(self):
+        return str(self.category)

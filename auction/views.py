@@ -16,7 +16,7 @@ from .forms import RegisterAcount, AuctionForm, BidForm, UserFormClinic, UserFor
 from django.urls import reverse_lazy
 import datetime
 from . import scheduled_tasks
-from .models import PROVINCES, Account, AdminSettings, Auction, Bid, Demographic, DemographicType, PracticeArea, PracticeAreaType, User, Account, UserType, PopupMessage, MessageAcknowledgement, Page, PaymentType
+from .models import PROVINCES, Account, AdminSettings, Auction, Bid, Demographic, DemographicType, PracticeArea, PracticeAreaType, User, Account, UserType, PopupMessage, MessageAcknowledgement, Page, PaymentType, Number
 from django.contrib.auth.forms import PasswordResetForm
 from django.utils.http import urlsafe_base64_encode
 from django.contrib.auth.tokens import default_token_generator
@@ -639,7 +639,6 @@ def create_auction(request):
                 formset_demographic = demographic_form_set(request.POST, instance=auction, queryset=Demographic.objects.none())
                 formset_practice = practice_area_form_set(request.POST, instance=auction, queryset=PracticeArea.objects.none())
                 print('AOP')
-                # print(formset_practice.empty_form)
             
                 if formset_practice.is_valid() and formset_demographic.is_valid():
                     formset_demographic.save()
@@ -877,9 +876,7 @@ def set_bid_increment(amount):
     return min_increment
 
 def get_next_auction_number():
-    auctions = Auction.objects.all()
-    max = 0
-    for auction in auctions:
-        if int(auction.auctionNumber) > max:
-            max = int(auction.auctionNumber)
-    return max + 1
+    number = Number.objects.get(category='auction_id')
+    number.currentValue = number.currentValue + 1
+    number.save()
+    return number.currentValue + 1

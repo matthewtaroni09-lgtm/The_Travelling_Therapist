@@ -446,9 +446,7 @@ class PracticeAreaForm(forms.ModelForm):
         self.empty_permitted = True
 
     def clean(self):
-        print('in clean')
-        if self.empty_permitted and not self.has_changed():
-            print('inclean')
+        if not self.empty_permitted:
             percentage = self.cleaned_data.get('percentage')
             error_list = []
 
@@ -459,8 +457,6 @@ class PracticeAreaForm(forms.ModelForm):
 
                 if len(error_list) > 0:
                     raise forms.ValidationError(error_list)
-        else:
-            return True
 
 class AuctionAccountForm(forms.ModelForm):
     remember_auction_data = forms.BooleanField(required=False, label="Remember auction information for next time?")

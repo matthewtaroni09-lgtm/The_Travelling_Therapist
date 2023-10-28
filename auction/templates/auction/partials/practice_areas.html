@@ -13,10 +13,9 @@
 
 {{ formset_practice.management_form }}
 {% for formset in formset_practice %}
-<div class="d-flex gap-3 mt-2 mt-sm-0 mb-3">
+<div class="d-flex gap-3 mt-2 mt-sm-0 mb-3 aop">
     <label for="id_practice_area_auction-{{forloop.counter0}}-category">Category:</label>
-    <select name="practice_area_auction-{{forloop.counter0}}-category"
-        id="id_practice_area_auction-{{forloop.counter0}}-category" disabled>
+    <select name="practice_area_auction-{{forloop.counter0}}-category" id="id_practice_area_auction-{{forloop.counter0}}-category" disabled>
         {% for practice in practice_areas %}
         {% if forloop.counter == forloop.parentloop.counter %}
         <option value="{{practice.pk}}" selected>{{practice.name}}</option>
@@ -25,13 +24,10 @@
         {% endif %}
         {% endfor %}
     </select>
-    <input type="number" name="practice_area_auction-{{forloop.counter0}}-percentage"
-        id="id_practice_area_auction-{{forloop.counter0}}-percentage">
+    <input type="number" name="practice_area_auction-{{forloop.counter0}}-percentage" id="id_practice_area_auction-{{forloop.counter0}}-percentage">
 
-    <input type="hidden" name="practice_area_auction-{{forloop.counter0}}-id"
-        id="id_practice_area_auction-{{forloop.counter0}}-id">
-    <input type="hidden" name="practice_area_auction-{{forloop.counter0}}-auction"
-        id="id_practice_area_auction-{{forloop.counter0}}-auction">
+    <input type="hidden" name="practice_area_auction-{{forloop.counter0}}-id" id="id_practice_area_auction-{{forloop.counter0}}-id">
+    <input type="hidden" name="practice_area_auction-{{forloop.counter0}}-auction" id="id_practice_area_auction-{{forloop.counter0}}-auction">
 </div>
 
 {% endfor %}
