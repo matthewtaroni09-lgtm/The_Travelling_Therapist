@@ -316,6 +316,7 @@ class PopupMessage(models.Model):
     active = models.BooleanField(verbose_name='Active', help_text='Is the popup currently active.')
     title = models.CharField(verbose_name='Popup Box Title', max_length=5000, help_text='The title of the popup box.')
     show_unauthenticated_users = models.BooleanField(verbose_name='Show to Non-logged in users', help_text='Should the pop-up be shown to non-users.')
+    clickID = models.CharField(verbose_name='Clickable Item ID', max_length=5000, help_text='The ID for the item being clicked to trigger the pop-up. For non-clickable messages leave blank.', blank=True, null=True)
 
     def __str__(self):
         return str(self.page) + ' | ' + str(self.message)

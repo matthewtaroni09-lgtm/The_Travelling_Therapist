@@ -10,7 +10,7 @@ var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
 
 $(document).ready(function () {
     $('.alert.alert-block.alert-danger').hide();
-    $('.feeSplitFields').hide();
+    // $('.feeSplitFields').hide();
     greyOutFields(true);
     // Prevent pressing enter from submitting the form
     $(document).keypress(
@@ -176,6 +176,30 @@ $('.clearButton').click(function () {
     $(this).parent().find('input[type=time]')[0].value = '';
     $(this).parent().find('input[type=time]')[1].value = '';
 });
+
+$('#priceInfoIcon').click(function () {
+    let page = $("#pageTitle").text();
+    $.ajax({
+        type: "GET",
+        url: "/auction/data/get_popups",
+        data: {
+            'page': page,
+            'clickID': 'priceInfoIcon'
+        },
+        success: function (response) {
+            console.log(response);
+            if (response.message != "") {
+                $("#modalTitle").text(response.title);
+                $("#modalParagraph").html(response.message);
+                $("#popupModal").modal('show');
+            }
+        },
+        error: function (error) {
+            console.log('error: ', error);
+        }
+    });
+})
+
 $("#submitButton").click(function () {
     let errorList = '';
 

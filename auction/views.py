@@ -445,19 +445,21 @@ def check_provinces(request):
 
 def get_popups(request): 
     request_page = request.GET['page']
+    click_id = request.GET['clickID']
+    if click_id == '':
+        click_id = None
     page = Page.objects.get(page = request_page)
     user = request.user
     message = ''
     title = ''
     popups = ''
     acknowledged = False
-    print(request.user)
     if request.user.is_authenticated == True:
-        popups = PopupMessage.objects.filter(page = page, active = True)
+        popups = PopupMessage.objects.filter(page = page, active = True, clickID = click_id)
     else:
-        popups = PopupMessage.objects.filter(page = page, active = True, show_unauthenticated_users = True)
+        popups = PopupMessage.objects.filter(page = page, active = True, show_unauthenticated_users = True, clickID = click_id)
     
-    print(popups)
+    print('Popups'+str(popups))
 
     if popups.count() > 0: 
         for popup in popups:
@@ -467,7 +469,8 @@ def get_popups(request):
             except:
                 acknowledged = False
             
-            if acknowledged == False:
+            # If click_id isn't blank then this refers to a pop-up that is clickable. This pop-up cannot be acknowledged because it is triggered by a click
+            if acknowledged == False or click_id != None:
                 message = message + " " + popup.message
                 title = title + " " + popup.title
 

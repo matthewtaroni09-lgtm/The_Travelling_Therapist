@@ -39,7 +39,8 @@ $(document).ready(function () {
         type: "GET",
         url: "/auction/data/get_popups",
         data: {
-            'page': page
+            'page': page,
+            'clickID': ''
         },
         success: function (response) {
             console.log(response);
