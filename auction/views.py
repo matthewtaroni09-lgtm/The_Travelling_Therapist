@@ -548,6 +548,7 @@ def get_view_auction_data(request):
     auction = Auction.objects.get(auctionID=request.GET['auctionID'])
     num_bids = Bid.objects.filter(auction=request.GET['auctionID']).count()
     max_bid = 0
+    matchting_types = False
     if num_bids > 0:
         diff = auction.currentLowBid - auction.minimumBidIncrement
         if diff > 0:
@@ -556,7 +557,8 @@ def get_view_auction_data(request):
             max_bid = 0
     else:
         max_bid = 0
-    print(max_bid)
+    if auction.type == request.user.account.userType:
+        matchting_types = True
     return JsonResponse({
         'max_bid': max_bid,
         'currentLowBid': auction.currentLowBid,
@@ -564,7 +566,8 @@ def get_view_auction_data(request):
         'auctionEnd': auction.auctionEnd,
         'reservePrice': auction.reservePrice,
         'paymentType': str(auction.paymentType),
-        'active': auction.active
+        'active': auction.active,
+        'matchtingTypes': matchting_types
     })
 
 def get_demographics(request, clinic_id):
