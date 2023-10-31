@@ -71,6 +71,7 @@ $(document).ready(function () {
             reservePrice = response.reservePrice;
             paymentType = response.paymentType;
 
+            // Setup slider if the auction is fee split and active, otherwise the element will not be found and it will produce and error
             if (paymentType === 'Fee Split' && response.active) {
                 var slider = document.getElementById("bidSlider");
                 var output = document.getElementById("demo");
