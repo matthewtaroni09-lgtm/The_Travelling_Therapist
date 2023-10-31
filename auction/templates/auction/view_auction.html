@@ -62,7 +62,14 @@
               <p>{{ auction.get_bid }}</p>
               {% csrf_token %}
               <div class="mb-3">
+                {% if payment_type == "Flat Fee" %}
                 {{ form.amount|as_crispy_field }}
+                {% else %}
+                <div class="slidecontainer">
+                  <input type="range" min="0" max="100" value={{ auction.get_bid_number }} class="slider" id="bidSlider" name="bidSlider">
+                  <p>Value: <span id="demo"></span>%</p>
+                </div>
+                {% endif %}
               </div>
               {% if num_bids > 0 and payment_type == "Flat Fee" %}
               <p>{{ auction.get_max_bid }}</p>

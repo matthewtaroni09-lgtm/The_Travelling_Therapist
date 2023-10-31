@@ -212,30 +212,24 @@ class BidForm(forms.ModelForm):
         self.min_bid_increment = kwargs.pop('min_bid_increment', None)
         self.payment_type = kwargs.pop('payment_type', None)
         super(BidForm, self).__init__(*args, **kwargs)
-        print("form " + str(self.min_bid_increment))
-        if self.payment_type == 'Fee Split':
-            self.fields['amount'].label = "Percentage"
-        else:
-            self.fields['amount'].label = "Amount"
-
-    amount = forms.IntegerField(min_value=0, max_value=100000)
+    amount = forms.IntegerField(min_value=0, max_value=100000, required=False)
     class Meta:
         model = Bid
         fields = ('amount', )
 
-    def clean_amount(self):
-        amount = self.cleaned_data.get("amount")
-        print(str(amount) + "  " + str(self.max_bid))
-        if amount > 0 and amount > self.max_bid and self.max_bid != 0 and self.payment_type == 'Flat Fee':
-            raise forms.ValidationError("Bids must be less than the next bid increment  $" + str(self.min_bid_increment) + ".")
-        if amount == 0:
-            if self.payment_type == 'Fee Split':
-                raise forms.ValidationError("Bids must be greater than 0%.")
-            else:
-                raise forms.ValidationError("Bids must be greater than $0.")
-        if amount > 100 and self.payment_type == 'Fee Split':
-                raise forms.ValidationError("Bids must be less than 100%.")
-        return amount 
+    # def clean_amount(self):
+    #     amount = self.cleaned_data.get("amount")
+    #     print(str(amount) + "  " + str(self.max_bid))
+    #     if amount > 0 and amount > self.max_bid and self.max_bid != 0 and self.payment_type == 'Flat Fee':
+    #         raise forms.ValidationError("Bids must be less than the next bid increment  $" + str(self.min_bid_increment) + ".")
+    #     if amount == 0:
+    #         if self.payment_type == 'Fee Split':
+    #             raise forms.ValidationError("Bids must be greater than 0%.")
+    #         else:
+    #             raise forms.ValidationError("Bids must be greater than $0.")
+    #     if amount > 100 and self.payment_type == 'Fee Split':
+    #             raise forms.ValidationError("Bids must be less than 100%.")
+    #     return amount 
 
 class RegisterAcount(UserCreationForm):
     first_name = forms.CharField(required=False)

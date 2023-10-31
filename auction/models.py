@@ -166,6 +166,24 @@ class Auction(models.Model):
                 return 'Low Bid: $' + str("{:,}".format(self.currentLowBid))
             elif str(self.paymentType) == 'Fee Split':
                 return 'Low Bid: ' + str("{:,}".format(self.currentLowBid)) + '%'
+            
+    def get_bid_number(self):
+        if self.currentLowBid is None:
+            return 0
+        elif self.reservePrice is not None and (self.closed == True and self.active == False and self.winningPrice > self.reservePrice):
+            return 0
+        elif self.closed == True and self.active == False and self.winningPrice is not None:
+            if str(self.paymentType) == 'Flat Fee':
+                return self.winningPrice
+            elif str(self.paymentType) == 'Fee Split':
+                return self.winningPrice
+        elif self.closed == True and self.active == False and self.winningPrice is None:
+            return 0
+        else:
+            if str(self.paymentType) == 'Flat Fee':
+                return self.currentLowBid
+            elif str(self.paymentType) == 'Fee Split':
+                return self.currentLowBid
 
     def get_num_bids(self):
         num_bids = Bid.objects.filter(auction=self.auctionID, active=True).count()
@@ -231,7 +249,7 @@ class Bid(models.Model):
     bidID = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     auction = models.ForeignKey(Auction, related_name='auction', on_delete=models.CASCADE) 
     user = models.ForeignKey(User, related_name='user', blank=True, null=True, on_delete=models.CASCADE) 
-    amount = models.IntegerField(verbose_name='Amount1', help_text='Enter the amount you would like to bid.')
+    amount = models.IntegerField(verbose_name='Amount1', blank=True, null=True, help_text='Enter the amount you would like to bid.')
     active = models.BooleanField(verbose_name='Active Bid')
     created = models.DateTimeField(verbose_name='Created Time', auto_now_add=True)
     createdBy = models.ForeignKey(User, related_name='bid_created_by', blank=True, null=True, on_delete=models.CASCADE)

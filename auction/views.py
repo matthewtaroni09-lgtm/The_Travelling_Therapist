@@ -330,6 +330,8 @@ def view_auction(request, auction_id):
             bid.user = request.user
             bid.active = True
             bid.createdBy = request.user
+            if str(auction.paymentType) == 'Fee Split':
+                bid.amount = int(request.POST.get("bidSlider", ""))
             if auction.currentLowBid is None:
                 prev_low_bid = 0
             else:

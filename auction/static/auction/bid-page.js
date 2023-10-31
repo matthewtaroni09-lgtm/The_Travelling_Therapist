@@ -3,6 +3,14 @@ const auctionID = URL.substring(URL.lastIndexOf('/') + 1);
 let currentLowBid = 0;
 let paymentType = '';
 
+var slider = document.getElementById("bidSlider");
+var output = document.getElementById("demo");
+output.innerHTML = slider.value;
+
+slider.oninput = function () {
+    output.innerHTML = this.value;
+}
+
 $(document).ready(function () {
     $("#warningMessage").hide();
     // $("#submitBidButton").prop("disabled", true);
@@ -105,6 +113,15 @@ $(document).ready(function () {
         }
         else {
             $("#submitBidButton").prop("disabled", false);
+        }
+    });
+
+    $("#bidSlider").change(function () {
+        $("#warningMessage").hide();
+        $("#warningMessage").removeClass("alert-warning");
+        $("#warningMessage").removeClass("alert-danger");
+        if (parseInt($("#bidSlider").val()) > currentLowBid && currentLowBid !== 0 && currentLowBid !== null) {
+            bidError("Warning", "Your bid is over the current minimum bid and will not be considered for determing the winner of the auction. Click Submit if you would like to proceed anyway.");
         }
     });
 
