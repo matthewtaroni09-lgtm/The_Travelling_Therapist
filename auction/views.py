@@ -630,6 +630,9 @@ def create_auction(request):
                 print('valid form')
                 auction = form.save(commit=False)
                 auction.clinic = request.user.account
+                # Check if it is a flat fee or fee split
+                if request.POST.get("paymentType", "") == '1':
+                    auction.reservePrice = request.POST.get("reservePriceSlider", "")
                 auction.auctionStart = datetime.datetime.now()
                 auction.auctionEnd = datetime.datetime.now() + datetime.timedelta(seconds=admin.defaultAuctionLength)
                 auction.closed = False
@@ -638,14 +641,17 @@ def create_auction(request):
                 auction.createdBy = request.user
                 auction.modifiedBy = request.user
                 auction.auctionNumber = get_next_auction_number()
+                print(auction.reservePrice)
                 auction.save()
                 formset_demographic = demographic_form_set(request.POST, instance=auction, queryset=Demographic.objects.none())
                 formset_practice = practice_area_form_set(request.POST, instance=auction, queryset=PracticeArea.objects.none())
                 print('AOP')
-            
+                
                 if formset_practice.is_valid() and formset_demographic.is_valid():
                     formset_demographic.save()
-                    formset_practice.save()
+                    # If AOP is populated save it
+                    if request.POST.get("AOPPopulated", "") == 'Yes':
+                        formset_practice.save()
                 else:
                     print("Fail")
                     print(formset_demographic.errors)
@@ -666,7 +672,7 @@ def create_auction(request):
                 'form': form,
                 'account_form': account_form,
                 'formset_demographic': formset_demographic,
-                'formset_practice': formset_practice,
+                'formset_practice': 'formset_practice',
                 'submitted_auction': submitted_auction,
                 'show_form': True,
                 'user_types': user_types,

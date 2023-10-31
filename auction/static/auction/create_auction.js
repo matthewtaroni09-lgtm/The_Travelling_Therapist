@@ -8,9 +8,17 @@ var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
     return new bootstrap.Tooltip(tooltipTriggerEl)
 });
 
+var slider = document.getElementById("reservePriceSlider");
+var output = document.getElementById("demo");
+output.innerHTML = slider.value;
+
+slider.oninput = function () {
+    output.innerHTML = this.value;
+}
+
 $(document).ready(function () {
     $('.alert.alert-block.alert-danger').hide();
-    // $('.feeSplitFields').hide();
+    $('.feeSplitFields').hide();
     greyOutFields(true);
     // Prevent pressing enter from submitting the form
     $(document).keypress(
@@ -20,14 +28,84 @@ $(document).ready(function () {
             }
         });
 
+    $('#id_type').change(function () {
+        if ($('#id_type').find(":selected").text() != '---------') {
+            $('#practiceAreaCheckBoxDiv').removeClass('d-none');
+            $("#optionsMessage").hide();
+
+            if ($("#practiceAreaCheckBox").is(':checked')) {
+                $('#practiceAreaDiv').hide();
+                $('#practiceAreaCheckBox').prop('checked', false);
+            }
+
+            if ($('#id_paymentType').find(":selected").text() != '---------') {
+                greyOutFields(false);
+            }
+            else {
+                greyOutFields(true);
+            }
+
+            $.ajax({
+                type: "GET",
+                url: "/auction/data/check_user_payment_type",
+                data: {
+                    'name': $('#id_type').find(":selected").text()
+                },
+                success: function (response) {
+                    console.log(response);
+                    if (!response.feeSplit) {
+                        $("#id_paymentType").val("2");
+                        $('#id_paymentType').attr('disabled', 'disabled');
+                        $('#sliderDiv').addClass('d-none');
+                        $("#reserveInputDiv").removeClass('d-none');
+                        greyOutFields(false);
+                    }
+                    else if ($('#id_paymentType').prop('disabled')) {
+                        $('#id_paymentType').val('');
+                        $('#id_paymentType').removeAttr('disabled');
+                        $('#sliderDiv').addClass('d-none');
+                        $("#reserveInputDiv").addClass('d-none');
+                        let feeSplitPresent = false;
+                        $("#id_paymentType > option").each(function () {
+                            if (this.text == "Fee Split") {
+                                feeSplitPresent = true;
+                            }
+                        });
+                    }
+
+                },
+                error: function (error) {
+                    console.log('error: ', error);
+                }
+            });
+        }
+        else {
+            $("#optionsMessage").hide();
+            $('.feeSplitFields').hide();
+            $('#sliderDiv').addClass('d-none');
+            $("#reserveInputDiv").addClass('d-none');
+            $('#id_paymentType').val('');
+        }
+    });
+
     $('#id_paymentType').change(function () {
-        if ($('#id_paymentType').find(":selected").text() === 'Fee Split') {
+        if ($('#id_paymentType').find(":selected").text() == '---------') {
+            $('#sliderDiv').addClass('d-none');
+            $("#reserveInputDiv").addClass('d-none');
+            $('.feeSplitFields').hide();
+            greyOutFields(true);
+        }
+        else if ($('#id_paymentType').find(":selected").text() === 'Fee Split') {
             $('.feeSplitFields').show();
-            $("label[for='id_reservePrice']").text('Reserve Split');
+            $('#sliderDiv').removeClass('d-none');
+            $("#reserveInputDiv").addClass('d-none');
+            greyOutFields(false);
         }
         else {
             $('.feeSplitFields').hide();
-            $("label[for='id_reservePrice']").text('Reserve Price');
+            $('#sliderDiv').addClass('d-none');
+            $("#reserveInputDiv").removeClass('d-none');
+            greyOutFields(false);
         }
     });
 
@@ -74,6 +152,13 @@ $(document).ready(function () {
         }, 0);
     });
 
+    // Prevent negative numbers in reserve price
+    $('#id_reservePrice').change(function () {
+        if ($(this).val() < 0) {
+            $(this).val('');
+        }
+    });
+
     $('[id^=id_demogrpahic_auction-]').each(function (i, el) {
         if ($(this).is('select')) {
             $(this).attr("disabled", true);
@@ -98,10 +183,8 @@ $(document).ready(function () {
             $('#practiceAreaDiv').show();
         }
         else {
-            $('#practiceAreaDiv').remove();
-            // $('.aop').remove();
-            // $('#id_practice_area_auction-TOTAL_FORMS').val(0);
-            // $('#id_practice_area_auction-MAX_NUM_FORMS').val(0);
+            $('#practiceAreaDiv').hide();
+            $('#AOPOpen').text("Yes");
         }
     });
 
@@ -115,57 +198,6 @@ $(document).ready(function () {
     $("#id_type option[value='" + clinicVal + "']").remove();
 });
 
-$('#id_paymentType').change(function () {
-    if ($('#id_paymenttype').find(":selected").text() != '---------' && $('#id_type').find(":selected").text() != '---------') {
-        greyOutFields(false);
-    }
-});
-
-$('#id_type').change(function () {
-    if ($('#id_type').find(":selected").text() != '---------') {
-        $("#optionsMessage").hide();
-        $('.feeSplitFields').hide();
-        $('#practiceAreaCheckBoxDiv').removeClass('d-none');
-
-        if ($("#practiceAreaCheckBox").is(':checked')) {
-            $('#practiceAreaDiv').hide();
-            $('#practiceAreaCheckBox').prop('checked', false);
-        }
-
-        if ($('#id_paymentType').find(":selected").text() != '---------') {
-            greyOutFields(false);
-        }
-
-        $.ajax({
-            type: "GET",
-            url: "/auction/data/check_user_payment_type",
-            data: {
-                'name': $('#id_type').find(":selected").text()
-            },
-            success: function (response) {
-                console.log(response);
-                if (!response.feeSplit) {
-                    $("#id_paymentType").val("2");
-                    $('#id_paymentType').attr('disabled', 'disabled');
-                }
-                else {
-                    $('#id_paymentType').val('');
-                    $('#id_paymentType').removeAttr('disabled');
-                    let feeSplitPresent = false;
-                    $("#id_paymentType > option").each(function () {
-                        if (this.text == "Fee Split") {
-                            feeSplitPresent = true;
-                        }
-                    });
-                }
-
-            },
-            error: function (error) {
-                console.log('error: ', error);
-            }
-        });
-    }
-});
 $('#id_placementStart').change(function () {
     getDateDiff();
 });
@@ -178,27 +210,16 @@ $('.clearButton').click(function () {
 });
 
 $('#priceInfoIcon').click(function () {
-    let page = $("#pageTitle").text();
-    $.ajax({
-        type: "GET",
-        url: "/auction/data/get_popups",
-        data: {
-            'page': page,
-            'clickID': 'priceInfoIcon'
-        },
-        success: function (response) {
-            console.log(response);
-            if (response.message != "") {
-                $("#modalTitle").text(response.title);
-                $("#modalParagraph").html(response.message);
-                $("#popupModal").modal('show');
-            }
-        },
-        error: function (error) {
-            console.log('error: ', error);
-        }
-    });
-})
+    popUps('priceInfoIcon');
+});
+
+$('#reservePriceInfoIcon').click(function () {
+    popUps('reservePriceInfoIcon');
+});
+
+$('#reservePercentageInfoIcon').click(function () {
+    popUps('reservePercentageInfoIcon');
+});
 
 $("#submitButton").click(function () {
     let errorList = '';
@@ -517,6 +538,7 @@ $("#submitButton").click(function () {
         }
         console.log(practiceTotal);
         console.log(errorList);
+        $('#AOPPopulated').val("Yes");
     }
 
     if (errorList !== '') {
@@ -580,6 +602,29 @@ function getDateDiff() {
         }
         $('#contractCost').text('Contract price if matched: ' + currencyFormatter.format(contractCost) + ' + HST');
     }
+}
+
+function popUps(id) {
+    let page = $("#pageTitle").text();
+    $.ajax({
+        type: "GET",
+        url: "/auction/data/get_popups",
+        data: {
+            'page': page,
+            'clickID': id
+        },
+        success: function (response) {
+            console.log(response);
+            if (response.message != "") {
+                $("#modalTitle").text(response.title);
+                $("#modalParagraph").html(response.message);
+                $("#popupModal").modal('show');
+            }
+        },
+        error: function (error) {
+            console.log('error: ', error);
+        }
+    });
 }
 
 function check_times(start_time, end_time, day) {

@@ -35,6 +35,7 @@
     {% endfor %}
     <form method="post" class="p-2">
       <!-- <form method="post" class="p-md-5"> -->
+      <input id="AOPPopulated" name="AOPPopulated" class="d-none" value="No">
       <h1 class="text-large text-weight-normal mb-5">Create New Auction Post</h1>
       {% csrf_token %}
       {{ form|as_crispy_errors }}
@@ -65,12 +66,26 @@
           {{ form.placementEnd|as_crispy_field }}
         </div>
         <div class="mb-3 col-md-6">
-          {{ form.reservePrice|as_crispy_field }}
-          <p>{{forms.non_field_errors}}</p>
-          {% for error in forms.non_field_errors %}
-          <p>{{error}}</p>
-          {% endfor %}
+          <div id="reserveInputDiv" class="d-none">
+            {{ form.reservePrice|as_crispy_field }}
+            <p>{{forms.non_field_errors}}</p>
+            {% for error in forms.non_field_errors %}
+            <p>{{error}}</p>
+            {% endfor %}
+            <img id="reservePriceInfoIcon" src="/media/images/info.svg" alt="Traveling Therapist Logo">
+            <p id="reservePriceInfoP">Reserve price is the maximum the clinic is willing to offer.</p>
+          </div>
+          <div id="sliderDiv" class="mb-3 col-md-6 d-none">
+            <label>Reserve Split</label>
+            <div class="slidecontainer">
+              <input type="range" min="0" max="100" value="0" class="slider" id="reservePriceSlider" name="reservePriceSlider">
+              <p>Value: <span id="demo"></span>%</p>
+            </div>
+            <img id="reservePercentageInfoIcon" src="/media/images/info.svg" alt="Traveling Therapist Logo">
+            <p id="reservePercentageInfoP">Reserve split is the maximum percentage the clinic is willing to offer.</p>
+          </div>
         </div>
+
         <!-- Spacer to keep the fee split fields in the same section -->
         <div class="mb-3 col-md-6">
         </div>
@@ -172,7 +187,6 @@
           <input type="checkbox" id="practiceAreaCheckBox" hx-post="{% url 'get-practice-types' %}" hx-target='#practiceAreaDiv' hx-trigger="click" hx-include="[name='type']">
           <label id="practiceAreaCheckBoxLabel" class="form-label">Would you like to provide Practice Area Information?</label>
         </div>
-
         <p id="optionsMessage">Practice Area options will de displayed once the auction type is selected.</p>
         <div id="practiceAreaDiv" class="mb-3">
           {% include 'auction/partials/practice_areas.html' %}
