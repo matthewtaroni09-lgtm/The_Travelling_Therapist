@@ -201,6 +201,10 @@
     margin-bottom: 0px;
 }
 
+.infoMessage {
+    display: inline-block;
+}
+
 /* View Auction Page */
 #bidModalSubFooter {
     display: none;
@@ -209,10 +213,6 @@
 
 #modalSubFooterButtonDiv {
     float: right;
-}
-
-#contractCost {
-    display: inline-block;
 }
 
 /**************************** 6. MISC ****************************/
