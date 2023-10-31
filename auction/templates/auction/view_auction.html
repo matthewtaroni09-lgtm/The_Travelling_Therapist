@@ -2,6 +2,7 @@
 {% load crispy_forms_tags %}
 {% load static %}
 {% block content %}
+{% load humanize %}
 <!-- Content Start -->
 <p id="pageTitle" class="d-none">View_Auction</p>
 <div class="container mt-3 mb-5">
@@ -137,17 +138,17 @@
     <p class="col-4 text-weight-bold border mb-0 py-2 bg-light">Minimum # of Treatments</p>
     <p class="col-3 text-weight-light border mb-0 py-2">{{ auction.treatmentMin }}</p>
     <p class="col-3 text-weight-bold border mb-0 py-2 bg-light">Rate for Treatments</p>
-    <p class="col-2 text-weight-light border mb-0 py-2">${{ auction.treatmentCost }}</p>
+    <p class="col-2 text-weight-light border mb-0 py-2">${{ auction.treatmentCost|floatformat:2|intcomma }}</p>
   </div>
   <div class="row w-100 mx-auto">
     <p class="col-4 text-weight-bold border mb-0 py-2 bg-light">Minimum # of Assessments</p>
     <p class="col-3 text-weight-light border mb-0 py-2">{{ auction.assessmentMin }}</p>
     <p class="col-3 text-weight-bold border mb-0 py-2 bg-light">Rate for Assessments</p>
-    <p class="col-2 text-weight-light border mb-0 py-2">${{ auction.assessmentCost }}</p>
+    <p class="col-2 text-weight-light border mb-0 py-2">${{ auction.assessmentCost|floatformat:2|intcomma }}</p>
   </div>
   <div class="row w-100 mx-auto">
     <p class="col-4 text-weight-bold border mb-0 py-2 bg-light">Daily Minimum</p>
-    <p class="col-8 text-weight-light border mb-0 py-2">${{ daily_minimum }}</p>
+    <p class="col-8 text-weight-light border mb-0 py-2">${{ daily_minimum|floatformat:2|intcomma }}</p>
   </div>
   {% endif %}
   <div class="row w-100 mx-auto">

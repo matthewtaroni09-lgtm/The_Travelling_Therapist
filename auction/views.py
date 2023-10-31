@@ -305,8 +305,10 @@ def view_auction(request, auction_id):
     num_biders = Bid.objects.values('user').filter(auction=auction_id).distinct().count()
     payment_type = str(auction.paymentType)
     daily_minimum = 0
-    if payment_type == 'Fee Split':
+    if payment_type == 'Fee Split' and auction.assessmentCost != None and auction.assessmentMin != None and auction.treatmentCost != None and auction.treatmentMin != None:
         daily_minimum = (auction.assessmentCost * auction.assessmentMin) + (auction.treatmentCost * auction.treatmentMin)
+    else:
+        daily_minimum = 0
     auction_change = False
     submitted = False
     max_bid = 0
