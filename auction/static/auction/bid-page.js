@@ -3,14 +3,6 @@ const auctionID = URL.substring(URL.lastIndexOf('/') + 1);
 let currentLowBid = 0;
 let paymentType = '';
 
-var slider = document.getElementById("bidSlider");
-var output = document.getElementById("demo");
-output.innerHTML = slider.value;
-
-slider.oninput = function () {
-    output.innerHTML = this.value;
-}
-
 $(document).ready(function () {
     $("#warningMessage").hide();
     // $("#submitBidButton").prop("disabled", true);
@@ -78,6 +70,17 @@ $(document).ready(function () {
             auctionEnd = new Date(response.auctionEnd);
             reservePrice = response.reservePrice;
             paymentType = response.paymentType;
+
+            if (paymentType === 'Fee Split' && response.active) {
+                var slider = document.getElementById("bidSlider");
+                var output = document.getElementById("demo");
+                output.innerHTML = slider.value;
+
+                slider.oninput = function () {
+                    output.innerHTML = this.value;
+                }
+
+            }
 
             if (currentLowBid == 1) {
                 $("#submitBidButton").prop("disabled", true);

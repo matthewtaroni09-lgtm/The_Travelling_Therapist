@@ -561,7 +561,8 @@ def get_view_auction_data(request):
         'minimumBidIncrement': auction.minimumBidIncrement,
         'auctionEnd': auction.auctionEnd,
         'reservePrice': auction.reservePrice,
-        'paymentType': str(auction.paymentType)
+        'paymentType': str(auction.paymentType),
+        'active': auction.active
     })
 
 def get_demographics(request, clinic_id):
