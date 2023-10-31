@@ -3,11 +3,6 @@ const currencyFormatter = new Intl.NumberFormat('en-US', {
     currency: 'USD',
 });
 
-const number = 123456.0;
-
-console.log(new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(number));
-// Expected output: "123.456,79 €"
-
 var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
 var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
     return new bootstrap.Tooltip(tooltipTriggerEl)

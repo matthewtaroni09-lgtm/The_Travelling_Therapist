@@ -1,5 +1,10 @@
 <div class="col-sm-6 col-lg-4">
   <div class="card mt-4 text-decoration-none text-dark">
+    {% if auction.paymentType|stringformat:"s" == "Flat Fee" %}
+    <div class="triangle" style="border-color: transparent var(--primary-colour) transparent;"><span class="triangleText"><b>{{ auction.paymentType }}</b></span></div>
+    {% else %}
+    <div class="triangle" style="border-color: transparent var(--secondary-colour) transparent;"><span class="triangleText"><b>{{ auction.paymentType }}</b></span></div>
+    {% endif %}
     <div class="card-body">
       <h2 class="card-title">{{ auction.clinicName }}{{ auction.clinic.clinicName }}</h2>
       <div class="d-inline-flex text-white bg-dark p-2 rounded mb-2 text-x-small">
