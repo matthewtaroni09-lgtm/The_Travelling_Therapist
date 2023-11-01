@@ -144,8 +144,8 @@ def auction_search(request):
 
 def index(request):
     auction = ''
-    if request.user.is_authenticated == False or request.user.account.userType == 'Clinic':
-        auctions = Auction.objects.filter(Q(active=True) | Q(closed=True) & Q(deleted=False))
+    if request.user.is_authenticated == False or str(request.user.account.userType) == 'Clinic':
+        auctions = Auction.objects.filter((Q(active=True) | Q(closed=True)) & Q(deleted=False))
     elif request.user.is_authenticated == True and request.user.account.userType != 'Clinic':
         auctions = Auction.objects.filter((Q(active=True) | Q(closed=True) & Q(deleted=False)) & Q(type=request.user.account.userType))
     cities = []

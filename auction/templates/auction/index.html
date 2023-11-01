@@ -130,12 +130,16 @@
         </select>
       </div>
     </div>
+    {% if user.is_authenticated %}
+    {% if user.account.get_split_user_type != 'Clinic' %}
     <div class="row">
       <div class="col">
         <input id="searchAllCheckbox" name="searchAllCheckbox" type="checkbox"></input>
         <label class="form-label">Search all auction types. Users can only bid on the type of auction their profile is setup for.</label>
       </div>
     </div>
+    {% endif %}
+    {% endif %}
     <div class="row">
       <div class="col-3">
         <button id="search" type="button" class="btn btn-primary mt-2" hx-post="{% url 'auction-search' %}" hx-include="[name='citySelect']" hx-target='#auctionListDiv' hx-trigger="click">Search</button>
