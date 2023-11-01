@@ -117,7 +117,7 @@ def auction_search(request):
 
     # Filter statues
     if status_select == '0':
-        status_select_fitler = Q()
+        status_select_fitler = Q(active=True)
     else:
         if status_select == 'Active':
             status_select_fitler = Q(active=True)
@@ -136,7 +136,7 @@ def auction_search(request):
     return render(request, 'auction/partials/auction_list.html', {'auction': auctions, 'length': len(auctions), 'auction_search': True})
 
 def index(request):
-    auctions = Auction.objects.filter(deleted=False)
+    auctions = Auction.objects.filter(Q(active=True) | Q(closed=True) & Q(deleted=False))
     cities = []
     payment_types = []
     statuses = []
