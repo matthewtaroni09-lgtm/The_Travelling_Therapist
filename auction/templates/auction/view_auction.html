@@ -68,7 +68,7 @@
                 {% else %}
                 <div class="slidecontainer">
                   <input type="range" min="0" max="100" value={{ auction.get_bid_number }} class="slider" id="bidSlider" name="bidSlider">
-                  <p>Value: <span id="demo"></span>%</p>
+                  <p>Value: <span id="demo">{{ auction.get_bid_number }}</span>%</p>
                 </div>
                 {% endif %}
               </div>

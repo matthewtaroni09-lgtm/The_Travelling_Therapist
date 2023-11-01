@@ -71,17 +71,17 @@ $(document).ready(function () {
             reservePrice = response.reservePrice;
             paymentType = response.paymentType;
 
-            // Setup slider if the auction is fee split and active, otherwise the element will not be found and it will produce and error
-            if (paymentType === 'Fee Split' && response.active && response.matchingTypes) {
-                var slider = document.getElementById("bidSlider");
-                var output = document.getElementById("demo");
-                output.innerHTML = slider.value;
+            // // Setup slider if the auction is fee split and active, otherwise the element will not be found and it will produce and error
+            // if (paymentType === 'Fee Split' && response.active && response.matchingTypes) {
+            //     var slider = document.getElementById("bidSlider");
+            //     var output = document.getElementById("demo");
+            //     output.innerHTML = slider.value;
 
-                slider.oninput = function () {
-                    output.innerHTML = this.value;
-                }
+            //     slider.oninput = function () {
+            //         output.innerHTML = this.value;
+            //     }
 
-            }
+            // }
 
             if (currentLowBid == 1) {
                 $("#submitBidButton").prop("disabled", true);
@@ -124,6 +124,7 @@ $(document).ready(function () {
         $("#warningMessage").hide();
         $("#warningMessage").removeClass("alert-warning");
         $("#warningMessage").removeClass("alert-danger");
+        $('#demo').text($("#bidSlider").val());
         if (parseInt($("#bidSlider").val()) > currentLowBid && currentLowBid !== 0 && currentLowBid !== null) {
             bidError("Warning", "Your bid is over the current minimum bid and will not be considered for determing the winner of the auction. Click Submit if you would like to proceed anyway.");
         }

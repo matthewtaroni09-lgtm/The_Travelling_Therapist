@@ -8,13 +8,9 @@ var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
     return new bootstrap.Tooltip(tooltipTriggerEl)
 });
 
-var slider = document.getElementById("reservePriceSlider");
-var output = document.getElementById("demo");
-output.innerHTML = slider.value;
-
-slider.oninput = function () {
-    output.innerHTML = this.value;
-}
+$("#reservePriceSlider").change(function () {
+    $('#demo').text($("#reservePriceSlider").val());
+});
 
 $(document).ready(function () {
     $('.alert.alert-block.alert-danger').hide();
