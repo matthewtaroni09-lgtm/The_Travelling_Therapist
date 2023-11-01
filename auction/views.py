@@ -97,11 +97,13 @@ def auction_search(request):
     payment_type_select = request.POST.get('paymentTypeSelect')
     status_select = request.POST.get('statusSelect')
     clinic_input = request.POST.get('clinicInput')
+    search_all_checkbox = request.POST.get('searchAllCheckbox')
 
     city_fitler = ''
     payment_type_fitler = ''
     status_select_fitler = ''
     clinic_fitler = ''
+    type_filter = ''
 
     # Filter city
     if city == '0':
@@ -117,7 +119,7 @@ def auction_search(request):
 
     # Filter statues
     if status_select == '0':
-        status_select_fitler = Q(active=True)
+        status_select_fitler = Q(active=True) | Q(closed=True)
     else:
         if status_select == 'Active':
             status_select_fitler = Q(active=True)
@@ -130,13 +132,22 @@ def auction_search(request):
         clinic_fitler = Q()
     else:
         clinic_fitler = Q(clinic__clinicName__icontains=clinic_input)
+
+    if request.user.is_authenticated and request.user.account.userType != 'Clinic' and search_all_checkbox != 'on':
+        type_filter = Q(type=request.user.account.userType)
+    else:
+        type_filter = Q()
     
-    filter = city_fitler & payment_type_fitler & status_select_fitler & clinic_fitler
+    filter = city_fitler & payment_type_fitler & status_select_fitler & clinic_fitler & type_filter
     auctions = Auction.objects.filter(filter)
     return render(request, 'auction/partials/auction_list.html', {'auction': auctions, 'length': len(auctions), 'auction_search': True})
 
 def index(request):
-    auctions = Auction.objects.filter(Q(active=True) | Q(closed=True) & Q(deleted=False))
+    auction = ''
+    if request.user.is_authenticated == False or request.user.account.userType == 'Clinic':
+        auctions = Auction.objects.filter(Q(active=True) | Q(closed=True) & Q(deleted=False))
+    elif request.user.is_authenticated == True and request.user.account.userType != 'Clinic':
+        auctions = Auction.objects.filter((Q(active=True) | Q(closed=True) & Q(deleted=False)) & Q(type=request.user.account.userType))
     cities = []
     payment_types = []
     statuses = []
