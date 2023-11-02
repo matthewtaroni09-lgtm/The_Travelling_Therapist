@@ -133,7 +133,7 @@ def auction_search(request):
     else:
         clinic_fitler = Q(clinic__clinicName__icontains=clinic_input)
 
-    if request.user.is_authenticated and request.user.account.userType != 'Clinic' and search_all_checkbox != 'on':
+    if request.user.is_authenticated and request.user.account.userType != 'Clinic' and search_all_checkbox != 'on' and not request.user.is_staff:
         type_filter = Q(type=request.user.account.userType)
     else:
         type_filter = Q()
@@ -144,7 +144,7 @@ def auction_search(request):
 
 def index(request):
     auction = ''
-    if request.user.is_authenticated == False or str(request.user.account.userType) == 'Clinic':
+    if request.user.is_authenticated == False or str(request.user.account.userType) == 'Clinic' or request.user.is_staff:
         auctions = Auction.objects.filter((Q(active=True) | Q(closed=True)) & Q(deleted=False))
     elif request.user.is_authenticated == True and request.user.account.userType != 'Clinic':
         auctions = Auction.objects.filter((Q(active=True) | Q(closed=True) & Q(deleted=False)) & Q(type=request.user.account.userType))
