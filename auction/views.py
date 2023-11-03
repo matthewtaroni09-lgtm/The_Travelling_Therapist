@@ -119,7 +119,7 @@ def auction_search(request):
 
     # Filter statues
     if status_select == '0':
-        status_select_fitler = Q(active=True) | Q(closed=True)
+        status_select_fitler = Q(active=True)
     else:
         if status_select == 'Active':
             status_select_fitler = Q(active=True)
@@ -145,9 +145,9 @@ def auction_search(request):
 def index(request):
     auction = ''
     if request.user.is_authenticated == False or str(request.user.account.userType) == 'Clinic' or request.user.is_staff:
-        auctions = Auction.objects.filter((Q(active=True) | Q(closed=True)) & Q(deleted=False))
+        auctions = Auction.objects.filter((Q(active=True)) & Q(deleted=False))
     elif request.user.is_authenticated == True and request.user.account.userType != 'Clinic':
-        auctions = Auction.objects.filter((Q(active=True) | Q(closed=True) & Q(deleted=False)) & Q(type=request.user.account.userType))
+        auctions = Auction.objects.filter((Q(active=True) & Q(deleted=False)) & Q(type=request.user.account.userType))
     cities = []
     payment_types = []
     statuses = []
