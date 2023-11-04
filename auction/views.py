@@ -358,10 +358,10 @@ def view_auction(request, auction_id):
                 auction.currentLowBid = bid.amount
                 auction_change = True
             # A timezone must be specifiedin order to make the subtraction
-            diff = auction.auctionEnd - datetime.datetime.now(timezone('utc'))
+            diff = auction.auctionEnd - datetime.datetime.now(timezone('America/Toronto'))
             if diff.total_seconds() < 60 and (bid.amount <= prev_low_bid or prev_low_bid == 0):
                 new_id = str(uuid.uuid4())
-                auction.auctionEnd = auction.auctionEnd + datetime.timedelta(minutes=1)
+                auction.auctionEnd = auction.auctionEnd.astimezone(timezone('America/Toronto')) + datetime.timedelta(minutes=1)
                 scheduled_tasks.print_job()
                 try:
                     scheduled_tasks.remove_cron_job(auction.cronID)
@@ -652,8 +652,9 @@ def create_auction(request):
                 # Check if it is a flat fee or fee split
                 if request.POST.get("paymentType", "") == '1':
                     auction.reservePrice = request.POST.get("reservePriceSlider", "")
-                auction.auctionStart = datetime.datetime.now()
-                auction.auctionEnd = datetime.datetime.now() + datetime.timedelta(seconds=admin.defaultAuctionLength)
+                print(datetime.datetime.now(timezone('America/Toronto')))
+                auction.auctionStart = datetime.datetime.now(timezone('America/Toronto'))
+                auction.auctionEnd = datetime.datetime.now(timezone('America/Toronto')) + datetime.timedelta(seconds=admin.defaultAuctionLength)
                 auction.closed = False
                 auction.active = settings.DEFAULT_AUCTION_ACTIVE
                 auction.deleted = False
