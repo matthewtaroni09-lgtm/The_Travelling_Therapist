@@ -10,13 +10,4 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RenameField(
-            model_name='auction',
-            old_name='auctionNumber1',
-            new_name='auctionNumber',
-        ),
-        migrations.RemoveField(
-            model_name='auction',
-            name='invoiceNumber1',
-        ),
     ]

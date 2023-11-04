@@ -2,7 +2,7 @@ from tabnanny import verbose
 from unicodedata import category
 from django import forms
 from django.contrib import admin
-from .models import Auction, Bid, Account, PayFrequency, PracticeArea, PracticeAreaType, ProMember, UserType, Demographic, DemographicType, ProMember, AdminSettings, Page, PopupMessage, MessageAcknowledgement, PaymentType, Number
+from .models import Auction, Bid, Account, PayFrequency, PracticeArea, PracticeAreaType, ProMember, UserType, Demographic, DemographicType, ProMember, AdminSetting, Page, PopupMessage, MessageAcknowledgement, PaymentType, Number
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
 from django.core.mail import send_mail
@@ -110,7 +110,7 @@ admin.site.register(DemographicType)
 # admin.site.register(PayFrequency)
 admin.site.register(PracticeArea)
 admin.site.register(ProMember)
-admin.site.register(AdminSettings)
+admin.site.register(AdminSetting)
 admin.site.register(Page)
 admin.site.register(PaymentType)
 admin.site.register(Number)

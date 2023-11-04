@@ -5,7 +5,7 @@ from django.core.mail import send_mail
 from django.core.mail import EmailMessage
 from django.conf import settings
 from django.http import JsonResponse, HttpResponse
-from .models import Account, Auction, Bid, User, Account, AdminSettings
+from .models import Account, Auction, Bid, User, Account, AdminSetting
 from django.db.models import Min
 from . import emails
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -45,7 +45,7 @@ def auction_closed(id):
     auction = Auction.objects.get(auctionID=id)
     bids = Bid.objects.filter(auction=id, active=True).annotate(Min('amount')).order_by('amount')
     winningBid = ""
-    admin = AdminSettings.objects.all()[:1].get()
+    admin = AdminSetting.objects.all()[:1].get()
     bidding_emails = []
     
     auction.active = False

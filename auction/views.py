@@ -16,7 +16,7 @@ from .forms import RegisterAcount, AuctionForm, BidForm, UserFormClinic, UserFor
 from django.urls import reverse_lazy
 import datetime
 from . import scheduled_tasks
-from .models import PROVINCES, Account, AdminSettings, Auction, Bid, Demographic, DemographicType, PracticeArea, PracticeAreaType, User, Account, UserType, PopupMessage, MessageAcknowledgement, Page, PaymentType, Number
+from .models import PROVINCES, Account, AdminSetting, Auction, Bid, Demographic, DemographicType, PracticeArea, PracticeAreaType, User, Account, UserType, PopupMessage, MessageAcknowledgement, Page, PaymentType, Number
 from django.contrib.auth.forms import PasswordResetForm
 from django.utils.http import urlsafe_base64_encode
 from django.contrib.auth.tokens import default_token_generator
@@ -50,7 +50,7 @@ class PasswordsChangeView(PasswordChangeView):
     success_url = reverse_lazy('profile')
 
 def contact(request):
-    admin = AdminSettings.objects.all()[:1].get()
+    admin = AdminSetting.objects.all()[:1].get()
     if request.method == 'POST':
         form = ContactForm(request.POST)
         if form.is_valid():
@@ -189,25 +189,7 @@ def view_user_auctions(request):
     auctions = Auction.objects.filter(active=True, type=user_type).order_by('-auctionEnd') | Auction.objects.filter(closed=True, type=user_type).order_by('-auctionEnd')
     return render(request, 'auction/partials/auction_list.html', {'auction': auctions})
 
-# class AuctionListView(ListView):
-#     model = Auction
-#     template_name = 'auction/index.html'
-
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         # Super users should see all auction types
-#         if self.request.user.is_authenticated == True and self.request.user.is_superuser == False:
-#             user_type = self.request.user.account.userType
-#             if str(user_type) != 'Clinic':
-#                 context['filter'] = AuctionFilter(self.request.GET, queryset=Auction.objects.filter(active=True, type=user_type).order_by('-auctionEnd') | Auction.objects.filter(closed=True, type=user_type).order_by('-auctionEnd'))
-#             else:
-#                 context['filter'] = AuctionFilter(self.request.GET, queryset=Auction.objects.filter(active=True).order_by('-auctionEnd') | Auction.objects.filter(closed=True).order_by('-auctionEnd'))
-#         else:
-#             context['filter'] = AuctionFilter(self.request.GET, queryset=Auction.objects.filter(active=True).order_by('-auctionEnd') | Auction.objects.filter(closed=True).order_by('-auctionEnd'))
-#         return context
-
 # Page Links
-
 def about(request):
     return render(request, 'auction/about.html', {'path': 'about'})
 
@@ -617,7 +599,7 @@ def admin_summary(request):
 def create_auction(request):
     if request.user.is_authenticated == False:
         return render(request, 'auction/create_auction.html', {})
-    admin = AdminSettings.objects.all()[:1].get()
+    admin = AdminSetting.objects.all()[:1].get()
     # Not closed and not deleted counts any auctions that are active or have no status selected
     active_auctions_list = Auction.objects.filter(closed=False, deleted=False, clinic=request.user.account)
     last_auction = Auction.objects.filter(deleted=False, clinic=request.user.account).order_by('-created').first()
@@ -629,7 +611,7 @@ def create_auction(request):
     # If the user has selected remember previous data get their last selected auction type
     if active_auctions_list.count() > 0 and remember_last_auction:
         selected = last_auction.type
-    max_auctions = AdminSettings.objects.all()[0]
+    max_auctions = AdminSetting.objects.all()[0]
     max_demographics = DemographicType.objects.all().count()
     # Areas of practice are specific to a user tpye so get the user's type
     max_practice_areas = 0 #PracticeAreaType.objects.all().count()
@@ -775,7 +757,7 @@ def check_user_payment_type(request):
 # @login_required
 # @transaction.atomic
 def register(request):
-    admin = AdminSettings.objects.all()[:1].get()
+    admin = AdminSetting.objects.all()[:1].get()
     if request.method == 'POST':
         form = RegisterAcount(request.POST, request.FILES)
         if form.is_valid():

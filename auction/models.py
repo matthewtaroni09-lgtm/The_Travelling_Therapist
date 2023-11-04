@@ -314,7 +314,7 @@ class ProMember(models.Model):
     def __str__(self):
         return str(self.clinic)
 
-class AdminSettings(models.Model):
+class AdminSetting(models.Model):
     sendEmails = models.BooleanField(verbose_name='Send Emails', help_text='Turns on and off emails. If checked emails will send.')
     numAllowedAuctions = models.IntegerField(verbose_name='# Allowed Auctions', help_text='Global setting for max number of active auctions')
     defaultAuctionLength = models.IntegerField(verbose_name='Default Auction Length in Seconds', help_text='Auctions will be set to this length, in seconds.')
