@@ -17,13 +17,13 @@ class AuctionAdmin(admin.ModelAdmin):
     readonly_fields = ('cronID',)
     list_display = ('auctionID', 'auctionNumber', 'clinic', 'paymentType', 'auctionStart', 'auctionEnd', 'active', 'closed', 'placementStart', 'placementEnd', 'winner', 'winningPrice')
     # Reverse alpahbetical order -name
-    ordering = ('auctionID', )
+    ordering = ('-auctionNumber', )
     search_fields = ('auctionID',)
     inlines = [BidInline]
     exclude = ['startingBid', 'underEightteen', 'eightteenToSixtyFive', 'overSixtyFive', 'MSK', 'neuro', 'cardioResp', 'payFrequency']
 
     def save_model(self, request, obj, form, change):
-        admin = AdminSettings.objects.all()[:1].get()
+        admin = AdminSetting.objects.all()[:1].get()
         auction = Auction.objects.get(pk=obj.auctionID)
         print("auction = " + str(auction.active))
         print("obj = " + str(obj.active))

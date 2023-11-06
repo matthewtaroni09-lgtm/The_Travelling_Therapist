@@ -93,15 +93,27 @@ $(document).ready(function () {
         }
         else if ($('#id_paymentType').find(":selected").text() === 'Fee Split') {
             $('.feeSplitFields').show();
-            $('#sliderDiv').removeClass('d-none');
+            $('#sliderCheckBox').prop('checked', false);
+            $('#sliderCheckBoxDiv').removeClass('d-none');
             $("#reserveInputDiv").addClass('d-none');
             greyOutFields(false);
         }
         else {
             $('.feeSplitFields').hide();
             $('#sliderDiv').addClass('d-none');
+            $('#sliderCheckBoxDiv').addClass('d-none');
             $("#reserveInputDiv").removeClass('d-none');
             greyOutFields(false);
+        }
+    });
+
+    $('#sliderCheckBox').change(function () {
+        if (this.checked) {
+            $('#sliderDiv').removeClass('d-none');
+        }
+        else {
+            $('#sliderDiv').addClass('d-none');
+            $('#reservePriceSlider').val(0);
         }
     });
 
@@ -371,11 +383,11 @@ $("#submitButton").click(function () {
             errorList += "<li>" + reserveCapital + " must be less than $25,000.</li>";
         }
     }
-    if (reservePrice !== "" && $('#id_paymentType').find(":selected").text() === 'Fee Split') {
-        if (reservePrice > 100) {
-            errorList += "<li>" + reserveCapital + " cannot be greater than 100%.</li>";
-        }
-    }
+    // if (reservePrice !== "" && $('#id_paymentType').find(":selected").text() === 'Fee Split') {
+    //     if (reservePrice > 100) {
+    //         errorList += "<li>" + reserveCapital + " cannot be greater than 100%.</li>";
+    //     }
+    // }
 
     //Validate treatment and assessment costs if the payment type is fee split
     if ($('#id_paymentType').find(":selected").text() === 'Fee Split') {
