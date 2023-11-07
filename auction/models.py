@@ -165,7 +165,7 @@ class Auction(models.Model):
             if str(self.paymentType) == 'Flat Fee':
                 return 'Low Bid: $' + str("{:,}".format(self.currentLowBid))
             elif str(self.paymentType) == 'Fee Split':
-                return 'Low Bid: ' + str("{:,}".format(self.currentLowBid)) + '%'
+                return 'Low Bid (HCP/Clinic): ' + str("{:,}".format(self.currentLowBid)) + '%'
             
     def get_bid_number(self):
         if self.currentLowBid is None:

@@ -76,6 +76,7 @@
               <p>{{ auction.get_max_bid }}</p>
               {% endif %}
               <div id="warningMessage" class="alert" role="alert"></div>
+              <p>The % you are bidding is the % YOU wish to receive as a healthcare professional. Example: if you bid 60%, you would like 60% of the fee for each patient/client you see in a day. The clinic would receive the remaining 40%.</p>
               <small>For more information on the bidding process see our <a href="{% url 'about' %}" target="_blank">FAQ</a></small>
               <div class="modal-footer">
                 <button id="closeButton" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -129,10 +130,17 @@
     <p class="col-md-3 col-sm-6 text-weight-bold border mb-0 py-2 bg-light">Clinic Location</p>
     <p class="col-md-2 col-sm-6 text-weight-light border mb-0 py-2">{{ auction.clinic.city }}, {{ auction.clinic.province }}</p>
   </div>
+  {% if payment_type == "Fee Split" %}
+  <div class="row w-100 mx-auto">
+    <p class="col-md-4 col-sm-6 text-weight-bold border mb-0 py-2 bg-light">Payment Type</p>
+    <p class="col-md-8 col-sm-6 text-weight-light border mb-0 py-2">{{ payment_type }} (HCP/Clinic)</p>
+  </div>
+  {% else %}
   <div class="row w-100 mx-auto">
     <p class="col-md-4 col-sm-6 text-weight-bold border mb-0 py-2 bg-light">Payment Type</p>
     <p class="col-md-8 col-sm-6 text-weight-light border mb-0 py-2">{{ payment_type }}</p>
   </div>
+  {% endif %}
   {% if payment_type == "Fee Split" %}
   <div class="row w-100 mx-auto">
     <p class="col-md-4 col-sm-6 text-weight-bold border mb-0 py-2 bg-light">Minimum # of Treatments</p>
