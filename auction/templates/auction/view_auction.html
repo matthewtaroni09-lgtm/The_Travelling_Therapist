@@ -42,7 +42,7 @@
   </div>
 
   <div class="d-flex">
-    <section class="d-inline-flex align-items-center text-white bg-dark py-2 px-3 me-3 rounded">
+    <section class="d-inline-flex align-items-center text-white bg-dark py-2 px-3 me-3 rounded mb-4 mb-md-0">
       <span class="material-icons small text-white">schedule</span><time id="auctionTimer-{{ auction.auctionID }}" class="m-0 d-flex me-3 text-white">{{ auction.get_time_diff }}</time>
       <p id="bidText" class="m-0 text-white">{{ auction.get_bid }}</p>
       <p class="m-0 mx-4 d-none d-lg-block text-white"># Bids:<span class="ms-2 text-white">{{ num_bids }}</span></p>
@@ -124,45 +124,45 @@
   <!-- Image Section End -->
 
   <div class="row w-100 mx-auto">
-    <p class="col-4 text-weight-bold border mb-0 py-2 bg-light">Clinic Name</p>
-    <p class="col-3 text-weight-light border mb-0 py-2">{{ auction.clinic.clinicName }}</p>
-    <p class="col-3 text-weight-bold border mb-0 py-2 bg-light">Clinic Location</p>
-    <p class="col-2 text-weight-light border mb-0 py-2">{{ auction.clinic.city }}, {{ auction.clinic.province }}</p>
+    <p class="col-md-4 col-sm-6 text-weight-bold border mb-0 py-2 bg-light">Clinic Name</p>
+    <p class="col-md-3 col-sm-6 text-weight-light border mb-0 py-2">{{ auction.clinic.clinicName }}</p>
+    <p class="col-md-3 col-sm-6 text-weight-bold border mb-0 py-2 bg-light">Clinic Location</p>
+    <p class="col-md-2 col-sm-6 text-weight-light border mb-0 py-2">{{ auction.clinic.city }}, {{ auction.clinic.province }}</p>
   </div>
   <div class="row w-100 mx-auto">
-    <p class="col-4 text-weight-bold border mb-0 py-2 bg-light">Payment Type</p>
-    <p class="col-8 text-weight-light border mb-0 py-2">{{ payment_type }}</p>
+    <p class="col-md-4 col-sm-6 text-weight-bold border mb-0 py-2 bg-light">Payment Type</p>
+    <p class="col-md-8 col-sm-6 text-weight-light border mb-0 py-2">{{ payment_type }}</p>
   </div>
   {% if payment_type == "Fee Split" %}
   <div class="row w-100 mx-auto">
-    <p class="col-4 text-weight-bold border mb-0 py-2 bg-light">Minimum # of Treatments</p>
-    <p class="col-3 text-weight-light border mb-0 py-2">{{ auction.treatmentMin }}</p>
-    <p class="col-3 text-weight-bold border mb-0 py-2 bg-light">Rate for Treatments</p>
-    <p class="col-2 text-weight-light border mb-0 py-2">${{ auction.treatmentCost|floatformat:2|intcomma }}</p>
+    <p class="col-md-4 col-sm-6 text-weight-bold border mb-0 py-2 bg-light">Minimum # of Treatments</p>
+    <p class="col-md-3 col-sm-6 text-weight-light border mb-0 py-2">{{ auction.treatmentMin }}</p>
+    <p class="col-md-3 col-sm-6 text-weight-bold border mb-0 py-2 bg-light">Rate for Treatments</p>
+    <p class="col-md-2 col-sm-6 text-weight-light border mb-0 py-2">${{ auction.treatmentCost|floatformat:2|intcomma }}</p>
   </div>
   <div class="row w-100 mx-auto">
-    <p class="col-4 text-weight-bold border mb-0 py-2 bg-light">Minimum # of Assessments</p>
-    <p class="col-3 text-weight-light border mb-0 py-2">{{ auction.assessmentMin }}</p>
-    <p class="col-3 text-weight-bold border mb-0 py-2 bg-light">Rate for Assessments</p>
-    <p class="col-2 text-weight-light border mb-0 py-2">${{ auction.assessmentCost|floatformat:2|intcomma }}</p>
+    <p class="col-md-4 col-sm-6 text-weight-bold border mb-0 py-2 bg-light">Minimum # of Assessments</p>
+    <p class="col-md-3 col-sm-6 text-weight-light border mb-0 py-2">{{ auction.assessmentMin }}</p>
+    <p class="col-md-3 col-sm-6 text-weight-bold border mb-0 py-2 bg-light">Rate for Assessments</p>
+    <p class="col-md-2 col-sm-6 text-weight-light border mb-0 py-2">${{ auction.assessmentCost|floatformat:2|intcomma }}</p>
   </div>
   <div class="row w-100 mx-auto">
-    <p class="col-4 text-weight-bold border mb-0 py-2 bg-light">Daily Minimum</p>
-    <p class="col-8 text-weight-light border mb-0 py-2">${{ daily_minimum|floatformat:2|intcomma }}</p>
+    <p class="col-md-4 col-sm-6 text-weight-bold border mb-0 py-2 bg-light">Daily Minimum</p>
+    <p class="col-md-8 col-sm-6 text-weight-light border mb-0 py-2">${{ daily_minimum|floatformat:2|intcomma }}</p>
   </div>
   {% endif %}
   <div class="row w-100 mx-auto">
-    <p class="col-4 text-weight-bold border mb-0 py-2 bg-light">Dates of Coverage</p>
-    <p class="col-8 text-weight-light border mb-0 py-2">{{ auction.placementStart }} - {{ auction.placementEnd }}</p>
+    <p class="col-md-4 col-sm-6 text-weight-bold border mb-0 py-2 bg-light">Dates of Coverage</p>
+    <p class="col-md-8 col-sm-6 text-weight-light border mb-0 py-2">{{ auction.placementStart }} - {{ auction.placementEnd }}</p>
   </div>
   <div class="row w-100 mx-auto">
-    <div class="col-4  border mb-0 py-2">
+    <div class="col-md-4 col-sm-6 border mb-0 py-2">
       <p class="text-weight-bold bg-light">Days Working</p>
       <p class="bg-light">Start and end times shown align with the time zone
         corresponding to the clinic.</p>
     </div>
 
-    <div class="col-8 border py-2">
+    <div class="col-md-8 col-sm-6 border py-2">
       <table>
         <tbody>
           <tr>
