@@ -391,26 +391,15 @@ $("#submitButton").click(function () {
 
     //Validate treatment and assessment costs if the payment type is fee split
     if ($('#id_paymentType').find(":selected").text() === 'Fee Split') {
-        //Treatment Cost
-        if (treatmentCost === "") {
-            errorList += "<li>Please enter a Treatment Cost.</li>";
+        //Minimum # of Assessments
+        if (assessmentMin === "") {
+            errorList += "<li>Please enter a Minimum Number of Assessments.</li>";
         }
-        if (treatmentCost > costMax && treatmentCost !== "") {
-            errorList += "<li>Treatment costs cannot exceed " + currencyFormatter.format(costMax) + "</li>";
+        if (assessmentMin > sessionMax && assessmentMin !== "") {
+            errorList += "<li>Minimum Number of Assessments cannot exceed " + sessionMax + "</li>";
         }
-        if (treatmentCost < 1 && treatmentCost !== "") {
-            errorList += "<li>Treatment costs must be at least $1.</li>";
-        }
-
-        //Minimum # of Treatments
-        if (treatmentMin === "") {
-            errorList += "<li>Please enter a Minimum Number of Treatments.</li>";
-        }
-        if (treatmentMin > sessionMax && treatmentMin !== "") {
-            errorList += "<li>Minimum number of Treatment sessions cannot exceed " + sessionMax + "</li>";
-        }
-        if (treatmentMin < 0 && treatmentMin !== "") {
-            errorList += "<li>Minimum number of Treatment sessions cannot be negative.</li>";
+        if (assessmentMin < 0 && assessmentMin !== "") {
+            errorList += "<li>Minimum number of Assessments sessions cannot be negative.</li>";
         }
 
         //Assessment Cost
@@ -424,15 +413,25 @@ $("#submitButton").click(function () {
             errorList += "<li>Assessment costs must be at least $1.</li>";
         }
 
-        //Minimum # of Assessments
-        if (assessmentMin === "") {
-            errorList += "<li>Please enter a Minimum Number of Assessments.</li>";
+        //Minimum # of Treatments
+        if (treatmentMin === "") {
+            errorList += "<li>Please enter a Minimum Number of Treatments.</li>";
         }
-        if (assessmentMin > sessionMax && assessmentMin !== "") {
-            errorList += "<li>Minimum Number of Assessments cannot exceed " + sessionMax + "</li>";
+        if (treatmentMin > sessionMax && treatmentMin !== "") {
+            errorList += "<li>Minimum number of Treatment sessions cannot exceed " + sessionMax + "</li>";
         }
-        if (assessmentMin < 1 && assessmentMin !== "") {
-            errorList += "<li>Minimum number of Assessments sessions cannot be negative.</li>";
+        if (treatmentMin < 0 && treatmentMin !== "") {
+            errorList += "<li>Minimum number of Treatment sessions cannot be negative.</li>";
+        }
+        //Treatment Cost
+        if (treatmentCost === "") {
+            errorList += "<li>Please enter a Treatment Cost.</li>";
+        }
+        if (treatmentCost > costMax && treatmentCost !== "") {
+            errorList += "<li>Treatment costs cannot exceed " + currencyFormatter.format(costMax) + "</li>";
+        }
+        if (treatmentCost < 1 && treatmentCost !== "") {
+            errorList += "<li>Treatment costs must be at least $1.</li>";
         }
     }
 
