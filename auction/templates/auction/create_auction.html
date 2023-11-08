@@ -179,8 +179,8 @@
           <h3 class="fs-5 my-3 text-weight-normal">Demographics</h3>
           {{ formset_demographic.management_form}}
           {% for formset in formset_demographic %}
-          <div class="input-group mb-3 align-items-center">
-            <div class="d-flex gap-3 mt-2 mt-sm-0">
+          <div class="input-group mb-sm-3 align-items-center row">
+            <div class="d-sm-flex gap-3 mt-2 mt-sm-0 col-6">
               {{ formset }}
             </div>
           </div>
@@ -192,7 +192,7 @@
           <label id="practiceAreaCheckBoxLabel" class="form-label">Would you like to provide Practice Area Information?</label>
         </div>
         <p id="optionsMessage">Practice Area options will de displayed once the auction type is selected.</p>
-        <div id="practiceAreaDiv" class="mb-3">
+        <div id="practiceAreaDiv" class="mb-3 row">
           {% include 'auction/partials/practice_areas.html' %}
         </div>
         <div class="mb-3">

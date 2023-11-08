@@ -13,7 +13,7 @@
 
 {{ formset_practice.management_form }}
 {% for formset in formset_practice %}
-<div class="d-flex gap-3 mt-2 mt-sm-0 mb-3 aop">
+<div class="d-sm-flex gap-3 mt-2 mt-sm-0 mb-3 aop">
     <label for="id_practice_area_auction-{{forloop.counter0}}-category">Category:</label>
     <select name="practice_area_auction-{{forloop.counter0}}-category" id="id_practice_area_auction-{{forloop.counter0}}-category" disabled>
         {% for practice in practice_areas %}
