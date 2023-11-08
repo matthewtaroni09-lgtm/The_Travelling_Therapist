@@ -409,8 +409,11 @@ $("#submitButton").click(function () {
         if (assessmentCost > costMax && assessmentCost !== "") {
             errorList += "<li>Assessment costs cannot exceed " + currencyFormatter.format(costMax) + "</li>";
         }
-        if (assessmentCost < 0 && assessmentCost !== "") {
+        if (assessmentCost < 1 && assessmentCost !== "" && assessmentMin > 0 && assessmentMin !== "") {
             errorList += "<li>Assessment costs must be at least $1.</li>";
+        }
+        if (assessmentCost > 0 && assessmentCost !== "" && assessmentMin == 0 && assessmentMin !== "") {
+            errorList += "<li>There cannot be an assessment cost if there isn't at least 1 Daily Minimum Assessment.</li>";
         }
 
         //Minimum # of Treatments
@@ -430,8 +433,15 @@ $("#submitButton").click(function () {
         if (treatmentCost > costMax && treatmentCost !== "") {
             errorList += "<li>Treatment costs cannot exceed " + currencyFormatter.format(costMax) + "</li>";
         }
-        if (treatmentCost < 1 && treatmentCost !== "") {
+        if (treatmentCost < 1 && treatmentCost !== "" && treatmentMin > 0 && treatmentMin !== "") {
             errorList += "<li>Treatment costs must be at least $1.</li>";
+        }
+        if (treatmentCost > 0 && treatmentCost !== "" && treatmentMin == 0 && treatmentMin !== "") {
+            errorList += "<li>There cannot be an treatment cost if there isn't at least 1 Daily Minimum Treatments.</li>";
+        }
+
+        if (assessmentMin == 0 && assessmentMin !== "" && treatmentMin == 0 && treatmentMin !== "") {
+            errorList += "<li>There must be at least 1 Daily Minimum # of Assessments or Daily Minimum # of Treatments.</li>";
         }
     }
 
