@@ -384,11 +384,11 @@ $("#submitButton").click(function () {
         }
     }
 
-    if ($('#id_paymentType').find(":selected").text() === 'Fee Split' && $('#reservePriceSlider').val() == 0) {
+    if ($('#id_paymentType').find(":selected").text() === 'Fee Split' && $('#reservePriceSlider').val() == 0 && $('#sliderCheckBox').prop('checked')) {
         errorList += "<li>Fee split values must be greater than 0%.</li>";
     }
 
-    if ($('#id_paymentType').find(":selected").text() === 'Fee Split' && $('#reservePriceSlider').val() == 100) {
+    if ($('#id_paymentType').find(":selected").text() === 'Fee Split' && $('#reservePriceSlider').val() == 100 && $('#sliderCheckBox').prop('checked')) {
         errorList += "<li>Fee split values must be less than 100%.</li>";
     }
     // if (reservePrice !== "" && $('#id_paymentType').find(":selected").text() === 'Fee Split') {
