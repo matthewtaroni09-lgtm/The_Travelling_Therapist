@@ -383,6 +383,14 @@ $("#submitButton").click(function () {
             errorList += "<li>" + reserveCapital + " must be less than $25,000.</li>";
         }
     }
+
+    if ($('#id_paymentType').find(":selected").text() === 'Fee Split' && $('#reservePriceSlider').val() == 0) {
+        errorList += "<li>Fee split values must be greater than 0%.</li>";
+    }
+
+    if ($('#id_paymentType').find(":selected").text() === 'Fee Split' && $('#reservePriceSlider').val() == 100) {
+        errorList += "<li>Fee split values must be less than 100%.</li>";
+    }
     // if (reservePrice !== "" && $('#id_paymentType').find(":selected").text() === 'Fee Split') {
     //     if (reservePrice > 100) {
     //         errorList += "<li>" + reserveCapital + " cannot be greater than 100%.</li>";
