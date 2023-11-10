@@ -400,7 +400,7 @@ $("#submitButton").click(function () {
     //Validate treatment and assessment costs if the payment type is fee split
     if ($('#id_paymentType').find(":selected").text() === 'Fee Split') {
         //Minimum # of Assessments
-        if (assessmentMin === "") {
+        if (assessmentMin === "" && assessmentCost !== "") {
             errorList += "<li>Please enter a Minimum Number of Assessments.</li>";
         }
         if (assessmentMin > sessionMax && assessmentMin !== "") {
@@ -411,7 +411,7 @@ $("#submitButton").click(function () {
         }
 
         //Assessment Cost
-        if (assessmentCost === "") {
+        if (assessmentCost === "" && assessmentMin !== "") {
             errorList += "<li>Please enter a Assessment Cost.</li>";
         }
         if (assessmentCost > costMax && assessmentCost !== "") {
@@ -425,7 +425,7 @@ $("#submitButton").click(function () {
         }
 
         //Minimum # of Treatments
-        if (treatmentMin === "") {
+        if (treatmentMin === "" && treatmentCost !== "") {
             errorList += "<li>Please enter a Minimum Number of Treatments.</li>";
         }
         if (treatmentMin > sessionMax && treatmentMin !== "") {
@@ -435,7 +435,7 @@ $("#submitButton").click(function () {
             errorList += "<li>Minimum number of Treatment sessions cannot be negative.</li>";
         }
         //Treatment Cost
-        if (treatmentCost === "") {
+        if (treatmentCost === "" && treatmentMin !== "") {
             errorList += "<li>Please enter a Treatment Cost.</li>";
         }
         if (treatmentCost > costMax && treatmentCost !== "") {
@@ -448,9 +448,9 @@ $("#submitButton").click(function () {
             errorList += "<li>There cannot be an treatment cost if there isn't at least 1 Daily Minimum Treatments.</li>";
         }
 
-        if (assessmentMin == 0 && assessmentMin !== "" && treatmentMin == 0 && treatmentMin !== "") {
-            errorList += "<li>There must be at least 1 Daily Minimum # of Assessments or Daily Minimum # of Treatments.</li>";
-        }
+        // if (assessmentMin == 0 && assessmentMin !== "" && treatmentMin == 0 && treatmentMin !== "") {
+        //     errorList += "<li>There must be at least 1 Daily Minimum # of Assessments or Daily Minimum # of Treatments.</li>";
+        // }
     }
 
 
