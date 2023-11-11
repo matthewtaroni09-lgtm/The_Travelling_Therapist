@@ -305,6 +305,13 @@ def view_auction(request, auction_id):
     auction_change = False
     submitted = False
     max_bid = 0
+    assessments = False
+    treatments = False
+
+    if auction.assessmentCost is not None and auction.assessmentMin is not None:
+        assessments = True
+    if auction.treatmentCost is not None and auction.treatmentMin is not None:
+        treatments = True
 
     if num_bids > 0 and auction.currentLowBid is not None and auction.minimumBidIncrement is not None:
         diff = auction.currentLowBid - auction.minimumBidIncrement
@@ -365,7 +372,9 @@ def view_auction(request, auction_id):
                 'num_bids': num_bids,
                 'num_biders': num_biders,
                 'payment_type': payment_type,
-                'daily_minimum': daily_minimum
+                'daily_minimum': daily_minimum,
+                'assessments': assessments,
+                'treatments': treatments
             }
             return render(request, 'auction/view_auction.html', context)
     else:
@@ -377,7 +386,9 @@ def view_auction(request, auction_id):
                 'num_bids': num_bids,
                 'num_biders': num_biders,
                 'payment_type': payment_type,
-                'daily_minimum': daily_minimum
+                'daily_minimum': daily_minimum,
+                'assessments': assessments,
+                'treatments': treatments
             }
         return render(request, 'auction/view_auction.html', context)
     

@@ -144,18 +144,22 @@
   </div>
   {% endif %}
   {% if payment_type == "Fee Split" %}
+  {% if treatments %}
   <div class="row w-100 mx-auto">
     <p class="col-md-4 col-sm-6 text-weight-bold border mb-0 py-2 bg-light">Minimum # of Treatments</p>
     <p class="col-md-3 col-sm-6 text-weight-light border mb-0 py-2">{{ auction.treatmentMin }}</p>
     <p class="col-md-3 col-sm-6 text-weight-bold border mb-0 py-2 bg-light">Rate for Treatments</p>
     <p class="col-md-2 col-sm-6 text-weight-light border mb-0 py-2">${{ auction.treatmentCost|floatformat:2|intcomma }}</p>
   </div>
+  {% endif %}
+  {% if assessments %}
   <div class="row w-100 mx-auto">
     <p class="col-md-4 col-sm-6 text-weight-bold border mb-0 py-2 bg-light">Minimum # of Assessments</p>
     <p class="col-md-3 col-sm-6 text-weight-light border mb-0 py-2">{{ auction.assessmentMin }}</p>
     <p class="col-md-3 col-sm-6 text-weight-bold border mb-0 py-2 bg-light">Rate for Assessments</p>
     <p class="col-md-2 col-sm-6 text-weight-light border mb-0 py-2">${{ auction.assessmentCost|floatformat:2|intcomma }}</p>
   </div>
+  {% endif %}
   <div class="row w-100 mx-auto">
     <p class="col-md-4 col-sm-6 text-weight-bold border mb-0 py-2 bg-light">Daily Minimum</p>
     <p class="col-md-8 col-sm-6 text-weight-light border mb-0 py-2">${{ daily_minimum|floatformat:2|intcomma }}</p>
