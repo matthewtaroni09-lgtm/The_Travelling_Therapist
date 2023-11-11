@@ -643,7 +643,6 @@ def create_auction(request):
                 auction = form.save(commit=False)
                 auction.clinic = request.user.account
                 # Check if it is a flat fee or fee split
-                print(request.POST.get('sliderCheckBox'))
                 if request.POST.get("paymentType", "") == '1' and request.POST.get('sliderCheckBox') == 'on':
                     auction.reservePrice = request.POST.get("reservePriceSlider", "")
                 elif request.POST.get("paymentType", "") == '1' and request.POST.get('sliderCheckBox') != 'on':
