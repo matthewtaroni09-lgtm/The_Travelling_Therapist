@@ -419,6 +419,9 @@ $("#submitButton").click(function () {
         reserve = 'reserve price';
         reserveCapital = 'Reserve price';
     }
+    if (reservePrice == "" && $("#reservePriceCheckBox").prop("checked")) {
+        errorList += "<li>Please enter a Reserve Price.</li>";
+    }
     if (reservePrice !== "") {
         if (reservePrice <= 0) {
             errorList += "<li>" + reserveCapital + " cannot be 0 or less. If no " + reserve + " is desired leave the field blank.</li>";
