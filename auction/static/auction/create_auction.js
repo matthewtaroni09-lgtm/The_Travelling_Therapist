@@ -8,6 +8,10 @@ var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
     return new bootstrap.Tooltip(tooltipTriggerEl)
 });
 
+let feeSplitCalcShown = false;
+let assessmentChecked = false;
+let treatmentChecked = false;
+
 $("#reservePriceSlider").change(function () {
     $('#demo').text($("#reservePriceSlider").val());
 });
@@ -92,21 +96,47 @@ $(document).ready(function () {
             greyOutFields(true);
         }
         else if ($('#id_paymentType').find(":selected").text() === 'Fee Split') {
-            $('.feeSplitFields').show();
             $('#sliderCheckBox').prop('checked', false);
             $('#sliderCheckBoxDiv').removeClass('d-none');
+            $('#assessmentCheckBoxDiv').removeClass('d-none');
+            $('#treatmentCheckBoxDiv').removeClass('d-none');
             $("#reserveInputDiv").addClass('d-none');
+            $("#reservePriceCheckBoxDiv").addClass('d-none');
+            $("#id_reservePrice").val('');
             greyOutFields(false);
         }
         else {
-            $('.feeSplitFields').hide();
             $('#sliderDiv').addClass('d-none');
             $('#sliderCheckBoxDiv').addClass('d-none');
-            $("#reserveInputDiv").removeClass('d-none');
+            $("#assessmentCheckBoxDiv").addClass('d-none');
+            $("#treatmentCheckBoxDiv").addClass('d-none');
+            $(".assessmentField").addClass('d-none');
+            $(".treatmentField").addClass('d-none');
+            $(".feeSplitCalcFields").addClass('d-none');
+            $('#id_assessmentCost').val('');
+            $('#id_assessmentMin').val('');
+            $('#id_treatmentMin').val('');
+            $('#id_treatmentCost').val('');
+            calculateDailyMin();
+            $("#reservePriceCheckBoxDiv").removeClass('d-none');
+            $("#assessmentCheckBox").prop('checked', false);
+            $("#treatmentCheckBox").prop('checked', false);
             greyOutFields(false);
         }
     });
 
+    //Reserve price checkbox
+    $('#reservePriceCheckBox').change(function () {
+        if (this.checked) {
+            $('#reserveInputDiv').removeClass('d-none');
+        }
+        else {
+            $('#reserveInputDiv').addClass('d-none');
+            $('#id_reservePrice').val(0);
+        }
+    });
+
+    //Reserve split checkbox
     $('#sliderCheckBox').change(function () {
         if (this.checked) {
             $('#sliderDiv').removeClass('d-none');
@@ -117,37 +147,53 @@ $(document).ready(function () {
         }
     });
 
+    //Show assessment fields checkbox
+    $('#assessmentCheckBox').change(function () {
+        if (this.checked) {
+            $('.assessmentField').removeClass('d-none');
+            $('.feeSplitCalcFields').removeClass('d-none');
+            assessmentChecked = true;
+        }
+        else {
+            $('.assessmentField').addClass('d-none');
+            $('#id_assessmentCost').val('');
+            $('#id_assessmentMin').val('');
+            calculateDailyMin();
+            assessmentChecked = false;
+            // If treatment check and assessment check are both unchecked then hide the calculated fields
+            if (!treatmentChecked) {
+                $('.feeSplitCalcFields').addClass('d-none');
+            }
+        }
+    });
+
+    //Show treatment fields checkbox
+    $('#treatmentCheckBox').change(function () {
+        if (this.checked) {
+            $('.treatmentField').removeClass('d-none');
+            $('.feeSplitCalcFields').removeClass('d-none');
+            treatmentChecked = true;
+        }
+        else {
+            $('.treatmentField').addClass('d-none');
+            $('#id_treatmentCost').val('');
+            $('#id_treatmentMin').val('');
+            calculateDailyMin();
+            treatmentChecked = false;
+            // If treatment check and assessment check are both unchecked then hide the calculated fields
+            if (!assessmentChecked) {
+                $('.feeSplitCalcFields').addClass('d-none');
+            }
+        }
+    });
+
     $('#id_treatmentCost, #id_treatmentMin, #id_assessmentCost, #id_assessmentMin').change(function () {
         // If a negative number is entered blank out that input
         if ($(this).val() < 0) {
             $(this).val('');
         }
 
-        let treatmentCost = $('#id_treatmentCost').val();
-        let treatmentMin = $('#id_treatmentMin').val();
-        let assessmentCost = $('#id_assessmentCost').val();
-        let assessmentMin = $('#id_assessmentMin').val();
-        let dailyMin = 0;
-        let userType = '';
-
-        if (treatmentCost !== '' && treatmentMin !== '' && assessmentCost !== '' && assessmentMin !== '') {
-            if ($('#id_type').find(":selected").text() === '---------') {
-                userType = 'position: ';
-            }
-            else {
-                userType = $('#id_type').find(":selected").text();
-            }
-            dailyMin = (parseFloat(treatmentCost) * parseFloat(treatmentMin)) + (parseFloat(assessmentCost) * parseFloat(assessmentMin));
-            if (dailyMin < 0) {
-                $('#dailyMinimum').text('Daily Minimum for your temporary position: $-');
-            }
-            else {
-                $('#dailyMinimum').text('Daily Minimum for your temporary ' + userType + '  : ' + currencyFormatter.format(dailyMin));
-            }
-        }
-        else {
-            $('#dailyMinimum').text('Daily Minimum for your temporary position: $-');
-        }
+        calculateDailyMin();
     });
 
     // Prevent decimal numbers from being added to the number of treatments/assessments
@@ -407,7 +453,7 @@ $("#submitButton").click(function () {
             errorList += "<li>Minimum Number of Assessments cannot exceed " + sessionMax + "</li>";
         }
         if (assessmentMin < 0 && assessmentMin !== "") {
-            errorList += "<li>Minimum number of Assessments sessions cannot be negative.</li>";
+            errorList += "<li>Minimum Number of Assessments sessions cannot be negative.</li>";
         }
 
         //Assessment Cost
@@ -415,10 +461,10 @@ $("#submitButton").click(function () {
             errorList += "<li>Please enter a Assessment Cost.</li>";
         }
         if (assessmentCost > costMax && assessmentCost !== "") {
-            errorList += "<li>Assessment costs cannot exceed " + currencyFormatter.format(costMax) + "</li>";
+            errorList += "<li>Assessment Costs cannot exceed " + currencyFormatter.format(costMax) + "</li>";
         }
         if (assessmentCost < 1 && assessmentCost !== "" && assessmentMin > 0 && assessmentMin !== "") {
-            errorList += "<li>Assessment costs must be at least $1.</li>";
+            errorList += "<li>Assessment Costs must be at least $1.</li>";
         }
         if (assessmentCost > 0 && assessmentCost !== "" && assessmentMin == 0 && assessmentMin !== "") {
             errorList += "<li>There cannot be an assessment cost if there isn't at least 1 Daily Minimum Assessment.</li>";
@@ -429,28 +475,24 @@ $("#submitButton").click(function () {
             errorList += "<li>Please enter a Minimum Number of Treatments.</li>";
         }
         if (treatmentMin > sessionMax && treatmentMin !== "") {
-            errorList += "<li>Minimum number of Treatment sessions cannot exceed " + sessionMax + "</li>";
+            errorList += "<li>Minimum Number of Treatment sessions cannot exceed " + sessionMax + "</li>";
         }
         if (treatmentMin < 0 && treatmentMin !== "") {
-            errorList += "<li>Minimum number of Treatment sessions cannot be negative.</li>";
+            errorList += "<li>Minimum Number of Treatment sessions cannot be negative.</li>";
         }
         //Treatment Cost
         if (treatmentCost === "" && treatmentMin !== "") {
             errorList += "<li>Please enter a Treatment Cost.</li>";
         }
         if (treatmentCost > costMax && treatmentCost !== "") {
-            errorList += "<li>Treatment costs cannot exceed " + currencyFormatter.format(costMax) + "</li>";
+            errorList += "<li>Treatment Costs cannot exceed " + currencyFormatter.format(costMax) + "</li>";
         }
         if (treatmentCost < 1 && treatmentCost !== "" && treatmentMin > 0 && treatmentMin !== "") {
-            errorList += "<li>Treatment costs must be at least $1.</li>";
+            errorList += "<li>Treatment Costs must be at least $1.</li>";
         }
         if (treatmentCost > 0 && treatmentCost !== "" && treatmentMin == 0 && treatmentMin !== "") {
-            errorList += "<li>There cannot be an treatment cost if there isn't at least 1 Daily Minimum Treatments.</li>";
+            errorList += "<li>There cannot be an Treatment Cost if there isn't at least 1 Daily Minimum Treatments.</li>";
         }
-
-        // if (assessmentMin == 0 && assessmentMin !== "" && treatmentMin == 0 && treatmentMin !== "") {
-        //     errorList += "<li>There must be at least 1 Daily Minimum # of Assessments or Daily Minimum # of Treatments.</li>";
-        // }
     }
 
 
@@ -580,6 +622,42 @@ function greyOutFields(val) {
     $("#id_placementStart, #id_placementEnd, #id_reservePrice, #id_demogrpahic_auction-0-percentage, #id_demogrpahic_auction-1-percentage, #id_demogrpahic_auction-2-percentage").attr("disabled", val);
 }
 
+function calculateDailyMin() {
+    let treatmentCost = $('#id_treatmentCost').val();
+    let treatmentMin = $('#id_treatmentMin').val();
+    let assessmentCost = $('#id_assessmentCost').val();
+    let assessmentMin = $('#id_assessmentMin').val();
+    let dailyMin = 0;
+    let userType = '';
+
+    if ((treatmentCost !== '' && treatmentMin !== '') || (assessmentCost !== '' && assessmentMin !== '')) {
+        if ($('#id_type').find(":selected").text() === '---------') {
+            userType = 'position: ';
+        }
+        else {
+            userType = $('#id_type').find(":selected").text();
+        }
+        if ($('#assessmentCheckBox').prop('checked') == true && $('#treatmentCheckBox').prop('checked') == true && (treatmentCost !== '' && treatmentMin !== '' && assessmentCost !== '' && assessmentMin !== '')) {
+            dailyMin = (parseFloat(treatmentCost) * parseFloat(treatmentMin)) + (parseFloat(assessmentCost) * parseFloat(assessmentMin));
+        }
+        else if ($('#assessmentCheckBox').prop('checked') == true && $('#treatmentCheckBox').prop('checked') == false) {
+            dailyMin = parseFloat(assessmentCost) * parseFloat(assessmentMin);
+        }
+        else if ($('#assessmentCheckBox').prop('checked') == false && $('#treatmentCheckBox').prop('checked') == true) {
+            dailyMin = parseFloat(treatmentCost) * parseFloat(treatmentMin);
+        }
+        if (dailyMin <= 0) {
+            $('#dailyMinimum').text('Daily Minimum paid to your temporary position: $-');
+        }
+        else {
+            $('#dailyMinimum').text('Daily Minimum paid to your temporary ' + userType + '  : ' + currencyFormatter.format(dailyMin));
+        }
+    }
+    else {
+        $('#dailyMinimum').text('Daily Minimum paid to your temporary position: $-');
+    }
+}
+
 function getDateDiff() {
     let start = "";
     let end = "";
@@ -615,7 +693,7 @@ function getDateDiff() {
     //         }));
     //     }
     // }
-    if ($('#id_paymentType').find(":selected").text() === 'Fee Split' && endDate > startDate) {
+    if (endDate > startDate) {
         if (dateDiff * 25 < 300) {
             contractCost = 300;
         }

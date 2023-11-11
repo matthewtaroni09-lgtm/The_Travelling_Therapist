@@ -56,16 +56,35 @@
             {% endfor %}
           </select>
         </div>
+      </div>
+      <div class="row">
         <div class="mb-12 col-md-12">
           {{ form.paymentType|as_crispy_field }}
         </div>
+      </div>
+      <div class="row">
         <div class="mb-3 col-md-6">
           {{ form.placementStart|as_crispy_field }}
         </div>
         <div class="mb-3 col-md-6">
           {{ form.placementEnd|as_crispy_field }}
         </div>
-        <div class="mb-3 col-md-6">
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <img id="priceInfoIcon" src="/media/images/info.svg" alt="Traveling Therapist Logo">
+          <p id="contractCost" class="infoMessage">Contract price if matched: $-</p>
+        </div>
+      </div>
+      <!-- Slider Checkbox -->
+      <div class="row">
+        <div id="reservePriceCheckBoxDiv" class="d-none">
+          <input id="reservePriceCheckBox" name="reservePriceCheckBox" type="checkbox">
+          <label class="form-label">Include a reserve price</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="mb-3 col-md-6 col-sm-12">
           <div id="reserveInputDiv" class="d-none">
             {{ form.reservePrice|as_crispy_field }}
             <p>{{forms.non_field_errors}}</p>
@@ -75,134 +94,160 @@
             <img id="reservePriceInfoIcon" src="/media/images/info.svg" alt="Traveling Therapist Logo">
             <p id="reservePriceInfoP" class="infoMessage">Reserve price is the maximum the clinic is willing to offer.</p>
           </div>
-          <div id="sliderCheckBoxDiv" class="d-none">
-            <input id="sliderCheckBox" name="sliderCheckBox" type="checkbox">
-            <label class="form-label">Include a reserve split %</label>
-          </div>
-          <div id="sliderDiv" class="mb-3 col-md-6 d-none">
-            <label>Reserve Split (HCP/Clinic)</label>
-            <div class="slidecontainer">
-              <input type="range" min="0" max="100" value="0" class="slider" id="reservePriceSlider" name="reservePriceSlider">
-              <p>Value: <span id="demo">0</span>%</p>
-            </div>
-            <img id="reservePercentageInfoIcon" src="/media/images/info.svg" alt="Traveling Therapist Logo">
-            <p id="reservePercentageInfoP" class="infoMessage">Reserve split is the maximum percentage the clinic is willing to offer to the healthcare worker for each session they perform/complete.</p>
-          </div>
         </div>
+      </div>
 
-        <!-- Spacer to keep the fee split fields in the same section -->
-        <div class="mb-3 col-md-6">
+      <!-- Slider Checkbox -->
+      <div class="row">
+        <div id="sliderCheckBoxDiv" class="d-none">
+          <input id="sliderCheckBox" name="sliderCheckBox" type="checkbox">
+          <label class="form-label">Include a reserve split %</label>
         </div>
-        <div class="mb-3 col-md-6 feeSplitFields">
+      </div>
+
+      <!-- Slider -->
+      <div class="row">
+        <div id="sliderDiv" class="mb-3 d-none">
+          <label>Reserve Split (HCP/Clinic)</label>
+          <div class="slidecontainer col-md-6 col-sm-12">
+            <input type="range" min="0" max="100" value="0" class="slider" id="reservePriceSlider" name="reservePriceSlider">
+            <p>Value: <span id="demo">0</span>%</p>
+          </div>
+          <img id="reservePercentageInfoIcon" src="/media/images/info.svg" alt="Traveling Therapist Logo">
+          <p id="reservePercentageInfoP" class="infoMessage">Reserve split is the maximum percentage the clinic is willing to offer to the healthcare worker for each session they perform/complete.</p>
+        </div>
+      </div>
+
+      <!-- Assessment Checkbox -->
+      <div class="row">
+        <div id="assessmentCheckBoxDiv" class="d-none">
+          <input id="assessmentCheckBox" name="sliderCheckBox" type="checkbox">
+          <label class="form-label">Include assement details</label>
+        </div>
+      </div>
+      <!-- Assessment Fields -->
+      <div class="row">
+        <div class="mb-3 col-md-6 col-sm-12 assessmentField d-none">
           {{ form.assessmentMin|as_crispy_field }}
         </div>
-        <div class="mb-3 col-md-6 feeSplitFields">
+        <div class="mb-3 col-md-6 col-sm-12 assessmentField d-none">
           {{ form.assessmentCost|as_crispy_field }}
         </div>
-        <div class="mb-3 col-md-6 feeSplitFields">
+      </div>
+
+      <!-- Treatment Checkbox -->
+      <div class="row">
+        <div id="treatmentCheckBoxDiv" class="d-none">
+          <input id="treatmentCheckBox" name="sliderCheckBox" type="checkbox">
+          <label class="form-label">Include treament details</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="mb-3 col-md-6 col-sm-12 treatmentField d-none">
           {{ form.treatmentMin|as_crispy_field }}
         </div>
-        <div class="mb-3 col-md-6 feeSplitFields">
+        <div class="mb-3 col-md-6 col-sm-12 treatmentField d-none">
           {{ form.treatmentCost|as_crispy_field }}
         </div>
-        <div class="mb-3 col-md-6 feeSplitFields">
-          <p id="dailyMinimum">Daily Minimum for your temporary position: $-</p>
-        </div>
-        <div class="mb-3 col-md-6 feeSplitFields">
-          <!-- <img id="priceInfoIcon" src="/media/images/info.svg" alt="Traveling Therapist Logo" data-bs-toggle="modal" data-bs-target="#costModal"> -->
-          <img id="priceInfoIcon" src="/media/images/info.svg" alt="Traveling Therapist Logo">
-          <p id="contractCost" class="infoMessage">Contract Price if matched: $-</p>
-        </div>
-        <div class="mb-3">
-          <h3 class="fs-5 my-3 text-weight-normal">Therapist Schedule <span class="text-weight-thin fs-6">*Leave day
-              blank to indicate days the therapist will not be working</span>
-          </h3>
+      </div>
 
-          <div class="input-group mb-3 align-items-center">
-            <span class="input-group-text me-3 mt-3 mt-md-4">Mon:</span>
-            <div class="d-flex gap-3 mt-2 mt-sm-0">
-              {{ form.mondayStart|as_crispy_field }}
-              {{ form.mondayEnd|as_crispy_field }}
-              <button id="mondayClearButton" class="btn btn-primary clearButton mt-4" type="button">Clear</button>
-            </div>
-          </div>
-          <div class="input-group mb-3 align-items-center">
-            <span class="input-group-text me-3 mt-3 mt-md-4">Tue:</span>
-            <div class="d-flex gap-3 mt-2 mt-sm-0">
-              {{ form.tuesdayStart|as_crispy_field }}
-              {{ form.tuesdayEnd|as_crispy_field }}
-              <button id="tuessdayClearButton" class="btn btn-primary clearButton mt-4" type="button">Clear</button>
-            </div>
-          </div>
-          <div class="input-group mb-3 align-items-center">
-            <span class="input-group-text me-3 mt-3 mt-md-4">Wed:</span>
-            <div class="d-flex gap-3 mt-2 mt-sm-0">
-              {{ form.wednesdayStart|as_crispy_field }}
-              {{ form.wednesdayEnd|as_crispy_field }}
-              <button id="wednesdayClearButton" class="btn btn-primary clearButton mt-4" type="button">Clear</button>
-            </div>
-          </div>
-          <div class="input-group mb-3 align-items-center">
-            <span class="input-group-text me-3 mt-3 mt-md-4">Thu:</span>
-            <div class="d-flex gap-3 mt-2 mt-sm-0">
-              {{ form.thursdayStart|as_crispy_field }}
-              {{ form.thursdayEnd|as_crispy_field }}
-              <button id="thursdayClearButton" class="btn btn-primary clearButton mt-4" type="button">Clear</button>
-            </div>
-          </div>
-          <div class="input-group mb-3 align-items-center">
-            <span class="input-group-text me-3 mt-3 mt-md-4">Fri:</span>
-            <div class="d-flex gap-3 mt-2 mt-sm-0">
-              {{ form.fridayStart|as_crispy_field }}
-              {{ form.fridayEnd|as_crispy_field }}
-              <button id="fridayClearButton" class="btn btn-primary clearButton mt-4" type="button">Clear</button>
-            </div>
-          </div>
-          <div class="input-group mb-3 align-items-center">
-            <span class="input-group-text me-3 mt-3 mt-md-4">Sat:</span>
-            <div class="d-flex gap-3 mt-2 mt-sm-0">
-              {{ form.saturdayStart|as_crispy_field }}
-              {{ form.saturdayEnd|as_crispy_field }}
-              <button id="saturdayClearButton" class="btn btn-primary clearButton mt-4" type="button">Clear</button>
-            </div>
-          </div>
-          <div class="input-group mb-3 align-items-center">
-            <span class="input-group-text me-3 mt-3 mt-md-4">Sun:</span>
-            <div class="d-flex gap-3 mt-2 mt-sm-0">
-              {{ form.sundayStart|as_crispy_field }}
-              {{ form.sundayEnd|as_crispy_field }}
-              <button id="sundayClearButton" class="btn btn-primary clearButton mt-4" type="button">Clear</button>
-            </div>
-          </div>
-        </div>
-        <div class="mb-3">
-          <h3 class="fs-5 my-3 text-weight-normal">Demographics</h3>
-          {{ formset_demographic.management_form}}
-          {% for formset in formset_demographic %}
-          <div class="input-group mb-sm-3 align-items-center row">
-            <div class="d-sm-flex gap-3 mt-2 mt-sm-0 col-6">
-              {{ formset }}
-            </div>
-          </div>
-          {% endfor %}
-        </div>
-        <h3 class="fs-5 my-3 text-weight-normal">Areas of Practice</h3>
-        <div id="practiceAreaCheckBoxDiv" class="mb-3 d-none">
-          <input type="checkbox" id="practiceAreaCheckBox" hx-post="{% url 'get-practice-types' %}" hx-target='#practiceAreaDiv' hx-trigger="click" hx-include="[name='type']">
-          <label id="practiceAreaCheckBoxLabel" class="form-label">Would you like to provide Practice Area Information?</label>
-        </div>
-        <p id="optionsMessage">Practice Area options will de displayed once the auction type is selected.</p>
-        <div id="practiceAreaDiv" class="mb-3 row">
-          {% include 'auction/partials/practice_areas.html' %}
-        </div>
-        <div class="mb-3">
-          {{ form.comments|as_crispy_field }}
+      <!-- Fee Split Calculated Fields -->
+      <div class="row">
+        <div class="mb-3 col-md-6 feeSplitCalcFields d-none">
+          <p id="dailyMinimum">Daily Minimum paid to your temporary position: $-</p>
         </div>
       </div>
-      <div>
-        <button id="submitButton" type="submit" class="btn btn-primary">Create Auction</button>
+
+      <!-- Schedule -->
+      <div class="mb-3">
+        <h3 class="fs-5 my-3 text-weight-normal">Therapist Schedule <span class="text-weight-thin fs-6">*Leave day
+            blank to indicate days the therapist will not be working</span>
+        </h3>
+
+        <div class="input-group mb-3 align-items-center">
+          <span class="input-group-text me-3 mt-3 mt-md-4">Mon:</span>
+          <div class="d-flex gap-3 mt-2 mt-sm-0">
+            {{ form.mondayStart|as_crispy_field }}
+            {{ form.mondayEnd|as_crispy_field }}
+            <button id="mondayClearButton" class="btn btn-primary clearButton mt-4" type="button">Clear</button>
+          </div>
+        </div>
+        <div class="input-group mb-3 align-items-center">
+          <span class="input-group-text me-3 mt-3 mt-md-4">Tue:</span>
+          <div class="d-flex gap-3 mt-2 mt-sm-0">
+            {{ form.tuesdayStart|as_crispy_field }}
+            {{ form.tuesdayEnd|as_crispy_field }}
+            <button id="tuessdayClearButton" class="btn btn-primary clearButton mt-4" type="button">Clear</button>
+          </div>
+        </div>
+        <div class="input-group mb-3 align-items-center">
+          <span class="input-group-text me-3 mt-3 mt-md-4">Wed:</span>
+          <div class="d-flex gap-3 mt-2 mt-sm-0">
+            {{ form.wednesdayStart|as_crispy_field }}
+            {{ form.wednesdayEnd|as_crispy_field }}
+            <button id="wednesdayClearButton" class="btn btn-primary clearButton mt-4" type="button">Clear</button>
+          </div>
+        </div>
+        <div class="input-group mb-3 align-items-center">
+          <span class="input-group-text me-3 mt-3 mt-md-4">Thu:</span>
+          <div class="d-flex gap-3 mt-2 mt-sm-0">
+            {{ form.thursdayStart|as_crispy_field }}
+            {{ form.thursdayEnd|as_crispy_field }}
+            <button id="thursdayClearButton" class="btn btn-primary clearButton mt-4" type="button">Clear</button>
+          </div>
+        </div>
+        <div class="input-group mb-3 align-items-center">
+          <span class="input-group-text me-3 mt-3 mt-md-4">Fri:</span>
+          <div class="d-flex gap-3 mt-2 mt-sm-0">
+            {{ form.fridayStart|as_crispy_field }}
+            {{ form.fridayEnd|as_crispy_field }}
+            <button id="fridayClearButton" class="btn btn-primary clearButton mt-4" type="button">Clear</button>
+          </div>
+        </div>
+        <div class="input-group mb-3 align-items-center">
+          <span class="input-group-text me-3 mt-3 mt-md-4">Sat:</span>
+          <div class="d-flex gap-3 mt-2 mt-sm-0">
+            {{ form.saturdayStart|as_crispy_field }}
+            {{ form.saturdayEnd|as_crispy_field }}
+            <button id="saturdayClearButton" class="btn btn-primary clearButton mt-4" type="button">Clear</button>
+          </div>
+        </div>
+        <div class="input-group mb-3 align-items-center">
+          <span class="input-group-text me-3 mt-3 mt-md-4">Sun:</span>
+          <div class="d-flex gap-3 mt-2 mt-sm-0">
+            {{ form.sundayStart|as_crispy_field }}
+            {{ form.sundayEnd|as_crispy_field }}
+            <button id="sundayClearButton" class="btn btn-primary clearButton mt-4" type="button">Clear</button>
+          </div>
+        </div>
+      </div>
+      <div class="mb-3">
+        <h3 class="fs-5 my-3 text-weight-normal">Demographics</h3>
+        {{ formset_demographic.management_form}}
+        {% for formset in formset_demographic %}
+        <div class="input-group mb-sm-3 align-items-center row">
+          <div class="d-sm-flex gap-3 mt-2 mt-sm-0 col-6">
+            {{ formset }}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      <h3 class="fs-5 my-3 text-weight-normal">Areas of Practice</h3>
+      <div id="practiceAreaCheckBoxDiv" class="mb-3 d-none">
+        <input type="checkbox" id="practiceAreaCheckBox" hx-post="{% url 'get-practice-types' %}" hx-target='#practiceAreaDiv' hx-trigger="click" hx-include="[name='type']">
+        <label id="practiceAreaCheckBoxLabel" class="form-label">Would you like to provide Practice Area Information?</label>
+      </div>
+      <p id="optionsMessage">Practice Area options will de displayed once the auction type is selected.</p>
+      <div id="practiceAreaDiv" class="mb-3 row">
+        {% include 'auction/partials/practice_areas.html' %}
+      </div>
+      <div class="mb-3">
+        {{ form.comments|as_crispy_field }}
       </div>
   </div>
+  <button id="submitButton" type="submit" class="btn btn-primary">Create Auction</button>
+</div>
+</div>
 </div>
 </form>
 {% else %}
