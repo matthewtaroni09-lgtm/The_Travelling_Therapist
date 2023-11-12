@@ -424,7 +424,7 @@ $("#submitButton").click(function () {
     }
     if (reservePrice !== "") {
         if (reservePrice <= 0) {
-            errorList += "<li>" + reserveCapital + " cannot be 0 or less. If no " + reserve + " is desired leave the field blank.</li>";
+            errorList += "<li>" + reserveCapital + " cannot be 0 or less.</li>";
         }
     }
     if (reservePrice !== "" && $('#id_paymentType').find(":selected").text() === 'Flat Fee') {
