@@ -132,7 +132,7 @@ $(document).ready(function () {
         }
         else {
             $('#reserveInputDiv').addClass('d-none');
-            $('#id_reservePrice').val(0);
+            $('#id_reservePrice').val("");
         }
     });
 
@@ -419,7 +419,7 @@ $("#submitButton").click(function () {
         reserve = 'reserve price';
         reserveCapital = 'Reserve price';
     }
-    if (reservePrice == "" && $("#reservePriceCheckBox").prop("checked")) {
+    if (reservePrice === "" && $("#reservePriceCheckBox").prop("checked")) {
         errorList += "<li>Please enter a Reserve Price.</li>";
     }
     if (reservePrice !== "") {
