@@ -70,12 +70,6 @@
           {{ form.placementEnd|as_crispy_field }}
         </div>
       </div>
-      <div class="row">
-        <div class="col-md-6">
-          <img id="priceInfoIcon" src="/media/images/info.svg" alt="Traveling Therapist Logo">
-          <p id="contractCost" class="infoMessage">Contract price if matched: $-</p>
-        </div>
-      </div>
       <!-- Slider Checkbox -->
       <div class="row">
         <div id="reservePriceCheckBoxDiv" class="d-none">
@@ -122,7 +116,7 @@
       <div class="row">
         <div id="assessmentCheckBoxDiv" class="d-none">
           <input id="assessmentCheckBox" name="sliderCheckBox" type="checkbox">
-          <label class="form-label">Include assement details</label>
+          <label class="form-label">Include a minimum number of daily assessments?</label>
         </div>
       </div>
       <!-- Assessment Fields -->
@@ -139,7 +133,7 @@
       <div class="row">
         <div id="treatmentCheckBoxDiv" class="d-none">
           <input id="treatmentCheckBox" name="sliderCheckBox" type="checkbox">
-          <label class="form-label">Include treament details</label>
+          <label class="form-label">Include a minimum number of daily treatments?</label>
         </div>
       </div>
       <div class="row">
@@ -151,10 +145,21 @@
         </div>
       </div>
 
+      <div class="row">
+        <div id="assessmentTreatmentInfoDiv" class="mb-3 col-md-6 d-none">
+          <img id="assessmentTreatmentInfoIcon" src="/media/images/info.svg" alt="Traveling Therapist Logo">
+          <p id="assessmentTreatmentInfo" class="infoMessage">These fields are optional. Fill out these fields if you're guaranteeing a minimum number of daily assessments or treatments that you will compensate them for. <a href="{% url 'about' %}#headingL" target="_blank"><b><i>Learn more</i></b></a></p>
+        </div>
+      </div>
+
       <!-- Fee Split Calculated Fields -->
       <div class="row">
         <div class="mb-3 col-md-6 feeSplitCalcFields d-none">
           <p id="dailyMinimum">Daily Minimum paid to your temporary position: $-</p>
+        </div>
+        <div class="mb-3 col-md-6 feeSplitCalcFields d-none">
+          <img id="priceInfoIcon" src="/media/images/info.svg" alt="Traveling Therapist Logo">
+          <p id="contractCost" class="infoMessage">Contract price if matched: $-</p>
         </div>
       </div>
 

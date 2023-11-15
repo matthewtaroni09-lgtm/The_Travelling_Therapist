@@ -330,11 +330,11 @@
   </div>
   <div class="accordion-item">
     <h2 class="accordion-header" id="headingN">
-      <button class="accordion-button text-weight-normal collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseN" aria-expanded="false" aria-controls="collapseM">
+      <button class="accordion-button text-weight-normal collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseN" aria-expanded="false" aria-controls="collapseN">
         How is my total cost calculated for fee split auctions?
       </button>
     </h2>
-    <div id="collapseN" class="accordion-collapse collapse" aria-labelledby="headingN" data-bs-parent="#clinicAccordian">
+    <div id="collapseN" name="collapseN" class="accordion-collapse collapse" aria-labelledby="headingN" data-bs-parent="#clinicAccordian">
       <p class="accordion-body text-weight-light">
         Clinics are invoiced $25+HST per day the contract is set to cover for, inclusive of the start and end date. This means if the coverage is for 8 weeks, the invoice would be $1,400+HST (25/day *56 days). Fee split auctions have the same floor and ceiling prices as fixed fee auctions at $300+HST and $5,000+HST respectively. This means any fee split posting shorter than 12 days of coverage are still invoiced $300+HST and those longer than 200 days are invoiced $5,000+HST.
         <br><br>
@@ -579,5 +579,5 @@
 <!-- Unregulated Accordian End -->
 
 <!-- Content End -->
-<script src="{% static 'auction/index.js' %}"></script>
+<script src="{% static 'auction/about.js' %}"></script>
 {% endblock %}

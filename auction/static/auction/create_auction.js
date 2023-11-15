@@ -100,6 +100,7 @@ $(document).ready(function () {
             $('#sliderCheckBoxDiv').removeClass('d-none');
             $('#assessmentCheckBoxDiv').removeClass('d-none');
             $('#treatmentCheckBoxDiv').removeClass('d-none');
+            $('#assessmentTreatmentInfoDiv').removeClass('d-none');
             $("#reserveInputDiv").addClass('d-none');
             $("#reservePriceCheckBoxDiv").addClass('d-none');
             $("#id_reservePrice").val('');
@@ -110,6 +111,7 @@ $(document).ready(function () {
             $('#sliderCheckBoxDiv').addClass('d-none');
             $("#assessmentCheckBoxDiv").addClass('d-none');
             $("#treatmentCheckBoxDiv").addClass('d-none');
+            $("#assessmentTreatmentInfoDiv").addClass('d-none');
             $(".assessmentField").addClass('d-none');
             $(".treatmentField").addClass('d-none');
             $(".feeSplitCalcFields").addClass('d-none');
@@ -273,6 +275,9 @@ $('#reservePriceInfoIcon').click(function () {
 
 $('#reservePercentageInfoIcon').click(function () {
     popUps('reservePercentageInfoIcon');
+});
+$('#assessmentTreatmentInfoIcon').click(function () {
+    popUps('assessmentTreatmentInfoIcon');
 });
 
 $("#submitButton").click(function () {
