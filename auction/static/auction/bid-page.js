@@ -7,11 +7,10 @@ $(document).ready(function () {
     $("#warningMessage").hide();
     // $("#submitBidButton").prop("disabled", true);
     let max_bid = 0;
-    let currentLowBid = 0;
     let url = $(location).attr('href').split("/");
     let auctionID = url[url.length - 1];
     let auctionEnd = "";
-    let reservePrice = 0;
+
 
     $(document).keypress(
         function (event) {
@@ -71,17 +70,10 @@ $(document).ready(function () {
             reservePrice = response.reservePrice;
             paymentType = response.paymentType;
 
-            // // Setup slider if the auction is fee split and active, otherwise the element will not be found and it will produce and error
-            // if (paymentType === 'Fee Split' && response.active && response.matchingTypes) {
-            //     var slider = document.getElementById("bidSlider");
-            //     var output = document.getElementById("demo");
-            //     output.innerHTML = slider.value;
-
-            //     slider.oninput = function () {
-            //         output.innerHTML = this.value;
-            //     }
-
-            // }
+            let currentTime = new Date().getTime()
+            let subtractMilliSecondsValue = auctionEnd.getTime() - currentTime;
+            console.log(subtractMilliSecondsValue);
+            setTimeout(auctionEnded, subtractMilliSecondsValue);
 
             if (currentLowBid == 1) {
                 $("#submitBidButton").prop("disabled", true);
@@ -148,11 +140,21 @@ $(document).ready(function () {
     function auctionEnded() {
         $("#bidButton").hide();
         $("#exampleModal").modal("hide");
-        if (currentLowBid > reservePrice && reservePrice !== null) {
+        console.log(currentLowBid);
+        console.log(reservePrice);
+        if (currentLowBid > reservePrice && reservePrice !== null && currentLowBid != null) {
             $("#bidText").text("Reserve price not met");
         }
+        else if (currentLowBid == null) {
+            $("#bidText").text("No bids placed");
+        }
         else {
-            $("#bidText").text("Winning Bid: $" + currentLowBid.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+            if (paymentType === 'Flat Fee') {
+                $("#bidText").text("Winning Bid: $" + currentLowBid.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+            }
+            else {
+                $("#bidText").text("Winning Bid: " + currentLowBid.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "%");
+            }
         }
     }
 });
