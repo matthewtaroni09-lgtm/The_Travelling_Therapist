@@ -10,6 +10,8 @@ from django.db.models import Min
 from . import emails
 from apscheduler.schedulers.background import BackgroundScheduler
 from django_apscheduler.jobstores import DjangoJobStore, register_events, register_job
+import logging
+logger = logging.getLogger(__name__)
 
 scheduler = BackgroundScheduler()
 scheduler.add_jobstore(DjangoJobStore(), "default")
@@ -39,6 +41,8 @@ def remove_cron_job(id):
     scheduler.remove_job(id)
 
 def auction_closed(id):
+    print('!!!!!AUCTION END!!!!!')
+    logger.warning('!!!!Auction ended!!!!')
     now = datetime.now()
     dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
     print("date and time =", dt_string)
@@ -50,26 +54,37 @@ def auction_closed(id):
     
     auction.active = False
     auction.closed = True
-    print(admin.sendEmails)
-    print(bids.count())
+    logger.warning(admin.sendEmails)
+    logger.warning(bids.count())
     if bids.count() > 0:
         winningBid = bids[0]
-        print(winningBid.amount)
-        print(winningBid.user.first_name)
-        print(winningBid.user.email)
-        for bid in bids:
-            print('Bid user:' + str(bid.user.email))
-            if bid.user.email != winningBid.user.email and not any(email_list['email'] == bid.user.email for email_list in bidding_emails):
-                bidding_emails.append({'email': bid.user.email, 'first_name': bid.user.first_name, 'last_name': bid.user.last_name})
-                print(bidding_emails)
-        print(bidding_emails)
-        auction.winner = winningBid.user
-        auction.winningPrice = winningBid.amount
+        logger.warning(winningBid.amount)
+        logger.warning(winningBid.user.first_name)
+        logger.warning(winningBid.user.email)
+        if auction.reservePrice is not None:
+            if winningBid.amount < auction.reservePrice and auction.reservePrice > 0:
+                for bid in bids:
+                    logger.warning('Bid user:' + str(bid.user.email))
+                    if bid.user.email != winningBid.user.email and not any(email_list['email'] == bid.user.email for email_list in bidding_emails):
+                        bidding_emails.append({'email': bid.user.email, 'first_name': bid.user.first_name, 'last_name': bid.user.last_name})
+                        logger.warning(bidding_emails)
+                logger.warning(bidding_emails)
+                auction.winner = winningBid.user
+                auction.winningPrice = winningBid.amount
+            else:
+                for bid in bids:
+                    logger.warning('Bid user:' + str(bid.user.email))
+                    if bid.user.email != winningBid.user.email and not any(email_list['email'] == bid.user.email for email_list in bidding_emails):
+                        bidding_emails.append({'email': bid.user.email, 'first_name': bid.user.first_name, 'last_name': bid.user.last_name})
+                        logger.warning(bidding_emails)
+                logger.warning(bidding_emails)
+                auction.winner = winningBid.user
+                auction.winningPrice = winningBid.amount
         auction.save()
 
         if admin.sendEmails:
             if auction.reservePrice is not None:
-                if winningBid.amount > auction.reservePrice:
+                if winningBid.amount > auction.reservePrice and auction.reservePrice > 0:
                     # Therapist email
                     for bid in bids: 
                         send_mail(

@@ -42,8 +42,8 @@ from functools import partial, wraps
 from django.http import JsonResponse
 import json
 import requests
-
-#Test comment
+import logging
+logger = logging.getLogger(__name__)
 
 class PasswordsChangeView(PasswordChangeView):
     form_class = PasswordChangingForm
@@ -143,6 +143,7 @@ def auction_search(request):
     return render(request, 'auction/partials/auction_list.html', {'auction': auctions, 'length': len(auctions), 'auction_search': True})
 
 def index(request):
+    logger.warning('Homepage was accessed at '+str(datetime.datetime.now())+' hours!')
     auction = ''
     if request.user.is_authenticated == False or str(request.user.account.userType) == 'Clinic' or request.user.is_staff:
         auctions = Auction.objects.filter((Q(active=True)) & Q(deleted=False))

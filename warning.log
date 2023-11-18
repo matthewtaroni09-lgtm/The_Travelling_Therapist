@@ -1,0 +1,166 @@
+Homepage was accessed at 2023-11-18 06:51:34.133198 hours!
+Not Found: /media/default.jpg
+Not Found: /media/default.jpg
+Homepage was accessed at 2023-11-18 06:54:39.191395 hours!
+Not Found: /media/default.jpg
+Not Found: /media/default.jpg
+Not Found: /media/default.jpg
+Not Found: /media/
+Not Found: /media/default.jpg
+Not Found: /media/
+Not Found: /media/default.jpg
+Not Found: /media/
+Not Found: /media/default.jpg
+Not Found: /media/
+Job "auction_closed (trigger: cron[year='2023', month='11', day='18', hour='6', minute='55', second='53'], next run at: 2023-11-18 06:55:53 EST)" raised an exception
+Traceback (most recent call last):
+  File "D:\OneDrive\Projects\The Travelling Therapist\The_Travelling_Therapist\venv\lib\site-packages\apscheduler\executors\base.py", line 125, in run_job
+    retval = job.func(*job.args, **job.kwargs)
+  File "D:\OneDrive\Projects\The Travelling Therapist\The_Travelling_Therapist\The_Travelling_Therapist\auction\scheduled_tasks.py", line 45, in auction_closed
+    logger.warning('!!!!Auction ended at '+str(datetime.datetime.now())+'!!!!')
+AttributeError: type object 'datetime.datetime' has no attribute 'datetime'
+Job 'e0b5c87e-2330-4301-9c29-5f797babf4de' no longer exists! Skipping logging of job execution...
+Job 'e0b5c87e-2330-4301-9c29-5f797babf4de' no longer exists! Skipping logging of job execution...
+Not Found: /media/default.jpg
+Not Found: /media/default.jpg
+Not Found: /media/IMG_0331.JPG
+Not Found: /media/default.jpg
+Not Found: /media/default.jpg
+Not Found: /media/default.jpg
+Not Found: /media/IMG_0331.JPG
+Not Found: /media/default.jpg
+Not Found: /media/default.jpg
+Not Found: /media/Screenshot 2023-03-06 203757.png
+Not Found: /media/default.jpg
+Not Found: /media/Screenshot 2023-03-01 082554.png
+Not Found: /media/default.jpg
+Not Found: /media/default.jpg
+Not Found: /media/default.jpg
+Not Found: /media/Screenshot 2023-03-01 082554.png
+Not Found: /media/default.jpg
+Homepage was accessed at 2023-11-18 06:58:24.702955 hours!
+Not Found: /media/default.jpg
+Not Found: /media/default.jpg
+Not Found: /media/default.jpg
+Not Found: /media/default.jpg
+Not Found: /media/default.jpg
+Not Found: /media/default.jpg
+Not Found: /media/default.jpg
+Not Found: /media/Screenshot 2023-03-01 082554.png
+Not Found: /media/default.jpg
+Internal Server Error: /profile
+Traceback (most recent call last):
+  File "D:\OneDrive\Projects\The Travelling Therapist\The_Travelling_Therapist\venv\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "D:\OneDrive\Projects\The Travelling Therapist\The_Travelling_Therapist\venv\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "D:\OneDrive\Projects\The Travelling Therapist\The_Travelling_Therapist\The_Travelling_Therapist\auction\views.py", line 221, in profile
+    print(profile_clinic_form.is_valid())
+  File "D:\OneDrive\Projects\The Travelling Therapist\The_Travelling_Therapist\venv\lib\site-packages\django\forms\forms.py", line 205, in is_valid
+    return self.is_bound and not self.errors
+  File "D:\OneDrive\Projects\The Travelling Therapist\The_Travelling_Therapist\venv\lib\site-packages\django\forms\forms.py", line 200, in errors
+    self.full_clean()
+  File "D:\OneDrive\Projects\The Travelling Therapist\The_Travelling_Therapist\venv\lib\site-packages\django\forms\forms.py", line 434, in full_clean
+    self._clean_form()
+  File "D:\OneDrive\Projects\The Travelling Therapist\The_Travelling_Therapist\venv\lib\site-packages\django\forms\forms.py", line 455, in _clean_form
+    cleaned_data = self.clean()
+  File "D:\OneDrive\Projects\The Travelling Therapist\The_Travelling_Therapist\The_Travelling_Therapist\auction\forms.py", line 380, in clean
+    image_errors_one = validate_file_extension(imageOne, 'Clinic Image One')
+  File "D:\OneDrive\Projects\The Travelling Therapist\The_Travelling_Therapist\The_Travelling_Therapist\auction\forms.py", line 64, in validate_file_extension
+    if value.size > 10242880:
+  File "D:\OneDrive\Projects\The Travelling Therapist\The_Travelling_Therapist\venv\lib\site-packages\django\db\models\fields\files.py", line 73, in size
+    return self.storage.size(self.name)
+  File "D:\OneDrive\Projects\The Travelling Therapist\The_Travelling_Therapist\venv\lib\site-packages\django\core\files\storage.py", line 379, in size
+    return os.path.getsize(self.path(name))
+  File "C:\Users\lorib\AppData\Local\Programs\Python\Python310\lib\genericpath.py", line 50, in getsize
+    return os.stat(filename).st_size
+FileNotFoundError: [WinError 2] The system cannot find the file specified: 'D:\\OneDrive\\Projects\\The Travelling Therapist\\The_Travelling_Therapist\\The_Travelling_Therapist\\media\\default.jpg'
+Homepage was accessed at 2023-11-18 06:59:09.748905 hours!
+Not Found: /media/default.jpg
+Not Found: /media/default.jpg
+Not Found: /media/
+Not Found: /media/default.jpg
+Not Found: /media/
+Not Found: /media/default.jpg
+Not Found: /media/default.jpg
+Not Found: /media/default.jpg
+Not Found: /media/default.jpg
+Not Found: /media/default.jpg
+Homepage was accessed at 2023-11-18 06:59:21.258659 hours!
+Not Found: /media/default.jpg
+Not Found: /media/default.jpg
+Not Found: /media/default.jpg
+Homepage was accessed at 2023-11-18 07:00:22.841521 hours!
+Not Found: /media/default.jpg
+Not Found: /media/default.jpg
+Homepage was accessed at 2023-11-18 07:00:33.969894 hours!
+Not Found: /media/default.jpg
+Not Found: /media/default.jpg
+Not Found: /media/default.jpg
+Not Found: /media/
+Not Found: /media/default.jpg
+Not Found: /media/
+Not Found: /media/
+Not Found: /media/default.jpg
+Not Found: /media/
+Not Found: /media/default.jpg
+Not Found: /media/default.jpg
+Not Found: /media/default.jpg
+Not Found: /media/default.jpg
+!!!!Auction ended at 2023-11-18 07:01:50.015102!!!!
+Job "auction_closed (trigger: cron[year='2023', month='11', day='18', hour='7', minute='1', second='50'], next run at: 2023-11-18 07:01:50 EST)" raised an exception
+Traceback (most recent call last):
+  File "D:\OneDrive\Projects\The Travelling Therapist\The_Travelling_Therapist\venv\lib\site-packages\apscheduler\executors\base.py", line 125, in run_job
+    retval = job.func(*job.args, **job.kwargs)
+  File "D:\OneDrive\Projects\The Travelling Therapist\The_Travelling_Therapist\The_Travelling_Therapist\auction\scheduled_tasks.py", line 47, in auction_closed
+    now = datetime.now()
+AttributeError: module 'datetime' has no attribute 'now'
+Job 'bbf19853-e820-4c6f-a00a-0e4958aa41ea' no longer exists! Skipping logging of job execution...
+Job 'bbf19853-e820-4c6f-a00a-0e4958aa41ea' no longer exists! Skipping logging of job execution...
+Not Found: /media/default.jpg
+Homepage was accessed at 2023-11-18 07:03:23.105171 hours!
+Not Found: /media/default.jpg
+Not Found: /media/default.jpg
+Not Found: /media/default.jpg
+Not Found: /media/
+Not Found: /media/default.jpg
+Not Found: /media/
+Not Found: /media/default.jpg
+Not Found: /media/
+Not Found: /media/default.jpg
+Not Found: /media/
+Homepage was accessed at 2023-11-18 07:04:12.011063 hours!
+!!!!Auction ended!!!!
+Job '57db88e3-79de-475c-a6bb-4da0803d317d' no longer exists! Skipping logging of job execution...
+Job "auction_closed (trigger: cron[year='2023', month='11', day='18', hour='7', minute='4', second='40'], next run at: 2023-11-18 07:04:40 EST)" raised an exception
+Traceback (most recent call last):
+  File "D:\OneDrive\Projects\The Travelling Therapist\The_Travelling_Therapist\venv\lib\site-packages\apscheduler\executors\base.py", line 125, in run_job
+    retval = job.func(*job.args, **job.kwargs)
+  File "D:\OneDrive\Projects\The Travelling Therapist\The_Travelling_Therapist\The_Travelling_Therapist\auction\scheduled_tasks.py", line 47, in auction_closed
+    now = datetime.now()
+AttributeError: module 'datetime' has no attribute 'now'
+Job '57db88e3-79de-475c-a6bb-4da0803d317d' no longer exists! Skipping logging of job execution...
+Not Found: /media/default.jpg
+Not Found: /media/default.jpg
+Homepage was accessed at 2023-11-18 07:05:34.898528 hours!
+Not Found: /media/default.jpg
+Not Found: /media/default.jpg
+Homepage was accessed at 2023-11-18 07:05:44.992207 hours!
+Not Found: /media/default.jpg
+Not Found: /media/default.jpg
+Not Found: /media/
+Not Found: /media/default.jpg
+Not Found: /media/
+Not Found: /media/default.jpg
+Not Found: /media/default.jpg
+Not Found: /media/
+Not Found: /media/default.jpg
+Not Found: /media/
+!!!!Auction ended!!!!
+True
+1
+500
+Job 'b893a44d-8d00-497c-8064-76576b0da6f6' no longer exists! Skipping logging of job execution...
+Luke
+loribine@gmail.com
+Job 'b893a44d-8d00-497c-8064-76576b0da6f6' no longer exists! Skipping logging of job execution...
