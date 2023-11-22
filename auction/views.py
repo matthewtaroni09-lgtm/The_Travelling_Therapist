@@ -711,14 +711,14 @@ def create_auction(request):
                         message = "",
                         html_message = emails.clinic_auction_created(str(auction.clinic.clinicName)),
                         from_email = settings.EMAIL_HOST_USER,
-                        recipient_list = (auction.clinic.user.email)
+                        recipient_list = (auction.clinic.user.email,)
                     )
                     send_mail(
                         subject = "Your Auction has Been Created",
                         message = "",
                         html_message = "**ADMIN COPY**" + emails.clinic_auction_created(str(auction.clinic.clinicName)),
                         from_email = settings.EMAIL_HOST_USER,
-                        recipient_list = ('info@travelingtherapist.ca')
+                        recipient_list = ('info@travelingtherapist.ca', )
                     )
                 scheduled_tasks.start(auction.auctionEnd.year, auction.auctionEnd.month, auction.auctionEnd.day, auction.auctionEnd.hour, auction.auctionEnd.minute, auction.auctionEnd.second, str(auction.auctionID))
                 return HttpResponseRedirect('/profile?submitted=True')

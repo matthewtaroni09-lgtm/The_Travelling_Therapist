@@ -42,7 +42,8 @@ def remove_cron_job(id):
 
 def auction_closed(id):
     print('!!!!!AUCTION END!!!!!')
-    logger.warning('!!!!Auction ended!!!!')
+    logger.warning('!!!!AUCTION END!!!!')
+    logger.warning(auction.auctionID)
     now = datetime.now()
     dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
     print("date and time =", dt_string)
@@ -58,9 +59,9 @@ def auction_closed(id):
     logger.warning(bids.count())
     if bids.count() > 0:
         winningBid = bids[0]
-        logger.warning(winningBid.amount)
-        logger.warning(winningBid.user.first_name)
-        logger.warning(winningBid.user.email)
+        logger.warning("Winning Bid: " + str(winningBid.amount))
+        logger.warning("Frist Name: " + str(winningBid.user.first_name))
+        logger.warning("Winning Email: " + str(winningBid.user.email))
         if auction.reservePrice is not None:
             if winningBid.amount < auction.reservePrice and auction.reservePrice > 0:
                 for bid in bids:
@@ -86,7 +87,8 @@ def auction_closed(id):
             if auction.reservePrice is not None:
                 if winningBid.amount > auction.reservePrice and auction.reservePrice > 0:
                     # Therapist email
-                    for bid in bids: 
+                    for bid in bids:
+                        logger.warning("In bids loop")
                         send_mail(
                                 subject = "Auction Ended - Reserve Not Met",
                                 message = "",
