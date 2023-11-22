@@ -434,7 +434,7 @@ $("#submitButton").click(function () {
     }
     if (reservePrice !== "" && $('#id_paymentType').find(":selected").text() === 'Flat Fee') {
         if (reservePrice > 99999) {
-            errorList += "<li>" + reserveCapital + " must be less than $25,000.</li>";
+            errorList += "<li>" + reserveCapital + " must be less than $99,999.</li>";
         }
     }
 

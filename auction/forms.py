@@ -156,8 +156,8 @@ class AuctionForm(forms.ModelForm):
                 error_list.append(ValidationError("Reserve price cannot be 0 or less. If no reserve price is desired leave the field blank."))
 
         if reservePrice is not None:
-            if reservePrice > 25000:
-                error_list.append(ValidationError("Reserve price must be less than $25,000."))
+            if reservePrice > 99999:
+                error_list.append(ValidationError("Reserve price must be less than $99,999."))
 
         if placementEnd <= placementStart:
             error_list.append(ValidationError("The end of placement date must be after the start date of placement"))
