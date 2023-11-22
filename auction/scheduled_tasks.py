@@ -97,7 +97,7 @@ def auction_closed(id):
                         send_mail(
                                 subject = "Auction Ended - Reserve Not Met",
                                 message = "",
-                                html_message = emails.therapist_auction_not_met(bid.user.first_name, bid.user.last_name, auction.clinic.clinicName, auction.placementStart, auction.placementEnd, auction.paymentType),
+                                html_message = "**ADMIN COPY**" + emails.therapist_auction_not_met(bid.user.first_name, bid.user.last_name, auction.clinic.clinicName, auction.placementStart, auction.placementEnd, auction.paymentType),
                                 from_email = settings.EMAIL_HOST_USER,
                                 recipient_list = ['info@travelingtherapist.ca']
                             )
@@ -112,7 +112,7 @@ def auction_closed(id):
                     send_mail(
                             subject = "Auction Ended - Reserve Not Met",
                             message = "",
-                            html_message = emails.clinic_reserve_not_met(auction.clinic.clinicName, auction.placementStart, auction.placementEnd, auction.paymentType),
+                            html_message = "**ADMIN COPY**" + emails.clinic_reserve_not_met(auction.clinic.clinicName, auction.placementStart, auction.placementEnd, auction.paymentType),
                             from_email = settings.EMAIL_HOST_USER,
                             recipient_list = ['info@travelingtherapist.ca']
                         )
@@ -129,7 +129,7 @@ def auction_closed(id):
                 send_mail(
                         subject = "Auction Ended - You are the Winner",
                         message = "",
-                        html_message = emails.therapist_auction_end_win(winningBid.user.first_name, winningBid.user.last_name, auction.clinic.clinicName, auction.placementStart, auction.placementEnd),
+                        html_message = "**ADMIN COPY**" + emails.therapist_auction_end_win(winningBid.user.first_name, winningBid.user.last_name, auction.clinic.clinicName, auction.placementStart, auction.placementEnd),
                         from_email = settings.EMAIL_HOST_USER,
                         recipient_list = ['info@travelingtherapist.ca']
                     )
@@ -145,7 +145,7 @@ def auction_closed(id):
                 send_mail(
                         subject = "Auction Ended",
                         message = "",
-                        html_message = emails.clinic_auction_end(auction.clinic.clinicName, auction.placementStart, auction.placementEnd),
+                        html_message = "**ADMIN COPY**" + emails.clinic_auction_end(auction.clinic.clinicName, auction.placementStart, auction.placementEnd),
                         from_email = settings.EMAIL_HOST_USER,
                         recipient_list = ['info@travelingtherapist.ca']
                     )
@@ -161,7 +161,7 @@ def auction_closed(id):
                     send_mail(
                         subject = "Auction Ended - Better Luck Next Time",
                         message = "",
-                        html_message = emails.therapist_auction_end_lose(email['first_name'], email['last_name'], auction.clinic.clinicName, auction.placementStart, auction.placementEnd),
+                        html_message = "**ADMIN COPY**" + emails.therapist_auction_end_lose(email['first_name'], email['last_name'], auction.clinic.clinicName, auction.placementStart, auction.placementEnd),
                         from_email = settings.EMAIL_HOST_USER,
                         recipient_list = ['info@travelingtherapist.ca']
                     )   
@@ -179,7 +179,7 @@ def auction_closed(id):
             send_mail(
                     subject = "Auction Ended",
                     message = "",
-                    html_message = emails.clinic_no_bids(auction.clinic.clinicName, auction.placementStart, auction.placementEnd),
+                    html_message = "**ADMIN COPY**" + emails.clinic_no_bids(auction.clinic.clinicName, auction.placementStart, auction.placementEnd),
                     from_email = settings.EMAIL_HOST_USER,
                     recipient_list = ['info@travelingtherapist.ca']
                 )
