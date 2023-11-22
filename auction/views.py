@@ -707,11 +707,18 @@ def create_auction(request):
 
                     # Clinic email
                     send_mail(
-                        subject = "Your has been Auction Created",
+                        subject = "Your Auction has Been Created",
                         message = "",
                         html_message = emails.clinic_auction_created(str(auction.clinic.clinicName)),
                         from_email = settings.EMAIL_HOST_USER,
-                        recipient_list = (auction.clinic.user.email, 'info@travelingtherapist.ca')
+                        recipient_list = (auction.clinic.user.email)
+                    )
+                    send_mail(
+                        subject = "Your Auction has Been Created",
+                        message = "",
+                        html_message = "**ADMIN COPY**" + emails.clinic_auction_created(str(auction.clinic.clinicName)),
+                        from_email = settings.EMAIL_HOST_USER,
+                        recipient_list = ('info@travelingtherapist.ca')
                     )
                 scheduled_tasks.start(auction.auctionEnd.year, auction.auctionEnd.month, auction.auctionEnd.day, auction.auctionEnd.hour, auction.auctionEnd.minute, auction.auctionEnd.second, str(auction.auctionID))
                 return HttpResponseRedirect('/profile?submitted=True')
@@ -802,7 +809,7 @@ def register(request):
                     send_mail(
                             subject = "Welcome to the Traveling Therapist",
                             message = "",
-                            html_message = emails.clinic_welcome(user.account.clinicName),
+                            html_message = "**ADMIN COPY**" + emails.clinic_welcome(user.account.clinicName),
                             from_email = settings.EMAIL_HOST_USER,
                             recipient_list = ["info@travelingtherapist.ca"],
                         )
@@ -818,7 +825,7 @@ def register(request):
                     send_mail(
                             subject = "Welcome to the Traveling Therapist",
                             message = "",
-                            html_message = emails.therapist_welcome(user.first_name, user.last_name),
+                            html_message = "**ADMIN COPY**" + emails.therapist_welcome(user.first_name, user.last_name),
                             from_email = settings.EMAIL_HOST_USER,
                             recipient_list = ["info@travelingtherapist.ca"]
                         )
