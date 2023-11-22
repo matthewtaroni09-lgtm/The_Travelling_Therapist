@@ -43,11 +43,11 @@ def remove_cron_job(id):
 def auction_closed(id):
     print('!!!!!AUCTION END!!!!!')
     logger.warning('!!!!AUCTION END!!!!')
-    logger.warning(auction.auctionID)
     now = datetime.now()
     dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
     print("date and time =", dt_string)
     auction = Auction.objects.get(auctionID=id)
+    logger.warning(auction.auctionID)
     bids = Bid.objects.filter(auction=id, active=True).annotate(Min('amount')).order_by('amount')
     winningBid = ""
     admin = AdminSetting.objects.all()[:1].get()
@@ -185,5 +185,5 @@ def auction_closed(id):
                     from_email = settings.EMAIL_HOST_USER,
                     recipient_list = ['info@travelingtherapist.ca']
                 )
-            
+    logger.warning('!!!!END!!!!')
     return JsonResponse({'data': "success"})

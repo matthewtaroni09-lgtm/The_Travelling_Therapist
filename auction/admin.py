@@ -33,7 +33,14 @@ class AuctionAdmin(admin.ModelAdmin):
                 message = "",
                 html_message = emails.clinic_auction_live(str(obj.clinic.clinicName)),
                 from_email = settings.EMAIL_HOST_USER,
-                recipient_list = (obj.clinic.user.email, 'info@travelingtherapist.ca')
+                recipient_list = (obj.clinic.user.email,)
+            )
+            send_mail(
+                subject = str(obj.clinic.clinicName) + " Your Auction is Live!",
+                message = "",
+                html_message = "**ADMIN COPY**" + emails.clinic_auction_live(str(obj.clinic.clinicName)),
+                from_email = settings.EMAIL_HOST_USER,
+                recipient_list = ('info@travelingtherapist.ca',)
             )
         super().save_model(request, obj, form, change)
 
