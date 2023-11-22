@@ -6,3 +6,4 @@ settings.py
 ignore.html
 The_Travelling_Therapist\auction\migrations\0009_remove_auction_auctionnumber1_and_more.py
 The_Travelling_Therapist\auction\migrations\0010_remove_auction_auctionnumber1_and_more.py
+warning.log
