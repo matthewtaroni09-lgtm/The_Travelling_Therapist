@@ -149,10 +149,9 @@ class Auction(models.Model):
         return str(self.clinic.clinicName) + ": " + str(self.auctionStart.strftime("%m/%d/%Y %H:%M"))
 
     def get_bid(self):
-        print(self.paymentType)
         if self.currentLowBid is None:
             return str('0 bids')
-        elif self.reservePrice is not None and (self.closed == True and self.active == False and self.winningPrice > self.reservePrice):
+        elif self.reservePrice is not None and (self.closed == True and self.active == False and self.winningPrice is not None and self.winningPrice > self.reservePrice):
             return 'Reserve price not met'
         elif self.closed == True and self.active == False and self.winningPrice is not None:
             if str(self.paymentType) == 'Flat Fee':

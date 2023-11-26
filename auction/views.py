@@ -133,12 +133,14 @@ def auction_search(request):
     else:
         clinic_fitler = Q(clinic__clinicName__icontains=clinic_input)
 
-    if request.user.is_authenticated and request.user.account.userType != 'Clinic' and search_all_checkbox != 'on' and not request.user.is_staff:
+    if request.user.is_authenticated and str(request.user.account.userType) != 'Clinic' and search_all_checkbox != 'on' and not request.user.is_staff:
         type_filter = Q(type=request.user.account.userType)
     else:
         type_filter = Q()
-    
+
     filter = city_fitler & payment_type_fitler & status_select_fitler & clinic_fitler & type_filter
+    # filter = city_fitler & payment_type_fitler & status_select_fitler & clinic_fitler
+    print(filter)
     auctions = Auction.objects.filter(filter)
     return render(request, 'auction/partials/auction_list.html', {'auction': auctions, 'length': len(auctions), 'auction_search': True})
 
@@ -146,9 +148,9 @@ def index(request):
     logger.warning('Homepage was accessed at '+str(datetime.datetime.now())+' hours!')
     auction = ''
     if request.user.is_authenticated == False or str(request.user.account.userType) == 'Clinic' or request.user.is_staff:
-        auctions = Auction.objects.filter((Q(active=True)) & Q(deleted=False))
+        auctions = Auction.objects.filter(((Q(active=True)) | (Q(closed=True))) & Q(deleted=False))
     elif request.user.is_authenticated == True and request.user.account.userType != 'Clinic':
-        auctions = Auction.objects.filter((Q(active=True) & Q(deleted=False)) & Q(type=request.user.account.userType))
+        auctions = Auction.objects.filter(((Q(active=True)) | (Q(closed=True))) & Q(type=request.user.account.userType))
     cities = []
     payment_types = []
     statuses = []
