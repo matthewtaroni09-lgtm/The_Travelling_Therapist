@@ -34,6 +34,7 @@ const csrftoken = getCookie('csrftoken');
 
 $(document).ready(function () {
     //Check if the province of the clinic matches the province of the therapist, if not show pop-p
+    console.log("new page");
     let page = $("#pageTitle").text();
     $.ajax({
         type: "GET",
@@ -43,6 +44,7 @@ $(document).ready(function () {
             'clickID': ''
         },
         success: function (response) {
+            console.log("inside get popup");
             console.log(response);
             if (response.message != "") {
                 $("#modalTitle").text(response.title);
@@ -56,7 +58,6 @@ $(document).ready(function () {
     });
 
     $("#modalPopupOKButton").click(function () {
-        console.log("ggg");
         $.ajax({
             type: "POST",
             headers: { "X-CSRFToken": getCookie("csrftoken") },
@@ -69,7 +70,6 @@ $(document).ready(function () {
                 if (response.message != "") {
                     $("#modalTitle").text(response.title);
                     $("#modalParagraph").text(response.message);
-                    $("#popupModal").modal('show');
                 }
             },
             error: function (error) {
@@ -77,7 +77,6 @@ $(document).ready(function () {
             }
         });
     });
-
 });
 
 function countDown(date, auctionID) {
