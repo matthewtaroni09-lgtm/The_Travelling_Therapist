@@ -63,7 +63,7 @@ def contact(request):
             result = r.json()
 
             print(result)
-            if result['success']:
+            if result['success'] and result['score'] > .5:
                 subject = "Website Inquiry" 
                 body = {
                 'first_name': form.cleaned_data['first_name'], 
@@ -81,6 +81,7 @@ def contact(request):
                 return redirect ("index")
             else:
                 messages.error(request, 'Invalid reCAPTCHA. Please try again.')
+                logger.warning('****CONTACT US PAGE**** Captcha failure')
         else:
             return render(request, "auction/contact_us.html", {'form': form})
     else:
