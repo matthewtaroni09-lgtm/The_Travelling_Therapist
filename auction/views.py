@@ -621,22 +621,20 @@ def create_auction(request):
     remember_last_auction = Account.objects.filter(user=request.user).values().first()['remember_auction_data']
     submitted_auction = False
     parameter = {}
-    user_types = UserType.objects.filter(~Q(name='Clinic'))
     selected = ''
+    user_types = UserType.objects.filter(~Q(name='Clinic'))
     # If the user has selected remember previous data get their last selected auction type
     if active_auctions_list.count() > 0 and remember_last_auction:
         selected = last_auction.type
     max_auctions = AdminSetting.objects.all()[0]
     max_demographics = DemographicType.objects.all().count()
-    # Areas of practice are specific to a user tpye so get the user's type
+    # Areas of practice are specific to a user type so get the user's type
     max_practice_areas = 0 #PracticeAreaType.objects.all().count()
     demographic_form_set = inlineformset_factory(Auction, Demographic, form=DemographicForm, fields=('category', 'percentage'), max_num=max_demographics, extra=max_demographics, can_delete=False, help_texts=None)
     practice_area_form_set = inlineformset_factory(Auction, PracticeArea, form=PracticeAreaForm, fields=('category', 'percentage'), max_num=max_practice_areas, extra=max_practice_areas, can_delete=False)
     account = Account.objects.get(user=request.user.id)
     if active_auctions_list.count() <= max_auctions.numAllowedAuctions:
-        print("in")
         if request.method == "POST":
-            print("POST")
             form = AuctionForm(request.POST, request.FILES)
             account_form = AuctionAccountForm(request.POST, request.FILES, instance=account)
             formset_demographic = demographic_form_set(queryset=Demographic.objects.none())

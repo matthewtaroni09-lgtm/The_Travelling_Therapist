@@ -57,6 +57,15 @@ $(document).ready(function () {
         }
     });
 
+    $(".showPasswordCheckBox").click(function () {
+        if ($(".passwordInput").attr("type") === "password") {
+            $(".passwordInput").attr("type", "text");
+        }
+        else {
+            $(".passwordInput").attr("type", "password");
+        }
+    });
+
     $("#modalPopupOKButton").click(function () {
         $.ajax({
             type: "POST",

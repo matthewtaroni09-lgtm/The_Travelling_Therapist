@@ -72,6 +72,17 @@ $(document).ready(function () {
         userTypeChange(userType);
     }
 
+    $("#showPasswordCheckBox").click(function () {
+        if ($("#id_password1").attr("type") === "password") {
+            $("#id_password1").attr("type", "text");
+            $("#id_password2").attr("type", "text");
+        }
+        else {
+            $("#id_password1").attr("type", "password");
+            $("#id_password2").attr("type", "password");
+        }
+    });
+
     let clinicVal = '';
     $('#id_user_type option').each(function () {
         if ($(this).text() == 'Clinic') {
