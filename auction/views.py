@@ -149,9 +149,9 @@ def index(request):
     logger.warning('Homepage was accessed at '+str(datetime.datetime.now())+' hours!')
     auction = ''
     if request.user.is_authenticated == False or str(request.user.account.userType) == 'Clinic' or request.user.is_staff:
-        auctions = Auction.objects.filter(((Q(active=True)) | (Q(closed=True))) & Q(deleted=False))
+        auctions = Auction.objects.filter(((Q(active=True)) | (Q(closed=True))) & Q(deleted=False)).order_by('-active', 'auctionEnd')
     elif request.user.is_authenticated == True and request.user.account.userType != 'Clinic':
-        auctions = Auction.objects.filter(((Q(active=True)) | (Q(closed=True))) & Q(type=request.user.account.userType))
+        auctions = Auction.objects.filter(((Q(active=True)) | (Q(closed=True))) & Q(type=request.user.account.userType)).order_by('-active', 'auctionEnd').values()
     cities = []
     payment_types = []
     statuses = []
