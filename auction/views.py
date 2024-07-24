@@ -78,6 +78,8 @@ def contact(request):
                         send_mail(subject, message, 'info@travelingtherapist.ca', ['info@travelingtherapist.ca']) 
                 except BadHeaderError:
                     return HttpResponse('Invalid header found.')
+                except:
+                    HttpResponse('Other email error.')
                 return redirect ("index")
             else:
                 messages.error(request, 'Invalid reCAPTCHA. Please try again.')
@@ -698,29 +700,44 @@ def create_auction(request):
 
                 if admin.sendEmails:
                     # Admin email
-                    send_mail(
-                        subject = "Auction Created - Admin Details",
-                        message = "",
-                        html_message = emails.auction_created_admin(str(auction.clinic.clinicName), str(auction.clinic.city), str(auction.clinic.province), str(auction.clinic.user.email), str(auction.reservePrice), str(auction.auctionStart), str(auction.auctionEnd), str(auction.placementStart), str(auction.placementEnd), str(auction.auctionID)),
-                        from_email = settings.EMAIL_HOST_USER,
-                        recipient_list = ('loribine@gmail.com', 'info@travelingtherapist.ca')
-                    )
+                    try:
+                        send_mail(
+                            subject = "Auction Created - Admin Details",
+                            message = "",
+                            html_message = emails.auction_created_admin(str(auction.clinic.clinicName), str(auction.clinic.city), str(auction.clinic.province), str(auction.clinic.user.email), str(auction.reservePrice), str(auction.auctionStart), str(auction.auctionEnd), str(auction.placementStart), str(auction.placementEnd), str(auction.auctionID)),
+                            from_email = settings.EMAIL_HOST_USER,
+                            recipient_list = ('loribine@gmail.com', 'info@travelingtherapist.ca')
+                        )
+                    except:
+                        print('Admin email failed to send for Auction Creation.')
+                        logger.warning('Admin email failed to send for Auction Creation.')
+
 
                     # Clinic email
-                    send_mail(
-                        subject = "Your Auction has Been Created",
-                        message = "",
-                        html_message = emails.clinic_auction_created(str(auction.clinic.clinicName)),
-                        from_email = settings.EMAIL_HOST_USER,
-                        recipient_list = (auction.clinic.user.email,)
-                    )
-                    send_mail(
-                        subject = "Your Auction has Been Created",
-                        message = "",
-                        html_message = "**ADMIN COPY**" + emails.clinic_auction_created(str(auction.clinic.clinicName)),
-                        from_email = settings.EMAIL_HOST_USER,
-                        recipient_list = ('info@travelingtherapist.ca', )
-                    )
+                    try:
+                        send_mail(
+                            subject = "Your Auction has Been Created",
+                            message = "",
+                            html_message = emails.clinic_auction_created(str(auction.clinic.clinicName)),
+                            from_email = settings.EMAIL_HOST_USER,
+                            recipient_list = (auction.clinic.user.email,)
+                        )
+                    except:
+                        print('Clinic email failed to send for Auction Creation.')
+                        logger.warning('Clinic email failed to send for Auction Creation.')
+
+                    try:    
+                        send_mail(
+                            subject = "Your Auction has Been Created",
+                            message = "",
+                            html_message = "**ADMIN COPY**" + emails.clinic_auction_created(str(auction.clinic.clinicName)),
+                            from_email = settings.EMAIL_HOST_USER,
+                            recipient_list = ('info@travelingtherapist.ca', )
+                        )
+                    except:
+                        print('Admin copy of clinic email failed to send for Auction Creation.')
+                        logger.warning('Admin copy of clinic email failed to send for Auction Creation.')
+
                 scheduled_tasks.start(auction.auctionEnd.year, auction.auctionEnd.month, auction.auctionEnd.day, auction.auctionEnd.hour, auction.auctionEnd.minute, auction.auctionEnd.second, str(auction.auctionID))
                 return HttpResponseRedirect('/profile?submitted=True')
             else:
@@ -800,36 +817,54 @@ def register(request):
             if admin.sendEmails:
                 if str(user.account.userType).split(' ')[-1] == "Clinic":
                     # Clinic email
-                    send_mail(
-                            subject = "Welcome to the Traveling Therapist",
-                            message = "",
-                            html_message = emails.clinic_welcome(user.account.clinicName),
-                            from_email = settings.EMAIL_HOST_USER,
-                            recipient_list = [user.email],
-                        )
-                    send_mail(
-                            subject = "Welcome to the Traveling Therapist",
-                            message = "",
-                            html_message = "**ADMIN COPY**" + emails.clinic_welcome(user.account.clinicName),
-                            from_email = settings.EMAIL_HOST_USER,
-                            recipient_list = ["info@travelingtherapist.ca"],
-                        )
+                    try:
+                        send_mail(
+                                subject = "Welcome to the Traveling Therapist",
+                                message = "",
+                                html_message = emails.clinic_welcome(user.account.clinicName),
+                                from_email = settings.EMAIL_HOST_USER,
+                                recipient_list = [user.email],
+                            )
+                    except:
+                        print('Clinic email failed to send for registration.')
+                        logger.warning('Clinic email failed to send for registration.')
+
+                    try:
+                        send_mail(
+                                subject = "Welcome to the Traveling Therapist",
+                                message = "",
+                                html_message = "**ADMIN COPY**" + emails.clinic_welcome(user.account.clinicName),
+                                from_email = settings.EMAIL_HOST_USER,
+                                recipient_list = ["info@travelingtherapist.ca"],
+                            )
+                    except:
+                        print('Admin copy of clinic email failed to send for registration.')
+                        logger.warning('Admin copy of Clinic email failed to send for registration.')
                 else:
                     # Therapist email
-                    send_mail(
-                            subject = "Welcome to the Traveling Therapist",
-                            message = "",
-                            html_message = emails.therapist_welcome(user.first_name, user.last_name),
-                            from_email = settings.EMAIL_HOST_USER,
-                            recipient_list = [user.email]
-                        )
-                    send_mail(
-                            subject = "Welcome to the Traveling Therapist",
-                            message = "",
-                            html_message = "**ADMIN COPY**" + emails.therapist_welcome(user.first_name, user.last_name),
-                            from_email = settings.EMAIL_HOST_USER,
-                            recipient_list = ["info@travelingtherapist.ca"]
-                        )
+                    try:
+                        send_mail(
+                                subject = "Welcome to the Traveling Therapist",
+                                message = "",
+                                html_message = emails.therapist_welcome(user.first_name, user.last_name),
+                                from_email = settings.EMAIL_HOST_USER,
+                                recipient_list = [user.email]
+                            )
+                    except:
+                        print('Therapist email failed to send for registration.')
+                        logger.warning('Therapist email failed to send for registration.')
+
+                    try:
+                        send_mail(
+                                subject = "Welcome to the Traveling Therapist",
+                                message = "",
+                                html_message = "**ADMIN COPY**" + emails.therapist_welcome(user.first_name, user.last_name),
+                                from_email = settings.EMAIL_HOST_USER,
+                                recipient_list = ["info@travelingtherapist.ca"]
+                            )
+                    except:
+                        print('Admin copy of therapist email failed to send for registration.')
+                        logger.warning('Admin copy of therapist email failed to send for registration.')
                     
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=user.username, password=raw_password)
