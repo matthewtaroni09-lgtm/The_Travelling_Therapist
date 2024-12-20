@@ -947,3 +947,7 @@ def get_next_auction_number():
     number.currentValue = number.currentValue + 1
     number.save()
     return number.currentValue + 1
+
+# service benefits - static page
+def service_benefits_page(request):
+    return render(request, 'auction/service_benefits.html', {})

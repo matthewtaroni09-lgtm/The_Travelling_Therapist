@@ -1,0 +1,206 @@
+{% extends 'auction/base.html' %}
+{% load static %}
+{% block content %}
+<!-- content -->
+<style>
+    body {
+        background-image: url("/media/images/experimental_bg_header.png");
+        background-repeat: no-repeat;
+        background-color: #f8f9fa;
+    }
+
+    footer {
+        margin-top: 20px;
+    }
+    
+    .therapist-userbox {
+        margin-top: 50px;
+    }
+
+    .therapist-userbox h2 {
+        font-size: 24px;
+        font-weight: 700;
+        color: #333;
+    }
+
+    .therapist-userbox p {
+        font-size: 16px;
+        color: #666;
+    }
+
+    .provider-userbox {
+        margin-top: 50px;
+    }
+
+    .provider-userbox h2 {
+        font-size: 24px;
+        font-weight: 700;
+        color: #333;
+    }
+
+    .provider-userbox p {
+        font-size: 16px;
+        color: #666;
+    }
+
+    .collapse {
+        display: none;
+    }
+
+    .divider {
+        border-top: 1px solid #333;
+        margin-top: 4vh;
+        margin-bottom: 7vh;
+    }
+
+    .offset-lm-item {
+        margin-bottom: 5vh
+    }
+
+    .offset-tm-item {
+        margin-top: 5vh
+    }
+
+    .center-img {
+        display: flex;
+        justify-content: center;
+    }
+
+    .fixbottom {
+        margin-bottom: 20px;
+    }
+</style>
+<div class="container fixbottom">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="text-center mb-5">Our Service Benefits</h1>
+            <h5 class="text-center mb-5">I would like to see the benefits for...</h5>
+        </div>
+        <div class="row align-items-center">
+            <div class="col-md-6 offset-md-3" style="display: flex; justify-content: space-between;">
+                <div class="col-sm-1"></div>
+                <button id="clinicButton" class="col-sm-4 selection-boxes d-flex flex-column align-items-center gap-2 p-4">
+                    <img class="img-fluid" src="/media/images/clinic.png" alt="Clinic office as a cartoon">
+                    <h4>Clinics</h4>
+                </button>
+                <div class="col-sm-2"></div>
+                <button id="therapistButton" class="col-sm-4 selection-boxes d-flex flex-column align-items-center gap-2 p-3">
+                    <img class="img-fluid" src="/media/images/therapy.png" alt="Healthcare Professional as a cartoon">
+                    <h5>Healthcare Professionals</h5>
+                </button>
+                <div class="col-sm-1"></div>
+            </div>
+        </div>
+    </div>
+    <div class="row provider-userbox fixbottom">
+        <div class="divider"></div>
+        <div class="center">
+            <h1 class="text-center mb-5 offset-lm-item">For clinics we are...</h1>
+        </div>
+        <div class="col-md-3">
+            <h2 class="text-center offset-lm-item">Fast</h2>
+            <div class="center-img">
+                <img src="/media/images/startup.png" alt="Rocket ship" width="100px" height="100px">
+            </div>
+            <p class="text-center offset-tm-item">As an organization we strive to... Lorem ipsum dolor sit amet</p>
+        </div>
+        <div class="col-md-3">
+            <h2 class="text-center offset-lm-item">Transparent</h2>
+            <div class="center-img">
+                <!-- this image requires attribution -->
+                <img src="/media/images/like.png" alt="thumbs up" width="100px" height="100px">
+            </div>
+            <p class="text-center offset-tm-item">As an organization we strive to... Lorem ipsum dolor sit amet</p>
+        </div>
+        <div class="col-md-3">
+            <h2 class="text-center offset-lm-item">Customizable</h2>
+            <div class="center-img">
+                <img src="/media/images/price.png" alt="Price" width="100px" height="100px">
+            </div>
+            <p class="text-center offset-tm-item">As an organization we strive to... Lorem ipsum dolor sit amet</p>
+        </div>
+        <div class="col-md-3">
+            <h2 class="text-center offset-lm-item">Hassle free</h2>
+            <div class="center-img">
+                <img src="/media/images/hired.png" alt="Hands shaking" width="100px" height="100px">
+            </div>
+            <p class="text-center offset-tm-item">As an organization we strive to... Lorem ipsum dolor sit amet</p>
+        </div>
+    </div>
+    <div class="row therapist-userbox fixbottom">
+        <div class="divider"></div>
+        <div class="center">
+            <h1 class="text-center mb-5">For practitioners we are...</h1>
+        </div>
+        <div class="col-md-3">
+            <h2 class="text-center offset-lm-item">Private</h2>
+            <div class="center-img">
+                <img src="/media/images/spy.png" alt="Incognito" width="100px" height="100px">
+            </div>
+            <p class="text-center offset-tm-item">As an organization we strive to... Lorem ipsum dolor sit amet</p>
+        </div>
+        <div class="col-md-3">
+            <h2 class="text-center offset-lm-item">Free</h2>
+            <div class="center-img">
+                <img src="/media/images/free.png" alt="Price tag" width="100px" height="100px">
+            </div>
+            <p class="text-center offset-tm-item">As an organization we strive to... Lorem ipsum dolor sit amet</p>
+        </div>
+        <div class="col-md-3">
+            <h2 class="text-center offset-lm-item">Flexible</h2>
+            <div class="center-img">
+                <img src="/media/images/leave.png" alt="Plane and calendar" width="100px" height="100px">
+            </div>
+            <p class="text-center offset-tm-item">As an organization we strive to... Lorem ipsum dolor sit amet</p>
+        </div>
+        <div class="col-md-3">
+            <h2 class="text-center offset-lm-item">Expanding your coverage</h2>
+            <div class="center-img">
+                <img src="/media/images/career-choice.png" alt="Person with arrows" width="100px" height="100px">
+            </div>
+            <p class="text-center offset-tm-item">As an organization we strive to... Lorem ipsum dolor sit amet</p>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function() {
+        // hide userboxes
+        $('.therapist-userbox').hide();
+        $('.provider-userbox').hide();
+
+        $('#therapistButton').click(function() {
+            $('.therapist-userbox').show();
+            $('.provider-userbox').hide();
+            
+            // make button green
+            $('#therapistButton').css('background-color', '#0aeaa9');
+            $('#clinicButton').css('background-color', '#fff');
+
+            // scroll into view
+            $('.therapist-userbox').get(0).scrollIntoView({
+                behavior: 'smooth'
+            });
+
+            // attempt to fix cutting into footer
+            $('.fixbottom').css('margin-bottom', '0');
+        });
+
+        $('#clinicButton').click(function() {
+            $('.therapist-userbox').hide();
+            $('.provider-userbox').show();
+
+            // make button green
+            $('#clinicButton').css('background-color', '#0aeaa9');
+            $('#therapistButton').css('background-color', '#fff');
+
+            // scroll into view
+            $('.provider-userbox').get(0).scrollIntoView({
+                behavior: 'smooth'
+            });
+
+            // attempt to fix cutting into footer
+            $('.fixbottom').css('margin-bottom', '0');
+        });
+    });
+</script>
+{% endblock %}

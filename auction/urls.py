@@ -28,6 +28,7 @@ urlpatterns = [
     path("privacy_policy", views.privacy_policy, name="privacy-policy"),
     path("admin_summary", views.admin_summary, name="admin-summary"),
     path("test", views.test, name="test"),
+    path("benefits", views.service_benefits_page, name="benefits"),
 
     # AJAX Calls
     path('auction/data/auction/<auction_id>', views.get_auction_end, name="get-auction-end"),
