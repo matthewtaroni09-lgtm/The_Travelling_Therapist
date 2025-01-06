@@ -15,7 +15,7 @@
                     <a class="nav-link text-weight-normal {% if path == 'about' %}active{% endif %}" href="{% url 'about' %}">About/FAQ</a>
                 </li>
                 <li>
-                    <a class="nav-link text-weight-normal {% if path == 'benefits' %}active{% endif %}" href="{% url 'benefits' %}">Benefits</a>
+                    <a class="nav-link text-weight-normal {% if path == 'benefits' %}active{% endif %}" href="{% url 'benefits' %}">Service Benefits</a>
                 </li>
                 {% if user.is_authenticated %}
                 {% if user.account.get_split_user_type == 'Clinic' %}

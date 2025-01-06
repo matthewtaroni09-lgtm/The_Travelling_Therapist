@@ -1,0 +1,121 @@
+<html lang="en">
+{% load static %}
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+    <!-- Custom css -->
+    <link rel="stylesheet" href="{% static 'auction/style.css' %}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>The Traveling Therapist</title>
+
+    <!-- Fonts -->
+    <link rel="stylesheet" href="https://use.typekit.net/dla5ohp.css">
+
+    <link rel="shortcut icon" type="image/png" href="{% static 'auction/favicon.ico' %}" />
+
+    <!-- Google Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-GPRVT4HYZD"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-GPRVT4HYZD');
+    </script>
+
+    <!-- Google Tag Manager -->
+    <script>(function (w, d, s, l, i) {
+            w[l] = w[l] || []; w[l].push({
+                'gtm.start':
+                    new Date().getTime(), event: 'gtm.js'
+            }); var f = d.getElementsByTagName(s)[0],
+                j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+                    'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', 'GTM-MQW4DK7');</script>
+    <!-- End Google Tag Manager -->
+
+    <!-- reCaptcha -->
+    <script src='https://www.google.com/recaptcha/api.js?render=6LfotjMkAAAAANJiaG4WTtN1quRBByReYZ2XBGbV'></script>
+
+    <!-- HTMX -->
+    <script src="https://unpkg.com/htmx.org@1.8.2" integrity="sha384-+8ISc/waZcRdXCLxVgbsLzay31nCdyZXQxnsUy++HJzJliTzxKWr0m1cIEMyUzQu" crossorigin="anonymous"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- style for container (after removing bg-light)-->
+    <style>
+        .container {
+            background-color: rgba(248, 249, 250, 0.7);
+            border-radius: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <!-- Optional JavaScript; choose one of the two! -->
+
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
+    <!-- Jquery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js" integrity="sha256-lSjKY0/srUM9BE3dPm+c4fBo1dky2v27Gdjm2uoZaL0=" crossorigin="anonymous"></script>
+    <!-- Navigation -->
+    {% include 'auction/navigation.html' %}
+
+    <!-- Runs the auction countdown clock -->
+    <script src="{% static 'auction/auction.js' %}"></script>
+    <!-- Main Content -->
+    {% if request.path == '/' %}
+    <div class="container my-3 py-3 p-md-3">
+        <h3 id="tag-line" class="text-center font-italic">
+            Improving patient care 1 healthcare worker day at a time.
+        </h3>
+    </div>
+    {%endif%}
+    <!-- main (with bg-light removed for new bg)-->
+    <main class="container my-3 py-3 p-md-5">
+        <!-- Generic Pop-up -->
+        <div class="modal fade" id="popupModal" tabindex="1" aria-labelledby="popupModal" aria-hidden="false">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalTitle"></h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p id="modalParagraph"></p>
+                        <form method="post">
+                            {% csrf_token %}
+                            <div id="modalSubFooterButtonDiv">
+                                <button id="modalPopupOKButton" type="button" class="btn btn-secondary" data-bs-dismiss="modal">OK</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!-- Footer -->
+    {% include 'auction/footer.html' %}
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MQW4DK7" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+</body>
+
+
+</html>

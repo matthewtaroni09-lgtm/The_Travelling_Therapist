@@ -1,4 +1,4 @@
-{% extends 'auction/base.html' %}
+{% extends 'auction/base_new.html' %}
 {% load static %}
 {% block content %}
 <!-- content -->
@@ -70,7 +70,7 @@
         margin-bottom: 20px;
     }
 </style>
-<div class="container fixbottom">
+<div class="container fixbottom" style="background-color: rgba(0, 0, 0, 0);">
     <div class="row">
         <div class="col-md-12">
             <h1 class="text-center mb-5">Our Service Benefits</h1>
@@ -102,7 +102,10 @@
             <div class="center-img">
                 <img src="/media/images/startup.png" alt="Rocket ship" width="100px" height="100px">
             </div>
-            <p class="text-center offset-tm-item">As an organization we strive to... Lorem ipsum dolor sit amet</p>
+            <ul class="text-center offset-tm-item">
+                <li>Create your profile, and post your auction in under 10 minutes.</li>
+                <li>Auctions are live for 14 days, so you get a match quickly!</li>
+            </ul>
         </div>
         <div class="col-md-3">
             <h2 class="text-center offset-lm-item">Transparent</h2>
@@ -110,21 +113,33 @@
                 <!-- this image requires attribution -->
                 <img src="/media/images/like.png" alt="thumbs up" width="100px" height="100px">
             </div>
-            <p class="text-center offset-tm-item">As an organization we strive to... Lorem ipsum dolor sit amet</p>
+            <ul class="text-center offset-tm-item">
+                <li>Save the agency fees and expensive job board advertisements. Our prices start at $300 per match.</li>
+                <li>Post your auction for free! We only invoice you if we get you a match!</li>
+                <li>No hidden fees once your employee starts.</li>
+            </ul>
         </div>
         <div class="col-md-3">
             <h2 class="text-center offset-lm-item">Customizable</h2>
             <div class="center-img">
                 <img src="/media/images/price.png" alt="Price" width="100px" height="100px">
             </div>
-            <p class="text-center offset-tm-item">As an organization we strive to... Lorem ipsum dolor sit amet</p>
+            <ul class="text-center offset-tm-item">
+                <li>Select between full contract price and fee split for most practitioner types </li>
+                <li>Create a posting for PT, RMT, PSW, Chiropractor, and many more!</li>
+                <li>Set ceiling prices to keep your posting on budget.</li>
+            </ul>
         </div>
         <div class="col-md-3">
             <h2 class="text-center offset-lm-item">Hassle free</h2>
             <div class="center-img">
                 <img src="/media/images/hired.png" alt="Hands shaking" width="100px" height="100px">
             </div>
-            <p class="text-center offset-tm-item">As an organization we strive to... Lorem ipsum dolor sit amet</p>
+            <ul class="text-center offset-tm-item">
+                <li>Save time, and effort screening resumes and conducting interviews for your short term or contract hires.</li>
+                <li>Once your ad is live, therapists bid on your posting for the next 14 days with no action needed on your side.</li>
+                <li>Eliminate the agency middleman, back and forth calls, and haggling!</li>
+            </ul>
         </div>
     </div>
     <div class="row therapist-userbox fixbottom">
@@ -137,28 +152,39 @@
             <div class="center-img">
                 <img src="/media/images/spy.png" alt="Incognito" width="100px" height="100px">
             </div>
-            <p class="text-center offset-tm-item">As an organization we strive to... Lorem ipsum dolor sit amet</p>
+            <ul class="text-center offset-tm-item">
+                <li>We do not collect your license, personal or credit card information when you sign up</li>
+            </ul>
         </div>
         <div class="col-md-3">
             <h2 class="text-center offset-lm-item">Free</h2>
             <div class="center-img">
                 <img src="/media/images/free.png" alt="Price tag" width="100px" height="100px">
             </div>
-            <p class="text-center offset-tm-item">As an organization we strive to... Lorem ipsum dolor sit amet</p>
+            <ul class="text-center offset-tm-item">
+                <li>Always free to create an account and bid!</li>
+            </ul>
         </div>
         <div class="col-md-3">
             <h2 class="text-center offset-lm-item">Flexible</h2>
             <div class="center-img">
                 <img src="/media/images/leave.png" alt="Plane and calendar" width="100px" height="100px">
             </div>
-            <p class="text-center offset-tm-item">As an organization we strive to... Lorem ipsum dolor sit amet</p>
+            <ul class="text-center offset-tm-item">
+                <li>Determine your own schedule and price to work.</li>
+                <li>Only bid on postings you are interested in.</li>
+            </ul>
         </div>
         <div class="col-md-3">
-            <h2 class="text-center offset-lm-item">Expanding your coverage</h2>
+            <h2 class="text-center offset-lm-item">Expanding Your Career</h2>
             <div class="center-img">
                 <img src="/media/images/career-choice.png" alt="Person with arrows" width="100px" height="100px">
             </div>
-            <p class="text-center offset-tm-item">As an organization we strive to... Lorem ipsum dolor sit amet</p>
+            <ul class="text-center offset-tm-item">
+                <li>Travel while you work by taking jobs in new locations.</li>
+                <li>Serve new clinical populations.</li>
+                <li>Network and build your career!</li>
+            </ul>
         </div>
     </div>
 </div>
