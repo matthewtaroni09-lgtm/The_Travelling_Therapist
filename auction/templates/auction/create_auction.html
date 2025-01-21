@@ -12,24 +12,24 @@
     <p>{{showForm}}</p>
     {% if show_form %}
     <!-- Message Alert -->
+    <style>
+      /* remove arrows from non selectables */
+      #id_demogrpahic_auction-0-category,
+      #id_demogrpahic_auction-1-category,
+      #id_demogrpahic_auction-2-category {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        padding: 6px;
+      }
+    </style>
     {% for f in auction %}
     <div class="input-group mb-3 align-items-center">
       <div class="d-flex gap-3 mt-2 mt-sm-0">
-
-        <th><label for="id_demogrpahic_auction-">Category:</label></th>
-        <td>
-          <select name="demogrpahic_auction-" id="id_demogrpahic_auction-">
-            <option value="" disabled selected>{{ f.category }}</option>
-          </select>
-        </td>
-        </tr>
-        <tr>
-          <th><label for="id_demogrpahic_auction-"></label></th>
-          <td>
-            <input type="number" name="demogrpahic_auction-" id="id_demogrpahic_auction-" value={{ f.percentage }}>
-            <input type="hidden" name="demogrpahic_auction-" id="id_demogrpahic_auction-"><input type="hidden" name="demogrpahic_auction-" id="id_demogrpahic_auction-">
-          </td>
-        </tr>
+        <label for="id_demogrpahic_auction-">Category:</label>
+        <select name="demogrpahic_auction-" id="id_demogrpahic_auction-">
+          <option value="" disabled selected>{{ f.category }}</option>
+        </select>
+        <input type="number" name="demogrpahic_auction-" id="id_demogrpahic_auction-" value={{ f.percentage }}>
       </div>
     </div>
     {% endfor %}
@@ -44,7 +44,7 @@
       </div>
       <div class="row">
         <div class="mb-12 col-md-12">
-          <label>What Type of Therapist are you looking for?</label>
+          <label>What Type of Clinician are you looking for?</label>
           <select name="type" class="select form-control" required="" id="id_type">
             <option value="0">---------</option>
             {% for user in user_types %}
@@ -165,8 +165,8 @@
 
       <!-- Schedule -->
       <div class="mb-3">
-        <h3 class="fs-5 my-3 text-weight-normal">Therapist Schedule <span class="text-weight-thin fs-6">*Leave day
-            blank to indicate days the therapist will not be working</span>
+        <h3 class="fs-5 my-3 text-weight-normal">Clinician Schedule <span class="text-weight-thin fs-6">*Leave day
+            blank to indicate days the clinician will not be working</span>
         </h3>
 
         <div class="input-group mb-3 align-items-center">
@@ -283,6 +283,7 @@
 </div>
 <!-- </div> -->
 <script src="{% static 'auction/create_auction.js' %}"></script>
+<script src="{% static 'auction/textarea.js' %}"></script>
 {% else %}
 <p>You must be logged in to access this page. Please <a href="https://travelingtherapist.ca/login">login here</a>
 </p>
