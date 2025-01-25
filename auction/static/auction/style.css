@@ -217,7 +217,7 @@
 
 /**************************** 6. MISC ****************************/
 .nav-link {
-    color: var(--primary-colour);
+    color: var(--dark-colour);
 }
 
 .form-control:focus,
