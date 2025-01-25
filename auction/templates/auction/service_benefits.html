@@ -2,74 +2,7 @@
 {% load static %}
 {% block content %}
 <!-- content -->
-<style>
-    body {
-        background-image: url("/media/images/experimental_bg_header.png");
-        background-repeat: no-repeat;
-        background-color: #f8f9fa;
-    }
-
-    footer {
-        margin-top: 20px;
-    }
-    
-    .therapist-userbox {
-        margin-top: 50px;
-    }
-
-    .therapist-userbox h2 {
-        font-size: 24px;
-        font-weight: 700;
-        color: #333;
-    }
-
-    .therapist-userbox p {
-        font-size: 16px;
-        color: #666;
-    }
-
-    .provider-userbox {
-        margin-top: 50px;
-    }
-
-    .provider-userbox h2 {
-        font-size: 24px;
-        font-weight: 700;
-        color: #333;
-    }
-
-    .provider-userbox p {
-        font-size: 16px;
-        color: #666;
-    }
-
-    .collapse {
-        display: none;
-    }
-
-    .divider {
-        border-top: 1px solid #333;
-        margin-top: 4vh;
-        margin-bottom: 7vh;
-    }
-
-    .offset-lm-item {
-        margin-bottom: 5vh
-    }
-
-    .offset-tm-item {
-        margin-top: 5vh
-    }
-
-    .center-img {
-        display: flex;
-        justify-content: center;
-    }
-
-    .fixbottom {
-        margin-bottom: 20px;
-    }
-</style>
+<p id="pageTitle" class="d-none">Service_Benefits</p>
 <div class="container fixbottom" style="background-color: rgba(0, 0, 0, 0);">
     <div class="row">
         <div class="col-md-12">
@@ -189,15 +122,15 @@
     </div>
 </div>
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         // hide userboxes
         $('.therapist-userbox').hide();
         $('.provider-userbox').hide();
 
-        $('#therapistButton').click(function() {
+        $('#therapistButton').click(function () {
             $('.therapist-userbox').show();
             $('.provider-userbox').hide();
-            
+
             // make button green
             $('#therapistButton').css('background-color', '#0aeaa9');
             $('#clinicButton').css('background-color', '#fff');
@@ -211,7 +144,7 @@
             $('.fixbottom').css('margin-bottom', '0');
         });
 
-        $('#clinicButton').click(function() {
+        $('#clinicButton').click(function () {
             $('.therapist-userbox').hide();
             $('.provider-userbox').show();
 
