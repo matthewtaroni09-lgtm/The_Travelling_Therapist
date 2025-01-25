@@ -389,22 +389,22 @@ $("#submitButton").click(function () {
     }
     else {
         if (days_between(placementStart, now, false) < 0) {
-            errorList += '<li>Therapist Start Date cannot be in the past.</li>';
+            errorList += '<li>Clinician Start Date cannot be in the past.</li>';
         }
 
         if (days_between(placementEnd, now, false) < 0) {
-            errorList += '<li>Therapist End Date cannot be in the past.</li>';
+            errorList += '<li>Clinician End Date cannot be in the past.</li>';
         }
     }
 
     if (placementStart === NaN) {
-        errorList += '<li>Please enter a valid Therapist Start Date.</li>';
+        errorList += '<li>Please enter a valid Clinician Start Date.</li>';
     }
     if (placementEnd === NaN) {
-        errorList += '<li>Please enter a valid Therapist End Date.</li>';
+        errorList += '<li>Please enter a valid Clinician End Date.</li>';
     }
     if (placementEnd < placementStart) {
-        errorList += '<li>The Therapist End Date must be after the Therapist Start Date.</li>';
+        errorList += '<li>The Clinician End Date must be after the Clinician Start Date.</li>';
     }
     if (placementStart > oneYear) {
         errorList += '<li>Placements must start within the next 12 months.</li>';
@@ -564,7 +564,7 @@ $("#submitButton").click(function () {
 
     //All day's have been left blank
     if (noneCount === 7) {
-        errorList += "<li>You're trying to create a posting, but you've left the therapist schedule blank.  This would indicate to bidding therapists that they have a start and end date, but no days to actual be at your clinic. Please complete at least 1 day showing the start and end time for the therapist before you can submit your auction.</li>";
+        errorList += "<li>You're trying to create a posting, but you've left the Clinician schedule blank.  This would indicate to bidding Clinicians that they have a start and end date, but no days to actual be at your clinic. Please complete at least 1 day showing the start and end time for the Clinician before you can submit your auction.</li>";
     }
 
     //Validate Demographics
