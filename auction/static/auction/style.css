@@ -137,6 +137,20 @@
 }
 
 /**************************** 5. PAGES ****************************/
+/* All Pages */
+/* Sets the background for the main section to transparent grey */
+.container {
+    background-color: rgba(248, 249, 250, 0.7);
+    border-radius: 20px;
+}
+
+/* Adds the green "wavy" background */
+body {
+    background-image: url("/media/images/experimental_bg_header.png");
+    background-repeat: no-repeat;
+    background-color: #f8f9fa;
+}
+
 /* Index */
 #tag-line {
     font-family: Futura-Italic, sans-serif;
@@ -216,12 +230,6 @@
 }
 
 /* Service Benefits */
-body {
-    background-image: url("/media/images/experimental_bg_header.png");
-    background-repeat: no-repeat;
-    background-color: #f8f9fa;
-}
-
 footer {
     margin-top: 20px;
 }
