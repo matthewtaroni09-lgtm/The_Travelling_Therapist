@@ -149,6 +149,7 @@ body {
     background-image: url("/media/images/experimental_bg_header.png");
     background-repeat: no-repeat;
     background-color: #f8f9fa;
+    background-size: 100%;
 }
 
 /* Index */
