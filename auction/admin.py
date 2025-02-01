@@ -2,6 +2,7 @@ from tabnanny import verbose
 from unicodedata import category
 from django import forms
 from django.contrib import admin
+from django.http import BadHeaderError, HttpResponse
 from .models import Auction, Bid, Account, PayFrequency, PracticeArea, PracticeAreaType, ProMember, UserType, Demographic, DemographicType, ProMember, AdminSetting, Page, PopupMessage, MessageAcknowledgement, PaymentType, Number
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
@@ -28,20 +29,28 @@ class AuctionAdmin(admin.ModelAdmin):
         print("auction = " + str(auction.active))
         print("obj = " + str(obj.active))
         if obj.active and admin.sendEmails and not auction.active:
-            send_mail(
-                subject = str(obj.clinic.clinicName) + " Your Auction is Live!",
-                message = "",
-                html_message = emails.clinic_auction_live(str(obj.clinic.clinicName)),
-                from_email = settings.EMAIL_HOST_USER,
-                recipient_list = (obj.clinic.user.email,)
-            )
-            send_mail(
-                subject = str(obj.clinic.clinicName) + " Your Auction is Live!",
-                message = "",
-                html_message = "**ADMIN COPY**" + emails.clinic_auction_live(str(obj.clinic.clinicName)),
-                from_email = settings.EMAIL_HOST_USER,
-                recipient_list = ('info@travelingtherapist.ca',)
-            )
+            try:
+                send_mail(
+                    subject = str(obj.clinic.clinicName) + " Your Auction is Live!",
+                    message = "",
+                    html_message = emails.clinic_auction_live(str(obj.clinic.clinicName)),
+                    from_email = settings.EMAIL_HOST_USER,
+                    recipient_list = (obj.clinic.user.email,)
+                )
+            except BadHeaderError:
+                    return HttpResponse('Invalid header found.')
+            
+            try:
+                send_mail(
+                    subject = str(obj.clinic.clinicName) + " Your Auction is Live!",
+                    message = "",
+                    html_message = "**ADMIN COPY**" + emails.clinic_auction_live(str(obj.clinic.clinicName)),
+                    from_email = settings.EMAIL_HOST_USER,
+                    recipient_list = ('info@travelingtherapist.ca',)
+                )
+            except BadHeaderError:
+                    return HttpResponse('Invalid header found.')
+            
         super().save_model(request, obj, form, change)
 
 @admin.register(Bid)
