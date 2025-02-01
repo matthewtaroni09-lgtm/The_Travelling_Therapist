@@ -122,7 +122,7 @@ def auction_search(request):
 
     # Filter statues
     if status_select == '0':
-        status_select_fitler = Q(active=True)
+        status_select_fitler = Q()
     else:
         if status_select == 'Active':
             status_select_fitler = Q(active=True)
