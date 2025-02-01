@@ -1,24 +1,30 @@
 const modal = new bootstrap.Modal(document.getElementById("modal"))
 
-$("#modalXButton").click(function () {
-    modal.hide();
-});
+$(document).ready(function () {
+    $("#modalXButton, #cancelButton").click(function () {
+        modal.hide();
+        $('#searchAllCheckbox').prop('checked', false);
+    });
 
-$("#allAuctionsLink").click(function () {
-    modal.show();
-    $("#allAuctionsButton").show();
-    $("#selectAuctionsButton").hide();
-});
-$("#selectAuctionsLink").click(function () {
-    $("#allAuctionsLink").show();
-    $("#selectAuctionsLink").hide();
-});
+    $("#allAuctionsLink").click(function () {
+        modal.show();
+        $("#allAuctionsButton").show();
+        $("#selectAuctionsButton").hide();
+    });
+    $("#selectAuctionsLink").click(function () {
+        $("#allAuctionsLink").show();
+        $("#selectAuctionsLink").hide();
+    });
 
-$("#allAuctionsButton").click(function () {
-    $("#allAuctionsLink").hide();
-    $("#selectAuctionsLink").show();
-});
+    $("#allAuctionsButton").click(function () {
+        $("#allAuctionsLink").hide();
+        $("#selectAuctionsLink").show();
+    });
 
+    $("#searchAllCheckbox").change(function () {
+        modal.show('show');
+    });
+});
 const getAuctionIndex = () => {
     $.ajax({
         type: "GET",

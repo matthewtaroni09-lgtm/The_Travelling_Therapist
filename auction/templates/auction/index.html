@@ -65,8 +65,7 @@
             {% csrf_token %}
             <button id="allAuctionsButton" type="button" class="btn btn-secondary" data-bs-dismiss="modal" hx-post="{% url 'view-all-auctions' %}" hx-target='#auctionListDiv' hx-trigger="click">Procced
               Anyway</button>
-            <button id="selectAuctionsButton" type="button" class="btn btn-secondary" data-bs-dismiss="modal" hx-post="{% url 'view-user-auctions' %}" hx-target='#auctionListDiv' hx-trigger="click">Procced
-              Anyway</button>
+            <button id="cancelButton" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
             <!-- <a class="btn btn-primary" href="{% url 'logout' %}">Logout</a> -->
             {% endif %}
             {% endif %}

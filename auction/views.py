@@ -93,7 +93,8 @@ def contact(request):
 def view_all_auctions(request):
     auctions = ''
     auctions = Auction.objects.filter(active=True).order_by('-auctionEnd') | Auction.objects.filter(closed=True).order_by('-auctionEnd')
-    return render(request, 'auction/partials/auction_list.html', {'auction': auctions})
+    print(auctions)
+    return render(request, 'auction/partials/auction_list.html', {'auction': auctions, 'length': len(auctions), 'auction_search': True})
 
 def auction_search(request):
     city = request.POST.get('citySelect')
