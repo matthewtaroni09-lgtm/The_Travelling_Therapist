@@ -221,6 +221,26 @@ body {
     display: inline-block;
 }
 
+/* remove arrows from non selectables */
+#id_demogrpahic_auction-0-category,
+#id_demogrpahic_auction-1-category,
+#id_demogrpahic_auction-2-category {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    padding: 6px;
+    background-color: #f5f6f7;
+    color: #000000;
+    border: 1px solid #ccc;
+    pointer-events: none;
+    opacity: 0.85;
+}
+
+.practiceAreaSelectClass {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    padding: 6px;
+}
+
 /* View Auction Page */
 #bidModalSubFooter {
     display: none;
@@ -485,4 +505,17 @@ input[type=number] {
 
 #sliderDiv {
     width: 100%;
+}
+
+.greyed-out {
+    background-color: #f5f6f7;
+    /* Light grey */
+    color: #000000;
+    /* Darker grey text */
+    border: 1px solid #ccc;
+    /* Soft border */
+    pointer-events: none;
+    /* Prevents interaction */
+    opacity: 0.85;
+    /* Faded look */
 }

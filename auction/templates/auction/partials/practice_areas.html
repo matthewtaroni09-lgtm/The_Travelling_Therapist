@@ -15,7 +15,7 @@
 {% for formset in formset_practice %}
 <div class="d-sm-flex gap-3 mt-2 mt-sm-0 mb-3 aop">
     <label for="id_practice_area_auction-{{forloop.counter0}}-category">Category:</label>
-    <select name="practice_area_auction-{{forloop.counter0}}-category" id="id_practice_area_auction-{{forloop.counter0}}-category" disabled>
+    <select class="practiceAreaSelectClass greyed-out" name="practice_area_auction-{{forloop.counter0}}-category" id="id_practice_area_auction-{{forloop.counter0}}-category" disabled>
         {% for practice in practice_areas %}
         {% if forloop.counter == forloop.parentloop.counter %}
         <option value="{{practice.pk}}" selected>{{practice.name}}</option>

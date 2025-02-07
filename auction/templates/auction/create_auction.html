@@ -12,16 +12,6 @@
     <p>{{showForm}}</p>
     {% if show_form %}
     <!-- Message Alert -->
-    <style>
-      /* remove arrows from non selectables */
-      #id_demogrpahic_auction-0-category,
-      #id_demogrpahic_auction-1-category,
-      #id_demogrpahic_auction-2-category {
-        -webkit-appearance: none;
-        -moz-appearance: none;
-        padding: 6px;
-      }
-    </style>
     {% for f in auction %}
     <div class="input-group mb-3 align-items-center">
       <div class="d-flex gap-3 mt-2 mt-sm-0">
