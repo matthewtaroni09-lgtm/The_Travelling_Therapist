@@ -286,9 +286,10 @@ footer {
     color: #666;
 }
 
-.collapse {
+/* Commenting this out becuase it is breaking the accordian sections on the FAQ */
+/* .collapse {
     display: none;
-}
+} */
 
 .divider {
     border-top: 1px solid #333;
