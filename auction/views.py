@@ -592,10 +592,13 @@ def get_demographics(request, clinic_id):
 def admin_summary(request):
     accounts_non_staff = Account.objects.filter(user__is_staff=False)
     accounts_staff = Account.objects.filter(user__is_staff=True)
+    users_all = User.objects.all()
     auctions = Auction.objects.all()
     bids = Bid.objects.all()
     user_types = UserType.objects.all()
     user_types_count = {}
+
+    print(users_all)
 
     for type in user_types:
         count = 0
@@ -612,6 +615,7 @@ def admin_summary(request):
         'user_types_count': user_types_count,
         'auction_count': auctions.__len__,
         'bid_count': bids.__len__,
+        'users': users_all
     }
     return render(request, 'auction/admin_summary.html', context)
 

@@ -17,6 +17,11 @@
 <p>Number of auctions: {{ auction_count }}</p>
 <p>Number of bids: {{ bid_count }}</p>
 
+<p><b>List of user Emails</b></p>
+{% for user in users %}
+{{ user }}<br>
+{% endfor %}
+
 {% else %}
 <h1>Permission Denied</h1>
 {% endif %}
