@@ -2,6 +2,14 @@
 {% load static %}
 {% load crispy_forms_tags %}
 {% block content %}
+<script>
+  //global grecaptcha
+  grecaptcha.ready(function () {
+    grecaptcha.execute('6LfotjMkAAAAANJiaG4WTtN1quRBByReYZ2XBGbV', { action: "/register/" }).then(function (token) {
+      document.getElementById('g-recaptcha-response').value = token;
+    });
+  });
+</script>
 
 <!-- Content Start -->
 <p id="pageTitle" class="d-none">Register</p>
@@ -52,6 +60,7 @@
       <p class="combinedFields"><small>Terms and Conditions must be agreed to before an account can be
           created.</small></p>
       <div>
+        <input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response">
         <button type="submit" disabled id="submitButton" class="btn btn-primary combinedFields">Create Account</button>
       </div>
     </form>
