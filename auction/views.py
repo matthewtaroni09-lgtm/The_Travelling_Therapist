@@ -84,6 +84,7 @@ def contact(request):
             else:
                 messages.error(request, 'Invalid reCAPTCHA. Please try again.')
                 logger.warning('****CONTACT US PAGE**** Captcha failure')
+                return render(request, "auction/contact_us.html", {})
         else:
             return render(request, "auction/contact_us.html", {'form': form})
     else:
@@ -820,62 +821,76 @@ def register(request):
             user.account.imageFour = form.cleaned_data.get('imageFour')
             user.save()
             
-            if admin.sendEmails:
-                if str(user.account.userType).split(' ')[-1] == "Clinic":
-                    # Clinic email
-                    try:
-                        send_mail(
-                                subject = "Welcome to the Traveling Therapist",
-                                message = "",
-                                html_message = emails.clinic_welcome(user.account.clinicName),
-                                from_email = settings.EMAIL_HOST_USER,
-                                recipient_list = [user.email],
-                            )
-                    except:
-                        print('Clinic email failed to send for registration.')
-                        logger.warning('Clinic email failed to send for registration.')
+            recaptcha_response = request.POST.get('g-recaptcha-response')
+            data = {
+            'secret': settings.GOOGLE_RECAPTCHA_SECRET_KEY,
+            'response': recaptcha_response
+            }
+            r = requests.post('https://www.google.com/recaptcha/api/siteverify', data=data)
+            result = r.json()
 
-                    try:
-                        send_mail(
-                                subject = "Welcome to the Traveling Therapist",
-                                message = "",
-                                html_message = "**ADMIN COPY**" + emails.clinic_welcome(user.account.clinicName),
-                                from_email = settings.EMAIL_HOST_USER,
-                                recipient_list = ["info@travelingtherapist.ca"],
-                            )
-                    except:
-                        print('Admin copy of clinic email failed to send for registration.')
-                        logger.warning('Admin copy of Clinic email failed to send for registration.')
-                else:
-                    # Therapist email
-                    try:
-                        send_mail(
-                                subject = "Welcome to the Traveling Therapist",
-                                message = "",
-                                html_message = emails.therapist_welcome(user.first_name, user.last_name),
-                                from_email = settings.EMAIL_HOST_USER,
-                                recipient_list = [user.email]
-                            )
-                    except:
-                        print('Therapist email failed to send for registration.')
-                        logger.warning('Therapist email failed to send for registration.')
+            print(result)
+            if result['success'] and result['score'] > .5:
+                if admin.sendEmails:
+                    if str(user.account.userType).split(' ')[-1] == "Clinic":
+                        # Clinic email
+                        try:
+                            send_mail(
+                                    subject = "Welcome to the Traveling Therapist",
+                                    message = "",
+                                    html_message = emails.clinic_welcome(user.account.clinicName),
+                                    from_email = settings.EMAIL_HOST_USER,
+                                    recipient_list = [user.email],
+                                )
+                        except:
+                            print('Clinic email failed to send for registration.')
+                            logger.warning('Clinic email failed to send for registration.')
 
-                    try:
-                        send_mail(
-                                subject = "Welcome to the Traveling Therapist",
-                                message = "",
-                                html_message = "**ADMIN COPY**" + emails.therapist_welcome(user.first_name, user.last_name),
-                                from_email = settings.EMAIL_HOST_USER,
-                                recipient_list = ["info@travelingtherapist.ca"]
-                            )
-                    except:
-                        print('Admin copy of therapist email failed to send for registration.')
-                        logger.warning('Admin copy of therapist email failed to send for registration.')
-                    
-            raw_password = form.cleaned_data.get('password1')
-            user = authenticate(username=user.username, password=raw_password)
-            login(request, user)
-            return redirect('index')
+                        try:
+                            send_mail(
+                                    subject = "Welcome to the Traveling Therapist",
+                                    message = "",
+                                    html_message = "**ADMIN COPY**" + emails.clinic_welcome(user.account.clinicName),
+                                    from_email = settings.EMAIL_HOST_USER,
+                                    recipient_list = ["info@travelingtherapist.ca"],
+                                )
+                        except:
+                            print('Admin copy of clinic email failed to send for registration.')
+                            logger.warning('Admin copy of Clinic email failed to send for registration.')
+                    else:
+                        # Therapist email
+                        try:
+                            send_mail(
+                                    subject = "Welcome to the Traveling Therapist",
+                                    message = "",
+                                    html_message = emails.therapist_welcome(user.first_name, user.last_name),
+                                    from_email = settings.EMAIL_HOST_USER,
+                                    recipient_list = [user.email]
+                                )
+                        except:
+                            print('Therapist email failed to send for registration.')
+                            logger.warning('Therapist email failed to send for registration.')
+
+                        try:
+                            send_mail(
+                                    subject = "Welcome to the Traveling Therapist",
+                                    message = "",
+                                    html_message = "**ADMIN COPY**" + emails.therapist_welcome(user.first_name, user.last_name),
+                                    from_email = settings.EMAIL_HOST_USER,
+                                    recipient_list = ["info@travelingtherapist.ca"]
+                                )
+                        except:
+                            print('Admin copy of therapist email failed to send for registration.')
+                            logger.warning('Admin copy of therapist email failed to send for registration.')
+                        
+                raw_password = form.cleaned_data.get('password1')
+                user = authenticate(username=user.username, password=raw_password)
+                login(request, user)
+                return redirect('index')
+            else:
+                messages.error(request, 'Invalid reCAPTCHA. Please try again.')
+                logger.warning('****REGISTER**** Captcha failure')
+                return render(request, "auction/register.html", {})
         else:
             print("not valid")
             return render(request, 'auction/register.html', {'form': form, 'user_type': form.cleaned_data.get('user_type')})
