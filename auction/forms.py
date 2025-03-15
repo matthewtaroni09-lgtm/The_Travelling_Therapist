@@ -1,6 +1,6 @@
 from dataclasses import field
 from datetime import datetime, timedelta
-import email
+import email, re
 from operator import mod
 from pyexpat import model
 from tkinter import Widget
@@ -25,7 +25,7 @@ def check_times(start_time, end_time, day):
     else: 
         return ''
 
-def validate_clinic_fields(clinicName, city, province):
+def validate_clinic_fields(clinicName, city, province, username):
     error_list = []
     if clinicName == '' or clinicName is None:
         error_list.append(ValidationError("Please enter a clinic name."))
@@ -35,6 +35,10 @@ def validate_clinic_fields(clinicName, city, province):
 
     if province == '' or province is None:
         error_list.append(ValidationError("Please enter a province."))
+
+    pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+    if not re.match(pattern, username):
+         error_list.append(ValidationError("Email is not in the correct format."))
 
     # if underEighteen is None or eighteenToSixtyFive is None or overSixtyFive is None:
     #     error_list.append(ValidationError("Please enter a value for all Clinic Demographics. If one of the age groups does not apply put in a 0."))
@@ -283,7 +287,7 @@ class RegisterAcount(UserCreationForm):
             error_list.append(f'Username "{username}" is already in use.')
 
         if str(userType).split(' ')[-1] == "Clinic":
-            errors = validate_clinic_fields(clinicName, city, province)
+            errors = validate_clinic_fields(clinicName, city, province, username)
             if errors is not None:
                 error_list.extend(errors)
         else:
@@ -292,6 +296,10 @@ class RegisterAcount(UserCreationForm):
 
             if lastName == '' or lastName is None:
                 error_list.append(ValidationError("Please enter a last name."))
+
+            pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+            if not re.match(pattern, username):
+                error_list.append(ValidationError("Email is not in the correct format."))
 
         if len(error_list) > 0:
             raise forms.ValidationError(error_list)
@@ -315,6 +323,10 @@ class UserFormClinic(forms.ModelForm):
         if User.objects.exclude(pk=self.instance.pk).filter(username=email).exists():
             error_list.append(f'Username "{email}" is already in use.')
 
+        pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+        if not re.match(pattern, email):
+            error_list.append(ValidationError("Email is not in the correct format."))
+
         if email == '' or email is None:
             error_list.append(ValidationError("Please enter a properly formatted email."))
 
@@ -322,7 +334,7 @@ class UserFormClinic(forms.ModelForm):
             raise forms.ValidationError(error_list)
 
 class UserFormTherapist(forms.ModelForm):
-    email = forms.EmailField()
+    user_email = forms.EmailField()
     class Meta:
         model = User
         fields = ['first_name', 'last_name', 'email']
@@ -331,7 +343,8 @@ class UserFormTherapist(forms.ModelForm):
         firstName = self.cleaned_data.get('first_name')
         lastName = self.cleaned_data.get('last_name')
         email = self.cleaned_data.get('email')
-
+        print("!!UserFormTherapist!!")
+        print(email)
         error_list = []
 
         if User.objects.exclude(pk=self.instance.pk).filter(username=email).exists():
@@ -342,6 +355,10 @@ class UserFormTherapist(forms.ModelForm):
 
         if lastName == '' or lastName is None:
             error_list.append(ValidationError("Last name cannot be blank."))
+
+        pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+        if not re.match(pattern, email):
+            error_list.append(ValidationError("Email is not in the correct format."))
 
         if len(error_list) > 0:
             raise forms.ValidationError(error_list)
@@ -361,6 +378,7 @@ class ProfileUpdateClinic(forms.ModelForm):
     def clean(self):
         clinicName = self.cleaned_data.get('clinicName')
         city = self.cleaned_data.get('city')
+        user_email = self.cleaned_data.get('email')
         about = self.cleaned_data.get('about')
         province = self.cleaned_data.get('province')
         username = self.cleaned_data.get('username')
@@ -394,7 +412,7 @@ class ProfileUpdateClinic(forms.ModelForm):
         if User.objects.exclude(pk=self.instance.pk).filter(username=username).exists():
             error_list.append(f'Username "{username}" is already in use.')
 
-        errors = validate_clinic_fields(clinicName, city, province)
+        errors = validate_clinic_fields(clinicName, city, province, username)
         if errors is not None:
             error_list.extend(errors)
     
