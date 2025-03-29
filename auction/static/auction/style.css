@@ -11,6 +11,7 @@
 /**************************** 1. VARIABLES ****************************/
 :root {
     --primary-colour: #0AEAA9;
+    --primary-colour-light: #B2FBDD;
     --secondary-colour: #C9FFE5;
     --dark-colour: #1B1B1B;
     --light-colour: #fff;
@@ -312,6 +313,61 @@ footer {
 
 .fixbottom {
     margin-bottom: 20px;
+}
+
+/* Why Use TTT Page */
+#whyUseTable {
+    width: 100%;
+    border-collapse: collapse;
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+#whyUseTable thead {
+    background-color: #D9D9D9;
+}
+
+#whyUseTableLogo {
+    width: 50%;
+}
+
+#whyUseTable td,
+#whyUseTable th {
+    border: 2px solid black;
+    padding: 15px;
+    text-align: center;
+}
+
+/* Styling for specific sections */
+/* Frist Column */
+#whyUseTable td:first-child,
+#whyUseTable th:first-child {
+    background-color: #c0c0c0;
+    text-align: center;
+    vertical-align: middle;
+    width: 25%;
+}
+
+/* Second Column */
+#whyUseTable td:nth-child(2) {
+    background-color: #ffffff;
+}
+
+/* Third Column */
+#whyUseTable td:nth-child(3) {
+    background-color: #ffffff;
+}
+
+/* Fourth Column */
+#whyUseTable td:last-child {
+    background-color: var(--primary-colour-light);
+}
+
+/* Remove extra padding and spacing for lists and left justify */
+#whyUseTable ul,
+ol {
+    padding-left: 20px;
+    margin: 0;
+    text-align: left;
 }
 
 /**************************** 6. MISC ****************************/

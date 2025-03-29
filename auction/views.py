@@ -972,3 +972,7 @@ def get_next_auction_number():
 # service benefits - static page
 def service_benefits_page(request):
     return render(request, 'auction/service_benefits.html', {})
+
+# why use - static page
+def why_use_page(request):
+    return render(request, 'auction/why_use.html', {})

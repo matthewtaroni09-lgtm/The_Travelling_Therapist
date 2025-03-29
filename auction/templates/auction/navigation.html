@@ -17,6 +17,9 @@
                 <li>
                     <a class="nav-link text-weight-normal {% if path == 'benefits' %}active{% endif %}" href="{% url 'benefits' %}">Service Benefits</a>
                 </li>
+                <li>
+                    <a class="nav-link text-weight-normal {% if path == 'why_use' %}active{% endif %}" href="{% url 'why-use' %}">Why Use TTT?</a>
+                </li>
                 {% if user.is_authenticated %}
                 {% if user.account.get_split_user_type == 'Clinic' %}
                 <li class="nav-item">
