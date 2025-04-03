@@ -322,12 +322,34 @@ footer {
     box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
 }
 
+@media (max-width: 994px) {
+    #whyUseTable {
+        display: none;
+    }
+
+    #whyUseCarousel {
+        display: block;
+    }
+}
+
+@media (min-width: 995px) {
+
+    #whyUseCarousel {
+        display: none;
+    }
+}
+
 #whyUseTable thead {
     background-color: #D9D9D9;
 }
 
 #whyUseTableLogo {
     width: 50%;
+}
+
+#carouselLogo {
+    width: 25%;
+    height: 25%;
 }
 
 #whyUseTable td,
@@ -370,9 +392,29 @@ ol {
     text-align: left;
 }
 
+#whyUseTable li {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
 /* Read More Button */
 .moreless {
     margin-top: 10px;
+}
+
+.whyUseImages {
+    height: 325px;
+    object-fit: contain;
+}
+
+.cellTitle {
+    font-size: 20px;
+}
+
+/* Carasouel Card Body */
+.whyUseCardBody {
+    width: 90%;
+    margin: auto;
 }
 
 /**************************** 6. MISC ****************************/
