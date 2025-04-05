@@ -11,14 +11,14 @@
                 <li class="nav-item">
                     <a class="nav-link text-weight-normal {% if path == 'home' %}active{% endif %}" aria-current="page" href="{% url 'index' %}">Home</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link text-weight-normal {% if path == 'about' %}active{% endif %}" href="{% url 'about' %}">About/FAQ</a>
-                </li>
-                <li>
-                    <a class="nav-link text-weight-normal {% if path == 'benefits' %}active{% endif %}" href="{% url 'benefits' %}">Service Benefits</a>
-                </li>
-                <li>
-                    <a class="nav-link text-weight-normal {% if path == 'why_use' %}active{% endif %}" href="{% url 'why-use' %}">Why Use TTT?</a>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle text-weight-normal" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        What's The Traveling Therapist?
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="{% url 'benefits' %}">About</a></li>
+                        <li><a class="dropdown-item" href="{% url 'how-it-works' %}">How it Works</a></li>
+                    </ul>
                 </li>
                 {% if user.is_authenticated %}
                 {% if user.account.get_split_user_type == 'Clinic' %}

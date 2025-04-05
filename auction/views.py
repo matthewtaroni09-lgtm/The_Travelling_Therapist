@@ -204,6 +204,9 @@ def about(request):
 def faq(request):
     return render(request, 'auction/faq.html', {'path': 'faq'})
 
+def how_it_works(request):
+    return render(request, 'auction/how_it_works.html', {'path': 'how-it-works'})
+
 def cookie_policy(request):
     return render(request, 'auction/cookie_policy.html', {})
 
