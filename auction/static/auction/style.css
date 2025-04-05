@@ -405,6 +405,27 @@ ol {
     margin: auto;
 }
 
+/* How It Works */
+.howItWorksGraphicDiv {
+    padding-top: 4%;
+}
+
+.howItWorksRowDiv {
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
+.howItWorksiFrame {
+    border-style: solid;
+    border-width: 10px;
+    border-color: #0feaab38;
+    border-radius: 20px;
+}
+
+.iFrameClass {
+    width: 50%;
+}
+
 /**************************** 6. MISC ****************************/
 .nav-link {
     color: var(--dark-colour);
