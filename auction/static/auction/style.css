@@ -226,6 +226,7 @@ body {
 #id_demogrpahic_auction-0-category,
 #id_demogrpahic_auction-1-category,
 #id_demogrpahic_auction-2-category {
+    appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
     padding: 6px;
@@ -237,6 +238,7 @@ body {
 }
 
 .practiceAreaSelectClass {
+    appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
     padding: 6px;
@@ -257,10 +259,6 @@ footer {
     margin-top: 20px;
 }
 
-.therapist-userbox {
-    margin-top: 50px;
-}
-
 .therapist-userbox h2 {
     font-size: 24px;
     font-weight: 700;
@@ -270,10 +268,6 @@ footer {
 .therapist-userbox p {
     font-size: 16px;
     color: #666;
-}
-
-.provider-userbox {
-    margin-top: 50px;
 }
 
 .provider-userbox h2 {
@@ -291,12 +285,6 @@ footer {
 /* .collapse {
     display: none;
 } */
-
-.divider {
-    border-top: 1px solid #333;
-    margin-top: 4vh;
-    margin-bottom: 7vh;
-}
 
 .offset-lm-item {
     margin-bottom: 5vh
