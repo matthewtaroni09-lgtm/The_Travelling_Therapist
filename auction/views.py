@@ -201,6 +201,9 @@ def view_user_auctions(request):
 def about(request):
     return render(request, 'auction/about.html', {'path': 'about'})
 
+def faq(request):
+    return render(request, 'auction/faq.html', {'path': 'faq'})
+
 def cookie_policy(request):
     return render(request, 'auction/cookie_policy.html', {})
 
