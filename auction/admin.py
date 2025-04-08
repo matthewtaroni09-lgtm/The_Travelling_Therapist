@@ -9,6 +9,7 @@ from django.contrib.auth.admin import UserAdmin
 from django.core.mail import send_mail
 from django.conf import settings
 from . import emails
+from The_Travelling_Therapist.settings import ENVIRONMENT, DEV_LINK, PROD_LINK
 
 class BidInline(admin.TabularInline):
     model = Bid
@@ -28,6 +29,12 @@ class AuctionAdmin(admin.ModelAdmin):
         auction = Auction.objects.get(pk=obj.auctionID)
         print("auction = " + str(auction.active))
         print("obj = " + str(obj.active))
+
+        # Query the user list for users that are the same type as the auction
+        print(auction.type)
+        accounts = Account.objects.filter(userType=auction.type)
+        print(accounts)
+
         if obj.active and admin.sendEmails and not auction.active:
             try:
                 send_mail(
@@ -50,6 +57,27 @@ class AuctionAdmin(admin.ModelAdmin):
                 )
             except BadHeaderError:
                     return HttpResponse('Invalid header found.')
+            
+            # Email users of the auction type that there is a new auction available for bidding
+            link  = ""
+            if ENVIRONMENT == "DEV":
+                link = DEV_LINK + "/auction/" + str(auction.auctionID)
+            else:
+                link = PROD_LINK + "/auction/" + str(auction.auctionID)
+
+            for account in accounts:
+                try:
+                    send_mail(
+                        subject = "NEW AUCTION - The Traveling Therapist",
+                        message = "",
+                        html_message = emails.new_auction_email_to_all(account.user__first_name, account.user__last_name, link, auction.placementStart, auction.placementEnd, auction.paymentType),
+                        from_email = settings.EMAIL_HOST_USER,
+                        # bcc = ('info@travelingtherapist.ca',),
+                        bcc = ('loribine@gmail.com',),
+                        recipient_list = (account.user__email,'loribine@gmail.com',)
+                    )
+                except BadHeaderError:
+                        return HttpResponse('Invalid header found.')
             
         super().save_model(request, obj, form, change)
 

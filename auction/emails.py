@@ -245,3 +245,30 @@ def auction_created_admin(clinicName, city, province, email, reservePrice, aucti
         </section><br><br>"""
     message = message + email_footer
     return message
+
+def new_auction_email_to_all(first_name, last_name, link, start_date, end_date, payment_type):
+    payment_type_message = ""
+    if payment_type == "flat fee":
+      payment_type_message = "the price you're bidding is for the entire as posted, not your desired hourly rate!"
+    else:
+      payment_type_message = "The fee split you're bidding is the percentage YOU want as a clinician for each patient you see."
+    message = email_header
+    message = message + """<section style="font-size: 16px; margin-bottom: 4rem;">
+  <p>Dear <span class="text-weight-bold">""" + first_name + """ """ + last_name + """</span>,</p>
+  
+  This is an email to let you know that a <a href=""" + link + """> new listing you can bid on </a> with the following details has been posted!
+  """ + start_date + """ - """ + end_date + """
+
+  The clock is ticking, so if you'd like to take the opening, bid away!
+  (auction time remaining) ** Ideally a running clock
+
+  This auction is a """ + payment_type + """, so remember that """ + payment_type_message + """
+  
+  Remember that The Traveling Therapist is always free to bid for clinicians and at the end of the auction that the clinic is matched with the LOWEST bidder.
+
+    <p>Happy Bidding!</p>
+    <p style="font-weight: 700; padding-top: 0rem; margin-top: 0; line-height: 0;">The Traveling Therapist Team</p>
+
+</section>"""
+    message = message + email_footer
+    return message
