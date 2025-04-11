@@ -5,52 +5,44 @@
 <p id="pageTitle" class="d-none">FAQ</p>
 <h2 class="my-5 text-weight-normal mb-3">Frequently Asked Questions</h2>
 
-<div class="row justify-content-center">
-  <!-- <div class="col-sm-1"></div> -->
-  <a href="#clinicFAQ" class="col-sm-3 selection-boxes d-flex flex-column align-items-center p-4 m-2">
-    <img class="img-fluid" src="/media/images/clinic.png" alt="Clinic office as a cartoon">
-    <h4>Clinics</h4>
-  </a>
-  <!-- <div class="col-sm-1"></div> -->
-  <a href="#therapistFAQ" class="col-sm-3 selection-boxes d-flex flex-column align-items-center p-4 m-2">
-    <img class="img-fluid" src="/media/images/therapy.png" alt="Therapist as a cartoon">
-    <h4>Regulated Healthcare Professionals</h4>
-  </a>
-  <!-- <div class="col-sm-1"></div> -->
-  <a href="#unregulatedFAQ" class="col-sm-3 selection-boxes d-flex flex-column align-items-center p-4 m-2">
-    <img class="img-fluid" src="/media/images/medical.png" alt="Therapist as a cartoon">
-    <h4>Unregulated Healthcare Professionals</h4>
-  </a>
-</div>
-
-<h3 id="clinicFAQ">Clinics</h3>
-<!-- Clinic Accordian Start -->
-<div class="accordion" id="clinicAccordian">
+<!-- Main FAQ Accordian Start -->
+<div class="accordion" id="mainAccordian">
+  <!-- Start What is TTT -->
   <div class="accordion-item">
     <h2 class="accordion-header" id="headingA">
       <button class="accordion-button text-weight-normal" type="button" data-bs-toggle="collapse" data-bs-target="#collapseA" aria-expanded="true" aria-controls="collapseA">
         What is The Traveling Therapist?
       </button>
     </h2>
-    <div id="collapseA" class="accordion-collapse collapse show" aria-labelledby="headingA" data-bs-parent="#clinicAccordian">
+    <div id="collapseA" class="accordion-collapse collapse show" aria-labelledby="headingA" data-bs-parent="#mainAccordian">
       <p class="accordion-body text-weight-light">
-        The Traveling Therapist is a temporary work matchmaking service operating via auction. The Traveling Therapist
-        connects
-        clinics looking for temporary coverage for their therapists on vacation, leave, etc. to therapists looking for
-        temporary, casual, or extra work in new clinical environments. Clinics retain their level of client care and
-        patient
-        load while their regular staff are away, while therapists get paid to network and work in new clinical
-        environments.
+        Learn more on our <a>What is The Traveling Therapist page</a>.
       </p>
     </div>
   </div>
+  <!-- End What is TTT -->
+  <!-- Start How do I use TTT -->
   <div class="accordion-item">
     <h2 class="accordion-header" id="headingB">
-      <button class="accordion-button text-weight-normal collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseB" aria-expanded="false" aria-controls="collapseB">
+      <button class="accordion-button text-weight-normal collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseB" aria-expanded="true" aria-controls="collapseB">
+        How do I use The Traveling Therapist?
+      </button>
+    </h2>
+    <div id="collapseB" class="accordion-collapse collapse" aria-labelledby="headingB" data-bs-parent="#mainAccordian">
+      <p class="accordion-body text-weight-light">
+        Check out our <a>How to Page</a>.
+      </p>
+    </div>
+  </div>
+  <!-- End How do I use TTT -->
+  <!-- Start How does an auction work? -->
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="headingC">
+      <button class="accordion-button text-weight-normal collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseC" aria-expanded="false" aria-controls="collapseC">
         How do auctions work?
       </button>
     </h2>
-    <div id="collapseB" class="accordion-collapse collapse" aria-labelledby="headingB" data-bs-parent="#clinicAccordian">
+    <div id="collapseC" class="accordion-collapse collapse" aria-labelledby="headingC" data-bs-parent="#mainAccordian">
       <p class="accordion-body text-weight-light">
         Auctions work via reverse bidding. The clinic posts an opening to which therapists post their bid to complete
         the entire
@@ -66,30 +58,15 @@
       </p>
     </div>
   </div>
-  <div class="accordion-item">
-    <h2 class="accordion-header" id="headingC">
-      <button class="accordion-button text-weight-normal collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseC" aria-expanded="false" aria-controls="collapseC">
-        How does the matching process work?
-      </button>
-    </h2>
-    <div id="collapseC" class="accordion-collapse collapse" aria-labelledby="headingC" data-bs-parent="#clinicAccordian">
-      <p class="accordion-body text-weight-light">
-        The Traveling Therapist matches the lowest bidding therapist and the clinic within 48h of a match via email.
-        This is the
-        handoff process, from which point finances are handled outside of The Traveling Therapist. Note that therapists
-        attempting to contact the clinic directly can be banned from the service as outlined in the
-        <span type="button" data-bs-toggle="modal" data-bs-target="#tandcModalAbout1" class="mb-0 text-primary-colour">Terms & Conditions</span>.
-        {% include 'auction/modal_terms_and_conditions.html' with id='tandcModalAbout1' %}
-      </p>
-    </div>
-  </div>
+  <!-- End How does an auction work? -->
+  <!-- Start What are the fees? -->
   <div class="accordion-item">
     <h2 class="accordion-header" id="headingD">
-      <button class="accordion-button text-weight-normal collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseE" aria-expanded="false" aria-controls="collapseE">
+      <button class="accordion-button text-weight-normal collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseD" aria-expanded="false" aria-controls="collapseD">
         What are your fees?
       </button>
     </h2>
-    <div id="collapseE" class="accordion-collapse collapse" aria-labelledby="headingE" data-bs-parent="#clinicAccordian">
+    <div id="collapseD" class="accordion-collapse collapse" aria-labelledby="headingD" data-bs-parent="#mainAccordian">
       <p class="accordion-body text-weight-light">
         Clinics post ads for free. Therapists bid for free.
         <br><br>
@@ -99,164 +76,35 @@
       </p>
     </div>
   </div>
+  <!-- End What are the fees? -->
+  <!-- Start What happens at the end of an auction? -->
   <div class="accordion-item">
     <h2 class="accordion-header" id="headingE">
-      <button class="accordion-button text-weight-normal collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseD" aria-expanded="false" aria-controls="collapseD">
-        How are transactions processed?
-      </button>
-    </h2>
-    <div id="collapseD" class="accordion-collapse collapse" aria-labelledby="headingD" data-bs-parent="#clinicAccordian">
-      <p class="accordion-body text-weight-light">
-        Upon an auction ending, The Traveling Therapist charges the clinic's credit card on file in the amount of
-        5%+HST/tax or
-        $300+HST/tax based on the final auction value, whichever is larger.
-      </p>
-    </div>
-  </div>
-  <div class="accordion-item">
-    <h2 class="accordion-header" id="headingF">
-      <button class="accordion-button text-weight-normal collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseF" aria-expanded="false" aria-controls="collapseF">
-        How do I post an ad?
-      </button>
-    </h2>
-    <div id="collapseF" class="accordion-collapse collapse" aria-labelledby="headingF" data-bs-parent="#clinicAccordian">
-      <div class="col-md-6 m-3">
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#videoModalOne">
-          <img class="img-fluid bg-white" src="/media/images/how_to_create_a_listing_screenshot.png">
-        </button>
-        <div class="modal fade" id="videoModalOne" tabindex="-1" aria-labelledby="videoModalOneLabel" aria-hidden="true">
-          <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="videoModalOneLabel">How to create a listing</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                <iframe width="100%" height="415" src="https://www.youtube.com/embed/o5dIt7sF_Fc" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- <div class="accordion-item">
-    <h2 class="accordion-header" id="headingF">
-      <button class="accordion-button text-weight-normal collapsed" type="button" data-bs-toggle="collapse"
-        data-bs-target="#collapseF" aria-expanded="false" aria-controls="collapseF">
-        Why can I only post 1 ad?
-      </button>
-    </h2>
-    <div id="collapseF" class="accordion-collapse collapse" aria-labelledby="headingF"
-      data-bs-parent="#clinicAccordian">
-      <p class="accordion-body text-weight-light">
-        Free accounts for clinics allow 1 active ad at a time. If you'd like the ability to post more than 1 listing,
-        access to auction reporting statistics and other features, you need a PRO account. Pro accounts have a monthly
-        subscription cost of $31+HST. See full features of our pro accounts here.
-      </p>
-    </div>
-  </div> -->
-  <div class="accordion-item">
-    <h2 class="accordion-header" id="headingG">
-      <button class="accordion-button text-weight-normal collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseG" aria-expanded="false" aria-controls="collapseG">
-        What information is stored/saved by The Traveling Therapist?
-      </button>
-    </h2>
-    <div id="collapseG" class="accordion-collapse collapse" aria-labelledby="headingG" data-bs-parent="#clinicAccordian">
-      <p class="accordion-body text-weight-light">
-        We store information, privately and encrypted on our end. We only share therapist contact information with the
-        clinic if
-        you're the lowest bidding therapist at the end of an auction. See full details with our
-        <span type="button" data-bs-toggle="modal" data-bs-target="#privacyModaAbout" class="text-primary-colour">Privacy Policy</span>.
-        {% include 'auction/modal_privacy_policy.html' with id='privacyModaAbout' %}
-      </p>
-    </div>
-  </div>
-  <div class="accordion-item">
-    <h2 class="accordion-header" id="headingH">
-      <button class="accordion-button text-weight-normal collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseH" aria-expanded="false" aria-controls="collapseH">
+      <button class="accordion-button text-weight-normal collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseE" aria-expanded="false" aria-controls="collapseE">
         What happens at end of the auction?
       </button>
     </h2>
-    <div id="collapseH" class="accordion-collapse collapse" aria-labelledby="headingH" data-bs-parent="#clinicAccordian">
+    <div id="collapseE" class="accordion-collapse collapse" aria-labelledby="headingE" data-bs-parent="#mainAccordian">
       <div class="accordion-body text-weight-light">
         <ul>
           <li>The Traveling Therapist will connect the lowest bidder and the clinic via email</li>
-          <li>Therapist provides proof of insurance to clinic</li>
-          <li>Therapist and clinic reach an agreement and confirm payment method for the work term. This is not the
-            responsibility of The Traveling Therapist</li>
+          <li>The clinic and clinician confirm necessary startup documents (insurance, agreed upon method of payment) directly once connected by The Traveling Therapist</li>
           <li>Share your auction and clinic meeting experience with The Traveling Therapist so we can share with others
             in your shoes!</li>
         </ul>
-        <p>Past auctions (closed or not) are available for all to see forever, regardless of price.</p>
+        <p>Past auctions are available for all to see, forever, regardless of price.</p>
       </div>
     </div>
   </div>
+  <!-- End What happens at the end of an auction? -->
+  <!-- Start What if a therapist backs out -->
   <div class="accordion-item">
-    <h2 class="accordion-header" id="headingI">
-      <button class="accordion-button text-weight-normal collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseI" aria-expanded="false" aria-controls="collapseI">
-        Bidding Specifics & Incrementation
-      </button>
-    </h2>
-    <div id="collapseI" class="accordion-collapse collapse" aria-labelledby="headingI" data-bs-parent="#clinicAccordian">
-      <div class="accordion-body text-weight-light">
-        <ul>
-          <li>Auctions are setup for convenience and ease of understanding for all users of the traveling therapist with
-            the below parameters in place. Recall that bids represent the total value the therapist is willing to accept
-            to complete the temporary job as posted by the clinic.</li>
-          <li>Therapists may only bid whole dollar values</li>
-          <li>The maximum value for any bid is $100,000</li>
-          <li>From the 2nd bid onward, bids are subject to incrementation based on the value of the current lowest bid
-            as listed in the auction highlights bar
-            <ul>
-              <li><img class="status-bar" src="/media/images/status_bar.png" alt="Status bar">
-            </ul>
-          </li>
-          </li>
-          <li>Bids above $25,000 can only be lowered in increments of $500</li>
-          <li>Bids between 10,000 and 25,000 can only be lowered in increments of $250</li>
-          <li>Bids below $10,000 and can only be lowered in increments of $250</li>
-          <li>The Traveling Therapist does not offer automatic/proxy bidding</li>
-          <li>Bids placed in the final minute of an auction add 60s to the timer and end of the auction to be fair to
-            all therapists interested</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-  <div class="accordion-item">
-    <h2 class="accordion-header" id="headingJ">
-      <button class="accordion-button text-weight-normal collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseJ" aria-expanded="false" aria-controls="collapseJ">
-        What is the reserve price?
-      </button>
-    </h2>
-    <div id="collapseJ" class="accordion-collapse collapse" aria-labelledby="headingJ" data-bs-parent="#clinicAccordian">
-      <div class="accordion-body text-weight-light">
-        <ul>
-          <li>The reserve price is a fixed bar that the clinic has the choice to set or not set when creating their
-            auction.</li>
-          <li>If set, the reserve price is a fixed value defined as the maximum amount a clinic is willing to pay a
-            therapist to cover the temporary posted that has been listed.</li>
-          <li>If a reserve price is not met (by therapists posting lower and lower bids) by the auction end date, the
-            auction is closed, and NO winner/match is assigned.</li>
-          <li>Therapists bidding and the clinic are notified by email indicating the end of the auction, but with an
-            unmet reserve price.</li>
-          <li>In our experience, auctions <u><i>without</i></u> reserve prices generally tend to attract more bidders,
-            but of course we leave the decision to or not to set a reserve price up to the clinic creating the listing.
-          </li>
-        </ul>
-      </div>
-    </div>
-  </div>
-  <div class="accordion-item">
-    <h2 class="accordion-header" id="headingK">
-      <button class="accordion-button text-weight-normal collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseK" aria-expanded="false" aria-controls="collapseK">
+    <h2 class="accordion-header" id="headingF">
+      <button class="accordion-button text-weight-normal collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseF" aria-expanded="false" aria-controls="collapseF">
         What if a therapist backs out after being the lowest bidder?
       </button>
     </h2>
-    <div id="collapseK" class="accordion-collapse collapse" aria-labelledby="headingK" data-bs-parent="#clinicAccordian">
+    <div id="collapseF" class="accordion-collapse collapse" aria-labelledby="headingF" data-bs-parent="#mainAccordian">
       <div class="accordion-body text-weight-light">
         <ul>
           <li>The Traveling Therapist will email the winning therapist after the auction closes.</li>
@@ -280,13 +128,15 @@
       </div>
     </div>
   </div>
+  <!-- End What if a therapist backs out -->
+  <!-- Start What if I want the therapist to have specific skills -->
   <div class="accordion-item">
-    <h2 class="accordion-header" id="headingL">
-      <button class="accordion-button text-weight-normal collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseL" aria-expanded="false" aria-controls="collapseL">
+    <h2 class="accordion-header" id="headingG">
+      <button class="accordion-button text-weight-normal collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseG" aria-expanded="false" aria-controls="collapseG">
         What if I want my therapist to have specific skills/experience?
       </button>
     </h2>
-    <div id="collapseL" class="accordion-collapse collapse" aria-labelledby="headingL" data-bs-parent="#clinicAccordian">
+    <div id="collapseG" class="accordion-collapse collapse" aria-labelledby="headingG" data-bs-parent="#mainAccordian">
       <p class="accordion-body text-weight-light">
         By using the Traveling Therapist, you understand that you may not be getting your ideal candidate, but a
         licensed therapist to fill your temporary position.
@@ -298,277 +148,287 @@
       </p>
     </div>
   </div>
-  <div class="accordion-item">
-    <h2 class="accordion-header" id="headingM">
-      <button class="accordion-button text-weight-normal collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseM" aria-expanded="false" aria-controls="collapseM">
-        I created my ad for a temporary position, why don't I see my ad on the site?
-      </button>
-    </h2>
-    <div id="collapseM" class="accordion-collapse collapse" aria-labelledby="headingM" data-bs-parent="#clinicAccordian">
-      <p class="accordion-body text-weight-light">
-        Before any auction can go live on our site, our team reviews the ad/posting contents and connects with you as
-        the clinic
-        owner to collect a payment method which we use to pay for your auction upon matching with the lowest bidder.
-        <br /><br />
-        This serves the dual function of ensuring all our ads are for actual positions available and ensures that
-        therapists can
-        only bid on auctions that meet their scope of practice.
-        <br /><br />
-        Approval generally takes 24-48h from the time you created the auction and you will receive an email from us when
-        your
-        auction is live!
-      </p>
-    </div>
-  </div>
-  <div class="accordion-item">
-    <h2 class="accordion-header" id="headingN">
-      <button class="accordion-button text-weight-normal collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseN" aria-expanded="false" aria-controls="collapseN">
-        How is my total cost calculated for fee split auctions?
-      </button>
-    </h2>
-    <div id="collapseN" name="collapseN" class="accordion-collapse collapse" aria-labelledby="headingN" data-bs-parent="#clinicAccordian">
-      <p class="accordion-body text-weight-light">
-        Clinics are invoiced $25+HST per day the contract is set to cover for, inclusive of the start and end date. This means if the coverage is for 8 weeks, the invoice would be $1,400+HST (25/day *56 days). Fee split auctions have the same floor and ceiling prices as fixed fee auctions at $300+HST and $5,000+HST respectively. This means any fee split posting shorter than 12 days of coverage are still invoiced $300+HST and those longer than 200 days are invoiced $5,000+HST.
-        <br><br>
-        Please note that the number of days of coverage does not necessarily equal the number of days you have your healthcare worker set to work for. In the above example, the coverage and invoice total is 56 days. Irrespective of how many of those days you have your worker set to work for.
-      </p>
-    </div>
-  </div>
+  <!-- End What if I want the therapist to have specific skills -->
 </div>
-<!-- Clinic Accordian End -->
+<br>
 
-<h3 id="therapistFAQ" class="mt-5">Regulated Healthcare Professionals</h3>
-<!-- Therapist Accordian Start -->
-<div class="accordion" id="therapistAccordian">
+<div class="accordion" id="outsideSecondaryAccordian">
+  <!-- Start Outside Accordian -->
   <div class="accordion-item">
-    <h2 class="accordion-header" id="heading1">
-      <button class="accordion-button text-weight-normal" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1" aria-expanded="true" aria-controls="collapse1">
-        What is The Traveling Therapist?
+    <h2 class="accordion-header" id="collapseheadingOutside">
+      <button class="accordion-button text-weight-normal collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseheadingOutside" aria-expanded="false" aria-controls="collapseheadingOutside">
+        More FAQs
       </button>
     </h2>
-    <div id="collapse1" class="accordion-collapse collapse show" aria-labelledby="heading1" data-bs-parent="#therapistAccordian">
-      <p class="accordion-body text-weight-light">
-        The Traveling Therapist is a temporary work matchmaking service operating via auction. The traveling therapist
-        connects clinics looking for temporary coverage for their therapists on vacation, leave, etc. and therapists
-        looking for temporary, casual, or extra work in new clinical environments. Clinics retain their level of client
-        care and patient load while their regular staff are away, while therapists get paid to work in new environments
-        with new clinical populations and network in the process.
-      </p>
-    </div>
-  </div>
-  <div class="accordion-item">
-    <h2 class="accordion-header" id="heading2">
-      <button class="accordion-button text-weight-normal collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2" aria-expanded="false" aria-controls="collapse2">
-        How do auctions work?
-      </button>
-    </h2>
-    <div id="collapse2" class="accordion-collapse collapse" aria-labelledby="heading2" data-bs-parent="#therapistAccordian">
-      <p class="accordion-body text-weight-light">
-        Auctions work via reverse bidding. The clinic posts an opening to which therapists post their bid to complete
-        the entire work term listed. This bid is how much they are willing to accept as payment for the entire term of
-        the ad posted. Therapists may continue to offer their services for lower and lower prices if they are willing to
-        complete the term for that price. This process continues until the auction timer runs out, at which time, The
-        Traveling Therapist matches the lowest bidding therapist with the clinic in need. If there is a bid placed in
-        the last 60s before an auction closes, another 60s is added to the timer to be fair to other therapists bidding.
-      </p>
-    </div>
-  </div>
-  <div class="accordion-item">
-    <h2 class="accordion-header" id="heading3">
-      <button class="accordion-button text-weight-normal collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3" aria-expanded="false" aria-controls="collapse3">
-        How does the matching process work?
-      </button>
-    </h2>
-    <div id="collapse3" class="accordion-collapse collapse" aria-labelledby="heading3" data-bs-parent="#therapistAccordian">
-      <p class="accordion-body text-weight-light">
-        The Traveling Therapist matches the lowest bidding therapist and the clinic within 48h of a match via email.
-        This is the handoff process, from which point finances are handled outside of The Traveling Therapist. Note that
-        therapists attempting to contact the clinic directly can be banned from the service as outlined in the
-        <span type="button" data-bs-toggle="modal" data-bs-target="#tandcModalAbout1" class="mb-0 text-primary-colour">Terms & Conditions</span>.
-        {% include 'auction/modal_terms_and_conditions.html' with id='tandcModalAbout1' %}
-      </p>
-    </div>
-  </div>
-  <div class="accordion-item">
-    <h2 class="accordion-header" id="heading4">
-      <button class="accordion-button text-weight-normal collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse4" aria-expanded="false" aria-controls="collapse4">
-        How do I bid?
-      </button>
-    </h2>
-    <div id="collapse4" class="accordion-collapse collapse" aria-labelledby="heading4" data-bs-parent="#therapistAccordian">
-      <div class="col-md-6 m-3">
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#videoModalTwo">
-          <img class="img-fluid bg-white" src="/media/images/how_to_bid_as_a_therapist_screenshot.png">
-        </button>
-        <div class="modal fade" id="videoModalTwo" tabindex="-1" aria-labelledby="videoModalTwoLabel" aria-hidden="true">
-          <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="videoModalTwoLabel">How to create a listing</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                <iframe width="100%" height="415" src="https://www.youtube.com/embed/IE6vYY2Xx3E" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+    <div id="collapseheadingOutside" class="accordion-collapse collapse" aria-labelledby="collapseheadingOutside" data-bs-parent="#outsideSecondaryAccordian">
+      <div class="accordion" id="secondaryAccordian">
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="heading1">
+            <button class="accordion-button text-weight-normal collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1" aria-expanded="false" aria-controls="collapse1">
+              How does the matching process work?
+            </button>
+          </h2>
+          <div id="collapse1" class="accordion-collapse collapse" aria-labelledby="heading1" data-bs-parent="#secondaryAccordian">
+            <p class="accordion-body text-weight-light">
+              The Traveling Therapist matches the lowest bidding therapist and the clinic within 48h of a match via email.
+              This is the
+              handoff process, from which point finances are handled outside of The Traveling Therapist. Note that therapists
+              attempting to contact the clinic directly can be banned from the service as outlined in the
+              <span type="button" data-bs-toggle="modal" data-bs-target="#tandcModalAbout1" class="mb-0 text-primary-colour">Terms & Conditions</span>.
+              {% include 'auction/modal_terms_and_conditions.html' with id='tandcModalAbout1' %}
+            </p>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="heading2">
+            <button class="accordion-button text-weight-normal collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2" aria-expanded="false" aria-controls="collapse2">
+              How are transactions processed?
+            </button>
+          </h2>
+          <div id="collapse2" class="accordion-collapse collapse" aria-labelledby="heading2" data-bs-parent="#secondaryAccordian">
+            <p class="accordion-body text-weight-light">
+              Upon an auction ending, The Traveling Therapist charges the clinic's credit card on file in the amount of
+              5%+HST/tax or
+              $300+HST/tax based on the final auction value, whichever is larger.
+            </p>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="heading3">
+            <button class="accordion-button text-weight-normal collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3" aria-expanded="false" aria-controls="collapse3">
+              How do I post an ad?
+            </button>
+          </h2>
+          <div id="collapse3" class="accordion-collapse collapse" aria-labelledby="heading3" data-bs-parent="#secondaryAccordian">
+            <div class="col-md-6 m-3">
+              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#videoModalOne">
+                <img class="img-fluid bg-white" src="/media/images/how_to_create_a_listing_screenshot.png">
+              </button>
+              <div class="modal fade" id="videoModalOne" tabindex="-1" aria-labelledby="videoModalOneLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="videoModalOneLabel">How to create a listing</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <iframe width="100%" height="415" src="https://www.youtube.com/embed/o5dIt7sF_Fc" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="heading4">
+            <button class="accordion-button text-weight-normal collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse4" aria-expanded="false" aria-controls="collapseG">
+              What information is stored/saved by The Traveling Therapist?
+            </button>
+          </h2>
+          <div id="collapse4" class="accordion-collapse collapse" aria-labelledby="heading4" data-bs-parent="#secondaryAccordian">
+            <p class="accordion-body text-weight-light">
+              We store information, privately and encrypted on our end. We only share therapist contact information with the
+              clinic if
+              you're the lowest bidding therapist at the end of an auction. See full details with our
+              <span type="button" data-bs-toggle="modal" data-bs-target="#privacyModaAbout" class="text-primary-colour">Privacy Policy</span>.
+              {% include 'auction/modal_privacy_policy.html' with id='privacyModaAbout' %}
+            </p>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="heading5">
+            <button class="accordion-button text-weight-normal collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse5" aria-expanded="false" aria-controls="collapse5">
+              Bidding Specifics & Incrementation
+            </button>
+          </h2>
+          <div id="collapse5" class="accordion-collapse collapse" aria-labelledby="heading5" data-bs-parent="#secondaryAccordian">
+            <div class="accordion-body text-weight-light">
+              <ul>
+                <li>Auctions are setup for convenience and ease of understanding for all users of the traveling therapist with
+                  the below parameters in place. Recall that bids represent the total value the therapist is willing to accept
+                  to complete the temporary job as posted by the clinic.</li>
+                <li>Therapists may only bid whole dollar values</li>
+                <li>The maximum value for any bid is $100,000</li>
+                <li>From the 2nd bid onward, bids are subject to incrementation based on the value of the current lowest bid
+                  as listed in the auction highlights bar
+                  <ul>
+                    <li><img class="status-bar" src="/media/images/status_bar.png" alt="Status bar">
+                  </ul>
+                </li>
+                </li>
+                <li>Bids above $25,000 can only be lowered in increments of $500</li>
+                <li>Bids between 10,000 and 25,000 can only be lowered in increments of $250</li>
+                <li>Bids below $10,000 and can only be lowered in increments of $250</li>
+                <li>The Traveling Therapist does not offer automatic/proxy bidding</li>
+                <li>Bids placed in the final minute of an auction add 60s to the timer and end of the auction to be fair to
+                  all therapists interested</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="heading6">
+            <button class="accordion-button text-weight-normal collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse6" aria-expanded="false" aria-controls="collapse6">
+              What is the reserve price?
+            </button>
+          </h2>
+          <div id="collapse6" class="accordion-collapse collapse" aria-labelledby="heading6" data-bs-parent="#secondaryAccordian">
+            <div class="accordion-body text-weight-light">
+              <ul>
+                <li>The reserve price is a fixed bar that the clinic has the choice to set or not set when creating their
+                  auction.</li>
+                <li>If set, the reserve price is a fixed value defined as the maximum amount a clinic is willing to pay a
+                  therapist to cover the temporary posted that has been listed.</li>
+                <li>If a reserve price is not met (by therapists posting lower and lower bids) by the auction end date, the
+                  auction is closed, and NO winner/match is assigned.</li>
+                <li>Therapists bidding and the clinic are notified by email indicating the end of the auction, but with an
+                  unmet reserve price.</li>
+                <li>In our experience, auctions <u><i>without</i></u> reserve prices generally tend to attract more bidders,
+                  but of course we leave the decision to or not to set a reserve price up to the clinic creating the listing.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="heading7">
+            <button class="accordion-button text-weight-normal collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse7" aria-expanded="false" aria-controls="collapse7">
+              I created my ad for a temporary position, why don't I see my ad on the site?
+            </button>
+          </h2>
+          <div id="collapse7" class="accordion-collapse collapse" aria-labelledby="heading7" data-bs-parent="#secondaryAccordian">
+            <p class="accordion-body text-weight-light">
+              Before any auction can go live on our site, our team reviews the ad/posting contents and connects with you as
+              the clinic
+              owner to collect a payment method which we use to pay for your auction upon matching with the lowest bidder.
+              <br /><br />
+              This serves the dual function of ensuring all our ads are for actual positions available and ensures that
+              therapists can
+              only bid on auctions that meet their scope of practice.
+              <br /><br />
+              Approval generally takes 24-48h from the time you created the auction and you will receive an email from us when
+              your
+              auction is live!
+            </p>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="heading8">
+            <button class="accordion-button text-weight-normal collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse8" aria-expanded="false" aria-controls="collapse8">
+              How is my total cost calculated for fee split auctions?
+            </button>
+          </h2>
+          <div id="collapse8" name="collapse8" class="accordion-collapse collapse" aria-labelledby="heading8" data-bs-parent="#secondaryAccordian">
+            <p class="accordion-body text-weight-light">
+              Clinics are invoiced $25+HST per day the contract is set to cover for, inclusive of the start and end date. This means if the coverage is for 8 weeks, the invoice would be $1,400+HST (25/day *56 days). Fee split auctions have the same floor and ceiling prices as fixed fee auctions at $300+HST and $5,000+HST respectively. This means any fee split posting shorter than 12 days of coverage are still invoiced $300+HST and those longer than 200 days are invoiced $5,000+HST.
+              <br><br>
+              Please note that the number of days of coverage does not necessarily equal the number of days you have your healthcare worker set to work for. In the above example, the coverage and invoice total is 56 days. Irrespective of how many of those days you have your worker set to work for.
+            </p>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="heading9">
+            <button class="accordion-button text-weight-normal collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse9" aria-expanded="false" aria-controls="collapse9">
+              How does the matching process work?
+            </button>
+          </h2>
+          <div id="collapse9" class="accordion-collapse collapse" aria-labelledby="heading9" data-bs-parent="#secondaryAccordian">
+            <p class="accordion-body text-weight-light">
+              The Traveling Therapist matches the lowest bidding therapist and the clinic within 48h of a match via email.
+              This is the handoff process, from which point finances are handled outside of The Traveling Therapist. Note that
+              therapists attempting to contact the clinic directly can be banned from the service as outlined in the
+              <span type="button" data-bs-toggle="modal" data-bs-target="#tandcModalAbout1" class="mb-0 text-primary-colour">Terms & Conditions</span>.
+              {% include 'auction/modal_terms_and_conditions.html' with id='tandcModalAbout1' %}
+            </p>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="heading10">
+            <button class="accordion-button text-weight-normal collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse10" aria-expanded="false" aria-controls="collapse10">
+              How do I bid?
+            </button>
+          </h2>
+          <div id="collapse10" class="accordion-collapse collapse" aria-labelledby="heading10" data-bs-parent="#secondaryAccordian">
+            <div class="col-md-6 m-3">
+              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#videoModalTwo">
+                <img class="img-fluid bg-white" src="/media/images/how_to_bid_as_a_therapist_screenshot.png">
+              </button>
+              <div class="modal fade" id="videoModalTwo" tabindex="-1" aria-labelledby="videoModalTwoLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="videoModalTwoLabel">How to create a listing</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <iframe width="100%" height="415" src="https://www.youtube.com/embed/IE6vYY2Xx3E" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="heading11">
+            <button class="accordion-button text-weight-normal collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse11" aria-expanded="false" aria-controls="collapse11">
+              What information is stored/saved by The Traveling Therapist?
+            </button>
+          </h2>
+          <div id="collapse11" class="accordion-collapse collapse" aria-labelledby="heading11" data-bs-parent="#secondaryAccordian">
+            <p class="accordion-body text-weight-light">
+              We store information, privately and encrypted on our end. We only share therapist contact information with the
+              clinic if you're the lowest bidding therapist at the end of an auction. See full details with our
+              <span type="button" data-bs-toggle="modal" data-bs-target="#privacyModaAbout2" class="text-primary-colour">Privacy Policy</span>.
+              {% include 'auction/modal_privacy_policy.html' with id='privacyModaAbout2' %}
+            </p>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="heading12">
+            <button class="accordion-button text-weight-normal collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse12" aria-expanded="false" aria-controls="collapse12">
+              I see auctions for other provinces, can I place bids on those auctions too?
+            </button>
+          </h2>
+          <div id="collapse12" class="accordion-collapse collapse" aria-labelledby="heading12" data-bs-parent="#secondaryAccordian">
+            <p class="accordion-body text-weight-light">
+              Check with your professional governing body and insurance provider first. Some professions allow this, while
+              others do not. The Traveling Therapist allows bids on auctions outside of your province, but the responsibility
+              is on the therapist to ensure they are legally able to perform that work that they are bidding on. See full
+              details on your responsibilities as a bidder in our
+              <span type="button" data-bs-toggle="modal" data-bs-target="#tandcModalAbout2" class="mb-0 text-primary-colour">Terms & Conditions</span>.
+              {% include 'auction/modal_terms_and_conditions.html' with id='tandcModalAbout2' %}
+            </p>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="heading13">
+            <button class="accordion-button text-weight-normal collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse13" aria-expanded="false" aria-controls="collapse13">
+              I am an unregulated Healthcare Professional. What do I need to know before using The Traveling Therapist?
+            </button>
+          </h2>
+          <div id="collapse13" class="accordion-collapse collapse" aria-labelledby="heading13" data-bs-parent="#secondaryAccordian">
+            <p class="accordion-body text-weight-light">
+              Please see our <a href="https://www.youtube.com/watch?v=CHEZcJaw49E&t=5s" target="_blank">FAQ video</a> to understand how "The Traveling Therapist" service works.
+              <br><br>
+              The process for using The Traveling Therapist is much the same as it would be for a regulated Healthcare worker. A consideration we have come across for some using our service is the fact that you might work as both a PTA and a PSW. If this is the case, you will need to create a separate account for each user type when using The Traveling Therapist. This is because a PTA cannot bid on a PSW posting, and vice versa.
+              <br><br>
+              Please ensure you read the <a data-bs-toggle="modal" data-bs-target="#tandcModal" class="mb-0">Terms & Conditions</a> so you understand your responsibilities in advance of using our service. This includes ensuring you are register as the correct user type when you sign up to ensure you can only bid on auctions relevant to you.
+            </p>
           </div>
         </div>
       </div>
     </div>
   </div>
-
-  <div class="accordion-item">
-    <h2 class="accordion-header" id="heading5">
-      <button class="accordion-button text-weight-normal collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse5" aria-expanded="false" aria-controls="collapse5">
-        What are your fees?
-      </button>
-    </h2>
-    <div id="collapse5" class="accordion-collapse collapse" aria-labelledby="heading5" data-bs-parent="#therapistAccordian">
-      <p class="accordion-body text-weight-light">
-        Clinics post ads for free. Therapists bid for free. The traveling therapist charges a 5% fee based on the lowest
-        bidder contract value of any completed auction. We charge a maximum of $5,000+HST/tax per transaction for large
-        auctions and a $300+HST/tax minimum.
-      </p>
-    </div>
-  </div>
-  <div class="accordion-item">
-    <h2 class="accordion-header" id="heading6">
-      <button class="accordion-button text-weight-normal collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse6" aria-expanded="false" aria-controls="collapse6">
-        What information is stored/saved by The Traveling Therapist?
-      </button>
-    </h2>
-    <div id="collapse6" class="accordion-collapse collapse" aria-labelledby="heading6" data-bs-parent="#therapistAccordian">
-      <p class="accordion-body text-weight-light">
-        We store information, privately and encrypted on our end. We only share therapist contact information with the
-        clinic if you're the lowest bidding therapist at the end of an auction. See full details with our
-        <span type="button" data-bs-toggle="modal" data-bs-target="#privacyModaAbout2" class="text-primary-colour">Privacy Policy</span>.
-        {% include 'auction/modal_privacy_policy.html' with id='privacyModaAbout2' %}
-      </p>
-    </div>
-  </div>
-  <div class="accordion-item">
-    <h2 class="accordion-header" id="heading7">
-      <button class="accordion-button text-weight-normal collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse7" aria-expanded="false" aria-controls="collapse7">
-        I see auctions for other provinces, can I place bids on those auctions too?
-      </button>
-    </h2>
-    <div id="collapse7" class="accordion-collapse collapse" aria-labelledby="heading7" data-bs-parent="#therapistAccordian">
-      <p class="accordion-body text-weight-light">
-        Check with your professional governing body and insurance provider first. Some professions allow this, while
-        others do not. The Traveling Therapist allows bids on auctions outside of your province, but the responsibility
-        is on the therapist to ensure they are legally able to perform that work that they are bidding on. See full
-        details on your responsibilities as a bidder in our
-        <span type="button" data-bs-toggle="modal" data-bs-target="#tandcModalAbout2" class="mb-0 text-primary-colour">Terms & Conditions</span>.
-        {% include 'auction/modal_terms_and_conditions.html' with id='tandcModalAbout2' %}
-      </p>
-    </div>
-  </div>
-  <div class="accordion-item">
-    <h2 class="accordion-header" id="heading8">
-      <button class="accordion-button text-weight-normal collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse8" aria-expanded="false" aria-controls="collapse8">
-        What happens at end of the auction?
-      </button>
-    </h2>
-    <div id="collapse8" class="accordion-collapse collapse" aria-labelledby="heading8" data-bs-parent="#therapistAccordian">
-      <div class="accordion-body text-weight-light">
-        <ul>
-          <li>The Traveling Therapist will connect the lowest bidder and the clinic via email</li>
-          <li>Therapist provides proof of insurance to clinic</li>
-          <li>Therapist and clinic reach an agreement and confirm payment method for the work term. This is not the
-            responsibility of The Traveling Therapist</li>
-          <li>Share your auction and clinic meeting experience with The Traveling Therapist so we can share with others
-            in your shoes!</li>
-        </ul>
-        <p>Past auctions (closed or not) are available for all to see forever, regardless of price.</p>
-      </div>
-    </div>
-  </div>
-  <div class="accordion-item">
-    <h2 class="accordion-header" id="heading9">
-      <button class="accordion-button text-weight-normal collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse9" aria-expanded="false" aria-controls="collapse9">
-        Bidding Specifics & Incrementation
-      </button>
-    </h2>
-    <div id="collapse9" class="accordion-collapse collapse" aria-labelledby="heading9" data-bs-parent="#therapistAccordian">
-      <div class="accordion-body text-weight-light">
-        <ul>
-          <li>Auctions are setup for convenience and ease of understanding for all users of the traveling therapist with
-            the below parameters in place. Recall that bids represent the total value the therapist is willing to accept
-            to complete the temporary job as posted by the clinic.</li>
-          <li>Therapists may only bid whole dollar values</li>
-          <li>The maximum value for any bid is $100,000</li>
-          <li>From the 2nd bid onward, bids are subject to incrementation based on the value of the current lowest bid
-            as listed in the auction highlights bar
-            <ul>
-              <li><img class="status-bar" src="/media/images/status_bar.png" alt="Status bar">
-            </ul>
-          </li>
-          </li>
-          <li>Bids above $25,000 can only be lowered in increments of $500</li>
-          <li>Bids between 10,000 and 25,000 can only be lowered in increments of $250</li>
-          <li>Bids below $10,000 and can only be lowered in increments of $250</li>
-          <li>The Traveling Therapist does not offer automatic/proxy bidding</li>
-          <li>Bids placed in the final minute of an auction add 60s to the timer and end of the auction to be fair to
-            all therapists interested</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-  <div class="accordion-item">
-    <h2 class="accordion-header" id="heading10">
-      <button class="accordion-button text-weight-normal collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse10" aria-expanded="false" aria-controls="collapse10">
-        What if a therapist backs out after being the lowest bidder?
-      </button>
-    </h2>
-    <div id="collapse10" class="accordion-collapse collapse" aria-labelledby="heading10" data-bs-parent="#therapistAccordian">
-      <div class="accordion-body text-weight-light">
-        <ul>
-          <li>The Traveling Therapist will email the winning therapist after the auction closes.</li>
-          <li>The therapist has 48h from the time stamped on our email to respond to the clinic via email and confirm
-            their intention to complete the work term.</li>
-          <li>IF the therapist does not respond within 48h of a match, The Traveling Therapist engages in the following
-            process:</li>
-          <ol type="a">
-            <li>We (The Traveling Therapist) attempt to contact the therapist user to inquire about the nature of their
-              back out from the auction.</li>
-            <li>If no response from the therapist user, their account is banned, and the therapist must reach out to The
-              Traveling Therapist to re-activate their account.</li>
-            <li>If a response from the therapist, and we deem the response reasonable, we issue a warning to the
-              therapist and advise them that an additional back out results in a ban on their account.</li>
-            <li>The Traveling Therapist takes auction fraud and users who attempt to sabotage an auction very seriously.
-              Users abusing The Traveling Therapist will be removed and unable to use our services in the future.</li>
-          </ol>
-        </ul>
-      </div>
-    </div>
-  </div>
+  <!-- End Outside Accordian -->
 </div>
-<!-- Therapist Accordian End -->
-
-<h3 id="unregulatedFAQ" class="mt-5">Unregulated Healthcare Professionals</h3>
-<!-- Unregulated Accordian Start -->
-<div class="accordion" id="unregulatedAccordian">
-  <div class="accordion-item">
-    <h2 class="accordion-header" id="heading1">
-      <button class="accordion-button text-weight-normal" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1" aria-expanded="true" aria-controls="collapse1">
-        I am an unregulated Healthcare Professional. What do I need to know before using The Traveling Therapist?
-      </button>
-    </h2>
-    <div id="collapse1" class="accordion-collapse collapse show" aria-labelledby="heading1" data-bs-parent="#unregulatedAccordian">
-      <p class="accordion-body text-weight-light">
-        Please see our <a href="https://www.youtube.com/watch?v=CHEZcJaw49E&t=5s" target="_blank">FAQ video</a> to understand how "The Traveling Therapist" service works.
-        <br><br>
-        The process for using The Traveling Therapist is much the same as it would be for a regulated Healthcare worker. A consideration we have come across for some using our service is the fact that you might work as both a PTA and a PSW. If this is the case, you will need to create a separate account for each user type when using The Traveling Therapist. This is because a PTA cannot bid on a PSW posting, and vice versa.
-        <br><br>
-        Please ensure you read the <a data-bs-toggle="modal" data-bs-target="#tandcModal" class="mb-0">Terms & Conditions</a> so you understand your responsibilities in advance of using our service. This includes ensuring you are register as the correct user type when you sign up to ensure you can only bid on auctions relevant to you.
-      </p>
-    </div>
-  </div>
-</div>
-<!-- Unregulated Accordian End -->
 
 <!-- Content End -->
 <script src="{% static 'auction/faq.js' %}"></script>
