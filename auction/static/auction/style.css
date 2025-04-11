@@ -426,6 +426,16 @@ ol {
     width: 50%;
 }
 
+/* Mission & Vision Page */
+.missionVisionTitle {
+    color: var(--primary-colour);
+}
+
+#howItWorksButton {
+    width: 50%;
+    margin: auto;
+}
+
 /**************************** 6. MISC ****************************/
 .nav-link {
     color: var(--dark-colour);

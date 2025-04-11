@@ -207,6 +207,9 @@ def faq(request):
 def how_it_works(request):
     return render(request, 'auction/how_it_works.html', {'path': 'how-it-works'})
 
+def mission_vision(request):
+    return render(request, 'auction/mission_vision.html', {'path': 'mission-vision'})
+
 def cookie_policy(request):
     return render(request, 'auction/cookie_policy.html', {})
 
