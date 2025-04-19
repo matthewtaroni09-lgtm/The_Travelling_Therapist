@@ -53,14 +53,40 @@
     </div>
   </div> -->
   <!-- End How does an auction work? -->
-  <!-- Start What are the fees? -->
+  <!-- Start What happens at the end of an auction? -->
   <div class="accordion-item">
     <h2 class="accordion-header" id="headingD">
       <button class="accordion-button text-weight-normal collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseD" aria-expanded="false" aria-controls="collapseD">
-        What are your fees?
+        How does the matching process work?
       </button>
     </h2>
     <div id="collapseD" class="accordion-collapse collapse" aria-labelledby="headingD" data-bs-parent="#mainAccordian">
+      <div class="accordion-body text-weight-light">
+        <ol>
+          <li>The Traveling Therapist will connect the lowest bidder and the clinic via email</li>
+          <li>The clinic and clinician confirm necessary startup documents (insurance, agreed upon method of payment) directly once connected.</li>
+        </ol>
+        <br>
+        <b>Please Note:</b>
+        <ol>
+          <li>All finances for the position are handled outside of The Traveling Therapist platform.</li>
+          <li>Clinicians attempting to contact the clinic/facility directly can be banned from the service as outlined in the <a href="{% url 'terms-and-conditions' %}">Terms & Conditions</a>.</li>
+          <li>Past auctions are available for all to see, forever, regardless of price.</li>
+        </ol>
+        <br>
+        <p>Be sure to share your experience using The Traveling Therapist with us so we can share it with others in your shoes too!</p>
+      </div>
+    </div>
+  </div>
+  <!-- End What happens at the end of an auction? -->
+  <!-- Start What are the fees? -->
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="headingE">
+      <button class="accordion-button text-weight-normal collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseE" aria-expanded="false" aria-controls="collapseE">
+        What are your fees?
+      </button>
+    </h2>
+    <div id="collapseE" class="accordion-collapse collapse" aria-labelledby="headingE" data-bs-parent="#mainAccordian">
       <p class="accordion-body text-weight-light">
         Healthcare facilities post ads for free. Clinicians bid for free.
         <br><br>
@@ -71,32 +97,6 @@
     </div>
   </div>
   <!-- End What are the fees? -->
-  <!-- Start What happens at the end of an auction? -->
-  <div class="accordion-item">
-    <h2 class="accordion-header" id="headingE">
-      <button class="accordion-button text-weight-normal collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseE" aria-expanded="false" aria-controls="collapseE">
-        What happens at end of the auction?
-      </button>
-    </h2>
-    <div id="collapseE" class="accordion-collapse collapse" aria-labelledby="headingE" data-bs-parent="#mainAccordian">
-      <div class="accordion-body text-weight-light">
-        <ol>
-          <li>The Traveling Therapist will connect the lowest bidder and the clinic via email</li>
-          <li>The clinic and clinician confirm necessary startup documents (insurance, agreed upon method of payment) directly once connected.</li>
-        </ol>
-        <br>
-        <b>Please Note:</b>
-        <ol>
-          <li>All finances for the position are handled outside of The Traveling Therapist platform.</li>
-          <li>Clinicians attempting to contact the clinic/facility directly can be banned from the service as outlined in the Terms & Conditions.</li>
-          <li>Past auctions are available for all to see, forever, regardless of price.</li>
-        </ol>
-        <br>
-        <p>Be sure to share your experience using The Traveling Therapist with us so we can share it with others in your shoes too!</p>
-      </div>
-    </div>
-  </div>
-  <!-- End What happens at the end of an auction? -->
   <!-- Start What if a therapist backs out -->
   <div class="accordion-item">
     <h2 class="accordion-header" id="headingF">
@@ -154,23 +154,6 @@
     </h2>
     <div id="collapseOutside" class="accordion-collapse collapse" aria-labelledby="headingOutside" data-bs-parent="#outsideSecondaryAccordian">
       <div class="accordion" id="secondaryAccordian">
-        <div class="accordion-item">
-          <h2 class="accordion-header" id="heading1">
-            <button class="accordion-button text-weight-normal collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1" aria-expanded="false" aria-controls="collapse1">
-              How does the matching process work?
-            </button>
-          </h2>
-          <div id="collapse1" class="accordion-collapse collapse" aria-labelledby="heading1" data-bs-parent="#secondaryAccordian">
-            <p class="accordion-body text-weight-light">
-              The Traveling Therapist matches the lowest bidding clinician and the healthcare facility within 48h of a match via email.
-              This is the
-              handoff process, from which point finances are handled outside of The Traveling Therapist. Note that clinicians
-              attempting to contact the healthcare facility directly can be banned from the service as outlined in the
-              <span type="button" data-bs-toggle="modal" data-bs-target="#tandcModalAbout1" class="mb-0 text-primary-colour">Terms & Conditions</span>.
-              {% include 'auction/modal_terms_and_conditions.html' with id='tandcModalAbout1' %}
-            </p>
-          </div>
-        </div>
         <div class="accordion-item">
           <h2 class="accordion-header" id="heading2">
             <button class="accordion-button text-weight-normal collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2" aria-expanded="false" aria-controls="collapse2">
@@ -242,7 +225,7 @@
             <div class="accordion-body text-weight-light">
               <ul>
                 <li>The reserve price is an optional field available to healthcare facilities when creating a posting.</li>
-                <li>The reserve price is the maximum amount a healthcare facility is willing to pay a clinician to cover the temporary posted that has been listed.</li>
+                <li>The reserve price is the maximum amount a clinic is willing to pay a clinician to cover the temporary posting that has been listed.</li>
                 <li>If a reserve price is not met by the posting end date, the posting is closed, and NO winner/match is assigned. All clinicians with offers and the healthcare facility that posted the position are notified by email indicating that the reserve price was not met.</li>
                 <li>In our experience, auctions without reserve prices generally tend to attract more bidders, but we leave the decision to or not to set a reserve price up to the facility creating the posting.</li>
               </ul>
@@ -282,22 +265,6 @@
               Healthcare facilities are invoiced $25+HST per day the contract is set to cover for, inclusive of the start and end date. This means if the coverage is for 8 weeks, the invoice would be $1,400+HST (25/day *56 days). Fee split auctions have the same floor and ceiling prices as fixed fee auctions at $300+HST and $5,000+HST respectively. This means any fee split posting shorter than 12 days of coverage are still invoiced $300+HST and those longer than 200 days are invoiced $5,000+HST.
               <br><br>
               Please note that the number of days of coverage does not necessarily equal the number of days you have your healthcare worker set to work for. In the above example, the coverage and invoice total is 56 days. Irrespective of how many of those days you have your worker set to work for.
-            </p>
-          </div>
-        </div>
-        <div class="accordion-item">
-          <h2 class="accordion-header" id="heading9">
-            <button class="accordion-button text-weight-normal collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse9" aria-expanded="false" aria-controls="collapse9">
-              How does the matching process work?
-            </button>
-          </h2>
-          <div id="collapse9" class="accordion-collapse collapse" aria-labelledby="heading9" data-bs-parent="#secondaryAccordian">
-            <p class="accordion-body text-weight-light">
-              The Traveling Therapist matches the lowest bidding clinician and the healthcare facility within 48h of a match via email.
-              This is the handoff process, from which point finances are handled outside of The Traveling Therapist. Note that
-              clinicians attempting to contact the healthcare facility directly can be banned from the service as outlined in the
-              <span type="button" data-bs-toggle="modal" data-bs-target="#tandcModalAbout1" class="mb-0 text-primary-colour">Terms & Conditions</span>.
-              {% include 'auction/modal_terms_and_conditions.html' with id='tandcModalAbout1' %}
             </p>
           </div>
         </div>
