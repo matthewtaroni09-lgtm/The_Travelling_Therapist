@@ -9,3 +9,4 @@ The_Travelling_Therapist\auction\migrations\0010_remove_auction_auctionnumber1_a
 warning.log
 venv
 .vscode
+auction/migrations/
