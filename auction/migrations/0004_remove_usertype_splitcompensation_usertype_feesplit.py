@@ -10,14 +10,14 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='usertype',
-            name='splitCompensation',
-        ),
-        migrations.AddField(
-            model_name='usertype',
-            name='feeSplit',
-            field=models.BooleanField(default=True, help_text='If checked this user type will be allowed to select fee split as a payment type.', verbose_name='Allowed Fee Split'),
-            preserve_default=False,
-        ),
+        # migrations.RemoveField(
+        #     model_name='usertype',
+        #     name='splitCompensation',
+        # ),
+        # migrations.AddField(
+        #     model_name='usertype',
+        #     name='feeSplit',
+        #     field=models.BooleanField(default=True, help_text='If checked this user type will be allowed to select fee split as a payment type.', verbose_name='Allowed Fee Split'),
+        #     preserve_default=False,
+        # ),
     ]

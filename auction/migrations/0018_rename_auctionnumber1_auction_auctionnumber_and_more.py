@@ -11,10 +11,10 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AddField(
-            model_name='adminsetting',
-            name='endAuctionEmailBatchSize',
-            field=models.IntegerField(default=1, help_text='At the end of an auction emails will be sent to user with the same type as the auction. To avoid spamming email batches are limited to this number.', verbose_name='End of Auction Email Batch Size'),
-            preserve_default=False,
-        )
+        # migrations.AddField(
+        #     model_name='adminsetting',
+        #     name='endAuctionEmailBatchSize',
+        #     field=models.IntegerField(default=1, help_text='At the end of an auction emails will be sent to user with the same type as the auction. To avoid spamming email batches are limited to this number.', verbose_name='End of Auction Email Batch Size'),
+        #     preserve_default=False,
+        # )
     ]

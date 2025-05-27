@@ -10,8 +10,8 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RenameModel(
-            old_name='AdminSettings',
-            new_name='AdminSetting',
-        ),
+        # migrations.RenameModel(
+        #     old_name='AdminSettings',
+        #     new_name='AdminSetting',
+        # ),
     ]

@@ -10,9 +10,9 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AddField(
-            model_name='popupmessage',
-            name='clickID',
-            field=models.CharField(blank=True, help_text='The ID for the item being clicked to trigger the pop-up. For non-clickable messages leave blank.', max_length=5000, null=True, verbose_name='Clickable Item ID'),
-        ),
+        # migrations.AddField(
+        #     model_name='popupmessage',
+        #     name='clickID',
+        #     field=models.CharField(blank=True, help_text='The ID for the item being clicked to trigger the pop-up. For non-clickable messages leave blank.', max_length=5000, null=True, verbose_name='Clickable Item ID'),
+        # ),
     ]

@@ -10,10 +10,10 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AddField(
-            model_name='adminsettings',
-            name='defaultAuctionLength',
-            field=models.IntegerField(default=5000, help_text='Auctions will be set to this length, in seconds.', verbose_name='Default Auction Length in Seconds'),
-            preserve_default=False,
-        ),
+        # migrations.AddField(
+        #     model_name='adminsettings',
+        #     name='defaultAuctionLength',
+        #     field=models.IntegerField(default=5000, help_text='Auctions will be set to this length, in seconds.', verbose_name='Default Auction Length in Seconds'),
+        #     preserve_default=False,
+        # ),
     ]
