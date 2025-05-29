@@ -60,24 +60,24 @@ class AuctionAdmin(admin.ModelAdmin):
             
             # Email users of the auction type that there is a new auction available for bidding
             link  = ""
-            if ENVIRONMENT == "DEV":
-                link = DEV_LINK + "/auction/" + str(auction.auctionID)
-            else:
-                link = PROD_LINK + "/auction/" + str(auction.auctionID)
+            # if ENVIRONMENT == "DEV":
+            #     link = DEV_LINK + "/auction/" + str(auction.auctionID)
+            # else:
+            #     link = PROD_LINK + "/auction/" + str(auction.auctionID)
 
-            for account in accounts:
-                try:
-                    send_mail(
-                        subject = "NEW AUCTION - The Traveling Therapist",
-                        message = "",
-                        html_message = emails.new_auction_email_to_all(account.user__first_name, account.user__last_name, link, auction.placementStart, auction.placementEnd, auction.paymentType),
-                        from_email = settings.EMAIL_HOST_USER,
-                        # bcc = ('info@travelingtherapist.ca',),
-                        bcc = ('loribine@gmail.com',),
-                        recipient_list = (account.user__email,'loribine@gmail.com',)
-                    )
-                except BadHeaderError:
-                        return HttpResponse('Invalid header found.')
+            # for account in accounts:
+            #     try:
+            #         send_mail(
+            #             subject = "NEW AUCTION - The Traveling Therapist",
+            #             message = "",
+            #             html_message = emails.new_auction_email_to_all(account.user__first_name, account.user__last_name, link, auction.placementStart, auction.placementEnd, auction.paymentType),
+            #             from_email = settings.EMAIL_HOST_USER,
+            #             # bcc = ('info@travelingtherapist.ca',),
+            #             bcc = ('loribine@gmail.com',),
+            #             recipient_list = (account.user__email,'loribine@gmail.com',)
+            #         )
+            #     except BadHeaderError:
+            #             return HttpResponse('Invalid header found.')
             
         super().save_model(request, obj, form, change)
 
