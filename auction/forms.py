@@ -334,7 +334,7 @@ class UserFormClinic(forms.ModelForm):
             raise forms.ValidationError(error_list)
 
 class UserFormTherapist(forms.ModelForm):
-    user_email = forms.EmailField()
+    # user_email = forms.EmailField()
     class Meta:
         model = User
         fields = ['first_name', 'last_name', 'email']
