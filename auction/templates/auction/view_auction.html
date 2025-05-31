@@ -67,7 +67,7 @@
                 {{ form.amount|as_crispy_field }}
                 {% else %}
                 <div class="slidecontainer">
-                  <input type="range" min="0" max="100" value={{ auction.get_bid_number }} class="slider" id="bidSlider" name="bidSlider">
+                  <input type="range" min="0" max="100" value={{ auction.get_bid_number }} class="slider" id="bidSlider" name="amount">
                   <p>Value: <span id="demo">{{ auction.get_bid_number }}</span>%</p>
                 </div>
                 {% endif %}
@@ -77,6 +77,7 @@
               {% endif %}
               <div id="warningMessage" class="alert" role="alert"></div>
               {% if payment_type == "Fee Split" %}
+              <p>{{ auction.get_max_bid }}</p>
               <div class="alert alert-light" role="alert">
                 <p><i>The % you are bidding is the % YOU wish to receive as a healthcare professional. Example: if you bid 60%, you would like 60% of the fee for each patient/client you see in a day. The clinic would receive the remaining 40%.</i></p>
               </div>

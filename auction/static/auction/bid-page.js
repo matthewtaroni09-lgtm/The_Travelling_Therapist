@@ -77,8 +77,17 @@ $(document).ready(function () {
 
             if (currentLowBid == 1) {
                 $("#submitBidButton").prop("disabled", true);
-                $("#id_amount").prop("disabled", true);
-                $("#id_amount").attr('placeholder', 'Lowest Bid Reached');
+                // Flat Fee
+                if(paymentType === "Flat Fee"){
+                    $("#id_amount").prop("disabled", true);
+                    $("#id_amount").attr('placeholder', 'Lowest Bid Reached');
+                }
+                // Fee Split
+                else{
+                    $("#bidSlider").prop("disabled", true);
+                    // Make the slider look greyed out
+                    $("#bidSlider").css("opacity", .4);
+                }
             }
         },
         error: function (error) {
@@ -107,6 +116,9 @@ $(document).ready(function () {
         else if (parseInt($("#id_amount").val()) > 100 && paymentType === "Fee Split") {
             bidError("Danger", "Bids must be less than 100%.");
         }
+        else if(parseInt($("#id_amount").val()) > max_bid){
+            bidError("Danger", "Bids must be less than the Next Available Bid, $" + max_bid.toLocaleString() + ".");
+        }
         else {
             $("#submitBidButton").prop("disabled", false);
         }
@@ -119,6 +131,12 @@ $(document).ready(function () {
         $('#demo').text($("#bidSlider").val());
         if (parseInt($("#bidSlider").val()) > currentLowBid && currentLowBid !== 0 && currentLowBid !== null) {
             bidError("Warning", "Your bid is over the current minimum bid and will not be considered for determing the winner of the auction. Click Submit if you would like to proceed anyway.");
+        }
+        else if (parseInt($("#bidSlider").val()) === 0) {
+            bidError("Danger", "Bids must be above 0%.");
+        }
+        else {
+            $("#submitBidButton").prop("disabled", false);
         }
     });
 

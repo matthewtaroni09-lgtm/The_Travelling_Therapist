@@ -221,19 +221,20 @@ class BidForm(forms.ModelForm):
         model = Bid
         fields = ('amount', )
 
-    # def clean_amount(self):
-    #     amount = self.cleaned_data.get("amount")
-    #     print(str(amount) + "  " + str(self.max_bid))
-    #     if amount > 0 and amount > self.max_bid and self.max_bid != 0 and self.payment_type == 'Flat Fee':
-    #         raise forms.ValidationError("Bids must be less than the next bid increment  $" + str(self.min_bid_increment) + ".")
-    #     if amount == 0:
-    #         if self.payment_type == 'Fee Split':
-    #             raise forms.ValidationError("Bids must be greater than 0%.")
-    #         else:
-    #             raise forms.ValidationError("Bids must be greater than $0.")
-    #     if amount > 100 and self.payment_type == 'Fee Split':
-    #             raise forms.ValidationError("Bids must be less than 100%.")
-    #     return amount 
+    # This should be caught in JS validations but keep this here in case the user tries to get around front-end validations 
+    def clean_amount(self):
+        amount = self.cleaned_data.get("amount")
+        print(str(amount) + "  " + str(self.max_bid))
+        if amount > 0 and amount > self.max_bid and self.max_bid != 0 and self.payment_type == 'Flat Fee':
+            raise forms.ValidationError("Bids must be less than the next bid increment  $" + str(self.min_bid_increment) + ".")
+        if amount == 0:
+            if self.payment_type == 'Fee Split':
+                raise forms.ValidationError("Bids must be greater than 0%.")
+            else:
+                raise forms.ValidationError("Bids must be greater than $0.")
+        if amount > 100 and self.payment_type == 'Fee Split':
+                raise forms.ValidationError("Bids must be less than 100%.")
+        return amount 
 
 class RegisterAcount(UserCreationForm):
     first_name = forms.CharField(required=False)
