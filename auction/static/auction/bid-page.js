@@ -2,6 +2,7 @@ const URL = window.location.href;
 const auctionID = URL.substring(URL.lastIndexOf('/') + 1);
 let currentLowBid = 0;
 let paymentType = '';
+let minBidIncrement = 0;
 
 $(document).ready(function () {
     $("#warningMessage").hide();
@@ -69,6 +70,7 @@ $(document).ready(function () {
             auctionEnd = new Date(response.auctionEnd);
             reservePrice = response.reservePrice;
             paymentType = response.paymentType;
+            minBidIncrement = response.minimumBidIncrement;
 
             let currentTime = new Date().getTime()
             let subtractMilliSecondsValue = auctionEnd.getTime() - currentTime;
@@ -116,7 +118,7 @@ $(document).ready(function () {
         else if (parseInt($("#id_amount").val()) > 100 && paymentType === "Fee Split") {
             bidError("Danger", "Bids must be less than 100%.");
         }
-        else if(parseInt($("#id_amount").val()) > max_bid){
+        else if((parseInt($("#id_amount").val()) > max_bid)  && max_bid > 0){
             bidError("Danger", "Bids must be less than the Next Available Bid, $" + max_bid.toLocaleString() + ".");
         }
         else {
