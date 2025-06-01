@@ -104,8 +104,8 @@ $(document).ready(function () {
         if ($("#id_amount").val().includes(".")) {
             bidError("Danger", "Please enter only whole numbers.");
         }
-        else if (parseInt($("#id_amount").val()) > currentLowBid && currentLowBid !== 0 && currentLowBid !== null) {
-            bidError("Warning", "Your bid is over the current minimum bid and will not be considered for determing the winner of the auction. Click Submit if you would like to proceed anyway.");
+        else if (parseInt($("#id_amount").val()) >= currentLowBid && currentLowBid !== 0 && currentLowBid !== null) {
+            bidError("Warning", "Your bid is equal to or over the current minimum bid and will not be considered for determing the winner of the auction. Click Submit if you would like to proceed anyway.");
         }
         else if (parseInt($("#id_amount").val()) <= 0) {
             if (paymentType === "Fee Split") {
@@ -118,7 +118,7 @@ $(document).ready(function () {
         else if (parseInt($("#id_amount").val()) > 100 && paymentType === "Fee Split") {
             bidError("Danger", "Bids must be less than 100%.");
         }
-        else if((parseInt($("#id_amount").val()) > max_bid)  && max_bid > 0){
+        else if(((parseInt($("#id_amount").val()) < currentLowBid) && (parseInt($("#id_amount").val()) > max_bid))  && max_bid > 0){
             bidError("Danger", "Bids must be less than the Next Available Bid, $" + max_bid.toLocaleString() + ".");
         }
         else {
@@ -131,8 +131,8 @@ $(document).ready(function () {
         $("#warningMessage").removeClass("alert-warning");
         $("#warningMessage").removeClass("alert-danger");
         $('#demo').text($("#bidSlider").val());
-        if (parseInt($("#bidSlider").val()) > currentLowBid && currentLowBid !== 0 && currentLowBid !== null) {
-            bidError("Warning", "Your bid is over the current minimum bid and will not be considered for determing the winner of the auction. Click Submit if you would like to proceed anyway.");
+        if (parseInt($("#bidSlider").val()) >= currentLowBid && currentLowBid !== 0 && currentLowBid !== null) {
+            bidError("Warning", "Your bid is equal to or over the current minimum bid and will not be considered for determing the winner of the auction. Click Submit if you would like to proceed anyway.");
         }
         else if (parseInt($("#bidSlider").val()) === 0) {
             bidError("Danger", "Bids must be above 0%.");
