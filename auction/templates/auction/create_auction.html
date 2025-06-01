@@ -154,12 +154,12 @@
       </div>
 
       <!-- Schedule -->
-      <div class="mb-3">
+      <div id="scheduleTableDiv" class="mb-3">
         <h3 class="fs-5 my-3 text-weight-normal">Clinician Schedule <span class="text-weight-thin fs-6">*Leave day
             blank to indicate days the clinician will not be working</span>
         </h3>
 
-        <div class="input-group mb-3 align-items-center">
+        <div id="mondaySchedule" class="input-group mb-3 align-items-center">
           <span class="input-group-text me-3 mt-3 mt-md-4">Mon:</span>
           <div class="d-flex gap-3 mt-2 mt-sm-0">
             {{ form.mondayStart|as_crispy_field }}
@@ -167,7 +167,7 @@
             <button id="mondayClearButton" class="btn btn-primary clearButton mt-4" type="button">Clear</button>
           </div>
         </div>
-        <div class="input-group mb-3 align-items-center">
+        <div id="tuesdaySchedule" class="input-group mb-3 align-items-center">
           <span class="input-group-text me-3 mt-3 mt-md-4">Tue:</span>
           <div class="d-flex gap-3 mt-2 mt-sm-0">
             {{ form.tuesdayStart|as_crispy_field }}
@@ -175,7 +175,7 @@
             <button id="tuessdayClearButton" class="btn btn-primary clearButton mt-4" type="button">Clear</button>
           </div>
         </div>
-        <div class="input-group mb-3 align-items-center">
+        <div id="wednesdaySchedule" class="input-group mb-3 align-items-center">
           <span class="input-group-text me-3 mt-3 mt-md-4">Wed:</span>
           <div class="d-flex gap-3 mt-2 mt-sm-0">
             {{ form.wednesdayStart|as_crispy_field }}
@@ -183,7 +183,7 @@
             <button id="wednesdayClearButton" class="btn btn-primary clearButton mt-4" type="button">Clear</button>
           </div>
         </div>
-        <div class="input-group mb-3 align-items-center">
+        <div id="thursdaySchedule" class="input-group mb-3 align-items-center">
           <span class="input-group-text me-3 mt-3 mt-md-4">Thu:</span>
           <div class="d-flex gap-3 mt-2 mt-sm-0">
             {{ form.thursdayStart|as_crispy_field }}
@@ -191,7 +191,7 @@
             <button id="thursdayClearButton" class="btn btn-primary clearButton mt-4" type="button">Clear</button>
           </div>
         </div>
-        <div class="input-group mb-3 align-items-center">
+        <div id="fridaySchedule" class="input-group mb-3 align-items-center">
           <span class="input-group-text me-3 mt-3 mt-md-4">Fri:</span>
           <div class="d-flex gap-3 mt-2 mt-sm-0">
             {{ form.fridayStart|as_crispy_field }}
@@ -199,7 +199,7 @@
             <button id="fridayClearButton" class="btn btn-primary clearButton mt-4" type="button">Clear</button>
           </div>
         </div>
-        <div class="input-group mb-3 align-items-center">
+        <div id="saturdaySchedule" class="input-group mb-3 align-items-center">
           <span class="input-group-text me-3 mt-3 mt-md-4">Sat:</span>
           <div class="d-flex gap-3 mt-2 mt-sm-0">
             {{ form.saturdayStart|as_crispy_field }}
@@ -207,7 +207,7 @@
             <button id="saturdayClearButton" class="btn btn-primary clearButton mt-4" type="button">Clear</button>
           </div>
         </div>
-        <div class="input-group mb-3 align-items-center">
+        <div id="sundaySchedule" class="input-group mb-3 align-items-center">
           <span class="input-group-text me-3 mt-3 mt-md-4">Sun:</span>
           <div class="d-flex gap-3 mt-2 mt-sm-0">
             {{ form.sundayStart|as_crispy_field }}
