@@ -10,6 +10,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 from . import emails
 from The_Travelling_Therapist.settings import ENVIRONMENT, DEV_LINK, PROD_LINK
+from datetime import datetime, timedelta
 
 class BidInline(admin.TabularInline):
     model = Bid
@@ -60,24 +61,23 @@ class AuctionAdmin(admin.ModelAdmin):
             
             # Email users of the auction type that there is a new auction available for bidding
             link  = ""
-            # if ENVIRONMENT == "DEV":
-            #     link = DEV_LINK + "/auction/" + str(auction.auctionID)
-            # else:
-            #     link = PROD_LINK + "/auction/" + str(auction.auctionID)
+            if ENVIRONMENT == "DEV":
+                link = DEV_LINK + "/auction/" + str(auction.auctionID)
+            else:
+                link = PROD_LINK + "/auction/" + str(auction.auctionID)
 
-            # for account in accounts:
-            #     try:
-            #         send_mail(
-            #             subject = "NEW AUCTION - The Traveling Therapist",
-            #             message = "",
-            #             html_message = emails.new_auction_email_to_all(account.user__first_name, account.user__last_name, link, auction.placementStart, auction.placementEnd, auction.paymentType),
-            #             from_email = settings.EMAIL_HOST_USER,
-            #             # bcc = ('info@travelingtherapist.ca',),
-            #             bcc = ('loribine@gmail.com',),
-            #             recipient_list = (account.user__email,'loribine@gmail.com',)
-            #         )
-            #     except BadHeaderError:
-            #             return HttpResponse('Invalid header found.')
+            for account in accounts:
+                print(str(auction.paymentType))
+                try:
+                    send_mail(
+                        subject = "NEW AUCTION - The Traveling Therapist",
+                        message = "",
+                        html_message = emails.new_auction_email_to_all(account.user.first_name, account.user.last_name, link, str(auction.placementStart), str(auction.placementEnd), str(auction.paymentType), auction.clinic.clinicName, auction.clinic.city + ", " + auction.clinic.province, time_diff_from_now(auction.auctionEnd)),
+                        from_email = settings.EMAIL_HOST_USER,
+                        recipient_list = (account.user.email,)
+                    )
+                except BadHeaderError:
+                        return HttpResponse('Invalid header found.')
             
         super().save_model(request, obj, form, change)
 
@@ -186,3 +186,35 @@ def delete_bid(queryset):
         auction.minimumBidIncrement = min_increment
 
     auction.save()
+
+from datetime import timedelta
+from django.utils import timezone  # Use Django's timezone-aware "now"
+
+def time_diff_from_now(target_datetime):
+    now = timezone.now()  # timezone-aware
+    if timezone.is_naive(target_datetime):
+        # Make the target timezone-aware using current timezone
+        target_datetime = timezone.make_aware(target_datetime)
+
+    diff = target_datetime - now
+    total_seconds = int(diff.total_seconds())
+
+    if total_seconds < 0:
+        total_seconds = abs(total_seconds)
+        sign = "-"
+    else:
+        sign = ""
+
+    days = total_seconds // 86400
+    hours = (total_seconds % 86400) // 3600
+    minutes = (total_seconds % 3600) // 60
+
+    return f"{sign}{days} day{'s' if days != 1 else ''}, {hours} hour{'s' if hours != 1 else ''}, {minutes} minute{'s' if minutes != 1 else ''}"
+
+# Example usage
+from datetime import datetime
+
+# If you have a naive datetime
+future_time = datetime(2025, 6, 8, 15, 30)  # naive datetime
+print(time_diff_from_now(future_time))
+

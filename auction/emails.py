@@ -246,27 +246,36 @@ def auction_created_admin(clinicName, city, province, email, reservePrice, aucti
     message = message + email_footer
     return message
 
-def new_auction_email_to_all(first_name, last_name, link, start_date, end_date, payment_type):
+def new_auction_email_to_all(first_name, last_name, link, start_date, end_date, payment_type, clinic_name, clinic_location, time_remaining):
     payment_type_message = ""
-    if payment_type == "flat fee":
+    print("in email")
+    print(payment_type)
+    if payment_type == "Flat Fee":
       payment_type_message = "the price you're bidding is for the entire as posted, not your desired hourly rate!"
     else:
-      payment_type_message = "The fee split you're bidding is the percentage YOU want as a clinician for each patient you see."
+      payment_type_message = "the fee split you're bidding is the percentage YOU want as a clinician for each patient you see."
     message = email_header
     message = message + """<section style="font-size: 16px; margin-bottom: 4rem;">
   <p>Dear <span class="text-weight-bold">""" + first_name + """ """ + last_name + """</span>,</p>
   
   This is an email to let you know that a <a href=""" + link + """> new listing you can bid on </a> with the following details has been posted!
-  """ + start_date + """ - """ + end_date + """
-
+  <br><br>
+  <b>Placement Term:</b> """ + start_date + """ - """ + end_date + """
+  <br>
+  <b>Clinic Name:</b> """ + clinic_name + """
+  <br>
+  <b>Clinic Name:</b> """ + clinic_location + """
+  <br><br>
   The clock is ticking, so if you'd like to take the opening, bid away!
-  (auction time remaining) ** Ideally a running clock
-
+  <br>
+  There is currently """ + time_remaining + """ left in the auction.
+  <br><br>
   This auction is a """ + payment_type + """, so remember that """ + payment_type_message + """
-  
+  <br>
   Remember that The Traveling Therapist is always free to bid for clinicians and at the end of the auction that the clinic is matched with the LOWEST bidder.
 
     <p>Happy Bidding!</p>
+    <br>
     <p style="font-weight: 700; padding-top: 0rem; margin-top: 0; line-height: 0;">The Traveling Therapist Team</p>
 
 </section>"""
