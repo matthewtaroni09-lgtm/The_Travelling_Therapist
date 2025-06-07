@@ -167,38 +167,20 @@ class Auction(models.Model):
                 return 'Low Bid (HCP/Clinic): ' + str("{:,}".format(self.currentLowBid)) + '%'
             
     def get_bid_number(self):
-        print("in")
-        print(self.paymentType)
-        print(self.currentLowBid)
-
-        if self.currentLowBid is None:
-            print("current none")
-
-        if self.paymentType.name == "Fee Split":
-            print("fee split")
-        else:
-            print("NOT!")
-
         if self.currentLowBid is None and self.paymentType.name == "Flat Fee":
-            print("1")
             return 0
         elif self.currentLowBid is None and self.paymentType.name == "Fee Split":
-            print("flat fee 100")
             return 100
         elif self.reservePrice is not None and (self.closed == True and self.active == False and self.winningPrice > self.reservePrice):
-            print("2")
             return 0
         elif self.closed == True and self.active == False and self.winningPrice is not None:
-            print("3")
             if str(self.paymentType) == 'Flat Fee':
                 return self.winningPrice
             elif str(self.paymentType) == 'Fee Split':
                 return self.winningPrice
         elif self.closed == True and self.active == False and self.winningPrice is None:
-            print("4")
             return 0
         else:
-            print("5")
             if str(self.paymentType) == 'Flat Fee':
                 return self.currentLowBid
             elif str(self.paymentType) == 'Fee Split':
