@@ -11,6 +11,7 @@ from django.conf import settings
 from . import emails
 from The_Travelling_Therapist.settings import ENVIRONMENT, DEV_LINK, PROD_LINK
 from datetime import datetime, timedelta
+import time
 
 class BidInline(admin.TabularInline):
     model = Bid
@@ -66,19 +67,42 @@ class AuctionAdmin(admin.ModelAdmin):
             else:
                 link = PROD_LINK + "/auction/" + str(auction.auctionID)
 
+            email_count = 0
+            admin_setting = AdminSetting.objects.first()
+            batch_size = admin_setting.endAuctionEmailBatchSize
+
             for account in accounts:
                 print(str(auction.paymentType))
-                try:
-                    send_mail(
-                        subject = "NEW AUCTION - The Traveling Therapist",
-                        message = "",
-                        html_message = emails.new_auction_email_to_all(account.user.first_name, account.user.last_name, link, str(auction.placementStart), str(auction.placementEnd), str(auction.paymentType), auction.clinic.clinicName, auction.clinic.city + ", " + auction.clinic.province, time_diff_from_now(auction.auctionEnd)),
-                        from_email = settings.EMAIL_HOST_USER,
-                        recipient_list = (account.user.email,)
-                    )
-                except BadHeaderError:
+                if email_count < batch_size:
+                    try:
+                        send_mail(
+                            subject = "NEW AUCTION - The Traveling Therapist",
+                            message = "",
+                            html_message = emails.new_auction_email_to_all(account.user.first_name, account.user.last_name, link, str(auction.placementStart), str(auction.placementEnd), str(auction.paymentType), auction.clinic.clinicName, auction.clinic.city + ", " + auction.clinic.province, time_diff_from_now(auction.auctionEnd)),
+                            from_email = settings.EMAIL_HOST_USER,
+                            recipient_list = (account.user.email, "loribine@gmail.com")
+                        )
+                    except BadHeaderError:
+                            return HttpResponse('Invalid header found.')
+                    email_count += 1
+                    # time.sleep(5)
+                else:
+                    missing_email_string = ""
+                    for account in accounts[email_count:]:
+                        print(account)
+                        missing_email_string += str(account) + "<br>"
+                    try:
+                        send_mail(
+                            subject = "**ADMIM COPY** New Auction Batch Total Surpassed",
+                            message = "",
+                            html_message = "The total number of emails that can be sent has been surpassed. The total number of emails to send was " + str(len(accounts)) + " and the max that can be sent is " + str(batch_size) + ". <br><br> The following people did not get emails: <br>" + missing_email_string,
+                            from_email = settings.EMAIL_HOST_USER,
+                            recipient_list = ('loribine@gmail.com',)
+                            # recipient_list = ('info@travelingtherapist.ca',)
+                        )
+                    except BadHeaderError:
                         return HttpResponse('Invalid header found.')
-            
+                    break            
         super().save_model(request, obj, form, change)
 
 @admin.register(Bid)
