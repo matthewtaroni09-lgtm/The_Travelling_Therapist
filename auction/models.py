@@ -319,7 +319,7 @@ class AdminSetting(models.Model):
     sendEmails = models.BooleanField(verbose_name='Send Emails', help_text='Turns on and off emails. If checked emails will send.')
     numAllowedAuctions = models.IntegerField(verbose_name='# Allowed Auctions', help_text='Global setting for max number of active auctions')
     defaultAuctionLength = models.IntegerField(verbose_name='Default Auction Length in Seconds', help_text='Auctions will be set to this length, in seconds.')
-    #endAuctionEmailBatchSize = models.IntegerField(verbose_name='End of Auction Email Batch Size', help_text='At the end of an auction emails will be sent to user with the same type as the auction. To avoid spamming email batches are limited to this number.')
+    endAuctionEmailBatchSize = models.IntegerField(verbose_name='End of Auction Email Batch Size', help_text='At the end of an auction emails will be sent to user with the same type as the auction. To avoid spamming email batches are limited to this number.')
 
     def __str__(self):
         return 'Admin Settings'
