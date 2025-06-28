@@ -97,8 +97,8 @@ class AuctionAdmin(admin.ModelAdmin):
                             message = "",
                             html_message = "The total number of emails that can be sent has been surpassed. The total number of emails to send was " + str(len(accounts)) + " and the max that can be sent is " + str(batch_size) + ". <br><br> The following people did not get emails: <br>" + missing_email_string,
                             from_email = settings.EMAIL_HOST_USER,
-                            recipient_list = ('loribine@gmail.com',)
-                            # recipient_list = ('info@travelingtherapist.ca',)
+                            # recipient_list = ('loribine@gmail.com',)
+                            recipient_list = ('info@travelingtherapist.ca',)
                         )
                     except BadHeaderError:
                         return HttpResponse('Invalid header found.')
