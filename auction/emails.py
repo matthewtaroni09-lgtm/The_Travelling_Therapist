@@ -251,7 +251,7 @@ def new_auction_email_to_all(first_name, last_name, link, start_date, end_date, 
     print("in email")
     print(payment_type)
     if payment_type == "Flat Fee":
-      payment_type_message = "the price you're bidding is for the entire as posted, not your desired hourly rate!"
+      payment_type_message = "<b>the price you're bidding is for the entire as posted, not your desired hourly rate!</b>"
     else:
       payment_type_message = "the fee split you're bidding is the percentage YOU want as a clinician for each patient you see."
     message = email_header
@@ -264,14 +264,14 @@ def new_auction_email_to_all(first_name, last_name, link, start_date, end_date, 
   <br>
   <b>Clinic Name:</b> """ + clinic_name + """
   <br>
-  <b>Clinic Name:</b> """ + clinic_location + """
+  <b>Clinic Location:</b> """ + clinic_location + """
   <br><br>
   The clock is ticking, so if you'd like to take the opening, bid away!
   <br>
-  There is currently """ + time_remaining + """ left in the auction.
+  There is currently <b>""" + time_remaining + """</b> left in the auction.
   <br><br>
   This auction is a """ + payment_type + """, so remember that """ + payment_type_message + """
-  <br>
+  <br><br>
   Remember that The Traveling Therapist is always free to bid for clinicians and at the end of the auction that the clinic is matched with the LOWEST bidder.
 
     <p>Happy Bidding!</p>
