@@ -2,7 +2,7 @@
 {% block content %}
 <!-- Content Start -->
 <p id="pageTitle" class="d-none">Login</p>
-<h1 class="text-center mb-5">Log In To The Traveling Therapist!</h1>
+<h1 class="text-center mb-5">Log In To The Traveling Therapist</h1>
 
 <!-- Login Box Start -->
 <div class="row">
@@ -26,7 +26,7 @@
         <input class="showPasswordCheckBox" type="checkbox">
         <label class="form-label">Show Password</label>
       </div>
-      <button id="submitButton" type="submit" class="btn btn-primary">Submit</button>
+      <button id="submitButton" type="submit" class="btn btn-primary" name="submitButton">Submit</button>
     </form>
     <a href="{% url 'password_reset' %}">Need help logging in?</a>
     <!-- Login Box End -->
