@@ -196,7 +196,7 @@ class Auction(models.Model):
     
     def get_winning_price(self):
         if self.winningPrice is not None:
-            return "$" + self.winningPrice
+            return "$" + str(self.winningPrice)
         else:
             return "None"
 

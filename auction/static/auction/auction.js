@@ -123,7 +123,6 @@ function countDown(date, auctionID) {
                 clearInterval(x);
                 document.getElementById("auctionTimer-" + auctionID).innerHTML = "Auction Completed";
                 let numBids = document.getElementById("auctionBids-" + auctionID).innerHTML;
-                console.log(numBids);
                 if (numBids === "0 bids") {
                     document.getElementById("auctionBids-" + auctionID).innerHTML = "";
                 }
@@ -134,7 +133,6 @@ function countDown(date, auctionID) {
             if ($('#auctionTimer-' + auctionID).length > 0) {
                 document.getElementById("auctionTimer-" + auctionID).innerHTML = "Auction Completed";
                 let numBids = document.getElementById("auctionBids-" + auctionID).innerHTML;
-                console.log(numBids);
                 if (numBids === "0 bids") {
                     document.getElementById("auctionBids-" + auctionID).innerHTML = "";
                 }
