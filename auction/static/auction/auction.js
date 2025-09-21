@@ -122,12 +122,22 @@ function countDown(date, auctionID) {
             if (distance < 0) {
                 clearInterval(x);
                 document.getElementById("auctionTimer-" + auctionID).innerHTML = "Auction Completed";
+                let numBids = document.getElementById("auctionBids-" + auctionID).innerHTML;
+                console.log(numBids);
+                if (numBids === "0 bids") {
+                    document.getElementById("auctionBids-" + auctionID).innerHTML = "";
+                }
             }
         }
         else {
             // If the length is 0 then that auction card has been filtered out
             if ($('#auctionTimer-' + auctionID).length > 0) {
                 document.getElementById("auctionTimer-" + auctionID).innerHTML = "Auction Completed";
+                let numBids = document.getElementById("auctionBids-" + auctionID).innerHTML;
+                console.log(numBids);
+                if (numBids === "0 bids") {
+                    document.getElementById("auctionBids-" + auctionID).innerHTML = "";
+                }
             }
         }
     }, 1000);

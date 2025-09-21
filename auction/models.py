@@ -149,8 +149,12 @@ class Auction(models.Model):
         return str(self.clinic.clinicName) + ": " + str(self.auctionStart.strftime("%m/%d/%Y %H:%M"))
 
     def get_bid(self):
-        if self.currentLowBid is None:
+        # If the auction is open and there are no bids
+        if self.currentLowBid is None and self.closed == False and self.active == True:
             return str('0 bids')
+        # If the auction is closed and there are no bids
+        if self.currentLowBid is None and self.closed == True and self.active == False:
+            return str('')
         elif self.reservePrice is not None and (self.closed == True and self.active == False and self.winningPrice is not None and self.winningPrice > self.reservePrice):
             return 'Reserve price not met'
         elif self.closed == True and self.active == False and self.winningPrice is not None:
@@ -189,6 +193,12 @@ class Auction(models.Model):
     def get_num_bids(self):
         num_bids = Bid.objects.filter(auction=self.auctionID, active=True).count()
         return num_bids
+    
+    def get_winning_price(self):
+        if self.winningPrice is not None:
+            return "$" + self.winningPrice
+        else:
+            return "None"
 
     def get_position_type(self):
         if str(self.clinic.userType) == 'Physiotherapy Clinic':
@@ -243,7 +253,7 @@ class Auction(models.Model):
                 timeLeft = timeLeft + str(seconds) + "s"
         else:
             timeLeft = 'Auction Completed'
-        
+  
         return timeLeft
 
 class Bid(models.Model):

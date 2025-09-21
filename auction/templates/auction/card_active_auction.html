@@ -1,9 +1,11 @@
 <div class="col-sm-6 col-lg-4">
   <a class="card mt-4 text-decoration-none text-dark" href="{% url 'auction' auction.auctionID %}">
     {% if auction.paymentType|stringformat:"s" == "Flat Fee" %}
-    <div class="triangle" style="border-color: transparent var(--primary-colour) transparent;"><span class="triangleText"><b>{{ auction.paymentType }}</b></span></div>
+    <div class="triangle" style="border-color: transparent var(--primary-colour) transparent;"><span
+        class="triangleText"><b>{{ auction.paymentType }}</b></span></div>
     {% else %}
-    <div class="triangle" style="border-color: transparent var(--secondary-colour) transparent;"><span class="triangleText"><b>{{ auction.paymentType }}</b></span></div>
+    <div class="triangle" style="border-color: transparent var(--secondary-colour) transparent;"><span
+        class="triangleText"><b>{{ auction.paymentType }}</b></span></div>
     {% endif %}
     <div class="position-relative">
       {% if auction.clinic.imageOne %}
@@ -11,9 +13,11 @@
       {% else %}
       <img src="/media/images/no-image.jpg" class="card-img-top card-image" alt="Image of Clinic">
       {% endif %}
-      <div class="d-flex text-align-center align-items-center bg-dark p-2 rounded position-absolute bottom-0 start-0 text-x-small">
-        <span class="material-icons small text-white">schedule</span><time id="auctionTimer-{{ auction.auctionID }}" class="m-0 d-flex me-3 text-white">{{ auction.get_time_diff }}</time>
-        <p class="m-0 text-white">{{ auction.get_bid }}</p>
+      <div
+        class="d-flex text-align-center align-items-center bg-dark p-2 rounded position-absolute bottom-0 start-0 text-x-small">
+        <span class="material-icons small text-white">schedule</span><time id="auctionTimer-{{ auction.auctionID }}"
+          class="m-0 d-flex me-3 text-white">{{ auction.get_time_diff }}</time>
+        <p id="auctionBids-{{ auction.auctionID }}" class="m-0 text-white">{{ auction.get_bid }}</p>
       </div>
     </div>
     <div class="card-body">
