@@ -61,7 +61,7 @@ function userTypeChange(userType) {
         }
         termsButton.style.display = 'block';
         $("#clinicButton").css("background-color", "#FFFFFF");
-        $("#therapistButton").css("background-color", "#FFFFFF");
+        $("#therapistButton").css("background-color", "#0AEAA9");
     }
 }
 
@@ -70,6 +70,18 @@ $(document).ready(function () {
     userType = $('#userTypeHiddenInput').val();
     if (userType !== "") {
         userTypeChange(userType);
+    }
+
+    // If the mandatory fields are filled out then the user must have already completed the form and had an error that caused it to reset like a password error.
+    // Since we know they are required to check off the terms and conditions box in order to submit the original form set that box to checked so the user doesn't
+    // have to keep going back and checking it each time
+    if (userType === "Clinic" && $("#id_username").val() !== "") {
+        $('#agreementCheckBox').prop("checked", true);
+        $('#submitButton').prop('disabled', false);
+    }
+    else if (userType !== "Clinic" && userType !== "---------" && $("#id_user_type").val() !== "" && $("#id_username").val() !== "") {
+        $('#agreementCheckBox').prop("checked", true);
+        $('#submitButton').prop('disabled', false);
     }
 
     $("#showPasswordCheckBox").click(function () {
