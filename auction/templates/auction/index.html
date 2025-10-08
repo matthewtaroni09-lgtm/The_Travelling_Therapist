@@ -6,7 +6,10 @@
 <p id="pageTitle" class="d-none">Home</p>
 <div class="row pb-3">
   <div class="col-md-7 pb-3">
-    <iframe class="howItWorksiFrame" width="100%" height="315" src="https://www.youtube.com/embed/CHEZcJaw49E" title="" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen></iframe>
+    <iframe class="howItWorksiFrame" width="100%" height="315" src="https://www.youtube.com/embed/CHEZcJaw49E" title=""
+      frameBorder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowFullScreen></iframe>
   </div>
   <div class="col-md-5 pb-3">
     <div class="d-flex align-items-center mb-3">
@@ -15,9 +18,13 @@
     </div>
     <p class="text-weight-light">What is The Traveling Therapist?
       <br><br>
-      The Traveling Therapist is an auction based temporary work staffing solution for healthcare professionals. The Traveling Therapist connects clinics, hospitals, retirement homes and long term care facilities looking for temporary coverage for their healthcare workers on vacation, or who are otherwise absent to those providers looking for temporary, casual or extra work in new clinical environments.
+      The Traveling Therapist is an auction based temporary work staffing solution for healthcare professionals. The
+      Traveling Therapist connects clinics, hospitals, retirement homes and long term care facilities looking for
+      temporary coverage for their healthcare workers on vacation, or who are otherwise absent to those providers
+      looking for temporary, casual or extra work in new clinical environments.
       <br><br>
-      Healthcare facilities retain their level of client care and healthcare workers are compensated to work in new environments with new clinical populations and network in the process.
+      Healthcare facilities retain their level of client care and healthcare workers are compensated to work in new
+      environments with new clinical populations and network in the process.
     </p>
   </div>
   <div id="whiteSpaceRow" class="row bg-white"></div>
@@ -28,7 +35,8 @@
       </div>
       {% if user.is_authenticated %}
       {% if user.account.get_split_user_type == 'Clinic' %}
-      <h1 id="welcomeClinicHeading" class="text-small text-weight-light text-md-end my-3">Welcome, {{user.account.clinicName }}
+      <h1 id="welcomeClinicHeading" class="text-small text-weight-light text-md-end my-3">Welcome,
+        {{user.account.clinicName }}
         </h>
         <style>
           .auction-fix {
@@ -37,7 +45,8 @@
         </style>
         <h2 class="text-large text-weight-normal auction-fix">Auctions</h2>
         {% else %}
-        <h1 id="welcomeTherapistHeading" class="text-small text-weight-light text-md-end my-3">Welcome, {{user.first_name }} {{user.last_name }}
+        <h1 id="welcomeTherapistHeading" class="text-small text-weight-light text-md-end my-3">Welcome,
+          {{user.first_name }} {{user.last_name }}
           </h>
           <h2 class="text-large text-weight-normal auction-fix">Auctions</h2>
           {% endif %}
@@ -48,7 +57,8 @@
   </div>
 
   <!-- Modal -->
-  <div id="modal" class="modal fade" id="allAuctionsModal" tabindex="-1" role="dialog" aria-labelledby="allAuctionsModalLabel" aria-hidden="true">
+  <div id="modal" class="modal fade" id="allAuctionsModal" tabindex="-1" role="dialog"
+    aria-labelledby="allAuctionsModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -59,14 +69,16 @@
         </div>
         <div id="dialog"></div>
         <div class="modal-body">
-          Please note that you will only be able to bid on auctions that correspond to your therapist type. If you are registered as multiple therapist types, please logout and sign in with a different account.
+          Please note that you will only be able to bid on auctions that correspond to your therapist type. If you are
+          registered as multiple therapist types, please logout and sign in with a different account.
         </div>
         <div class="modal-footer">
           <form method="GET">
             {% if user.is_authenticated %}
             {% if user.account.get_split_user_type != 'Clinic' %}
             {% csrf_token %}
-            <button id="allAuctionsButton" type="button" class="btn btn-secondary" data-bs-dismiss="modal" hx-post="{% url 'view-all-auctions' %}" hx-target='#auctionListDiv' hx-trigger="click">Procced
+            <button id="allAuctionsButton" type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+              hx-post="{% url 'view-all-auctions' %}" hx-target='#auctionListDiv' hx-trigger="click">Proceed
               Anyway</button>
             <button id="cancelButton" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
             <!-- <a class="btn btn-primary" href="{% url 'logout' %}">Logout</a> -->
@@ -122,14 +134,16 @@
     <div class="row">
       <div class="col">
         <input id="searchAllCheckbox" name="searchAllCheckbox" type="checkbox"></input>
-        <label class="form-label">Search all auction types. Users can only bid on the type of auction their profile is setup for.</label>
+        <label class="form-label">Search all auction types. Users can only bid on the type of auction their profile is
+          setup for.</label>
       </div>
     </div>
     {% endif %}
     {% endif %}
     <div class="row">
       <div class="col-3">
-        <button id="search" type="button" class="btn btn-primary mt-2" hx-post="{% url 'auction-search' %}" hx-include="[name='citySelect']" hx-target='#auctionListDiv' hx-trigger="click">Search</button>
+        <button id="search" type="button" class="btn btn-primary mt-2" hx-post="{% url 'auction-search' %}"
+          hx-include="[name='citySelect']" hx-target='#auctionListDiv' hx-trigger="click">Search</button>
       </div>
     </div>
   </form>
