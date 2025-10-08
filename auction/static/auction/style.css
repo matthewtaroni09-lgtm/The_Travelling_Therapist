@@ -449,10 +449,19 @@ ol {
 }
 
 /* Clinic Hiring Guide */
-.accordianIcon {
+.accordionIcon {
     width: 35px;
     height: 35px;
     padding-right: 5px;
+}
+
+.guidePageButton {
+    width: 50%;
+    margin: auto;
+}
+
+.accordionText {
+    font-size: 23px;
 }
 
 /* Sidebar */

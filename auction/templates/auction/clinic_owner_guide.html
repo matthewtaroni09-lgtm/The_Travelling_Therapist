@@ -27,7 +27,7 @@
             porta tortor et arcu molestie tincidunt.</p>
     </div>
     <div class="row text-center">
-        <a id="howItWorksButton" class="btn btn-primary btn-lg" href="{% url 'create-auction' %}">Start Your First
+        <a class="btn btn-primary btn-lg guidePageButton" href="{% url 'create-auction' %}">Start Your First
             Auction</a>
     </div>
     <br>
@@ -50,36 +50,23 @@
 
     <div class="row text-center">
         <div id="collapseOutside" class="accordion-collapse" aria-labelledby="headingOutside"
-            data-bs-parent="#outsideSecondaryAccordian">
-            <div class="accordion" id="secondaryAccordian">
+            data-bs-parent="#outsideSecondaryAccordion">
+            <div class="accordion" id="secondaryAccordion">
                 <!-- Job Board -->
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="heading2">
                         <button class="accordion-button text-weight-normal collapsed" type="button"
                             data-bs-toggle="collapse" data-bs-target="#collapse2" aria-expanded="false"
                             aria-controls="collapse2">
-                            <img class="accordianIcon" src="/media/images/job-board.png" alt="Hands shaking">
+                            <img class="AccordionIcon" src="/media/images/job-board.png" alt="Hands shaking">
                             Job Board
                         </button>
                     </h2>
                     <div id="collapse2" class="accordion-collapse collapse" aria-labelledby="heading2"
-                        data-bs-parent="#secondaryAccordian">
-                        <p class="accordion-body text-weight-light">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis aliquam odio ac magna posuere,
-                            id laoreet risus
-                            volutpat. Morbi eu massa nunc. Nunc dignissim semper tellus sit amet convallis. Ut consequat
-                            volutpat nunc
-                            et commodo. Curabitur luctus id justo at faucibus. Nam mauris felis, ullamcorper ut
-                            imperdiet sed, pulvinar
-                            laoreet sem. Ut nec purus sed purus euismod ullamcorper. Donec magna ante, rhoncus sed
-                            accumsan et, gravida
-                            et dui. Ut feugiat tristique ultricies. Integer nec sollicitudin tellus. Phasellus eget nisl
-                            diam. Maecenas
-                            auctor tellus justo, in venenatis erat rutrum sit amet. Nam fermentum placerat ante in
-                            imperdiet. In porta
-                            vitae ipsum quis convallis. Nulla ullamcorper sem vitae magna tempor, vel aliquet augue
-                            venenatis. Duis
-                            porta tortor et arcu molestie tincidunt.
+                        data-bs-parent="#secondaryAccordion">
+                        <p class="accordion-body text-weight-light accordionText">
+                            Broad exposure to candidates; no upfront agency fees<br>
+                            Flood of unqualified resumes; manual screening eats up staff time
                         </p>
                     </div>
                 </div>
@@ -89,28 +76,15 @@
                         <button class="accordion-button text-weight-normal collapsed" type="button"
                             data-bs-toggle="collapse" data-bs-target="#collapse4" aria-expanded="false"
                             aria-controls="collapseG">
-                            <img class="accordianIcon" src="/media/images/recruitment.png" alt="Hands shaking">
+                            <img class="AccordionIcon" src="/media/images/recruitment.png" alt="Hands shaking">
                             Direct Employer Recruitment
                         </button>
                     </h2>
                     <div id="collapse4" class="accordion-collapse collapse" aria-labelledby="heading4"
-                        data-bs-parent="#secondaryAccordian">
-                        <p class="accordion-body text-weight-light">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis aliquam odio ac magna posuere,
-                            id laoreet risus
-                            volutpat. Morbi eu massa nunc. Nunc dignissim semper tellus sit amet convallis. Ut consequat
-                            volutpat nunc
-                            et commodo. Curabitur luctus id justo at faucibus. Nam mauris felis, ullamcorper ut
-                            imperdiet sed, pulvinar
-                            laoreet sem. Ut nec purus sed purus euismod ullamcorper. Donec magna ante, rhoncus sed
-                            accumsan et, gravida
-                            et dui. Ut feugiat tristique ultricies. Integer nec sollicitudin tellus. Phasellus eget nisl
-                            diam. Maecenas
-                            auctor tellus justo, in venenatis erat rutrum sit amet. Nam fermentum placerat ante in
-                            imperdiet. In porta
-                            vitae ipsum quis convallis. Nulla ullamcorper sem vitae magna tempor, vel aliquet augue
-                            venenatis. Duis
-                            porta tortor et arcu molestie tincidunt.
+                        data-bs-parent="#secondaryAccordion">
+                        <p class="accordion-body text-weight-light accordionText">
+                            Full control over hiring criteria; zero middleman fees<br>
+                            Time-intensive outreach; limited reach beyond existing network
                         </p>
                     </div>
                 </div>
@@ -120,28 +94,15 @@
                         <button class="accordion-button text-weight-normal collapsed" type="button"
                             data-bs-toggle="collapse" data-bs-target="#collapse5" aria-expanded="false"
                             aria-controls="collapse5">
-                            <img class="accordianIcon" src="/media/images/headhunting.png" alt="Hands shaking">
+                            <img class="AccordionIcon" src="/media/images/headhunting.png" alt="Hands shaking">
                             Headhunter/Recruiter
                         </button>
                     </h2>
                     <div id="collapse5" class="accordion-collapse collapse" aria-labelledby="heading5"
-                        data-bs-parent="#secondaryAccordian">
-                        <div class="accordion-body text-weight-light">
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis aliquam odio ac magna
-                                posuere, id laoreet risus
-                                volutpat. Morbi eu massa nunc. Nunc dignissim semper tellus sit amet convallis. Ut
-                                consequat volutpat nunc
-                                et commodo. Curabitur luctus id justo at faucibus. Nam mauris felis, ullamcorper ut
-                                imperdiet sed, pulvinar
-                                laoreet sem. Ut nec purus sed purus euismod ullamcorper. Donec magna ante, rhoncus sed
-                                accumsan et, gravida
-                                et dui. Ut feugiat tristique ultricies. Integer nec sollicitudin tellus. Phasellus eget
-                                nisl diam. Maecenas
-                                auctor tellus justo, in venenatis erat rutrum sit amet. Nam fermentum placerat ante in
-                                imperdiet. In porta
-                                vitae ipsum quis convallis. Nulla ullamcorper sem vitae magna tempor, vel aliquet augue
-                                venenatis. Duis
-                                porta tortor et arcu molestie tincidunt.</p>
+                        data-bs-parent="#secondaryAccordion">
+                        <div class="accordion-body text-weight-light accordionText">
+                            <p>Access to specialized talent; passive candidates tapped<br>
+                                Placement fees of 20–30% of salary; process transparency can vary</p>
                         </div>
                     </div>
                 </div>
@@ -151,28 +112,15 @@
                         <button class="accordion-button text-weight-normal collapsed" type="button"
                             data-bs-toggle="collapse" data-bs-target="#collapse6" aria-expanded="false"
                             aria-controls="collapse6">
-                            <img class="accordianIcon" src="/media/images/staffingagency.png" alt="Hands shaking">
+                            <img class="AccordionIcon" src="/media/images/staffingagency.png" alt="Hands shaking">
                             Staffing Agency
                         </button>
                     </h2>
                     <div id="collapse6" class="accordion-collapse collapse" aria-labelledby="heading6"
-                        data-bs-parent="#secondaryAccordian">
-                        <div class="accordion-body text-weight-light">
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis aliquam odio ac magna
-                                posuere, id laoreet risus
-                                volutpat. Morbi eu massa nunc. Nunc dignissim semper tellus sit amet convallis. Ut
-                                consequat volutpat nunc
-                                et commodo. Curabitur luctus id justo at faucibus. Nam mauris felis, ullamcorper ut
-                                imperdiet sed, pulvinar
-                                laoreet sem. Ut nec purus sed purus euismod ullamcorper. Donec magna ante, rhoncus sed
-                                accumsan et, gravida
-                                et dui. Ut feugiat tristique ultricies. Integer nec sollicitudin tellus. Phasellus eget
-                                nisl diam. Maecenas
-                                auctor tellus justo, in venenatis erat rutrum sit amet. Nam fermentum placerat ante in
-                                imperdiet. In porta
-                                vitae ipsum quis convallis. Nulla ullamcorper sem vitae magna tempor, vel aliquet augue
-                                venenatis. Duis
-                                porta tortor et arcu molestie tincidunt.</p>
+                        data-bs-parent="#secondaryAccordion">
+                        <div class="accordion-body text-weight-light accordionText">
+                            <p>End-to-end service (payroll, credentialing); reliable temp and contract fills<br>
+                                High mark-ups; hidden costs; slower turnaround</p>
                         </div>
                     </div>
                 </div>
@@ -182,16 +130,16 @@
                         <button class="accordion-button text-weight-normal collapsed" type="button"
                             data-bs-toggle="collapse" data-bs-target="#collapse7" aria-expanded="false"
                             aria-controls="collapse7">
-                            <img class="accordianIcon" src="/media/images/T_Logo_Final.png" alt="Hands shaking">
+                            <img class="AccordionIcon" src="/media/images/T_Logo_Final.png" alt="Hands shaking">
                             The Traveling Therapist
                         </button>
                     </h2>
                     <div id="collapse7" class="accordion-collapse collapse" aria-labelledby="heading7"
-                        data-bs-parent="#secondaryAccordian">
-                        <p class="accordion-body text-weight-light">
-                            You have seen how each route stacks up. Now turn frustration into freedom. Post your first
-                            auction in under 10 minutes, compare bids in two weeks, and get back to what you do best –
-                            running a thriving clinic.
+                        data-bs-parent="#secondaryAccordion">
+                        <p class="accordion-body text-weight-light accordionText">
+                            Transparent flat fees as low as $300/match; rapid 14-day match auctions; minimal admin
+                            overhead<br>
+                            Requires clear postings; bid outcomes may vary; learning curve for new users
                         </p>
                     </div>
                 </div>
@@ -200,7 +148,12 @@
     </div>
     <br>
     <div class="row text-center">
-        <a id="howItWorksButton" class="btn btn-primary btn-lg" href="{% url 'create-auction' %}">Start Your First
+        <p>You have seen how each route stacks up. Now turn frustration into freedom. Post your first auction in under
+            10 minutes, compare bids in two weeks, and get back to what you do best – running a thriving clinic. </p>
+    </div>
+    <div class="row text-center">
+        <a id="startAuctionButton" class="btn btn-primary btn-lg guidePageButton"
+            href="{% url 'create-auction' %}">Start Your First
             Auction</a>
     </div>
 
