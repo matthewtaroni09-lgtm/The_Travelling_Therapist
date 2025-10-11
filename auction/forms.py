@@ -237,8 +237,8 @@ class BidForm(forms.ModelForm):
         return amount 
 
 class RegisterAcount(UserCreationForm):
-    first_name = forms.CharField(required=False)
-    last_name = forms.CharField(required=False)
+    first_name = forms.CharField(required=False, min_length=2)
+    last_name = forms.CharField(required=False, min_length=2)
     clinicName = forms.CharField(required=False, label='Clinic Name')
     city = forms.CharField(required=False)
     about = forms.CharField(required=False, label='About the clinic', widget=forms.Textarea)
