@@ -15,27 +15,33 @@
             <h1 class="text-center mb-5">Fill your gaps in days, not weeks</h1>
         </div>
     </div>
-    <div class=" row">
-        <img id="clinicOwnerGuideMainImage" src="/media/images/clinic_guide_main.png" class="img-fluid"
-            alt="Clinic staff">
-    </div>
     <div class="row text-center" id="intro">
         <h2>How Clinic owners like you are ditching slow, costly, hiring, and keeping doors open at full capacity</h2>
     </div>
-    <div class="row text-center">
+    <br>
+    <div class="row">
+        <div class="col-4"><img id="clinicOwnerGuideMainImage" src="/media/images/clinic_guide_main.png"
+                class="img-fluid" alt="Clinic staff"></div>
+        <div class="col-8">
+            <h2>A Day in the Life</h2>
+            <p>You open the clinic with a full morning slate of patients, but within an hour you’re pulled into the
+                hiring
+                scramble: an agency call saying their temp can’t cover tonight’s shift, a job-board posting that
+                generated
+                dozens of irrelevant resumes, and half an inbox of messages from clinicians who either aren’t available
+                or
+                expect different pay terms. As both practitioner and manager you must keep appointments full, handle
+                rent
+                and equipment issues, and cover unexpected gaps when contractors leave or go on parental leave. Hiring
+                turns
+                into a recurring operational emergency that steals clinical hours, reduces patient access, and adds
+                hidden
+                costs—time you should be spending growing the business and caring for patients. </p>
+        </div>
+    </div>
+    <div class="row text-center m-3">
         <a class="btn btn-primary btn-lg guidePageButton" href="{% url 'create-auction' %}">Post Your First
             Auction</a>
-    </div>
-    <br>
-    <div class="row text-center">
-        <h2>A Day in the Life</h2>
-        <p>You open the clinic with a full morning slate of patients, but within an hour you’re pulled into the hiring
-            scramble: an agency call saying their temp can’t cover tonight’s shift, a job-board posting that generated
-            dozens of irrelevant resumes, and half an inbox of messages from clinicians who either aren’t available or
-            expect different pay terms. As both practitioner and manager you must keep appointments full, handle rent
-            and equipment issues, and cover unexpected gaps when contractors leave or go on parental leave. Hiring turns
-            into a recurring operational emergency that steals clinical hours, reduces patient access, and adds hidden
-            costs—time you should be spending growing the business and caring for patients. </p>
     </div>
     <div class="row text-center">
         <div id="quoteCarousel" class="carousel slide mt-4 mb-4" data-bs-ride="carousel" data-bs-interval="5000">
@@ -78,20 +84,26 @@
             </button>
         </div>
     </div>
-    <div class="row text-center" id="hiringHole">
-        <h2>The Hiring Hole</h2>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis aliquam odio ac magna posuere, id laoreet risus
-            volutpat. Morbi eu massa nunc. Nunc dignissim semper tellus sit amet convallis. Ut consequat volutpat nunc
-            et commodo. Curabitur luctus id justo at faucibus. Nam mauris felis, ullamcorper ut imperdiet sed, pulvinar
-            laoreet sem. Ut nec purus sed purus euismod ullamcorper. Donec magna ante, rhoncus sed accumsan et, gravida
-            et dui. Ut feugiat tristique ultricies. Integer nec sollicitudin tellus. Phasellus eget nisl diam. Maecenas
-            auctor tellus justo, in venenatis erat rutrum sit amet. Nam fermentum placerat ante in imperdiet. In porta
-            vitae ipsum quis convallis. Nulla ullamcorper sem vitae magna tempor, vel aliquet augue venenatis. Duis
-            porta tortor et arcu molestie tincidunt.</p>
-    </div>
-    <div class="row text-center" id="hiringHole">
-        <img id="clinicOwnerGuideMiddleImage" src="/media/images/clinic_guide_middle.png" class="img-fluid"
-            alt="Clinic staff">
+    <div class="row" id="hiringHole">
+        <div class="col-8">
+            <h2>The Hiring Hole</h2>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis aliquam odio ac magna posuere, id laoreet
+                risus
+                volutpat. Morbi eu massa nunc. Nunc dignissim semper tellus sit amet convallis. Ut consequat volutpat
+                nunc
+                et commodo. Curabitur luctus id justo at faucibus. Nam mauris felis, ullamcorper ut imperdiet sed,
+                pulvinar
+                laoreet sem. Ut nec purus sed purus euismod ullamcorper. Donec magna ante, rhoncus sed accumsan et,
+                gravida
+                et dui. Ut feugiat tristique ultricies. Integer nec sollicitudin tellus. Phasellus eget nisl diam.
+                Maecenas
+                auctor tellus justo, in venenatis erat rutrum sit amet. Nam fermentum placerat ante in imperdiet. In
+                porta
+                vitae ipsum quis convallis. Nulla ullamcorper sem vitae magna tempor, vel aliquet augue venenatis. Duis
+                porta tortor et arcu molestie tincidunt.</p>
+        </div>
+        <div class="col-4"><img id="clinicOwnerGuideMiddleImage" src="/media/images/clinic_guide_middle.png"
+                class="img-fluid" alt="Clinic staff"></div>
     </div>
     <div class="row text-center" id="exploringStaffingSolutions">
         <h2>Explore Your Staffing Solutions</h2>
@@ -307,10 +319,6 @@
     <div class="row text-center">
         <p>You have seen how each route stacks up. Now turn frustration into freedom. Post your first auction in under
             10 minutes, compare bids in two weeks, and get back to what you do best – running a thriving clinic. </p>
-    </div>
-    <div class="row text-center">
-        <img id="clinicOwnerGuideBottomImage" src="/media/images/clinic_guide_bottom.png" class="img-fluid"
-            alt="Clinic staff">
     </div>
     <div class="row text-center">
         <a id="startAuctionButton" class="btn btn-primary btn-lg guidePageButton"

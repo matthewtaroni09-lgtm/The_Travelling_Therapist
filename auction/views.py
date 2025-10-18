@@ -216,6 +216,9 @@ def cookie_policy(request):
 def clinic_owner_guide(request):
     return render(request, 'auction/clinic_owner_guide.html', {})
 
+def clinic_owner_guide_2(request):
+    return render(request, 'auction/clinic_owner_guide_2.html', {})
+
 def profile(request):
     if request.user.is_authenticated == False:
         return render(request, 'auction/profile.html', {})

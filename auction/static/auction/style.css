@@ -455,14 +455,62 @@ ol {
     padding-right: 5px;
 }
 
+.accordionText {
+    font-size: 23px;
+}
+
 .guidePageButton {
     width: 50%;
     margin: auto;
 }
 
-.accordionText {
-    font-size: 23px;
+#clinicOwnerGuideMainImage {
+    width: 80%;
+    margin: auto;
+    padding-bottom: 10px;
 }
+
+#clinicOwnerGuideMiddleImage {
+    width: 85%;
+    margin: auto;
+    padding-bottom: 10px;
+}
+
+#clinicOwnerGuideBottomImage {
+    width: 25%;
+    margin: auto;
+    padding-bottom: 10px;
+}
+
+/* Carousel */
+#quoteCarousel .carousel-inner {
+    width: 80%;
+    margin: 0 auto;
+}
+
+.carouselP {
+    font-size: 25px;
+}
+
+.accordionList {
+    list-style-type: none;
+}
+
+/* Prevent layout jump */
+/* #quoteCarousel .carousel-item {
+    min-height: 140px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+@media (max-width: 768px) {
+    #quoteCarousel .carousel-item {
+        min-height: 180px;
+    }
+} */
+
 
 /* Sidebar */
 .sidebar {
