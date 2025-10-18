@@ -1,15 +1,85 @@
 from The_Travelling_Therapist.settings import ACTIVE_LINK
 
+# email_templates.py
 
-email_header = """<section style="font-size: 16px; margin-bottom: 4rem;">
-</section>"""
+# Placeholder logo URL
+LOGO_URL = "https://travelingtherapist.ca/media/images/TTT_LOGO.png"
 
-email_footer = """<footer>
-  <img src="https://travelingtherapist.ca/media/images/TTT_LOGO.png" alt="Traveling Therapist Logo">
-  <br>
-  <a href="travelingtherapist.ca">Click to visit The Traveling Therapist Website</a>
-  <p style="font-size: 10px; color: #848585;">You are receiving this email because you have registered to use The Traveling Therapist website services. Please do not reply to this email. If you wish to contact us then email The Traveling Therapist at info@travelingtherapist.ca. To ensure you continue to receive these emails, add this email address to your email safelist. Your details will not be disclosed or used by third parties for marketing or promotional purposes.</p>
-</footer>"""
+# Premium email header
+email_header = f"""<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Traveling Therapist</title>
+<style>
+  body {{
+    margin: 0; padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #B2FBDD;
+    color: #1B1B1B;
+  }}
+  .container {{
+    max-width: 600px;
+    margin: 40px auto;
+    background-color: #ffffff;
+    border-radius: 8px;
+    overflow: hidden;
+    padding: 0;
+  }}
+  .header {{
+    background-color: #0AEAA9;
+    text-align: center;
+    padding: 20px;
+  }}
+  .header img {{
+    max-width: 200px;
+    height: auto;
+  }}
+  .content {{
+    padding: 30px;
+    font-size: 16px;
+    line-height: 1.6;
+    color: #1B1B1B;
+  }}
+  .content a {{
+    color: #02CA90;
+    text-decoration: none;
+  }}
+  .footer {{
+    background-color: #1B1B1B;
+    color: #aaaaaa;
+    font-size: 12px;
+    text-align: center;
+    padding: 20px;
+  }}
+  .footer a {{
+    color: #9cd2f8;
+    text-decoration: none;
+  }}
+  b {{
+    font-weight: 700;
+  }}
+</style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <img src="{LOGO_URL}" alt="The Traveling Therapist Logo" style="background-color: #FFFFFF; padding: 5px;">
+    </div>
+"""
+
+email_footer = """
+    <div class="footer">
+      &copy; {year} The Traveling Therapist. All rights reserved.
+    </div>
+  </div>
+</body>
+</html>
+"""
+
+
+# -----------------------------
+# EMAIL FUNCTIONS
+# -----------------------------
 
 def clinic_reserve_not_met(clinic_name, start_date, end_date, payment_type):
     message = email_header
