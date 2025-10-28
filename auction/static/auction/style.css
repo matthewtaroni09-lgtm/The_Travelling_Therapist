@@ -493,7 +493,16 @@ ol {
 }
 
 .accordionList {
-    list-style-type: none;
+    /* list-style-type: none; */
+    margin: 10px;
+}
+
+.accordionBlockQuote {
+    background-color: var(--secondary-colour);
+    padding: 15px;
+    width: 95%;
+    margin: auto auto 15px auto;
+    font-weight: bold;
 }
 
 /* Prevent layout jump */

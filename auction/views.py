@@ -852,7 +852,7 @@ def register(request):
                                 message = "",
                                 html_message = emails.clinic_welcome(user.account.clinicName),
                                 from_email = settings.EMAIL_HOST_USER,
-                                recipient_list = [user.email, "loribine@gmail.com"],
+                                recipient_list = [user.email],
                             )
                     except:
                         print('Clinic email failed to send for registration.')
