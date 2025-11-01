@@ -498,8 +498,9 @@ ol {
 }
 
 .accordionBlockQuote {
-    padding: 15px;
-    width: 95%;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    /* width: 95%; */
     margin: auto auto 15px auto;
     font-weight: bold;
 }
