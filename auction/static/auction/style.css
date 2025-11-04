@@ -516,9 +516,11 @@ ol {
     top: 90px;
     /* exact height of main navbar */
     z-index: 1025;
-    background: #f8f9fa;
     padding-bottom: 15px;
     /* avoid transparency on scroll */
+    border-bottom: 2px solid #000;
+    margin-bottom: 5px;
+    background-color: var(--secondary-colour);
 }
 
 .staffSolutionsNavLink {
@@ -531,6 +533,13 @@ ol {
 
 .staffSolutionsTitle {
     scroll-margin-top: 170px;
+}
+
+.staffingSolutionsSection {
+    outline: 2px solid var(--dark-colour);
+    outline-offset: -4px;
+    /* moves outline inward */
+    padding: 10px;
 }
 
 /* Prevent layout jump */
