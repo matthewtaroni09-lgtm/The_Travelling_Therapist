@@ -128,7 +128,7 @@
         </div>
     </nav>
     <!-- Job Board -->
-    <div class="row">
+    <div class="row staffingSolutionRow">
         <div>
             <h2 class="staffSolutionsTitle" id="JobBoard">
                 <img class="AccordionIcon" src="/media/images/job-board.png" alt="Hands shaking">
@@ -170,18 +170,35 @@
                         </ul>
                     </div>
                 </div>
-                <p class=""><b>Impact:</b> Lost hours for staff, delayed fill times, and
+                <p class="staffingSolutionsImpact"><b>Impact:</b> Lost hours for staff, delayed fill times, and
                     patient
-                    cancellations
-                    that hit revenue.</p>
-                <blockquote class="blockquote accordionBlockQuote">
-                    <p>Post a targeted auction in under 10 minutes and see bids within 14 days.</p>
-                </blockquote>
+                    cancellations</p>
+                <!-- If the user is authenticated and a clinic link them to the create an auctuion. If they are not a clinic don't show the link because they won't be able to create an auction. -->
+                {% if user.is_authenticated %}
+                {% if user.account.get_split_user_type == 'Clinic' %}
+
+                <a class="staffSolutionsCTA" href="{% url 'create-auction' %}" target="_blank">Post a targeted
+                    auction in under 10
+                    minutes and
+                    see bids within 14 days.</a>
+                {% endif %}
+                <!-- If the user is not logged in then go to the sign up page -->
+                {% else %}
+                <button class="btn btn-primary btn-lg mb-3" href="{% url 'create-auction' %}" target="_blank">Post a
+                    targeted
+                    auction in under 10
+                    minutes and
+                    see bids within 14 days.</button>
+                <!-- <a class="staffSolutionsCTA" href="{% url 'register' %}" target="_blank">Post a targeted auction in
+                    under 10 minutes
+                    and
+                    see bids within 14 days.</a> -->
+                {% endif %}
             </div>
         </div>
     </div>
     <!-- Direct Employer Recruitment -->
-    <div class="row">
+    <div class="row staffingSolutionRow">
         <div>
             <h2 class="staffSolutionsTitle" id="DirectEmployerRecruitment">
                 <img class="AccordionIcon" src="/media/images/recruitment.png" alt="People icons with magnfiying glass">
@@ -232,7 +249,7 @@
     </div>
 
     <!-- Headhunter/Recruiter -->
-    <div class="row">
+    <div class="row staffingSolutionRow">
         <div>
             <h2 class="staffSolutionsTitle" id="HeadhunterRecruiter">
                 <img class="AccordionIcon" src="/media/images/headhunting.png" alt="Person icon with target">
@@ -280,7 +297,7 @@
     </div>
 
     <!-- Staffing Agency -->
-    <div class="row">
+    <div class="row staffingSolutionRow">
         <div>
             <h2 class="staffSolutionsTitle" id="StaffingAgency">
                 <img class="AccordionIcon" src="/media/images/staffingagency.png"
@@ -334,7 +351,7 @@
     </div>
 
     <!-- The Traveling Therapist -->
-    <div class="row">
+    <div class="row staffingSolutionRow">
         <div>
             <h2 class="staffSolutionsTitle" id="TheTravelingTherapist">
                 <img class="AccordionIcon" src="/media/images/T_Logo_Final.png" alt="The Traveling Therapist Logo">

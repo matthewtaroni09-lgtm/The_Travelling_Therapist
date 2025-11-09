@@ -535,11 +535,26 @@ ol {
     scroll-margin-top: 170px;
 }
 
-.staffingSolutionsSection {
+.staffingSolutionRow {
     outline: 2px solid var(--dark-colour);
     outline-offset: -4px;
     /* moves outline inward */
     padding: 10px;
+}
+
+.staffingSolutionsImpact {
+    font-size: 30px;
+    padding-top: 15px;
+}
+
+.staffSolutionsCTA {
+    text-decoration: none;
+    font-style: italic;
+    color: var(--dark-colour);
+}
+
+.staffSolutionsCTA:hover {
+    color: var(--primary-colour)
 }
 
 /* Prevent layout jump */
