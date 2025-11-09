@@ -316,6 +316,7 @@ def profile(request):
             return render(request, 'auction/profile.html', parameter)
 
 def view_auction(request, auction_id):
+    admin = AdminSetting.objects.all()[:1].get()
     auction = Auction.objects.get(pk=auction_id)
     print(auction.comments)
     num_bids = Bid.objects.filter(auction=auction_id).count()
@@ -384,6 +385,20 @@ def view_auction(request, auction_id):
             if auction_change:
                 auction.save()
             bid.save()
+            # Send email to user to thank them for the bid
+            if admin.sendEmails:
+                try:
+                    send_mail(
+                        subject = "Thank You for Your Bid - The Traveling Therapist",
+                        message = "",
+                        html_message = emails.therapist_auction_thank_you_bid(request.user.first_name, request.user.last_name, auction.clinic.clinicName, auction.auctionStart, auction.auctionID),
+                        from_email = settings.EMAIL_HOST_USER,
+                        recipient_list = ('loribine@gmail.com',) # ADD USER EMAIL!!!!!
+                    )
+                except:
+                    print('Thank your for bidding email failed.')
+                    logger.warning('Thank your for bidding email failed.')
+
             return HttpResponseRedirect('/auction/' + str(auction.auctionID))
         else:
             print('else')

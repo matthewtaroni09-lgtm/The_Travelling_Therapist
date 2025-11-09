@@ -5,6 +5,14 @@ from The_Travelling_Therapist.settings import ACTIVE_LINK
 # Placeholder logo URL
 LOGO_URL = "https://travelingtherapist.ca/media/images/TTT_LOGO.png"
 
+from datetime import datetime
+
+# Get the current date and time
+current_date_time = datetime.now()
+
+# Extract the year attribute
+current_year = current_date_time.year
+
 # Premium email header
 email_header = f"""<head>
 <meta charset="UTF-8">
@@ -69,7 +77,7 @@ email_header = f"""<head>
 
 email_footer = """
     <div class="footer">
-      &copy; {year} The Traveling Therapist. All rights reserved.
+      &copy; """ + str(current_year) + """ The Traveling Therapist. All rights reserved.
     </div>
   </div>
 </body>
@@ -271,6 +279,21 @@ def therapist_auction_not_met(first_name, last_name, clinic_name, start_date, en
   <p>Therapist Start Date: """ + str(start_date) + """</p>
   <p>Therapist End Date: """ + str(end_date) + """</p>
   
+  <p style="font-weight: 700; padding-top: 0rem; margin-top: 0; line-height: 0;">The Traveling Therapist Team</p>
+
+</section>
+"""
+    message = message + email_footer
+    return message
+
+def therapist_auction_thank_you_bid(first_name, last_name, clinic_name, start_date, auctionID):
+    message = email_header
+    message = message + """<section style="font-size: 16px; margin-bottom: 4rem;">
+  <p>Hello <span class="text-weight-bold">""" + first_name + """ """ + last_name + """</span>,</p>
+  
+  <p>Thank you for submitting your bid for <a href=""" + ACTIVE_LINK + "/auction/" + str(auctionID) + """>""" + clinic_name + """ 's: """ + str(start_date.strftime("%Y-%m-%d")) + """</a> auction. We appreciate your participation.</p>
+  <p>If another candidate submits a lower bid, you will receive an email allowing you to resubmit a new bid if you wish to stay in the running. </p>
+  <br>
   <p style="font-weight: 700; padding-top: 0rem; margin-top: 0; line-height: 0;">The Traveling Therapist Team</p>
 
 </section>
