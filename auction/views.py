@@ -40,6 +40,7 @@ from django.forms import inlineformset_factory
 from django.forms import formset_factory
 from functools import partial, wraps
 from django.http import JsonResponse
+from django.db.models import Min
 import json
 import requests
 import logging
@@ -321,6 +322,7 @@ def view_auction(request, auction_id):
     print(auction.comments)
     num_bids = Bid.objects.filter(auction=auction_id).count()
     num_biders = Bid.objects.values('user').filter(auction=auction_id).distinct().count()
+    bids = Bid.objects.filter(auction=auction_id, active=True).annotate(Min('amount')).order_by('amount')
     payment_type = str(auction.paymentType)
     daily_minimum = 0
     if payment_type == 'Fee Split' and auction.assessmentCost != None and auction.assessmentMin != None and auction.treatmentCost != None and auction.treatmentMin != None:
@@ -384,7 +386,11 @@ def view_auction(request, auction_id):
                 auction_change = True
             if auction_change:
                 auction.save()
+
+            # Before saving the new bid get the current lowest bidder from the sorted list of bids
+            current_lowest_bid_user = bids[0].user
             bid.save()
+            check_out_bid(auction.auctionID, bid, request, current_lowest_bid_user, bid.user)
             # Send email to user to thank them for the bid
             if admin.sendEmails:
                 try:
@@ -429,6 +435,80 @@ def view_auction(request, auction_id):
             }
         return render(request, 'auction/view_auction.html', context)
     
+def check_out_bid(auction_id, bid, request, current_lowest_bid_user, new_bid_user):
+    admin = AdminSetting.objects.all()[:1].get()
+    auction = Auction.objects.get(pk=auction_id)
+    bids = Bid.objects.filter(auction=auction_id)
+    no_email_List = ""
+    # Add these two emails so they don't get a second email in the loop
+    emailed_list = [current_lowest_bid_user.email, new_bid_user.email]
+    count = 0
+
+    # Email the user that had the lowest bid before the newst bid. If the same user outbids themseleves don't send the email
+    if admin.sendEmails:
+        if current_lowest_bid_user != new_bid_user:
+            try:
+                send_mail(
+                    subject = "You've been outbid! Place Your Next Bid Now - The Traveling Therapist",
+                    message = "",
+                    html_message = emails.therapist_auction_outbid_lowest(current_lowest_bid_user.first_name, current_lowest_bid_user.last_name, auction.clinic.clinicName, auction.auctionStart, auction.auctionID),
+                    from_email = settings.EMAIL_HOST_USER,
+                    recipient_list = ('loribine@gmail.com', current_lowest_bid_user.email)
+                )
+                emailed_list.append(single_bid.user.email)
+            except:
+                print('Admin email failed to send for the therapist outbid inital low bidder.')
+                logger.warning('Admin email failed to send for the therapist outbid inital low bidder.')
+
+    print("START!")
+    # Loop through bids and email all other users that there is a new bid. This should not go to the user who just created the bid of the previous lowest bidder since they will get different emails
+    for single_bid in bids:
+        print("START LOOP")
+        print("")
+        print(emailed_list)
+        print(current_lowest_bid_user.email)
+        print("single_bid.user.email: " + str(single_bid.user.email))
+        print(count)
+
+        if admin.sendEmails:
+            if single_bid.user.email not in emailed_list and count < admin.endAuctionEmailBatchSize:
+                print("Not in email list" + str(single_bid.user.email))
+                try:
+                    send_mail(
+                        subject = "An Auction You Bid on Has a New Bid - Place Your Next Bid Now - The Traveling Therapist",
+                        message = "",
+                        html_message = emails.therapist_auction_outbid_all_users(single_bid.user.first_name, single_bid.user.last_name, auction.clinic.clinicName, auction.auctionStart, auction.auctionID),
+                        from_email = settings.EMAIL_HOST_USER,
+                        recipient_list = ('loribine@gmail.com', single_bid.user.email)
+                    )
+                    emailed_list.append(single_bid.user.email)
+                    count = count + 1
+                    print("SEND EMAILL: " + str(single_bid.user.email))
+                except:
+                    print('Admin email failed to send for the therapist outbid.')
+                    logger.warning('Admin email failed to send for the therapist outbid.')
+            elif count >= admin.endAuctionEmailBatchSize and single_bid.user.email not in no_email_List and single_bid.user.email not in emailed_list:
+                print("batch Size Reached")
+                no_email_List = no_email_List + single_bid.user.email + "<br>"
+                count = count + 1
+            else:
+                print("count = " + str(count))
+        print("**********************************************************************")
+
+
+    if admin.sendEmails and no_email_List != "":
+        try:
+            send_mail(
+                subject = "ADMIN - Outbid Emial Max Reached",
+                message = "",
+                html_message = "Emails have been sent to outbit users and the limit has been reached. These users did not get the email: <br>" + no_email_List,
+                from_email = settings.EMAIL_HOST_USER,
+                recipient_list = ('loribine@gmail.com', 'info@travelingtherapist.ca')
+        )
+        except:
+            print('Admin email failed to send for Auction Creation.')
+            logger.warning('Admin email failed to send for Auction Creation.')
+
 def get_auction_end(request, auction_id):
     auction = Auction.objects.get(pk=auction_id)
     practice_area_valid = True

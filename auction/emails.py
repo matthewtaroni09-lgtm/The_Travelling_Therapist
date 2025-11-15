@@ -18,6 +18,11 @@ email_header = f"""<head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>The Traveling Therapist</title>
+
+<!-- Tell clients to respect light mode colors -->
+<meta name="color-scheme" content="light dark">
+<meta name="supported-color-schemes" content="light dark">
+
 <style>
   body {{
     margin: 0; padding: 0;
@@ -41,6 +46,11 @@ email_header = f"""<head>
   .header img {{
     max-width: 200px;
     height: auto;
+    background-color: #ffffff;
+    padding: 5px;
+    border-radius: 4px;
+    display: block;
+    margin: 0 auto;
   }}
   .content {{
     padding: 30px;
@@ -66,24 +76,45 @@ email_header = f"""<head>
   b {{
     font-weight: 700;
   }}
+
+  /* DARK MODE OVERRIDES (for clients that support prefers-color-scheme) */
+  @media (prefers-color-scheme: dark) {{
+    body, .container {{
+      background-color: #121212 !important;
+      color: #e6e6e6 !important;
+    }}
+    .header {{
+      background-color: #0AEAA9 !important;
+    }}
+    .header img {{
+      background-color: #ffffff !important; /* Keeps logo background white */
+    }}
+    .content a {{
+      color: #40f0c2 !important;
+    }}
+    .footer {{
+      background-color: #000000 !important;
+      color: #cccccc !important;
+    }}
+  }}
 </style>
 </head>
-<body>
-  <div class="container">
-    <div class="header">
-      <img src="{LOGO_URL}" alt="The Traveling Therapist Logo" style="background-color: #FFFFFF; padding: 5px;">
+<body style="background-color:#B2FBDD; margin:0; padding:0;">
+  <div class="container" style="background-color:#ffffff;">
+    <div class="header" style="background-color:#0AEAA9; text-align:center; padding:20px;">
+      <img src="{LOGO_URL}" alt="The Traveling Therapist Logo" style="background-color:#FFFFFF; padding:5px; border-radius:4px;">
     </div>
 """
 
+
 email_footer = """
-    <div class="footer">
+    <div class="footer" style="background-color:#1B1B1B; color:#aaaaaa; text-align:center; padding:20px; font-size:12px;">
       &copy; """ + str(current_year) + """ The Traveling Therapist. All rights reserved.
     </div>
   </div>
 </body>
 </html>
 """
-
 
 # -----------------------------
 # EMAIL FUNCTIONS
@@ -98,7 +129,7 @@ def clinic_reserve_not_met(clinic_name, start_date, end_date, payment_type):
         reserve_type = 'reserve split'
     else:
         reserve_type = 'reserve price'
-    message = message + """<section style="font-size: 16px; margin-bottom: 4rem;">
+    message = message + """<section style="font-size: 16px; margin-bottom: 1rem; padding: 10px;">
   <p>Hello <span class="text-weight-bold">""" + clinic_name + """</span>,</p>
   
   <p>Your auction has reached an end, and no therapist bid low enough to reach your reserve value. As such there will be no match made at this time.</p>
@@ -119,7 +150,7 @@ def clinic_reserve_not_met(clinic_name, start_date, end_date, payment_type):
 
 def clinic_no_bids(clinic_name, start_date, end_date):
     message = email_header
-    message = message + """<section style="font-size: 16px; margin-bottom: 4rem;">
+    message = message + """<section style="font-size: 16px; margin-bottom: 1rem; padding: 10px;">
   <p>Hello <span class="text-weight-bold">""" + clinic_name + """</span>,</p>
   
   <p>Your auction has reached an end, and there were no bids made. As such there will be no match made at this time.</p>
@@ -140,7 +171,7 @@ def clinic_no_bids(clinic_name, start_date, end_date):
 
 def clinic_welcome(clinic_name):
     message = email_header
-    message = message + """<section style="font-size: 16px; margin-bottom: 4rem;">
+    message = message + """<section style="font-size: 16px; margin-bottom: 1rem; padding: 10px;">
   <p>Hello <span class="text-weight-bold">""" + clinic_name + """</span>,</p>
   
   <p>It looks like you've created an account; welcome to The Traveling Therapist.</p>
@@ -161,7 +192,7 @@ def clinic_welcome(clinic_name):
 
 def clinic_auction_end(clinic_name, start_date, end_date):
     message = email_header
-    message = message + """<section style="font-size: 16px; margin-bottom: 4rem;">
+    message = message + """<section style="font-size: 16px; margin-bottom: 1rem; padding: 10px;">
   <p>Hello <span class="text-weight-bold">""" + clinic_name + """</span>,</p>
   
   <p>You auction has ended and you will be matched with the lowest bidding therapist soon. Look for an email from us shortly to connect you.</p>
@@ -187,7 +218,7 @@ def clinic_auction_end(clinic_name, start_date, end_date):
 
 def clinic_auction_created(clinic_name):
     message = email_header
-    message = message + """<section style="font-size: 16px; margin-bottom: 4rem;">
+    message = message + """<section style="font-size: 16px; margin-bottom: 1rem; padding: 10px;">
   <p>Hello <span class="text-weight-bold">""" + clinic_name + """</span>,</p>
   
   <p>Thank you for creating an auction on our site! We will review the details of your auction and connect with you to collect payment information before your ad can be live on our site. Full details on this can be found on our <a href="https://travelingtherapist.ca/about">FAQ page</a>.</p>
@@ -201,7 +232,7 @@ def clinic_auction_created(clinic_name):
 
 def clinic_auction_live(clinic_name):
     message = email_header
-    message = message + """<section style="font-size: 16px; margin-bottom: 4rem;">
+    message = message + """<section style="font-size: 16px; margin-bottom: 1rem; padding: 10px;">
   <p>Hello <span class="text-weight-bold">""" + clinic_name + """</span>,</p>
   
   <p>Thank you for creating an auction for your temporary/contract position on The Traveling Therapist.</p>
@@ -217,7 +248,7 @@ def clinic_auction_live(clinic_name):
 
 def therapist_auction_end_lose(first_name, last_name, clinic_name, start_date, end_date):
     message = email_header
-    message = message + """<section style="font-size: 16px; margin-bottom: 4rem;">
+    message = message + """<section style="font-size: 16px; margin-bottom: 1rem; padding: 10px;">
   <p>Hello <span class="text-weight-bold">""" + first_name + """ """ + last_name + """</span>,</p>
   
   <p>An auction you were bidding on has ended. </p>
@@ -239,7 +270,7 @@ def therapist_auction_end_lose(first_name, last_name, clinic_name, start_date, e
 
 def therapist_auction_end_win(first_name, last_name, clinic_name, start_date, end_date):
     message = email_header
-    message = message + """<section style="font-size: 16px; margin-bottom: 4rem;">
+    message = message + """<section style="font-size: 16px; margin-bottom: 1rem; padding: 10px;">
         <p>Hello <span class="text-weight-bold">""" + first_name + """ """ + last_name + """</span>,</p>
         
         <p>You were the lowest bidder at the end of an auction using The Traveling Therapist. Congratulations!</p>
@@ -266,7 +297,7 @@ def therapist_auction_not_met(first_name, last_name, clinic_name, start_date, en
         reserve_type = 'reserve split'
     else:
         reserve_type = 'reserve price'
-    message = message + """<section style="font-size: 16px; margin-bottom: 4rem;">
+    message = message + """<section style="font-size: 16px; margin-bottom: 1rem; padding: 10px;">
   <p>Hello <span class="text-weight-bold">""" + first_name + """ """ + last_name + """</span>,</p>
   
   <p>You were bidding on an auction using The Traveling Therapist.</p>
@@ -288,7 +319,7 @@ def therapist_auction_not_met(first_name, last_name, clinic_name, start_date, en
 
 def therapist_auction_thank_you_bid(first_name, last_name, clinic_name, start_date, auctionID):
     message = email_header
-    message = message + """<section style="font-size: 16px; margin-bottom: 4rem;">
+    message = message + """<section style="font-size: 16px; margin-bottom: 1rem; padding: 10px;">
   <p>Hello <span class="text-weight-bold">""" + first_name + """ """ + last_name + """</span>,</p>
   
   <p>Thank you for submitting your bid for <a href=""" + ACTIVE_LINK + "/auction/" + str(auctionID) + """>""" + clinic_name + """ 's: """ + str(start_date.strftime("%Y-%m-%d")) + """</a> auction. We appreciate your participation.</p>
@@ -301,9 +332,45 @@ def therapist_auction_thank_you_bid(first_name, last_name, clinic_name, start_da
     message = message + email_footer
     return message
 
+def therapist_auction_outbid_lowest(first_name, last_name, clinic_name, start_date, auctionID):
+    message = email_header
+    message = message + """<section style="font-size: 16px; margin-bottom: 1rem; padding: 10px;">
+  <p>Hello <span class="text-weight-bold">""" + first_name + """ """ + last_name + """</span>,</p>
+  
+  <p>We wanted to let you know that your bid for <a href=""" + ACTIVE_LINK + "/auction/" + str(auctionID) + """>""" + clinic_name + """ 's: """ + str(start_date.strftime("%Y-%m-%d")) + """</a> job opening has been outbid.</p>
+  <p>If you'd like to remain in the running, you may submit a new bid at any time before the auction closes.</p>
+  <a href=""" + ACTIVE_LINK + "/auction/" + str(auctionID) + """>Click here to place your new bid!</a>
+  <p>If you'd like to remain in the running, you may submit a new bid at any time before the auction closes.</p>
+  <p>Thank you for participating in the auction. We wish you the best of luck!</p>
+  <br>
+  <p style="font-weight: 700; padding-top: 0rem; margin-top: 0; line-height: 0;">The Traveling Therapist Team</p>
+
+</section>
+"""
+    message = message + email_footer
+    return message
+
+def therapist_auction_outbid_all_users(first_name, last_name, clinic_name, start_date, auctionID):
+    message = email_header
+    message = message + """<section style="font-size: 16px; margin-bottom: 1rem; padding: 10px;">
+  <p>Hello <span class="text-weight-bold">""" + first_name + """ """ + last_name + """</span>,</p>
+  
+  <p>We wanted to let you know that your bid for <a href=""" + ACTIVE_LINK + "/auction/" + str(auctionID) + """>""" + clinic_name + """ 's: """ + str(start_date.strftime("%Y-%m-%d")) + """</a> job opening has been outbid.</p>
+  <p>If you'd like to remain in the running, you may submit a new bid at any time before the auction closes.</p>
+  <a href=""" + ACTIVE_LINK + "/auction/" + str(auctionID) + """>Click here to place your new bid!</a>
+  <p>If you'd like to remain in the running, you may submit a new bid at any time before the auction closes.</p>
+  <p>Thank you for participating in the auction. We wish you the best of luck!</p>
+  <br>
+  <p style="font-weight: 700; padding-top: 0rem; margin-top: 0; line-height: 0;">The Traveling Therapist Team</p>
+
+</section>
+"""
+    message = message + email_footer
+    return message
+
 def therapist_welcome(first_name, last_name):
     message = email_header
-    message = message + """<section style="font-size: 16px; margin-bottom: 4rem;">
+    message = message + """<section style="font-size: 16px; margin-bottom: 1rem; padding: 10px;">
   <p>Hello <span class="text-weight-bold">""" + first_name + """ """ + last_name + """</span>,</p>
   
   <p>It looks like you've created an account; welcome to The Traveling Therapist.</p>
@@ -324,7 +391,7 @@ def therapist_welcome(first_name, last_name):
 
 def auction_created_admin(clinicName, city, province, email, reservePrice, auctionStart, auctionEnd, placementStart, placementEnd, auctionID):
     message = email_header
-    message = message + """<section style="font-size: 16px; margin-bottom: 4rem;">
+    message = message + """<section style="font-size: 16px; margin-bottom: 1rem; padding: 10px;">
         <h1>A New Auction has been created</h1>
         Clinic Name: """ + clinicName + """<br>
         Clinic Location: """ + city + """, """ + province + """<br>
@@ -348,7 +415,7 @@ def new_auction_email_to_all(first_name, last_name, link, start_date, end_date, 
     else:
       payment_type_message = "the fee split you're bidding is the percentage YOU want as a clinician for each patient you see."
     message = email_header
-    message = message + """<section style="font-size: 16px; margin-bottom: 4rem;">
+    message = message + """<section style="font-size: 16px; margin-bottom: 1rem; padding: 10px;">
   <p>Dear <span class="text-weight-bold">""" + first_name + """ """ + last_name + """</span>,</p>
   
   This is an email to let you know that a <a href=""" + link + """> new listing you can bid on </a> with the following details has been posted!
