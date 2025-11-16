@@ -170,29 +170,30 @@
                         </ul>
                     </div>
                 </div>
-                <p class="staffingSolutionsImpact"><b>Impact:</b> Lost hours for staff, delayed fill times, and
-                    patient
-                    cancellations</p>
+                <p class="staffingSolutionsImpact d-flex align-items-center">
+                    <img src="/media/images/negative-vote.png" alt="" class="me-2" style="width: 24px;">
+                    <b>Impact:</b> Lost hours for staff, delayed fill times, and patient cancellations
+                </p>
                 <!-- If the user is authenticated and a clinic link them to the create an auctuion. If they are not a clinic don't show the link because they won't be able to create an auction. -->
                 {% if user.is_authenticated %}
                 {% if user.account.get_split_user_type == 'Clinic' %}
-
-                <a class="staffSolutionsCTA" href="{% url 'create-auction' %}" target="_blank">Post a targeted
-                    auction in under 10
-                    minutes and
-                    see bids within 14 days.</a>
+                <div class="col-12 text-center">
+                    <a class="btn btn-primary btn-lg mb-3 text-center" href="{% url 'create-auction' %}">Post a
+                        targeted
+                        auction in under 10
+                        minutes and
+                        see bids within 14 days.</a>
+                </div>
                 {% endif %}
                 <!-- If the user is not logged in then go to the sign up page -->
                 {% else %}
-                <button class="btn btn-primary btn-lg mb-3" href="{% url 'create-auction' %}" target="_blank">Post a
-                    targeted
-                    auction in under 10
-                    minutes and
-                    see bids within 14 days.</button>
-                <!-- <a class="staffSolutionsCTA" href="{% url 'register' %}" target="_blank">Post a targeted auction in
-                    under 10 minutes
-                    and
-                    see bids within 14 days.</a> -->
+                <div class="col-12 text-center">
+                    <a class="btn btn-primary btn-lg mb-3 text-center" href="{% url 'register' %}">Post a
+                        targeted
+                        auction in under 10
+                        minutes and
+                        see bids within 14 days.</a>
+                </div>
                 {% endif %}
             </div>
         </div>
@@ -237,13 +238,25 @@
                         </ul>
                     </div>
                 </div>
-                <p class=""><b>Impact:</b> Lost hours for staff, delayed fill times, and
-                    patient
-                    cancellations
-                    that hit revenue.</p>
-                <blockquote class="blockquote accordionBlockQuote">
-                    <p>Create an auction and stop cold-emailing clinicians—let them come to you.</p>
-                </blockquote>
+                <p class="staffingSolutionsImpact d-flex align-items-center">
+                    <img src="/media/images/negative-vote.png" alt="" class="me-2" style="width: 24px;">
+                    <b>Impact:</b> Lost hours for staff, delayed fill times, and patient cancellations
+                </p>
+                <!-- If the user is authenticated and a clinic link them to the create an auctuion. If they are not a clinic don't show the link because they won't be able to create an auction. -->
+                {% if user.is_authenticated %}
+                {% if user.account.get_split_user_type == 'Clinic' %}
+                <div class="col-12 text-center">
+                    <a class="btn btn-primary btn-lg mb-3 text-center" href="{% url 'create-auction' %}">Create an
+                        auction and stop cold-emailing clinicians—let them come to you.</a>
+                </div>
+                {% endif %}
+                <!-- If the user is not logged in then go to the sign up page -->
+                {% else %}
+                <div class="col-12 text-center">
+                    <a class="btn btn-primary btn-lg mb-3 text-center" href="{% url 'register' %}">Create an auction and
+                        stop cold-emailing clinicians—let them come to you.</a>
+                </div>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -286,12 +299,27 @@
                         </ul>
                     </div>
                 </div>
-                <p class=""><b>Impact:</b> High placement costs with a slow human middleman that can often
+                <p class="staffingSolutionsImpact d-flex align-items-center">
+                    <img src="/media/images/negative-vote.png" alt="" class="me-2" style="width: 24px;">
+                    <b>Impact:</b> High placement costs with a slow human middleman that can often
                     leave you
-                    questioning whether it was better to not get the coverage at all.</p>
-                <blockquote class="blockquote accordionBlockQuote">
-                    <p>Compare recruiter costs to a flat-fee match and see the savings.</p>
-                </blockquote>
+                    questioning whether it was better to not get the coverage at all.
+                </p>
+                <!-- If the user is authenticated and a clinic link them to the create an auctuion. If they are not a clinic don't show the link because they won't be able to create an auction. -->
+                {% if user.is_authenticated %}
+                {% if user.account.get_split_user_type == 'Clinic' %}
+                <div class="col-12 text-center">
+                    <a class="btn btn-primary btn-lg mb-3 text-center" href="{% url 'create-auction' %}">Compare
+                        recruiter costs to a flat-fee match and see the savings.</a>
+                </div>
+                {% endif %}
+                <!-- If the user is not logged in then go to the sign up page -->
+                {% else %}
+                <div class="col-12 text-center">
+                    <a class="btn btn-primary btn-lg mb-3 text-center" href="{% url 'register' %}">Compare recruiter
+                        costs to a flat-fee match and see the savings.</a>
+                </div>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -339,13 +367,28 @@
                         </ul>
                     </div>
                 </div>
-                <p class=""><b>Impact:</b> Higher per-hour staffing costs, compliance risk, and the clinic
+                <p class="staffingSolutionsImpact d-flex align-items-center">
+                    <img src="/media/images/negative-vote.png" alt="" class="me-2" style="width: 24px;">
+                    <b>Impact:</b> Higher per-hour staffing costs, compliance risk, and the clinic
                     owner has
                     to
-                    cover for agency's bricks and mortar business structure</p>
-                <blockquote class="blockquote accordionBlockQuote">
-                    <p>Post a fee-split or contract auction and control your margins from day one.</p>
-                </blockquote>
+                    cover for agency's bricks and mortar business structure
+                </p>
+                <!-- If the user is authenticated and a clinic link them to the create an auctuion. If they are not a clinic don't show the link because they won't be able to create an auction. -->
+                {% if user.is_authenticated %}
+                {% if user.account.get_split_user_type == 'Clinic' %}
+                <div class="col-12 text-center">
+                    <a class="btn btn-primary btn-lg mb-3 text-center" href="{% url 'create-auction' %}">Post a
+                        fee-split or contract auction and control your margins from day one.</a>
+                </div>
+                {% endif %}
+                <!-- If the user is not logged in then go to the sign up page -->
+                {% else %}
+                <div class="col-12 text-center">
+                    <a class="btn btn-primary btn-lg mb-3 text-center" href="{% url 'register' %}">Post a fee-split or
+                        contract auction and control your margins from day one.</a>
+                </div>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -391,9 +434,21 @@
                         </ul>
                     </div>
                 </div>
-                <blockquote class="blockquote accordionBlockQuote">
-                    <p>Post your first auction now — pay nothing until you get a match.</p>
-                </blockquote>
+                <!-- If the user is authenticated and a clinic link them to the create an auctuion. If they are not a clinic don't show the link because they won't be able to create an auction. -->
+                {% if user.is_authenticated %}
+                {% if user.account.get_split_user_type == 'Clinic' %}
+                <div class="col-12 text-center">
+                    <a class="btn btn-primary btn-lg mb-3 text-center" href="{% url 'create-auction' %}">Post your first
+                        auction now — pay nothing until you get a match.</a>
+                </div>
+                {% endif %}
+                <!-- If the user is not logged in then go to the sign up page -->
+                {% else %}
+                <div class="col-12 text-center">
+                    <a class="btn btn-primary btn-lg mb-3 text-center" href="{% url 'register' %}">Post your first
+                        auction now — pay nothing until you get a match.</a>
+                </div>
+                {% endif %}
             </div>
         </div>
     </div>
