@@ -113,7 +113,7 @@
     <!-- Navigation for Staffing Solutions Section -->
     <nav class="navbar navbar-expand-lg sub-nav">
         <div class="container-fluid">
-            <a class="navbar-brand staffSolutionsNavLink" href="#JobBorad"><img class="AccordionIcon"
+            <a class="navbar-brand staffSolutionsNavLink" href="#JobBoard"><img class="AccordionIcon"
                     src="/media/images/job-board.png" alt="Hands shaking">Job Borad</a>
             <a class="navbar-brand staffSolutionsNavLink" href="#DirectEmployerRecruitment"><img class="AccordionIcon"
                     src="/media/images/recruitment.png" alt="People icons with magnfiying glass">Direct Employer
@@ -146,7 +146,7 @@
                         than they needed"
                     </i></p>
                 <div class="row">
-                    <div class="col-lg-6 col-md-12 staffingSolutionsSection">
+                    <div class="col-lg-4 col-md-12 staffingSolutionsSection">
                         <h4 class="ps-2">
                             <span class="text-danger">☒</span> What Goes Wrong
                         </h4>
@@ -156,7 +156,7 @@
                             <li>No built-in verification or credential gating; false positives are common.</li>
                         </ul>
                     </div>
-                    <div class="col-lg-6 col-md-12 staffingSolutionsSection">
+                    <div class="col-lg-4 col-md-12 staffingSolutionsSection">
                         <h4><span class="text-success">☑</span> How The Traveling Therapist Can Help</h4>
                         <ul class="accordionList">
                             <li>Post once on the The Traveling Therapist platform and receive focused clinician
@@ -169,33 +169,37 @@
                                 clinicians faster.</li>
                         </ul>
                     </div>
+                    <div class="col-lg-4 col-md-12 staffingSolutionsSection">
+                        <h4><span class="impactThumbsDown">🖓</span> Impact</h4>
+                        <ul class="accordionList">
+                            <li>Lost hours for staff, delayed fill times, and patient cancellations</li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-4 col-md-12 staffingSolutionsSection"></div>
+                    <img src="/media/images/negative-vote.png" alt="" style="width: 24px;">
                 </div>
-                <p class="staffingSolutionsImpact d-flex align-items-center">
-                    <img src="/media/images/negative-vote.png" alt="" class="me-2" style="width: 24px;">
-                    <b>Impact:</b> Lost hours for staff, delayed fill times, and patient cancellations
-                </p>
-                <!-- If the user is authenticated and a clinic link them to the create an auctuion. If they are not a clinic don't show the link because they won't be able to create an auction. -->
-                {% if user.is_authenticated %}
-                {% if user.account.get_split_user_type == 'Clinic' %}
-                <div class="col-12 text-center">
-                    <a class="btn btn-primary btn-lg mb-3 text-center" href="{% url 'create-auction' %}">Post a
-                        targeted
-                        auction in under 10
-                        minutes and
-                        see bids within 14 days.</a>
-                </div>
-                {% endif %}
-                <!-- If the user is not logged in then go to the sign up page -->
-                {% else %}
-                <div class="col-12 text-center">
-                    <a class="btn btn-primary btn-lg mb-3 text-center" href="{% url 'register' %}">Post a
-                        targeted
-                        auction in under 10
-                        minutes and
-                        see bids within 14 days.</a>
-                </div>
-                {% endif %}
             </div>
+            <!-- If the user is authenticated and a clinic link them to the create an auctuion. If they are not a clinic don't show the link because they won't be able to create an auction. -->
+            {% if user.is_authenticated %}
+            {% if user.account.get_split_user_type == 'Clinic' %}
+            <div class="col-12 text-center">
+                <a class="btn btn-primary btn-lg mb-3 text-center" href="{% url 'create-auction' %}">Post a
+                    targeted
+                    auction in under 10
+                    minutes and
+                    see bids within 14 days.</a>
+            </div>
+            {% endif %}
+            <!-- If the user is not logged in then go to the sign up page -->
+            {% else %}
+            <div class="col-12 text-center">
+                <a class="btn btn-primary btn-lg mb-3 text-center" href="{% url 'register' %}">Post a
+                    targeted
+                    auction in under 10
+                    minutes and
+                    see bids within 14 days.</a>
+            </div>
+            {% endif %}
         </div>
     </div>
     <!-- Direct Employer Recruitment -->
@@ -463,7 +467,8 @@
     </div>
     <div class="row">
         <a id="startAuctionButton" class="btn btn-primary btn-lg guidePageButton"
-            href="{% url 'create-auction' %}">Start Your First
+            href="{% url 'create-auction' %}">Start
+            Your First
             Auction</a>
     </div>
 

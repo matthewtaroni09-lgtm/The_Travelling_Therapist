@@ -542,11 +542,6 @@ ol {
     padding: 10px;
 }
 
-.staffingSolutionsImpact {
-    font-size: 30px;
-    padding-top: 15px;
-}
-
 .staffSolutionsCTA {
     text-decoration: none;
     font-style: italic;
@@ -555,6 +550,10 @@ ol {
 
 .staffSolutionsCTA:hover {
     color: var(--primary-colour)
+}
+
+.impactThumbsDown {
+    font-size: 30px;
 }
 
 /* Prevent layout jump */
