@@ -3,12 +3,6 @@
 {% block content %}
 <!-- content -->
 <p id="pageTitle" class="d-none">Clinic_Owner_Guide</p>
-<!-- <nav class="sidebar">
-    <a href="#intro">Intro</a>
-    <a href="#hiringHole">The Hiring Hole</a>
-    <a href="#exploringStaffingSolutions">Staffing Solutions</a>
-    <a href="#auction">Start Auction</a>
-</nav> -->
 <div class="container" style="background-color: rgba(0, 0, 0, 0);">
     <div class=" row">
         <div class="col-md-12">
@@ -20,9 +14,9 @@
     </div>
     <br>
     <div class="row">
-        <div class="col-4"><img id="clinicOwnerGuideMainImage" src="/media/images/clinic_guide_main.png"
+        <div class="col-lg-4 col-md-12"><img id="clinicOwnerGuideMainImage" src="/media/images/clinic_guide_main.png"
                 class="img-fluid" alt="Clinic staff"></div>
-        <div class="col-8">
+        <div class="col-lg-8 col-md-12">
             <h2>A Day in the Life</h2>
             <p>You open the clinic with a full morning slate of patients, but within an hour you’re pulled into the
                 hiring
@@ -85,7 +79,7 @@
         </div>
     </div>
     <div class="row" id="hiringHole">
-        <div class="col-8">
+        <div class="col-lg-8 col-md-12">
             <h2>The Hiring Hole</h2>
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis aliquam odio ac magna posuere, id laoreet
                 risus
@@ -102,31 +96,56 @@
                 vitae ipsum quis convallis. Nulla ullamcorper sem vitae magna tempor, vel aliquet augue venenatis. Duis
                 porta tortor et arcu molestie tincidunt.</p>
         </div>
-        <div class="col-4"><img id="clinicOwnerGuideMiddleImage" src="/media/images/clinic_guide_middle.png"
-                class="img-fluid" alt="Clinic staff"></div>
+        <div class="col-lg-4 col-md-12"><img id="clinicOwnerGuideMiddleImage"
+                src="/media/images/clinic_guide_middle.png" class="img-fluid" alt="Clinic staff"></div>
     </div>
     <div class="row text-center" id="exploringStaffingSolutions">
         <h2>Explore Your Staffing Solutions</h2>
         <p>Here’s how each hiring method tackles (or fails) the staffing puzzle – and why The Traveling Therapist
             outpaces them all.</p>
     </div>
+
     <!-- Navigation for Staffing Solutions Section -->
-    <nav class="navbar navbar-expand-lg sub-nav">
+    <nav class="navbar navbar-expand-xl navbar-light sub-nav">
         <div class="container-fluid">
-            <a class="navbar-brand staffSolutionsNavLink" href="#JobBoard"><img class="AccordionIcon"
-                    src="/media/images/job-board.png" alt="Hands shaking">Job Borad</a>
-            <a class="navbar-brand staffSolutionsNavLink" href="#DirectEmployerRecruitment"><img class="AccordionIcon"
-                    src="/media/images/recruitment.png" alt="People icons with magnfiying glass">Direct Employer
-                Recruitment</a>
-            <a class="navbar-brand staffSolutionsNavLink" href="#HeadhunterRecruiter"><img class="AccordionIcon"
-                    src="/media/images/headhunting.png" alt="Person icon with target">Headhunter/Recruiter</a>
-            <a class="navbar-brand staffSolutionsNavLink" href="#StaffingAgency"><img class="AccordionIcon"
-                    src="/media/images/staffingagency.png" alt="People icons with breifcase and gear">Staffing
-                Agency</a>
-            <a class="navbar-brand staffSolutionsNavLink" href="#TheTravelingTherapist"><img class="AccordionIcon"
-                    src="/media/images/T_Logo_Final.png" alt="The Traveling Therapist Logo">The Traveling Therapist</a>
+            <button class="navbar-toggler m-1" type="button" data-bs-toggle="collapse"
+                data-bs-target="#subNavbarToggler" aria-controls="subNavbarToggler" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="subNavbarToggler">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item staffingSolutionSubItem">
+                        <a class="navbar-brand staffSolutionsNavLink" href="#JobBoard"><img class="AccordionIcon"
+                                src="/media/images/job-board.png" alt="Hands shaking">Job Borad</a>
+                    </li>
+                    <li class="nav-item staffingSolutionSubItem">
+                        <a class="navbar-brand staffSolutionsNavLink" href="#DirectEmployerRecruitment"><img
+                                class="AccordionIcon" src="/media/images/recruitment.png"
+                                alt="People icons with magnfiying glass">Direct Employer
+                            Recruitment</a>
+                    </li>
+                    <li class="nav-item staffingSolutionSubItem">
+                        <a class="navbar-brand staffSolutionsNavLink" href="#HeadhunterRecruiter"><img
+                                class="AccordionIcon" src="/media/images/headhunting.png"
+                                alt="Person icon with target">Headhunter/Recruiter</a>
+                    </li>
+                    <li class="nav-item staffingSolutionSubItem">
+                        <a class="navbar-brand staffSolutionsNavLink" href="#StaffingAgency"><img class="AccordionIcon"
+                                src="/media/images/staffingagency.png"
+                                alt="People icons with breifcase and gear">Staffing
+                            Agency</a>
+                    </li>
+                    <li class="nav-item staffingSolutionSubItem">
+                        <a class="navbar-brand staffSolutionsNavLink" href="#TheTravelingTherapist"><img
+                                class="AccordionIcon" src="/media/images/T_Logo_Final.png"
+                                alt="The Traveling Therapist Logo">The Traveling Therapist</a>
+                    </li>
+                </ul>
+            </div>
         </div>
     </nav>
+
     <!-- Job Board -->
     <div class="row staffingSolutionRow">
         <div>
@@ -175,8 +194,6 @@
                             <li>Lost hours for staff, delayed fill times, and patient cancellations</li>
                         </ul>
                     </div>
-                    <div class="col-lg-4 col-md-12 staffingSolutionsSection"></div>
-                    <img src="/media/images/negative-vote.png" alt="" style="width: 24px;">
                 </div>
             </div>
             <!-- If the user is authenticated and a clinic link them to the create an auctuion. If they are not a clinic don't show the link because they won't be able to create an auction. -->
@@ -216,7 +233,7 @@
                         timeframe."
                     </i></p>
                 <div class="row">
-                    <div class="col-lg-6 col-md-12 staffingSolutionsSection">
+                    <div class="col-lg-4 col-md-12 staffingSolutionsSection">
                         <h4 class="ps-2">
                             <span class="text-danger">☒</span> What Goes Wrong
                         </h4>
@@ -229,7 +246,7 @@
                             <li>Negotiation on splits or rates often stalls without a neutral marketplace.</li>
                         </ul>
                     </div>
-                    <div class="col-lg-6 col-md-12 staffingSolutionsSection">
+                    <div class="col-lg-4 col-md-12 staffingSolutionsSection">
                         <h4><span class="text-success">☑</span> How The Traveling Therapist Can Help</h4>
                         <ul class="accordionList">
                             <li>Convert outreach effort into a single auction: set your schedule, budget ceiling,
@@ -241,11 +258,13 @@
                             <li>You only pay if a match is made, eliminating wasted outreach spend.</li>
                         </ul>
                     </div>
+                    <div class="col-lg-4 col-md-12 staffingSolutionsSection">
+                        <h4><span class="impactThumbsDown">🖓</span> Impact</h4>
+                        <ul class="accordionList">
+                            <li>Extended vacancy windows and continuous internal distraction from patient care. </li>
+                        </ul>
+                    </div>
                 </div>
-                <p class="staffingSolutionsImpact d-flex align-items-center">
-                    <img src="/media/images/negative-vote.png" alt="" class="me-2" style="width: 24px;">
-                    <b>Impact:</b> Lost hours for staff, delayed fill times, and patient cancellations
-                </p>
                 <!-- If the user is authenticated and a clinic link them to the create an auctuion. If they are not a clinic don't show the link because they won't be able to create an auction. -->
                 {% if user.is_authenticated %}
                 {% if user.account.get_split_user_type == 'Clinic' %}
@@ -279,7 +298,7 @@
                         timeframe."
                     </i></p>
                 <div class="row">
-                    <div class="col-lg-6 col-md-12 staffingSolutionsSection">
+                    <div class="col-lg-4 col-md-12 staffingSolutionsSection">
                         <h4 class="ps-2">
                             <span class="text-danger">☒</span> What Goes Wrong
                         </h4>
@@ -291,7 +310,7 @@
                             <li>Back and forth with a headhunter middleman via phone/email to get a candidate </li>
                         </ul>
                     </div>
-                    <div class="col-lg-6 col-md-12 staffingSolutionsSection">
+                    <div class="col-lg-4 col-md-12 staffingSolutionsSection">
                         <h4><span class="text-success">☑</span> How The Traveling Therapist Can Help</h4>
                         <ul class="accordionList">
                             <li>Transparent pricing model: auctions let you control ceiling price and hiring terms;
@@ -302,13 +321,14 @@
                                 expensive contingency placements.</li>
                         </ul>
                     </div>
+                    <div class="col-lg-4 col-md-12 staffingSolutionsSection">
+                        <h4><span class="impactThumbsDown">🖓</span> Impact</h4>
+                        <ul class="accordionList">
+                            <li>High placement costs with a slow human middleman that can often leave you questioning
+                                whether it was better to not get the coverage at all.</li>
+                        </ul>
+                    </div>
                 </div>
-                <p class="staffingSolutionsImpact d-flex align-items-center">
-                    <img src="/media/images/negative-vote.png" alt="" class="me-2" style="width: 24px;">
-                    <b>Impact:</b> High placement costs with a slow human middleman that can often
-                    leave you
-                    questioning whether it was better to not get the coverage at all.
-                </p>
                 <!-- If the user is authenticated and a clinic link them to the create an auctuion. If they are not a clinic don't show the link because they won't be able to create an auction. -->
                 {% if user.is_authenticated %}
                 {% if user.account.get_split_user_type == 'Clinic' %}
@@ -344,7 +364,7 @@
                         posting on a Job board anyways as a last resort."
                     </i></p>
                 <div class="row">
-                    <div class="col-lg-6 col-md-12 staffingSolutionsSection">
+                    <div class="col-lg-4 col-md-12 staffingSolutionsSection">
                         <h4 class="ps-2">
                             <span class="text-danger">☒</span> What Goes Wrong
                         </h4>
@@ -357,7 +377,7 @@
                                 fee-split scenarios. </li>
                         </ul>
                     </div>
-                    <div class="col-lg-6 col-md-12 staffingSolutionsSection">
+                    <div class="col-lg-4 col-md-12 staffingSolutionsSection">
                         <h4><span class="text-success">☑</span> How The Traveling Therapist Can Help</h4>
                         <ul class="accordionList">
                             <li>Eliminate the agency middleman: TTT’s auction model lets clinics set clear terms and
@@ -370,14 +390,14 @@
                                 than traditional agency workflows.
                         </ul>
                     </div>
+                    <div class="col-lg-4 col-md-12 staffingSolutionsSection">
+                        <h4><span class="impactThumbsDown">🖓</span> Impact</h4>
+                        <ul class="accordionList">
+                            <li>Higher per-hour staffing costs, compliance risk, and the clinic owner has to cover for
+                                agency's bricks and mortar business structure</li>
+                        </ul>
+                    </div>
                 </div>
-                <p class="staffingSolutionsImpact d-flex align-items-center">
-                    <img src="/media/images/negative-vote.png" alt="" class="me-2" style="width: 24px;">
-                    <b>Impact:</b> Higher per-hour staffing costs, compliance risk, and the clinic
-                    owner has
-                    to
-                    cover for agency's bricks and mortar business structure
-                </p>
                 <!-- If the user is authenticated and a clinic link them to the create an auctuion. If they are not a clinic don't show the link because they won't be able to create an auction. -->
                 {% if user.is_authenticated %}
                 {% if user.account.get_split_user_type == 'Clinic' %}
@@ -473,5 +493,5 @@
     </div>
 
 </div>
-<script src="{% static 'auction/why-use.js' %}"></script>
+<script src="{% static 'auction/user_guide_pages.js' %}"></script>
 {% endblock %}
