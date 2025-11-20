@@ -475,7 +475,7 @@ def check_out_bid(auction_id, bid, request, current_lowest_bid_user, new_bid_use
                 print("Not in email list" + str(single_bid.user.email))
                 try:
                     send_mail(
-                        subject = "An Auction You Bid on Has a New Bid - Place Your Next Bid Now - The Traveling Therapist",
+                        subject = "The Traveling Therapist -  A New Lowest Bid Has Been Placed",
                         message = "",
                         html_message = emails.therapist_auction_outbid_all_users(single_bid.user.first_name, single_bid.user.last_name, auction.clinic.clinicName, auction.auctionStart, auction.auctionID),
                         from_email = settings.EMAIL_HOST_USER,

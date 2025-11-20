@@ -353,16 +353,13 @@ def therapist_auction_outbid_lowest(first_name, last_name, clinic_name, start_da
 def therapist_auction_outbid_all_users(first_name, last_name, clinic_name, start_date, auctionID):
     message = email_header
     message = message + """<section style="font-size: 16px; margin-bottom: 1rem; padding: 10px;">
-  <p>Hello <span class="text-weight-bold">""" + first_name + """ """ + last_name + """</span>,</p>
-  
-  <p>We wanted to let you know that your bid for <a href=""" + ACTIVE_LINK + "/auction/" + str(auctionID) + """>""" + clinic_name + """ 's: """ + str(start_date.strftime("%Y-%m-%d")) + """</a> job opening has been outbid.</p>
-  <p>If you'd like to remain in the running, you may submit a new bid at any time before the auction closes.</p>
-  <a href=""" + ACTIVE_LINK + "/auction/" + str(auctionID) + """>Click here to place your new bid!</a>
-  <p>If you'd like to remain in the running, you may submit a new bid at any time before the auction closes.</p>
+  <p>Hello <span class="text-weight-bold">""" + first_name + """ """ + last_name + """</span>,</p>  
+  <p>There's been an update on an auction you previously bid on: <a href=""" + ACTIVE_LINK + "/auction/" + str(auctionID) + """>""" + clinic_name + """ 's: """ + str(start_date.strftime("%Y-%m-%d")) + """</a>.</p>
+  <p>Another clinician has placed a new, lower bid. This may affect your competitiveness if you're still interested in this opportunity. If you'd like to remain in the running, you may submit a new bid at any time before the auction closes.</p>
+  👉 <a href=""" + ACTIVE_LINK + "/auction/" + str(auctionID) + """>Click here to view the auction and place your next bid.</a>
   <p>Thank you for participating in the auction. We wish you the best of luck!</p>
   <br>
   <p style="font-weight: 700; padding-top: 0rem; margin-top: 0; line-height: 0;">The Traveling Therapist Team</p>
-
 </section>
 """
     message = message + email_footer
