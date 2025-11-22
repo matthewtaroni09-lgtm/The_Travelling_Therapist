@@ -556,6 +556,58 @@ ol {
     font-size: 30px;
 }
 
+/* Hiring Hole ChatGPT Suggestions */
+.quote-card {
+    padding: 1.25rem;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+    border-left: 4px solid #00d7a6;
+    /* accent color */
+    min-height: 150px;
+}
+
+.quote-card p {
+    margin: 0 0 0.75rem 0;
+    font-style: italic;
+    color: #333;
+}
+
+.quote-card footer {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.bubble {
+    max-width: 70%;
+    padding: 1rem;
+    margin: 0.75rem 0;
+    border-radius: 12px;
+    background: #f8fdfb;
+    border: 1px solid #e6f6ef;
+    font-style: italic;
+}
+
+.bubble.left {
+    margin-right: auto;
+}
+
+.bubble.right {
+    margin-left: auto;
+    background: #ffffff;
+    border-color: #eee;
+}
+
+.by {
+    display: block;
+    margin-top: 0.5rem;
+    font-style: normal;
+    color: #666;
+    font-size: .9rem;
+}
+
+
+/* End Hiring Hole */
 /* Staffing Solution Sub Nav for mobile */
 @media (max-width: 1198px) {
 
