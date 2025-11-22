@@ -284,7 +284,7 @@ $("#submitButton").click(function () {
     let errorList = '';
 
     if ($("#id_type").val() === "0") {
-        errorList += "<li>Please select an auction type.</li>";
+        errorList += "<li>Please select an clinician type.</li>";
     }
 
     if ($("#id_paymentType").val() === "") {
