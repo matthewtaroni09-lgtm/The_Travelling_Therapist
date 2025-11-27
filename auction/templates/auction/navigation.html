@@ -23,6 +23,10 @@
                         <li><a class="dropdown-item" href="{% url 'mission-vision' %}">Company Misson & Vision</a></li>
                     </ul>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link text-weight-normal {% if path == 'profile' %}active{% endif %}"
+                        href="{% url 'clinic-owner-guide' %}">Clinic Hiring Guide</a>
+                </li>
                 {% if user.is_authenticated %}
                 {% if user.account.get_split_user_type == 'Clinic' %}
                 <li class="nav-item">
