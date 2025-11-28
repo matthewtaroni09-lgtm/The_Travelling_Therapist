@@ -179,7 +179,7 @@ def clinic_welcome(clinic_name):
 
   <ol>
     <li><a href="https://travelingtherapist.ca">Login</a>: login, create an auction, and view the progress of your existing auctions once on the site.</li>
-    <li><a href="https://travelingtherapist.ca/about">FAQ</a>: interested in trying our service? See how it all works and answers to the most common questions we receive from therapists and clinics, here.</li>
+    <li><a href="https://travelingtherapist.ca/about">FAQ</a>: interested in trying our service? See how it all works and answers to the most common questions we receive from therapists and healthcare facilities, here.</li>
     <li>Questions for us? Feel free to reach out to us here info@travelingtherapist.ca, and we will get back to you as soon as possible.</li>
   </ol>
    
@@ -201,7 +201,7 @@ def clinic_auction_end(clinic_name, start_date, end_date):
   <ul>
     <li>How they will be paid (cheque, transfer, etc.)</li>
     <li>What you need from them before starting. This could be a copy of their insurance, etc.</li>
-    <li>Any site/clinic orientation required on day 1 or in advance of the work term.</li>
+    <li>Any site/healthcare facilities orientation required on day 1 or in advance of the work term.</li>
   </ul>
 
    <h3>Auction Details:</h3>
@@ -257,7 +257,7 @@ def therapist_auction_end_lose(first_name, last_name, clinic_name, start_date, e
   <p>Better luck on your next auction.</p>
 
   <h3>Auction Details:</h3>
-  <p>Clinic Name: """ + str(clinic_name) + """</p>
+  <p>Healthcare facility Name: """ + str(clinic_name) + """</p>
   <p>Therapist Start Date: """ + str(start_date) + """</p>
   <p>Therapist End Date: """ + str(end_date) + """</p>
   
@@ -274,10 +274,10 @@ def therapist_auction_end_win(first_name, last_name, clinic_name, start_date, en
         <p>Hello <span class="text-weight-bold">""" + first_name + """ """ + last_name + """</span>,</p>
         
         <p>You were the lowest bidder at the end of an auction using The Traveling Therapist. Congratulations!</p>
-        <p>Look for an email from us shortly to match you with the clinic. From that point it is your responsibility to contact the clinic and arrange some of the details of your job like how you will be paid (cheque, deposit, etc.)</p>
+        <p>Look for an email from us shortly to match you with the clinic. From that point it is your responsibility to contact the healthcare facility and arrange some of the details of your job like how you will be paid (cheque, deposit, etc.)</p>
 
         <h3>Auction Details:</h3>
-        <p>Clinic Name: """ + str(clinic_name) + """</p>
+        <p>Healthcare Facility Name: """ + str(clinic_name) + """</p>
         <p>Therapist Start Date: """ + str(start_date) + """</p>
         <p>Therapist End Date: """ + str(end_date) + """</p>
         
@@ -306,7 +306,7 @@ def therapist_auction_not_met(first_name, last_name, clinic_name, start_date, en
   <p>Not sure what the reserve price is? Check out our FAQ page <a href="https://travelingtherapist.ca/about">here</a>.</p>
 
   <h3>Auction Details:</h3>
-  <p>Clinic Name: """ + str(clinic_name) + """</p>
+  <p>hHalthcare Facility Name: """ + str(clinic_name) + """</p>
   <p>Therapist Start Date: """ + str(start_date) + """</p>
   <p>Therapist End Date: """ + str(end_date) + """</p>
   
@@ -390,9 +390,9 @@ def auction_created_admin(clinicName, city, province, email, reservePrice, aucti
     message = email_header
     message = message + """<section style="font-size: 16px; margin-bottom: 1rem; padding: 10px;">
         <h1>A New Auction has been created</h1>
-        Clinic Name: """ + clinicName + """<br>
-        Clinic Location: """ + city + """, """ + province + """<br>
-        Clinic email: """ + email + """<br>
+        Healthcare Facilities Name: """ + clinicName + """<br>
+        Healthcare Facilities Location: """ + city + """, """ + province + """<br>
+        Healthcare Facilities email: """ + email + """<br>
         Reserve Bid: """ + reservePrice + """<br>
         Auction Start: """ + auctionStart + """<br>
         Auction End: """ + auctionEnd + """<br>
@@ -419,9 +419,9 @@ def new_auction_email_to_all(first_name, last_name, link, start_date, end_date, 
   <br><br>
   <b>Placement Term:</b> """ + start_date + """ - """ + end_date + """
   <br>
-  <b>Clinic Name:</b> """ + clinic_name + """
+  <b>Healthcare Facility Name:</b> """ + clinic_name + """
   <br>
-  <b>Clinic Location:</b> """ + clinic_location + """
+  <b>Healthcare Facility Location:</b> """ + clinic_location + """
   <br><br>
   The clock is ticking, so if you'd like to take the opening, bid away!
   <br>
@@ -429,7 +429,7 @@ def new_auction_email_to_all(first_name, last_name, link, start_date, end_date, 
   <br><br>
   This auction is a """ + payment_type + """, so remember that """ + payment_type_message + """
   <br><br>
-  Remember that The Traveling Therapist is always free to bid for clinicians and at the end of the auction that the clinic is matched with the LOWEST bidder.
+  Remember that The Traveling Therapist is always free to bid for clinicians and at the end of the auction that the healthcare facility is matched with the LOWEST bidder.
 
     <p>Happy Bidding!</p>
     <br>
