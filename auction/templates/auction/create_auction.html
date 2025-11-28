@@ -26,7 +26,7 @@
     <form method="post" class="p-2">
       <!-- <form method="post" class="p-md-5"> -->
       <input id="AOPPopulated" name="AOPPopulated" class="d-none" value="No">
-      <h1 class="text-large text-weight-normal mb-5">Create New Auction Post</h1>
+      <h1 class="text-large text-weight-normal mb-5">Create New Listing Post</h1>
       {% csrf_token %}
       {{ form|as_crispy_errors }}
       <div class="alert alert-block alert-danger">
@@ -240,7 +240,7 @@
         <label id="practiceAreaCheckBoxLabel" class="form-label">Would you like to provide Practice Area
           Information?</label>
       </div>
-      <p id="optionsMessage">Practice Area options will de displayed once the auction type is selected.</p>
+      <p id="optionsMessage">Practice Area options will de displayed once the listing type is selected.</p>
       <div id="practiceAreaDiv" class="mb-3 row">
         {% include 'auction/partials/practice_areas.html' %}
       </div>
@@ -248,13 +248,13 @@
         {{ form.comments|as_crispy_field }}
       </div>
   </div>
-  <button id="submitButton" type="submit" class="btn btn-primary">Create Auction</button>
+  <button id="submitButton" type="submit" class="btn btn-primary">Create Listing</button>
 </div>
 </div>
 </div>
 </form>
 {% else %}
-<p>Only {{ max_forms }} active auctions are allowed at a time. Contact info@travelingtherapist.ca for more
+<p>Only {{ max_forms }} active listings are allowed at a time. Contact info@travelingtherapist.ca for more
   information on our Pro plan.</p>
 {% endif %}
 </div>
@@ -269,7 +269,7 @@
       </div>
       <!-- Modal body -->
       <div class="modal-body">
-        This represents the price that would be paid if the auction was a match.
+        This represents the price that would be paid if the listing was a match.
       </div>
       <!-- Modal footer -->
       <div class="modal-footer">

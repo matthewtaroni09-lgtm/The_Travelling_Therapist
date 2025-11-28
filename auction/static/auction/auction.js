@@ -121,7 +121,7 @@ function countDown(date, auctionID) {
             // If the count down is over, write some text 
             if (distance < 0) {
                 clearInterval(x);
-                document.getElementById("auctionTimer-" + auctionID).innerHTML = "Auction Completed";
+                document.getElementById("auctionTimer-" + auctionID).innerHTML = "Listing Completed";
                 let numBids = document.getElementById("auctionBids-" + auctionID).innerHTML;
                 if (numBids === "0 bids") {
                     document.getElementById("auctionBids-" + auctionID).innerHTML = "";
@@ -131,7 +131,7 @@ function countDown(date, auctionID) {
         else {
             // If the length is 0 then that auction card has been filtered out
             if ($('#auctionTimer-' + auctionID).length > 0) {
-                document.getElementById("auctionTimer-" + auctionID).innerHTML = "Auction Completed";
+                document.getElementById("auctionTimer-" + auctionID).innerHTML = "Listing Completed";
                 let numBids = document.getElementById("auctionBids-" + auctionID).innerHTML;
                 if (numBids === "0 bids") {
                     document.getElementById("auctionBids-" + auctionID).innerHTML = "";

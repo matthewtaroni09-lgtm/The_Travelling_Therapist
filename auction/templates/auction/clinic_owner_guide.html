@@ -35,7 +35,7 @@
     </div>
     <div class="row text-center m-3">
         <a class="btn btn-primary btn-lg guidePageButton" href="{% url 'create-auction' %}">Post Your First
-            Auction</a>
+            Listing</a>
     </div>
     <div class="row text-center">
         <div id="quoteCarousel" class="carousel slide mt-4 mb-4" data-bs-ride="carousel" data-bs-interval="50000000">
@@ -192,7 +192,7 @@
                         <ul class="accordionList">
                             <li>Post once on the The Traveling Therapist platform and receive focused clinician
                                 bids
-                                during a 14-day auction window.</li>
+                                during a 14-day listing window.</li>
                             <li>The Traveling Therapist reduces noise by attracting clinicians who actively bid
                                 on
                                 roles, not passive applicants.</li>
@@ -214,7 +214,7 @@
             <div class="col-12 text-center">
                 <a class="btn btn-primary btn-lg mb-3 text-center" href="{% url 'create-auction' %}">Post a
                     targeted
-                    auction in under 10
+                    listing in under 10
                     minutes and
                     see bids within 14 days.</a>
             </div>
@@ -224,7 +224,7 @@
             <div class="col-12 text-center">
                 <a class="btn btn-primary btn-lg mb-3 text-center" href="{% url 'register' %}">Post a
                     targeted
-                    auction in under 10
+                    listing in under 10
                     minutes and
                     see bids within 14 days.</a>
             </div>
@@ -261,7 +261,7 @@
                     <div class="col-lg-4 col-md-12 staffingSolutionsSection">
                         <h4><span class="text-success">☑</span> How The Traveling Therapist Can Help</h4>
                         <ul class="accordionList">
-                            <li>Convert outreach effort into a single auction: set your schedule, budget ceiling,
+                            <li>Convert outreach effort into a single listing: set your schedule, budget ceiling,
                                 and
                                 whether you’ll offer a fee-split or full contract price.</li>
                             <li>Clinicians bid directly, bringing negotiation into a transparent marketplace rather
@@ -281,14 +281,14 @@
                 {% if user.is_authenticated %}
                 {% if user.account.get_split_user_type == 'Clinic' %}
                 <div class="col-12 text-center">
-                    <a class="btn btn-primary btn-lg mb-3 text-center" href="{% url 'create-auction' %}">Create an
-                        auction and stop cold-emailing clinicians—let them come to you.</a>
+                    <a class="btn btn-primary btn-lg mb-3 text-center" href="{% url 'create-auction' %}">Create a
+                        listing and stop cold-emailing clinicians—let them come to you.</a>
                 </div>
                 {% endif %}
                 <!-- If the user is not logged in then go to the sign up page -->
                 {% else %}
                 <div class="col-12 text-center">
-                    <a class="btn btn-primary btn-lg mb-3 text-center" href="{% url 'register' %}">Create an auction and
+                    <a class="btn btn-primary btn-lg mb-3 text-center" href="{% url 'register' %}">Create a listing and
                         stop cold-emailing clinicians—let them come to you.</a>
                 </div>
                 {% endif %}
@@ -325,7 +325,7 @@
                     <div class="col-lg-4 col-md-12 staffingSolutionsSection">
                         <h4><span class="text-success">☑</span> How The Traveling Therapist Can Help</h4>
                         <ul class="accordionList">
-                            <li>Transparent pricing model: auctions let you control ceiling price and hiring terms;
+                            <li>Transparent pricing model: listings let you control ceiling price and hiring terms;
                                 TTT’s flat match fee starts at $300 and is only invoiced on a successful match.</li>
                             <li>Marketplace-driven bidding surfaces clinicians who accept your terms without a human
                                 middleman to slow the process.</li>
@@ -392,7 +392,7 @@
                     <div class="col-lg-4 col-md-12 staffingSolutionsSection">
                         <h4><span class="text-success">☑</span> How The Traveling Therapist Can Help</h4>
                         <ul class="accordionList">
-                            <li>Eliminate the agency middleman: TTT’s auction model lets clinics set clear terms and
+                            <li>Eliminate the agency middleman: TTT’s listing model lets clinics set clear terms and
                                 see
                                 clinician bids, reducing hidden margins and administrative overhead. </li>
                             <li>Choose between full contract price or fee-split posting options so you control the
@@ -415,14 +415,14 @@
                 {% if user.account.get_split_user_type == 'Clinic' %}
                 <div class="col-12 text-center">
                     <a class="btn btn-primary btn-lg mb-3 text-center" href="{% url 'create-auction' %}">Post a
-                        fee-split or contract auction and control your margins from day one.</a>
+                        fee-split or contract listing and control your margins from day one.</a>
                 </div>
                 {% endif %}
                 <!-- If the user is not logged in then go to the sign up page -->
                 {% else %}
                 <div class="col-12 text-center">
                     <a class="btn btn-primary btn-lg mb-3 text-center" href="{% url 'register' %}">Post a fee-split or
-                        contract auction and control your margins from day one.</a>
+                        contract listing and control your margins from day one.</a>
                 </div>
                 {% endif %}
             </div>
@@ -439,7 +439,7 @@
             <div>
                 <h4>The Traveling Therapist Case Study</h4>
                 <p class="ps-3 pe-3"><i>“After two months of agency calls and no-shows, a clinic owner
-                        posted an auction on TTT, was matched within 14 days, and booked a licensed
+                        posted a listing on TTT, was matched within 14 days, and booked a licensed
                         clinician at
                         a better rate than their last temp agency."
                     </i></p>
@@ -449,7 +449,7 @@
                             <span class="text-success">☑</span> What Goes Right
                         </h4>
                         <ul class="accordionList">
-                            <li>Fast: auctions run for 14 days so you get a match quickly.</li>
+                            <li>Fast: listings run for 14 days so you get a match quickly.</li>
                             <li>Transparent: no hidden fees; prices start at $300 per match and you only pay on
                                 successful matches.</li>
                             <li>Customizable: post for full contract price or fee split and set ceiling prices to
@@ -475,14 +475,14 @@
                 {% if user.account.get_split_user_type == 'Clinic' %}
                 <div class="col-12 text-center">
                     <a class="btn btn-primary btn-lg mb-3 text-center" href="{% url 'create-auction' %}">Post your first
-                        auction now — pay nothing until you get a match.</a>
+                        listing now — pay nothing until you get a match.</a>
                 </div>
                 {% endif %}
                 <!-- If the user is not logged in then go to the sign up page -->
                 {% else %}
                 <div class="col-12 text-center">
                     <a class="btn btn-primary btn-lg mb-3 text-center" href="{% url 'register' %}">Post your first
-                        auction now — pay nothing until you get a match.</a>
+                        listing now — pay nothing until you get a match.</a>
                 </div>
                 {% endif %}
             </div>
@@ -492,7 +492,7 @@
 
     <br>
     <div class="row">
-        <p>You have seen how each route stacks up. Now turn frustration into freedom. Post your first auction in
+        <p>You have seen how each route stacks up. Now turn frustration into freedom. Post your first listing in
             under
             10 minutes, compare bids in two weeks, and get back to what you do best – running a thriving clinic.
         </p>
@@ -501,7 +501,7 @@
         <a id="startAuctionButton" class="btn btn-primary btn-lg guidePageButton"
             href="{% url 'create-auction' %}">Start
             Your First
-            Auction</a>
+            Listing</a>
     </div>
 
 </div>

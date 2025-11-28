@@ -28,7 +28,7 @@ def check_times(start_time, end_time, day):
 def validate_clinic_fields(clinicName, city, province, username):
     error_list = []
     if clinicName == '' or clinicName is None:
-        error_list.append(ValidationError("Please enter a clinic name."))
+        error_list.append(ValidationError("Please enter a healthcare facility name."))
 
     if city == '' or city is None:
         error_list.append(ValidationError("Please enter a city."))
@@ -239,9 +239,9 @@ class BidForm(forms.ModelForm):
 class RegisterAcount(UserCreationForm):
     first_name = forms.CharField(required=False, min_length=2)
     last_name = forms.CharField(required=False, min_length=2)
-    clinicName = forms.CharField(required=False, label='Clinic Name')
+    clinicName = forms.CharField(required=False, label='Healthcare facility Name')
     city = forms.CharField(required=False)
-    about = forms.CharField(required=False, label='About the clinic', widget=forms.Textarea)
+    about = forms.CharField(required=False, label='About the healthcare facility', widget=forms.Textarea)
     province = forms.ChoiceField(choices=PROVINCES, required=False)
     username = forms.CharField(label='Email')
     user_type = forms.ModelChoiceField(queryset=UserType.objects.all())
@@ -471,14 +471,14 @@ class PracticeAreaForm(forms.ModelForm):
                 raise forms.ValidationError(error_list)
 
 class AuctionAccountForm(forms.ModelForm):
-    remember_auction_data = forms.BooleanField(required=False, label="Remember auction information for next time?")
+    remember_auction_data = forms.BooleanField(required=False, label="Remember listing information for next time?")
 
     class Meta:
         model = Account
         fields = ['remember_auction_data']
 
 class MessageAcknowledgementForm(forms.ModelForm):
-    acknowledged = forms.BooleanField(required=False, label="Remember auction information for next time?")
+    acknowledged = forms.BooleanField(required=False, label="Remember listing information for next time?")
 
     class Meta:
         model = MessageAcknowledgement

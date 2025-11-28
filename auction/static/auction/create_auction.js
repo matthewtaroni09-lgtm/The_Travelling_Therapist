@@ -564,7 +564,7 @@ $("#submitButton").click(function () {
 
     //All day's have been left blank
     if (noneCount === 7) {
-        errorList += "<li>You're trying to create a posting, but you've left the Clinician schedule blank.  This would indicate to bidding Clinicians that they have a start and end date, but no days to actual be at your clinic. Please complete at least 1 day showing the start and end time for the Clinician before you can submit your auction.</li>";
+        errorList += "<li>You're trying to create a posting, but you've left the Clinician schedule blank.  This would indicate to bidding Clinicians that they have a start and end date, but no days to actual be at your healthcare facility. Please complete at least 1 day showing the start and end time for the Clinician before you can submit your listing.</li>";
     }
 
     //Validate Demographics

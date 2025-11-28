@@ -821,34 +821,34 @@ def create_auction(request):
                             recipient_list = ('loribine@gmail.com', 'info@travelingtherapist.ca')
                         )
                     except:
-                        print('Admin email failed to send for Auction Creation.')
-                        logger.warning('Admin email failed to send for Auction Creation.')
+                        print('Admin email failed to send for Listing Creation.')
+                        logger.warning('Admin email failed to send for Listing Creation.')
 
 
                     # Clinic email
                     try:
                         send_mail(
-                            subject = "Your Auction has Been Created",
+                            subject = "Your Listing has Been Created",
                             message = "",
                             html_message = emails.clinic_auction_created(str(auction.clinic.clinicName)),
                             from_email = settings.EMAIL_HOST_USER,
                             recipient_list = (auction.clinic.user.email,)
                         )
                     except:
-                        print('Clinic email failed to send for Auction Creation.')
-                        logger.warning('Clinic email failed to send for Auction Creation.')
+                        print('Healthcare facility email failed to send for Listing Creation.')
+                        logger.warning('Healthcare facility email failed to send for Listing Creation.')
 
                     try:    
                         send_mail(
-                            subject = "Your Auction has Been Created",
+                            subject = "Your Listing has Been Created",
                             message = "",
                             html_message = "**ADMIN COPY**" + emails.clinic_auction_created(str(auction.clinic.clinicName)),
                             from_email = settings.EMAIL_HOST_USER,
                             recipient_list = ('info@travelingtherapist.ca', )
                         )
                     except:
-                        print('Admin copy of clinic email failed to send for Auction Creation.')
-                        logger.warning('Admin copy of clinic email failed to send for Auction Creation.')
+                        print('Admin copy of healthcare facility email failed to send for Listing Creation.')
+                        logger.warning('Admin copy of healthcare facility email failed to send for Listing Creation.')
 
                 scheduled_tasks.start(auction.auctionEnd.year, auction.auctionEnd.month, auction.auctionEnd.day, auction.auctionEnd.hour, auction.auctionEnd.minute, auction.auctionEnd.second, str(auction.auctionID))
                 return HttpResponseRedirect('/profile?submitted=True')
@@ -947,8 +947,8 @@ def register(request):
                                 recipient_list = [user.email],
                             )
                     except:
-                        print('Clinic email failed to send for registration.')
-                        logger.warning('Clinic email failed to send for registration.')
+                        print('Healthcare facility email failed to send for registration.')
+                        logger.warning('Healthcare facility email failed to send for registration.')
 
                     try:
                         subject_content = ""
@@ -964,8 +964,8 @@ def register(request):
                                 recipient_list = ["info@travelingtherapist.ca"],
                             )
                     except:
-                        print('Admin copy of clinic email failed to send for registration.')
-                        logger.warning('Admin copy of Clinic email failed to send for registration.')
+                        print('Admin copy of healthcare facility email failed to send for registration.')
+                        logger.warning('Admin copy of healthcare facility email failed to send for registration.')
                 else:
                     # Therapist email
                     try:

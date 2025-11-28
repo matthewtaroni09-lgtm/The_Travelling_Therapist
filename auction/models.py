@@ -52,17 +52,17 @@ class UserType(models.Model):
 
 class Account(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    clinicName = models.CharField(verbose_name='Clinic Name', max_length=200, blank=True, null=True, help_text='Enter the clinic name.')
+    clinicName = models.CharField(verbose_name='Clinic Name', max_length=200, blank=True, null=True, help_text='Enter the healthcare facility name.')
     userType = models.ForeignKey(UserType, verbose_name='User Type', blank=True, null=True, related_name='usertypes', on_delete=models.CASCADE)  
     licenseNumber = models.CharField(verbose_name='License Number', max_length=120, null=True, blank=True, help_text='Enter you license number.')
     imageOne = models.ImageField(default='default.jpg', verbose_name='Clinic Image One', upload_to=path_and_rename, blank=True, null=True, help_text='Upload an image (optional).')
     imageTwo = models.ImageField(verbose_name='Clinic Image Two', upload_to=path_and_rename, blank=True, null=True, help_text='Upload an image (optional).')
     imageThree = models.ImageField(verbose_name='Clinic Image Three', upload_to=path_and_rename, blank=True, null=True, help_text='Upload an image (optional).')
     imageFour = models.ImageField(verbose_name='Clinic Image Four', upload_to=path_and_rename, blank=True, null=True, help_text='Upload an image (optional).')
-    city = models.CharField(verbose_name='City', max_length=120, blank=True, null=True, help_text='Enter the city your clinic is in.')
-    country = models.CharField(verbose_name='Conutry', max_length=100, blank=True, null=True, help_text='Enter the country your clinic is in.')
-    province = models.CharField(verbose_name='Province', help_text='The province the clinic resides in.', blank=True, null=True, max_length=30, choices=PROVINCES)
-    about = models.TextField(verbose_name='About the clinic', blank=True, null=True, help_text='Tell us about your clinic.')
+    city = models.CharField(verbose_name='City', max_length=120, blank=True, null=True, help_text='Enter the city your healthcare facility is in.')
+    country = models.CharField(verbose_name='Conutry', max_length=100, blank=True, null=True, help_text='Enter the country your healthcare facility is in.')
+    province = models.CharField(verbose_name='Province', help_text='The province the healthcare facility resides in.', blank=True, null=True, max_length=30, choices=PROVINCES)
+    about = models.TextField(verbose_name='About the healthcare facility', blank=True, null=True, help_text='Tell us about your healthcare facility.')
     underEighteen = models.IntegerField(verbose_name='% Under 18', blank=True, null=True)
     eighteenToSixtyFive = models.IntegerField(verbose_name='% 18 - 65', blank=True, null=True)
     overSixtyFive = models.IntegerField(verbose_name='% Over 65', blank=True, null=True)
@@ -72,8 +72,8 @@ class Account(models.Model):
     practiceArea = models.ManyToManyField('PracticeArea', blank=True)
     demographic = models.ManyToManyField('Demographic', blank=True)
     pro = models.BooleanField(verbose_name='Pro Member', null=True, blank=True)
-    remember_auction_data = models.BooleanField(verbose_name='Do you want your data to be pre-populated for your next auction?', null=True, blank=True)
-    auction_message_displayed = models.BooleanField(verbose_name='Auction Message Displayed', null=True, blank=True)
+    remember_auction_data = models.BooleanField(verbose_name='Do you want your data to be pre-populated for your next listing?', null=True, blank=True)
+    auction_message_displayed = models.BooleanField(verbose_name='Listing Message Displayed', null=True, blank=True)
 
     def __str__(self):
         return str(self.user)
@@ -97,8 +97,8 @@ class PaymentType(models.Model):
 class Auction(models.Model):
     auctionID = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     clinic = models.ForeignKey(Account, related_name='auction_clinic', on_delete=models.CASCADE)
-    auctionStart = models.DateTimeField(verbose_name='Auction Start', help_text='Enter the start date of the auction.')
-    auctionEnd = models.DateTimeField(verbose_name='Auction End', help_text='Enter the end date of the auction.')
+    auctionStart = models.DateTimeField(verbose_name='Auction Start', help_text='Enter the start date of the listing.')
+    auctionEnd = models.DateTimeField(verbose_name='Auction End', help_text='Enter the end date of the listing.')
     placementStart = models.DateField(verbose_name='Clinican Start Date', help_text='Enter the start date of the placement.', default=datetime.date.today)
     placementEnd = models.DateField(verbose_name='Clinican End Date', help_text='Enter the end date of the placement.', default=datetime.date.today)
     mondayStart = models.TimeField(verbose_name='Start Time', null=True, blank=True, default='09:00')
@@ -128,22 +128,22 @@ class Auction(models.Model):
     MSK = models.IntegerField(verbose_name='MSK', blank=True, null=True)
     neuro = models.IntegerField(verbose_name='Neuro', blank=True, null=True)
     cardioResp = models.IntegerField(verbose_name='CardioResp', blank=True, null=True)
-    comments = models.TextField(verbose_name='Information about the Clinic', blank=True, null=True)
-    active = models.BooleanField(verbose_name='Active Auction')
-    closed = models.BooleanField(verbose_name='Closed Auction')
-    deleted = models.BooleanField(verbose_name='Deleted Auction')
+    comments = models.TextField(verbose_name='Information about the healthcare facility', blank=True, null=True)
+    active = models.BooleanField(verbose_name='Active Listing')
+    closed = models.BooleanField(verbose_name='Closed Listing')
+    deleted = models.BooleanField(verbose_name='Deleted Listing')
     cronID = models.TextField(verbose_name='Cron Job Timer ID')
     created = models.DateTimeField(verbose_name='Created Time', auto_now_add=True)
     createdBy = models.ForeignKey(User, related_name='auction_created_by', blank=True, null=True, on_delete=models.CASCADE)
     modified = models.DateTimeField(verbose_name='Modified Time', null=True, blank=True)
     modifiedBy = models.ForeignKey(User, related_name='auction_modified_by', blank=True, null=True, on_delete=models.CASCADE)
-    type = models.ForeignKey(UserType, verbose_name='Auction Type', related_name='auction_type', on_delete=models.CASCADE)
+    type = models.ForeignKey(UserType, verbose_name='Listing Type', related_name='auction_type', on_delete=models.CASCADE)
     paymentType = models.ForeignKey('PaymentType', verbose_name='Payment Type ', related_name='payment_type', on_delete=models.CASCADE)
-    treatmentCost = models.FloatField(verbose_name="Clinic's Treatment Price", blank=True, null=True)
+    treatmentCost = models.FloatField(verbose_name="Healthcare facility's Treatment Price", blank=True, null=True)
     treatmentMin = models.IntegerField(verbose_name='Daily Minimum # of Treatments', blank=True, null=True)
-    assessmentCost = models.FloatField(verbose_name="Clinic's Assessment Price", blank=True, null=True)
+    assessmentCost = models.FloatField(verbose_name="Healthcare facility's Assessment Price", blank=True, null=True)
     assessmentMin = models.IntegerField(verbose_name='Daily Minimum # of Assessments', blank=True, null=True)
-    auctionNumber = models.IntegerField(verbose_name='Auction Number', blank=True, null=True)
+    auctionNumber = models.IntegerField(verbose_name='Listing Number', blank=True, null=True)
 
     def __str__(self):
         return str(self.clinic.clinicName) + ": " + str(self.auctionStart.strftime("%m/%d/%Y %H:%M"))
@@ -252,7 +252,7 @@ class Auction(models.Model):
             else:
                 timeLeft = timeLeft + str(seconds) + "s"
         else:
-            timeLeft = 'Auction Completed'
+            timeLeft = 'Listing Completed'
   
         return timeLeft
 
@@ -327,9 +327,9 @@ class ProMember(models.Model):
 
 class AdminSetting(models.Model):
     sendEmails = models.BooleanField(verbose_name='Send Emails', help_text='Turns on and off emails. If checked emails will send.')
-    numAllowedAuctions = models.IntegerField(verbose_name='# Allowed Auctions', help_text='Global setting for max number of active auctions')
-    defaultAuctionLength = models.IntegerField(verbose_name='Default Auction Length in Seconds', help_text='Auctions will be set to this length, in seconds.')
-    endAuctionEmailBatchSize = models.IntegerField(verbose_name='End of Auction Email Batch Size', help_text='At the end of an auction emails will be sent to user with the same type as the auction. To avoid spamming email batches are limited to this number.')
+    numAllowedAuctions = models.IntegerField(verbose_name='# Allowed Listing', help_text='Global setting for max number of active listing')
+    defaultAuctionLength = models.IntegerField(verbose_name='Default Listing Length in Seconds', help_text='Listing will be set to this length, in seconds.')
+    endAuctionEmailBatchSize = models.IntegerField(verbose_name='End of Listing Email Batch Size', help_text='At the end of an listing emails will be sent to user with the same type as the listing. To avoid spamming email batches are limited to this number.')
 
     def __str__(self):
         return 'Admin Settings'

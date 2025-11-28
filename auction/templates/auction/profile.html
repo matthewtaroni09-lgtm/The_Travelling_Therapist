@@ -11,17 +11,19 @@
   <div>
     <ul class="nav nav-tabs" id="therapistProfile" role="tablist">
       <li class="nav-item" role="presentation">
-        <button class="btn-lg nav-link active" id="auction-tab" data-bs-toggle="tab" data-bs-target="#auction-history" type="button" role="tab" aria-controls="auction-history" aria-selected="true">Auction History</button>
+        <button class="btn-lg nav-link active" id="auction-tab" data-bs-toggle="tab" data-bs-target="#auction-history"
+          type="button" role="tab" aria-controls="auction-history" aria-selected="true">Auction History</button>
       </li>
       <li class="nav-item" role="presentation">
-        <button class="btn-lg nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Update Profile</button>
+        <button class="btn-lg nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button"
+          role="tab" aria-controls="profile" aria-selected="false">Update Profile</button>
       </li>
     </ul>
     <div class="tab-content" id="therapistProfileContent">
       <div class="tab-pane fade show active p-3" id="auction-history" role="tabpanel" aria-labelledby="auction-tab">
 
         {% if num_pending > 0 %}
-        <h2 class="mb-4">Auctions Pending Approval</h2>
+        <h2 class="mb-4">Listings Pending Approval</h2>
         <div class="row mb-5">
           {% for auction in pending_auctions_list %}
           {% include 'auction/card_pending_approval_auction.html' with auction=auction %}
@@ -29,14 +31,14 @@
         </div>
         {% endif %}
 
-        <h2 class="mb-4">Live Auctions</h2>
+        <h2 class="mb-4">Live Listings</h2>
         <div class="row mb-5">
           {% for auction in active_auctions_list %}
           {% include 'auction/card_active_auction.html' with auction=auction %}
           {% endfor %}
         </div>
 
-        <h2 class="mb-4">Past Auctions</h2>
+        <h2 class="mb-4">Past Listings</h2>
         <div class="row mb-5">
           {% for auction in past_auctions_list %}
           {% include 'auction/card_past_auction.html' with auction=auction %}
@@ -113,22 +115,26 @@
         <div>
           <ul class="nav nav-tabs" id="therapistProfile" role="tablist">
             <li class="nav-item" role="presentation">
-              <button class="btn-lg nav-link active" id="auction-tab" data-bs-toggle="tab" data-bs-target="#auction-history" type="button" role="tab" aria-controls="auction-history" aria-selected="true">Auction History</button>
+              <button class="btn-lg nav-link active" id="auction-tab" data-bs-toggle="tab"
+                data-bs-target="#auction-history" type="button" role="tab" aria-controls="auction-history"
+                aria-selected="true">Auction History</button>
             </li>
             <li class="nav-item" role="presentation">
-              <button class="btn-lg nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Update Profile</button>
+              <button class="btn-lg nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile"
+                type="button" role="tab" aria-controls="profile" aria-selected="false">Update Profile</button>
             </li>
           </ul>
           <div class="tab-content" id="therapistProfileContent">
-            <div class="tab-pane fade show active p-3" id="auction-history" role="tabpanel" aria-labelledby="auction-tab">
-              <h2>Live Auctions</h2>
+            <div class="tab-pane fade show active p-3" id="auction-history" role="tabpanel"
+              aria-labelledby="auction-tab">
+              <h2>Live Listings</h2>
               <div class="row mb-5">
                 {% for auction in active_auctions_list %}
                 {% include 'auction/card_active_auction.html' with auction=auction %}
                 {% endfor %}
               </div>
 
-              <h2>Past Auctions</h2>
+              <h2>Past Listings</h2>
               <div class="row mb-5">
                 {% for auction in past_auctions_list %}
                 {% include 'auction/card_past_auction.html' with auction=auction %}
