@@ -25,7 +25,7 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link text-weight-normal {% if path == 'profile' %}active{% endif %}"
-                        href="{% url 'clinic-owner-guide' %}">Clinic Hiring Guide</a>
+                        href="{% url 'healthcare-facility-guide' %}">Healthcare Facility Guide</a>
                 </li>
                 {% if user.is_authenticated %}
                 {% if user.account.get_split_user_type == 'Clinic' %}

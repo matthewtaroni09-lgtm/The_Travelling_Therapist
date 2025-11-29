@@ -214,8 +214,8 @@ def mission_vision(request):
 def cookie_policy(request):
     return render(request, 'auction/cookie_policy.html', {})
 
-def clinic_owner_guide(request):
-    return render(request, 'auction/clinic_owner_guide.html', {})
+def healthcare_facility_guide(request):
+    return render(request, 'auction/healthcare_facility_guide.html', {})
 
 def profile(request):
     if request.user.is_authenticated == False:
