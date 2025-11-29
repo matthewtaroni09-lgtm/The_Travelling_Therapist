@@ -23,9 +23,19 @@
                         <li><a class="dropdown-item" href="{% url 'mission-vision' %}">Company Misson & Vision</a></li>
                     </ul>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link text-weight-normal {% if path == 'profile' %}active{% endif %}"
-                        href="{% url 'healthcare-facility-guide' %}">Healthcare Facility Guide</a>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle text-weight-normal" href="#" id="navbarDropdown" role="button"
+                        data-bs-toggle="dropdown" aria-expanded="false">Hiring Guides</a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li class="nav-item">
+                            <a class="nav-link text-weight-normal {% if path == 'profile' %}active{% endif %}"
+                                href="{% url 'healthcare-facility-guide' %}">Healthcare Facility Hiring Guide</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-weight-normal {% if path == 'profile' %}active{% endif %}"
+                                href="{% url 'clinician-guide' %}">Clinician Hiring Guide</a>
+                        </li>
+                    </ul>
                 </li>
                 {% if user.is_authenticated %}
                 {% if user.account.get_split_user_type == 'Clinic' %}

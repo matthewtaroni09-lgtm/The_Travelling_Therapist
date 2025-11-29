@@ -563,7 +563,9 @@ ol {
     border-radius: 8px;
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
     border-left: 4px solid #00d7a6;
-    /* accent color */
+}
+
+.quote-card-facility {
     min-height: 150px;
 }
 

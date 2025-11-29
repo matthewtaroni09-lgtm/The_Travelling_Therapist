@@ -1,0 +1,377 @@
+{% extends 'auction/base.html' %}
+{% load static %}
+{% block content %}
+<!-- content -->
+<p id="pageTitle" class="d-none">Clinician_Guide</p>
+<div class="container" style="background-color: rgba(0, 0, 0, 0);">
+    <div class=" row">
+        <div class="col-md-12">
+            <h1 class="text-center mb-5">Elevate your career - no fees, no middleman</h1>
+        </div>
+    </div>
+    <div class="row text-center" id="intro">
+        <h2>You're in demand. Now earn more, work on your own terms, and keep 100% of your rate.</h2>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-lg-4 col-md-12"><img id="clinicOwnerGuideMainImage" src="/media/images/clinic_guide_main.png"
+                class="img-fluid" alt="healthcare facility staff"></div>
+        <div class="col-lg-8 col-md-12">
+            <h2>Your Current Role</h2>
+            <p>You arrive at your private clinic on a fee-split model, earning only 50–60% of every
+                patient dollar. Your schedule is locked, pay caps unchanged, and there’s zero
+                leverage for extra certifications or overtime. You know you deserve better, but the
+                right opportunity hasn’t landed in your inbox yet.
+            </p>
+        </div>
+    </div>
+    <div class="row text-center m-3">
+        <a class="btn btn-primary btn-lg guidePageButton" href="{% url 'register' %}">Get Started - It's Free</a>
+    </div>
+    <div class="row text-center">
+        <div id="quoteCarousel" class="carousel slide mt-4 mb-4" data-bs-ride="carousel" data-bs-interval="50000000">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <p class="carouselP"><i>You wear both hats—clinician and owner—so every last-minute contractor gap
+                            forces you to
+                            reshuffle patients and lose billable time.</i></p>
+                    <p><b><i>Priviate Healthcare Facility</i></b></p>
+                </div>
+                <div class="carousel-item">
+                    <p class="carouselP"><i>In an acute ward you juggle bed flow, emergent patient needs, and department
+                            staffing; when a
+                            contractor can't cover a shift you're forced into costly overtime, rapid redeployments, and
+                            interrupted care schedules. </i></p>
+                    <p><b><i>Hospital</i></b></p>
+                </div>
+                <div class="carousel-item">
+                    <p class="carouselP"><i>You're responsible for continuity of care across residents; last-minute
+                            clinician gaps or
+                            rotating agency staff create handoff risk, increased documentation load, and extra time
+                            spent stabilizing routines.</i></p>
+                    <p><b><i>Long Term Care</i></b></p>
+                </div>
+                <div class="carousel-item">
+                    <p class="carouselP"><i>Your caseloads depend on consistent therapy blocks; when contract clinicians
+                            leave or take
+                            leave you scramble to protect discharge timelines, maintain program integrity, and keep
+                            billable appointments full.</i></p>
+                    <p><b><i>Rehab Facility</i></b></p>
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#quoteCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#quoteCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    </div>
+    <div class="row" id="hiringHole">
+        <div class="col-lg-12 col-md-12">
+            <h2>The Hiring Hole</h2>
+            <div class="container my-5">
+                <div class="row g-3">
+                    <div class="col-12 col-md-4">
+                        <blockquote class="quote-card quote-card-clinican">
+                            <p>“I applied to 50 jobs on boards—zero responses except automated emails.”</p>
+                        </blockquote>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <blockquote class="quote-card quote-card-clinican">
+                            <p>“My recruiter said they'd negotiate pay, but I ended up making 20% less.”</p>
+                        </blockquote>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <blockquote class="quote-card quote-card-clinican">
+                            <p>“Agencies promised flexibility, then locked me into week-long blocks at low rates.”</p>
+                        </blockquote>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="row text-center">
+        <h2>Career Upgrade Paths</h2>
+        <p>Here's how each route really plays out and why clinicians are switching to The Traveling Therapist.</p>
+        <table class="table table-striped" role="table">
+            <thead>
+                <tr role="row">
+                    <th role="columnheader">Path</th>
+                    <th role="columnheader">Avg. Time</th>
+                    <th role="columnheader">Typical Cost to You</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr role="row">
+                    <td role="cell" data-label="Path">Job Boards</td>
+                    <td role="cell" data-label="Avg. Time">6–8 weeks</td>
+                    <td role="cell" data-label="Typical Cost to You">$0 (but your time)</td>
+                </tr>
+
+                <tr role="row">
+                    <td role="cell" data-label="Path">Direct Employer Outreach</td>
+                    <td role="cell" data-label="Avg. Time">8–10 weeks</td>
+                    <td role="cell" data-label="Typical Cost to You">$0 (but reliant on your network)</td>
+                </tr>
+
+                <tr role="row">
+                    <td role="cell" data-label="Path">Headhunters &amp; Recruiters</td>
+                    <td role="cell" data-label="Avg. Time">4–6 weeks</td>
+                    <td role="cell" data-label="Typical Cost to You">$0 (employer pays fees)</td>
+                </tr>
+
+                <tr role="row">
+                    <td role="cell" data-label="Path">Traditional Staffing Agencies</td>
+                    <td role="cell" data-label="Avg. Time">3–5 weeks</td>
+                    <td role="cell" data-label="Typical Cost to You">20–25% pay reduction (fee-split + agency)</td>
+                </tr>
+
+                <tr role="row">
+                    <td role="cell" data-label="Path">The Traveling Therapist (TTT)</td>
+                    <td role="cell" data-label="Avg. Time">7–14 days</td>
+                    <td role="cell" data-label="Typical Cost to You">$0 (keep 100% of your bid rate)</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="row text-center" id="exploringStaffingSolutions">
+        <h2>Explore Your Staffing Solutions</h2>
+        <p>Here's how each path really plays out—and why clinicians are switching to The Traveling Therapist.</p>
+    </div>
+
+    <!-- Navigation for Staffing Solutions Section -->
+    <nav class="navbar navbar-expand-xl navbar-light sub-nav">
+        <div class="container-fluid">
+            <button class="navbar-toggler m-1" type="button" data-bs-toggle="collapse"
+                data-bs-target="#subNavbarToggler" aria-controls="subNavbarToggler" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="subNavbarToggler">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item staffingSolutionSubItem">
+                        <a class="navbar-brand staffSolutionsNavLink" href="#JobBoard"><img class="AccordionIcon"
+                                src="/media/images/job-board.png" alt="Hands shaking">Job Board</a>
+                    </li>
+                    <li class="nav-item staffingSolutionSubItem">
+                        <a class="navbar-brand staffSolutionsNavLink" href="#DirectEmployerRecruitment"><img
+                                class="AccordionIcon" src="/media/images/recruitment.png"
+                                alt="People icons with magnfiying glass">Direct Employer
+                            Recruitment</a>
+                    </li>
+                    <li class="nav-item staffingSolutionSubItem">
+                        <a class="navbar-brand staffSolutionsNavLink" href="#HeadhunterRecruiter"><img
+                                class="AccordionIcon" src="/media/images/headhunting.png"
+                                alt="Person icon with target">Headhunter/Recruiter</a>
+                    </li>
+                    <li class="nav-item staffingSolutionSubItem">
+                        <a class="navbar-brand staffSolutionsNavLink" href="#StaffingAgency"><img class="AccordionIcon"
+                                src="/media/images/staffingagency.png"
+                                alt="People icons with breifcase and gear">Staffing
+                            Agency</a>
+                    </li>
+                    <li class="nav-item staffingSolutionSubItem">
+                        <a class="navbar-brand staffSolutionsNavLink" href="#TheTravelingTherapist"><img
+                                class="AccordionIcon" src="/media/images/T_Logo_Final.png"
+                                alt="The Traveling Therapist Logo">The Traveling Therapist</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Job Board -->
+    <div class="row staffingSolutionRow">
+        <div>
+            <h2 class="staffSolutionsTitle" id="JobBoard">
+                <img class="AccordionIcon" src="/media/images/job-board.png" alt="Hands shaking">
+                Job Board
+            </h2>
+            <div>
+                <h4>Job Board Case Study</h4>
+                <p class="ps-3 pe-3"><i>“Jane sent 40 applications via three boards, landed two interviews, no offers."
+                    </i></p>
+                <div class="row">
+                    <div class="col-lg-6 col-md-12 staffingSolutionsSection">
+                        <h4 class="ps-2">
+                            <span class="text-success">☑</span> Pros
+                        </h4>
+                        <ul class="accordionList">
+                            <li>No fees for you</li>
+                            <li>Huge variety of postings</li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-6 col-md-12 staffingSolutionsSection">
+                        <h4><span class="text-danger">☒</span> Cons</h4>
+                        <ul class="accordionList">
+                            <li>Mass competition; low callback rates</li>
+                            <li>Pay rates non-negotiable</li>
+                            <li>No ongoing support</li>
+                            <li><b>Avg. time to land a role: 6 - 8 weeks</b></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Direct Employer Recruitment -->
+    <div class="row staffingSolutionRow">
+        <div>
+            <h2 class="staffSolutionsTitle" id="DirectEmployerRecruitment">
+                <img class="AccordionIcon" src="/media/images/job-board.png" alt="Hands shaking">
+                Direct Employer Outreach
+            </h2>
+            <div>
+                <h4>Direct Employer Case Study</h4>
+                <p class="ps-3 pe-3"><i>“Sam reached out to 20 clinics by email; 3 replied; 1 position filled after 7
+                        weeks."
+                    </i></p>
+                <div class="row">
+                    <div class="col-lg-6 col-md-12 staffingSolutionsSection">
+                        <h4 class="ps-2">
+                            <span class="text-success">☑</span> Pros
+                        </h4>
+                        <ul class="accordionList">
+                            <li>Direct line to hiring manager</li>
+                            <li>Full transparency on pay/benefits</li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-6 col-md-12 staffingSolutionsSection">
+                        <h4><span class="text-danger">☒</span> Cons</h4>
+                        <ul class="accordionList">
+                            <li>Labor-intensive follow-up</li>
+                            <li>Limited to your personal network</li>
+                            <li>No matchmaking support</li>
+                            <li><b>Avg. time to land a role: 8 - 10 weeks</b></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Headhunter/Recruiter -->
+    <div class="row staffingSolutionRow">
+        <div>
+            <h2 class="staffSolutionsTitle" id="HeadhunterRecruiter">
+                <img class="AccordionIcon" src="/media/images/headhunting.png" alt="Person icon with target">
+                Headhunter/Recruiter
+            </h2>
+            <div>
+                <h4>Headhunter/Recruiter Case Study</h4>
+                <p class="ps-3 pe-3"><i>“Alex signed exclusively with a recruiter—paid no upfront fee but missed out on
+                        multiple higher-pay gigs."
+                    </i></p>
+                <div class="row">
+                    <div class="col-lg-6 col-md-12 staffingSolutionsSection">
+                        <h4 class="ps-2">
+                            <span class="text-success">☑</span> Pros
+                        </h4>
+                        <ul class="accordionList">
+                            <li>Access to hidden or unadvertised roles</li>
+                            <li>Resume coaching and interview prep</li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-6 col-md-12 staffingSolutionsSection">
+                        <h4><span class="text-danger">☒</span> Cons</h4>
+                        <ul class="accordionList">
+                            <li>Employer-paid model can misalign priorities</li>
+                            <li>You may feel “locked in” with one recruiter</li>
+                            <li>Limited visibility into process</li>
+                            <li><b>Avg. time to land a role: 4 - 6 weeks</b></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Staffing Agency -->
+    <div class="row staffingSolutionRow">
+        <div>
+            <h2 class="staffSolutionsTitle" id="StaffingAgency">
+                <img class="AccordionIcon" src="/media/images/staffingagency.png"
+                    alt="People icons with breifcase and gear">
+                Staffing Agency
+            </h2>
+            <div>
+                <h4>Staffing Agency Case Study</h4>
+                <p class="ps-3 pe-3"><i>“Maria did three 8-week temp gigs; each paid 25% less than market rate after
+                        agency cuts."
+                    </i></p>
+                <div class="row">
+                    <div class="col-lg-6 col-md-12 staffingSolutionsSection">
+                        <h4 class="ps-2">
+                            <span class="text-success">☑</span> Pros
+                        </h4>
+                        <ul class="accordionList">
+                            <li>Handles credentialing, payroll, compliance</li>
+                            <li>Steady stream of contract work</li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-6 col-md-12 staffingSolutionsSection">
+                        <h4><span class="text-danger">☒</span> Cons</h4>
+                        <ul class="accordionList">
+                            <li>Agency fees eat into your take-home pay</li>
+                            <li>Rigid schedules; little negotiation</li>
+                            <li>Slow onboarding processes</li>
+                            <li><b>Avg. time to land a role: 3 - 5 weeks</b></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- The Traveling Therapist -->
+    <div class="row staffingSolutionRow">
+        <div>
+            <h2 class="staffSolutionsTitle" id="TheTravelingTherapist">
+                <img class="AccordionIcon" src="/media/images/T_Logo_Final.png" alt="The Traveling Therapist Logo">
+                The Traveling Therapist
+            </h2>
+            <div>
+                <h4>The Traveling Therapist Case Study</h4>
+                <p class="ps-3 pe-3"><i>“Raj posted a bid on Monday, compared three offers on Thursday, and signed on
+                        for a 4-week OT role—making 15% more than his last contract."
+                    </i></p>
+                <div class="row">
+                    <div class="col-lg-6 col-md-12 staffingSolutionsSection">
+                        <h4 class="ps-2">
+                            <span class="text-success">☑</span> Pros
+                        </h4>
+                        <ul class="accordionList">
+                            <li>Always free to join and bid</li>
+                            <li>You set your rate, location, and schedule</li>
+                            <li>Transparent $300 flat match fee</li>
+                            <li>14-day match guarantee—no more endless waiting</li>
+                            <li>Faster matching with ready-to-hire facilities</li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-6 col-md-12 staffingSolutionsSection">
+                        <h4><span class="text-danger">☒</span> Cons</h4>
+                        <ul class="accordionList">
+                            <li>Must craft clear, enticing auctions</li>
+                            <li>Bid outcomes differ by market demand</li>
+                            <li>Quick familiarization with platform required</li>
+                            <li><b>Avg. time to land a role: 7 - 14 days</b></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <a id="startAuctionButton" class="btn btn-primary btn-lg guidePageButton" href="{% url 'register' %}">Get
+            Started - It's Free</a>
+    </div>
+</div>
+<script src="{% static 'auction/user_guide_pages.js' %}"></script>
+{% endblock %}
