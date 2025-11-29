@@ -387,10 +387,14 @@ def view_auction(request, auction_id):
             if auction_change:
                 auction.save()
 
-            # Before saving the new bid get the current lowest bidder from the sorted list of bids
-            current_lowest_bid_user = bids[0].user
+            # Before saving the new bid get the current lowest bidder from the sorted list of bids if there are existing bids
+            if len(bids) > 0:
+                current_lowest_bid_user = bids[0].user
             bid.save()
-            check_out_bid(auction.auctionID, bid, request, current_lowest_bid_user, bid.user)
+
+            # If there are existing bids check if the emails that need to be sent out
+            if len(bids) > 0:
+                check_out_bid(auction.auctionID, bid, request, current_lowest_bid_user, bid.user)
             # Send email to user to thank them for the bid
             if admin.sendEmails:
                 try:
