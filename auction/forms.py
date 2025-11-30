@@ -237,8 +237,8 @@ class BidForm(forms.ModelForm):
         return amount 
 
 class RegisterAcount(UserCreationForm):
-    first_name = forms.CharField(required=False, min_length=2)
-    last_name = forms.CharField(required=False, min_length=2)
+    first_name = forms.CharField(required=False)
+    last_name = forms.CharField(required=False)
     clinicName = forms.CharField(required=False, label='Healthcare facility Name')
     city = forms.CharField(required=False)
     about = forms.CharField(required=False, label='About the healthcare facility', widget=forms.Textarea)
@@ -291,12 +291,21 @@ class RegisterAcount(UserCreationForm):
             errors = validate_clinic_fields(clinicName, city, province, username)
             if errors is not None:
                 error_list.extend(errors)
+
+            if len(clinicName) <= 4:
+                error_list.append(ValidationError("Please enter a healthcare facility name that is greater than 4 characters."))
         else:
             if firstName == '' or firstName is None:
                 error_list.append(ValidationError("Please enter a first name."))
 
+            if len(firstName) <= 1:
+                error_list.append(ValidationError("Please enter a first name that is greater than 1 character."))
+
             if lastName == '' or lastName is None:
                 error_list.append(ValidationError("Please enter a last name."))
+
+            if len(lastName) <= 1:
+                error_list.append(ValidationError("Please enter a last name that is greater than 1 character."))
 
             pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
             if not re.match(pattern, username):
