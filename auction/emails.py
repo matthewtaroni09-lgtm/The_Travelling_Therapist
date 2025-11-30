@@ -2,8 +2,8 @@ from The_Travelling_Therapist.settings import ACTIVE_LINK
 
 # email_templates.py
 
-# Placeholder logo URL
-LOGO_URL = "https://travelingtherapist.ca/media/images/TTT_LOGO.png"
+# Placeholder logo URL - White Background
+LOGO_URL_WB = "https://travelingtherapist.ca/media/images/TTT_LOGO_white_BG.png"
 
 from datetime import datetime
 
@@ -39,9 +39,11 @@ email_header = f"""<head>
     padding: 0;
   }}
   .header {{
-    background-color: #0AEAA9;
+    background-color: #ffffff;
     text-align: center;
     padding: 20px;
+    border-style: solid;
+	  border-radius: 8px;
   }}
   .header img {{
     max-width: 200px;
@@ -77,32 +79,12 @@ email_header = f"""<head>
     font-weight: 700;
   }}
 
-  /* DARK MODE OVERRIDES (for clients that support prefers-color-scheme) */
-  @media (prefers-color-scheme: dark) {{
-    body, .container {{
-      background-color: #121212 !important;
-      color: #e6e6e6 !important;
-    }}
-    .header {{
-      background-color: #0AEAA9 !important;
-    }}
-    .header img {{
-      background-color: #ffffff !important; /* Keeps logo background white */
-    }}
-    .content a {{
-      color: #40f0c2 !important;
-    }}
-    .footer {{
-      background-color: #000000 !important;
-      color: #cccccc !important;
-    }}
-  }}
 </style>
 </head>
 <body style="background-color:#B2FBDD; margin:0; padding:0;">
-  <div class="container" bgcolor:"#121212" style="background-color:#ffffff;">
-    <div class="header" style="background-color:#0AEAA9; text-align:center; padding:20px;">
-      <img src="{LOGO_URL}" alt="The Traveling Therapist Logo" style="background-color:#FFFFFF; padding:5px; border-radius:4px;">
+  <div class="container">
+    <div class="header">
+      <img src="{LOGO_URL_WB}" alt="The Traveling Therapist Logo" padding:5px; border-radius:4px;">
     </div>
 """
 
@@ -337,7 +319,7 @@ def therapist_auction_outbid_lowest(first_name, last_name, clinic_name, start_da
     message = message + """<section style="font-size: 16px; margin-bottom: 1rem; padding: 10px;">
   <p>Hello <span class="text-weight-bold">""" + first_name + """ """ + last_name + """</span>,</p>
   
-  <p>We wanted to let you know that your bid for <a href=""" + ACTIVE_LINK + "/auction/" + str(auctionID) + """>""" + clinic_name + """ 's: """ + str(start_date.strftime("%Y-%m-%d")) + """</a> job opening has been outbid.</p>
+  <p>We wanted to let you know that your bid for <a href=""" + ACTIVE_LINK + "/auction/" + str(auctionID) + """>""" + clinic_name + """'s: """ + str(start_date.strftime("%Y-%m-%d")) + """</a> job opening has been outbid.</p>
   <p>If you'd like to remain in the running, you may submit a new bid at any time before the listing closes.</p>
   <a href=""" + ACTIVE_LINK + "/auction/" + str(auctionID) + """>Click here to place your new bid!</a>
   <p>If you'd like to remain in the running, you may submit a new bid at any time before the listing closes.</p>
@@ -354,7 +336,7 @@ def therapist_auction_outbid_all_users(first_name, last_name, clinic_name, start
     message = email_header
     message = message + """<section style="font-size: 16px; margin-bottom: 1rem; padding: 10px;">
   <p>Hello <span class="text-weight-bold">""" + first_name + """ """ + last_name + """</span>,</p>  
-  <p>There's been an update on a listing you previously bid on: <a href=""" + ACTIVE_LINK + "/auction/" + str(auctionID) + """>""" + clinic_name + """ 's: """ + str(start_date.strftime("%Y-%m-%d")) + """</a>.</p>
+  <p>There's been an update on a listing you previously bid on: <a href=""" + ACTIVE_LINK + "/auction/" + str(auctionID) + """>""" + clinic_name + """'s: """ + str(start_date.strftime("%Y-%m-%d")) + """</a>.</p>
   <p>Another clinician has placed a new, lower bid. This may affect your competitiveness if you're still interested in this opportunity. If you'd like to remain in the running, you may submit a new bid at any time before the listing closes.</p>
   👉 <a href=""" + ACTIVE_LINK + "/auction/" + str(auctionID) + """>Click here to view the listing and place your next bid.</a>
   <p>Thank you for participating in the listing. We wish you the best of luck!</p>
