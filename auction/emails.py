@@ -100,7 +100,7 @@ email_header = f"""<head>
 </style>
 </head>
 <body style="background-color:#B2FBDD; margin:0; padding:0;">
-  <div class="container" style="background-color:#ffffff;">
+  <div class="container" bgcolor:"#121212" style="background-color:#ffffff;">
     <div class="header" style="background-color:#0AEAA9; text-align:center; padding:20px;">
       <img src="{LOGO_URL}" alt="The Traveling Therapist Logo" style="background-color:#FFFFFF; padding:5px; border-radius:4px;">
     </div>
