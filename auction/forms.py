@@ -263,10 +263,15 @@ class RegisterAcount(UserCreationForm):
         about = self.cleaned_data.get('about')
         province = self.cleaned_data.get('province')
         username = self.cleaned_data.get('username')
+        email = self.cleaned_data.get('email')
         imageOne = self.cleaned_data.get('imageOne')
         imageTwo = self.cleaned_data.get('imageTwo')
         imageThree = self.cleaned_data.get('imageThree')
         imageFour = self.cleaned_data.get('imageFour')
+
+        # If the username is none it is a duplicate that Django has already caught and removed. Returning here triggers the front-end error message to be displayed
+        if username is None:
+            return
 
         error_list = []
 
@@ -286,6 +291,7 @@ class RegisterAcount(UserCreationForm):
 
         if User.objects.exclude(pk=self.instance.pk).filter(username=username).exists():
             error_list.append(f'Username "{username}" is already in use.')
+            print(f'Username "{username}" is already in use.')
 
         if str(userType).split(' ')[-1] == "Clinic":
             errors = validate_clinic_fields(clinicName, city, province, username)
