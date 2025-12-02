@@ -252,7 +252,7 @@ class Auction(models.Model):
             else:
                 timeLeft = timeLeft + str(seconds) + "s"
         else:
-            timeLeft = 'Listing Completed'
+            timeLeft = 'Completed'
   
         return timeLeft
 
