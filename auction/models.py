@@ -117,7 +117,7 @@ class Auction(models.Model):
     sundayEnd = models.TimeField(verbose_name='End Time', null=True, blank=True)
     payFrequency = models.ForeignKey('PayFrequency', verbose_name='Pay Frequency', related_name='pay_frequency', null=True, blank=True, on_delete=models.CASCADE) 
     reservePrice = models.IntegerField(verbose_name='Reserve Price', null=True, blank=True)
-    startingBid = models.IntegerField(verbose_name='Starting Bid', null=True, blank=True, help_text='The intial bid amount.')
+    startingBid = models.IntegerField(verbose_name='Starting Bid', null=True, blank=True, help_text='The initial bid amount.')
     minimumBidIncrement = models.IntegerField(verbose_name='Minimum Bid Increment', null=True, blank=True, help_text='All bids must decrease by the minimum bid increment.')
     currentLowBid = models.IntegerField(verbose_name='Current Low Bid', blank=True, null=True)
     winner = models.ForeignKey(User, related_name='auction_winner', blank=True, null=True, on_delete=models.CASCADE)
