@@ -492,6 +492,63 @@ ol {
     font-size: 25px;
 }
 
+/* Match the clean modern section title */
+.section-title {
+    font-size: 1.8rem;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+}
+
+/* Constrain carousel so text stays readable */
+.custom-paragraph-carousel {
+    position: relative;
+    padding: 0 2rem;
+    /* space for arrows */
+}
+
+/* Minimal arrow styling */
+.custom-arrow {
+    width: 40px;
+    height: 40px;
+    top: 40%;
+}
+
+.custom-arrow .carousel-control-prev-icon,
+.custom-arrow .carousel-control-next-icon {
+    filter: invert(40%);
+    /* soft neutral gray */
+    width: 24px;
+    height: 24px;
+}
+
+/* On mobile, tighten padding */
+@media (max-width: 768px) {
+    .custom-paragraph-carousel {
+        padding: 0 1rem;
+    }
+
+    .custom-arrow {
+        top: 45%;
+    }
+
+    .slick-prev,
+    .slick-next {
+        width: 44px;
+        /* make the tap area bigger */
+        height: 44px;
+    }
+
+    .slick-prev {
+        left: -20px !important;
+        /* push further left */
+    }
+
+    .slick-next {
+        right: -20px !important;
+        /* push further right */
+    }
+}
+
 .accordionList {
     /* list-style-type: none; */
     margin: 10px;
@@ -883,4 +940,14 @@ input[type=number] {
     /* Prevents interaction */
     opacity: 0.85;
     /* Faded look */
+}
+
+/* Match paragraph text style */
+.paragraph-text {
+    font-size: 1.05rem;
+    line-height: 1.65;
+    max-width: 700px;
+    margin: 0 auto;
+    color: #1f1f1f;
+    text-align: left;
 }

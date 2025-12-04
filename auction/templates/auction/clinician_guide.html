@@ -14,14 +14,105 @@
     </div>
     <br>
     <div class="row">
-        <!-- <div class="col-lg-4 col-md-12"><img id="clinicOwnerGuideMainImage" src="/media/images/clinic_guide_main.png"
-                class="img-fluid" alt="healthcare facility staff"></div> -->
-        <div class="col-lg-12 col-md-12">
-            <p>As a clinician seeking your next opportunity, you can navigate five distinct paths—each with its own
-                trade-offs. Below is the healthcare worker hiring process, told from your perspective, so you can see
-                why The Traveling Therapist may be the best fit for your career, lifestyle, and earning goals.
-            </p>
+        <div class="col-lg-4 col-md-12"><img id="clinicOwnerGuideMainImage" src="/media/images/clinic_guide_main.png"
+                class="img-fluid gx-5" alt="healthcare facility staff"></div>
+        <div class="col-lg-8 col-md-12">
+            <h3 class="section-title mb-3">Your Current Role</h3>
+
+            <div id="quoteCarouselClinican" class="carousel slide custom-paragraph-carousel" data-bs-ride="carousel"
+                data-bs-interval="50000000">
+                <div class="carousel-inner">
+
+                    <div class="carousel-item active">
+                        <p class="paragraph-text"><i>You show up for your Monday shift and it looks like your day has
+                                already
+                                fallen apart. You checked your schedule last night, and you were full - ideal for your
+                                schedule and your wallet. But now, the admin staff tells you patient #1 can't make it.
+                                Good
+                                thing you got up early this morning and sat in traffic for 45 minutes to be here. You
+                                see a
+                                client, and throughout the day, 2 more clients reschedule, leaving you at the clinic for
+                                7
+                                hours, to only see 4 clients. The clinic does have a cancelation policy, but it's never
+                                enforced - meaning you never get paid when a client cancels, even though the policy says
+                                you
+                                should. How much longer are you willing to put up with this kind of working environment?
+                            </i></p>
+                    </div>
+
+                    <div class="carousel-item">
+                        <p class="paragraph-text">
+                            <i>You just started working at a new facility this month. You're building a
+                                caseload, but it's slow going. Wouldn't it be great to fill those gaps in your schedule
+                                by
+                                picking up shifts at other clinics in the meantime while you build your caseload? </i>
+                        </p>
+                        </p>
+                    </div>
+
+                </div>
+
+                <!-- arrows: styled to match minimalist theme -->
+                <button class="carousel-control-prev custom-arrow" type="button" data-bs-target="#quoteCarousel"
+                    data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                </button>
+
+                <button class="carousel-control-next custom-arrow" type="button" data-bs-target="#quoteCarousel"
+                    data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                </button>
+            </div>
         </div>
+        <!-- <div class="col-lg-8 col-md-12 text-center">
+            <h2>Your Current Role</h2>
+            <div id="quoteCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="50000000">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <p class="carouselP"><i>You show up for your Monday shift and it looks like your day has already
+                                fallen apart. You checked your schedule last night, and you were full - ideal for your
+                                schedule and your wallet. But now, the admin staff tells you patient #1 can't make it.
+                                Good
+                                thing you got up early this morning and sat in traffic for 45 minutes to be here. You
+                                see a
+                                client, and throughout the day, 2 more clients reschedule, leaving you at the clinic for
+                                7
+                                hours, to only see 4 clients. The clinic does have a cancelation policy, but it's never
+                                enforced - meaning you never get paid when a client cancels, even though the policy says
+                                you
+                                should. How much longer are you willing to put up with this kind of working environment?
+                            </i></p>
+                    </div>
+                    <div class="carousel-item">
+                        <p class="carouselP"><i>You just started working at a new facility this month. You're building a
+                                caseload, but it's slow going. Wouldn't it be great to fill those gaps in your schedule
+                                by
+                                picking up shifts at other clinics in the meantime while you build your caseload? </i>
+                        </p>
+                    </div>
+                    <div class="carousel-item">
+                        <p class="carouselP"><i>You’ve been stuck in the same clinic for what feels like forever. You
+                                enjoy the stability of your work, and your pay is slowly improving - although this isn’t
+                                really the career you imagined for yourself when you graduated. You wanted to work with
+                                a different clinical population, you’d also love to travel and work, while networking
+                                and developing yourself in the process. There’s no opportunity for that right now at
+                                your current clinic. Wouldn’t it be nice to pick up the odd shift or cover someone’s
+                                vacation in an area or with a clinical population you’re really interested in
+                            </i></p>
+                    </div>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#quoteCarousel"
+                    data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#quoteCarousel"
+                    data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div> -->
     </div>
     <div class="row text-center m-3">
         <a class="btn btn-primary btn-lg guidePageButton" href="{% url 'register' %}">Join for Free</a>
@@ -30,62 +121,11 @@
     <hr>
 
     <div class="row text-center">
-        <h2>Your Current Role</h2>
-        <div id="quoteCarousel" class="carousel slide mt-4 mb-4" data-bs-ride="carousel" data-bs-interval="50000000">
-            <div class="carousel-inner">
-                <div class="carousel-item active">
-                    <p class="carouselP"><i>You wear both hats—clinician and owner—so every last-minute contractor gap
-                            forces you to
-                            reshuffle patients and lose billable time.</i></p>
-                    <p><b><i>Priviate Healthcare Facility</i></b></p>
-                </div>
-                <div class="carousel-item">
-                    <p class="carouselP"><i>You show up for your Monday shift and it looks like your day has already
-                            fallen apart. You checked your schedule last night, and you were full - ideal for your
-                            schedule and your wallet. But now, the admin staff tells you patient #1 can't make it. Good
-                            thing you got up early this morning and sat in traffic for 45 minutes to be here. You see a
-                            client, and throughout the day, 2 more clients reschedule, leaving you at the clinic for 7
-                            hours, to only see 4 clients. The clinic does have a cancelation policy, but it's never
-                            enforced - meaning you never get paid when a client cancels, even though the policy says you
-                            should. How much longer are you willing to put up with this kind of working environment?
-                        </i></p>
-                </div>
-                <div class="carousel-item">
-                    <p class="carouselP"><i>You just started working at a new facility this month. You're building a
-                            caseload, but it's slow going. Wouldn't it be great to fill those gaps in your schedule by
-                            picking up shifts at other clinics in the meantime while you build your caseload? </i></p>
-                </div>
-                <div class="carousel-item">
-                    <p class="carouselP"><i>You've been stuck in the same clinic for what feels like forever. You enjoy
-                            the stability of your work, and your pay is slowly improving - although this isn't really
-                            the career you imagined for yourself when you graduated.
-                        </i></p>
-                </div>
-                <div class="carousel-item">
-                    <p class="carouselP"><i>You wanted to work with a different clinical population, you'd also love to
-                            travel and work, while networking and developing yourself in the process. There's no
-                            opportunity for that right now at your current clinic. Wouldn't it be nice to pick up the
-                            odd shift or cover someone's vacation in an area or with a clinical population you're really
-                            interested in
-                        </i></p>
-                </div>
-            </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#quoteCarousel" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#quoteCarousel" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
-            </button>
-        </div>
-    </div>
-
-    <div class="row text-center">
         <h2>The Dissatisfaction Gap</h2>
         <h3>Hear from fellow clinicians - share yours to get featured on our homepage
             and social media</h3>
-        <div id="quoteCarousel" class="carousel slide mt-4 mb-4" data-bs-ride="carousel" data-bs-interval="50000000">
+        <div id="dissatisfactionCarousel" class="carousel slide mt-4 mb-4" data-bs-ride="carousel"
+            data-bs-interval="50000000">
             <div class="carousel-inner">
                 <div class="carousel-item active">
                     <p class="carouselP"><i>I've been at 45% split for three years despite advanced practice credentials
@@ -93,11 +133,13 @@
                     <p><b><i>M.G.</i></b></p>
                 </div>
             </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#quoteCarousel" data-bs-slide="prev">
+            <button class="carousel-control-prev" type="button" data-bs-target="#dissatisfactionCarousel"
+                data-bs-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Previous</span>
             </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#quoteCarousel" data-bs-slide="next">
+            <button class="carousel-control-next" type="button" data-bs-target="#dissatisfactionCarousel"
+                data-bs-slide="next">
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Next</span>
             </button>
@@ -197,7 +239,12 @@
             </div>
         </div>
     </nav>
-
+    <div class="col-lg-12 col-md-12">
+        <p>As a clinician seeking your next opportunity, you can navigate five distinct paths—each with its own
+            trade-offs. Below is the healthcare worker hiring process, told from your perspective, so you can see
+            why The Traveling Therapist may be the best fit for your career, lifestyle, and earning goals.
+        </p>
+    </div>
     <!-- Job Board -->
     <div class="row staffingSolutionRow">
         <div>
