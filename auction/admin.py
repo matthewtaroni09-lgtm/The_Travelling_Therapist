@@ -15,6 +15,7 @@ import time
 
 class BidInline(admin.TabularInline):
     model = Bid
+    ordering = ('amount',)
 
 @admin.register(Auction)
 class AuctionAdmin(admin.ModelAdmin):

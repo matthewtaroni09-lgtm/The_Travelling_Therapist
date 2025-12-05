@@ -105,7 +105,7 @@ $(document).ready(function () {
             bidError("Danger", "Please enter only whole numbers.");
         }
         else if (parseInt($("#id_amount").val()) >= currentLowBid && currentLowBid !== 0 && currentLowBid !== null) {
-            bidError("Warning", "Your bid is equal to or over the current minimum bid and will not be considered for determing the winner of the listing. Click Submit if you would like to proceed anyway.");
+            bidError("Warning", "Your bid is equal to or over the current minimum bid and will not be considered for determining the winner of the listing. Click Submit if you would like to proceed anyway.");
         }
         else if (parseInt($("#id_amount").val()) <= 0) {
             if (paymentType === "Fee Split") {
@@ -132,7 +132,7 @@ $(document).ready(function () {
         $("#warningMessage").removeClass("alert-danger");
         $('#demo').text($("#bidSlider").val());
         if (parseInt($("#bidSlider").val()) >= currentLowBid && currentLowBid !== 0 && currentLowBid !== null) {
-            bidError("Warning", "Your bid is equal to or over the current minimum bid and will not be considered for determing the winner of the listing. Click Submit if you would like to proceed anyway.");
+            bidError("Warning", "Your bid is equal to or over the current minimum bid and will not be considered for determining the winner of the listing. Click Submit if you would like to proceed anyway.");
         }
         else if (parseInt($("#bidSlider").val()) === 0) {
             bidError("Danger", "Bids must be above 0%.");

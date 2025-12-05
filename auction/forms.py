@@ -224,8 +224,9 @@ class BidForm(forms.ModelForm):
     # This should be caught in JS validations but keep this here in case the user tries to get around front-end validations 
     def clean_amount(self):
         amount = self.cleaned_data.get("amount")
-        print(str(amount) + "  " + str(self.max_bid))
-        if amount > 0 and amount > self.max_bid and self.max_bid != 0 and self.payment_type == 'Flat Fee':
+        print(str(amount) + "  " + str(self.max_bid) + "  " + str(self.min_bid_increment) + "  " + str(amount - self.max_bid))
+        print("less than: " + str(self.max_bid) + " || " + "greater than " + str(self.max_bid) + str(self.min_bid_increment) + " ")
+        if self.payment_type == 'Flat Fee' and amount < self.max_bid and amount > self.max_bid + self.min_bid_increment:
             raise forms.ValidationError("Bids must be less than the next bid increment  $" + str(self.min_bid_increment) + ".")
         if amount == 0:
             if self.payment_type == 'Fee Split':
