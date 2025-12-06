@@ -283,7 +283,7 @@
 <script src="{% static 'auction/create_auction.js' %}"></script>
 <script src="{% static 'auction/textarea.js' %}"></script>
 {% else %}
-<p>You must be logged in to access this page. Please <a href="https://travelingtherapist.ca/login">login here</a>
+<p>You must be logged in to access this page. Please <a href="{% url 'login' %}">login here</a>
 </p>
 {% endif %}
 {% endblock %}
