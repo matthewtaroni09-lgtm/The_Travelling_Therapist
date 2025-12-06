@@ -527,8 +527,14 @@ ol {
         padding: 0 1rem;
     }
 
-    .custom-arrow {
+    .custom-arrow .carousel-control-prev-icon {
         top: 45%;
+        margin-left: -50px;
+    }
+
+    .custom-arrow .carousel-control-next-icon {
+        top: 45%;
+        margin-right: -10px;
     }
 
     .slick-prev,

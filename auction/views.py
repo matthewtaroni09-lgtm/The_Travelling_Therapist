@@ -404,6 +404,7 @@ def view_auction(request, auction_id):
                         message = "",
                         html_message = emails.therapist_auction_thank_you_bid(request.user.first_name, request.user.last_name, auction.clinic.clinicName, auction.auctionStart, auction.auctionID),
                         from_email = settings.EMAIL_HOST_USER,
+                        # recipient_list = (request.user.email, 'loribine@gmail.com')
                         recipient_list = (request.user.email,)
                     )
                 except:
