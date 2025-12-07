@@ -36,8 +36,21 @@
         </div>
     </div>
     <div class="row text-center m-3">
-        <a class="btn btn-primary btn-lg guidePageButton" href="{% url 'create-auction' %}">Post Your First
-            Listing</a>
+        <!-- If the user is authenticated and a clinic link them to the create an auctuion. If they are not a clinic don't show the link because they won't be able to create an auction. -->
+        {% if user.is_authenticated %}
+        {% if user.account.get_split_user_type == 'Clinic' %}
+        <div class="col-12 text-center">
+            <a class="btn btn-primary btn-lg guidePageButton" href="{% url 'create-auction' %}">Post Your First
+                Listing</a>
+        </div>
+        {% endif %}
+        <!-- If the user is not logged in then go to the sign up page -->
+        {% else %}
+        <div class="col-12 text-center">
+            <a class="btn btn-primary btn-lg guidePageButton" href="{% url 'register' %}">Post Your First
+                Listing</a>
+        </div>
+        {% endif %}
     </div>
     <div class="row text-center">
         <div id="quoteCarousel" class="carousel slide mt-4 mb-4" data-bs-ride="carousel" data-bs-interval="50000000">
@@ -506,10 +519,20 @@
         </p>
     </div>
     <div class="row">
+        <!-- If the user is authenticated and a clinic link them to the create an auctuion. If they are not a clinic don't show the link because they won't be able to create an auction. -->
+        {% if user.is_authenticated %}
+        {% if user.account.get_split_user_type == 'Clinic' %}
         <a id="startAuctionButton" class="btn btn-primary btn-lg guidePageButton"
             href="{% url 'create-auction' %}">Start
             Your First
             Listing</a>
+        {% endif %}
+        <!-- If the user is not logged in then go to the sign up page -->
+        {% else %}
+        <a id="startAuctionButton" class="btn btn-primary btn-lg guidePageButton" href="{% url 'register' %}">Start
+            Your First
+            Listing</a>
+        {% endif %}
     </div>
 
 </div>
