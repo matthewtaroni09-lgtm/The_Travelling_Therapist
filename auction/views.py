@@ -220,6 +220,9 @@ def healthcare_facility_guide(request):
 def clinician_guide(request):
     return render(request, 'auction/clinician_guide.html', {})
 
+def hospital_guide(request):
+    return render(request, 'auction/hospital_guide.html', {})
+
 def profile(request):
     if request.user.is_authenticated == False:
         return render(request, 'auction/profile.html', {})

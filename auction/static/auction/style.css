@@ -733,6 +733,16 @@ html {
     scroll-behavior: smooth;
 }
 
+/* Hospital Guide */
+.TTTChecklist {
+    list-style: none;
+    font-size: 20px;
+}
+
+.TTTChecklist li:before {
+    content: '✓';
+}
+
 
 /**************************** 6. MISC ****************************/
 .main-nav {

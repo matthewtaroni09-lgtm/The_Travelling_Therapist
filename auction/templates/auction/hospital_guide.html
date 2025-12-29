@@ -1,0 +1,152 @@
+{% extends 'auction/base.html' %}
+{% load static %}
+{% block content %}
+<!-- content -->
+<p id="pageTitle" class="d-none">Hospital_Guide</p>
+<div class="container" style="background-color: rgba(0, 0, 0, 0);">
+    <div class=" row">
+        <div class="col-md-12">
+            <h1 class="text-center mb-5">Hospital Guide to Hiring</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-4 col-md-12"><img id="clinicOwnerGuideMainImage" src="/media/images/clinic_guide_main.png"
+                class="img-fluid" alt="healthcare facility staff"></div>
+        <div class="col-lg-8 col-md-12">
+            <h2>Internal Hiring Isn't Filling Shifts Like It Used To</h2>
+            <p>Most hospitals rely heavily on internal hiring lists. But in 2025, rising vacancies, clinician burnout,
+                and outdated HR workflows mean these lists are no longer enough. The Traveling Therapist helps hospitals
+                fill gaps faster, with verified staff ready when your internal pool can't deliver.</p>
+            <div class="text-center">
+                <a class="btn btn-primary btn-lg w-100" style="max-width: 420px;" href="{% url 'how-it-works' %}">
+                    See How The Traveling Therapist Works
+                </a>
+            </div>
+
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-lg-12 col-md-12">
+            <div class="container my-5">
+                <div class="row g-3">
+                    <div class="col-4 col-md-4">
+                        <blockquote class="quote-card quote-card-facility">
+                            <p>In 2023–2024, 8% of total hours worked by frontline care providers in hospital nursing
+                                units were overtime about 22.6 million overtime hours, equivalent to roughly 11,500
+                                full-time positions.</p>
+                            <footer><a
+                                    href="https://www.cihi.ca/en/health-workforce-overtime-and-staffing-challenges-in-hospitals?utm_source=chatgpt.com"
+                                    target="_blank">Reference
+                                    Link</a></footer>
+                        </blockquote>
+
+
+                        <blockquote class="quote-card quote-card-facility">
+                            <p>Recent data supports that Ontario has a 651:100 000 ratio of RN to person.
+                            </p>
+                            <footer><a href="https://ona.org/news/20240725-cihi-data-staffing/?utm_source=chatgpt.com"
+                                    target="_blank">Reference
+                                    Link</a></footer>
+                        </blockquote>
+
+                        <blockquote class="quote-card quote-card-facility">
+                            <p>Huge rise in hospital job vacancies in Ontario: Between 2015 and 2024 the number of
+                                hospital job vacancies in Ontario increased by 331% and the vacancy rate nearly tripled
+                            </p>
+                            <footer><a
+                                    href="https://www.policyalternatives.ca/news-research/hollowed-out/?utm_source=chatgpt.com"
+                                    target="_blank">Reference
+                                    Link</a></footer>
+                        </blockquote>
+                    </div>
+                    <div class="col-lg-8 col-md-12 text-center">
+                        <img src="/media/images/hospital_guide_cycle.png" class="img-fluid"
+                            alt="Hospital staffing cycle">
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <h2 class="text-center">The Hidden Costs of Relying Only on Internal Hiring</h2>
+        <h3>Administrative Overload</h3>
+        <ul>
+            <li>HR spends 7–12 hours/week trying to fill gaps through internal lists.</li>
+            <li>Most of this time is wasted on staff who never reply.</li>
+        </ul>
+        <h3>Shifts = Service Delays</h3>
+        <ul>
+            <li>Canadian hospitals reported 28% growth in unfilled temp shifts from 2023 to 2025.</li>
+            <li>Direct impact: delayed procedures, increased wait times, and increased overtime costs.</li>
+        </ul>
+        <h3>Burnout Reinforces Itself</h3>
+        <ul>
+            <li>Burned-out staff decline more shifts → internal pool weakens → more stress on remaining staff → cycle
+                repeats.</li>
+        </ul>
+        <h3>Lack of Real-Time Availability</h3>
+        <ul>
+            <li>Internal lists do not track:</li>
+            <ul>
+                <li>Who is available right now</li>
+                <li>Who is willing to take nights/weekends</li>
+                <li>Who is actively looking for shifts today</li>
+            </ul>
+        </ul>
+    </div>
+    <hr>
+    <div class="row" id="">
+        <h2 class="text-center">The Traveling Therapist</h2>
+        <ul class="TTTChecklist">
+            <li>Instant opening posting with quick responses</li>
+            <li>Zero manual follow-ups</li>
+            <li>Large pool beyond your internal staff</li>
+            <li>Specialized in healthcare staffing only</li>
+            <li>Transparent pricing, no agency markup</li>
+            <li>Reduces HR workload immediately</li>
+        </ul>
+        <div class="row staffingSolutionRow">
+            <div>
+                <h2 class="staffSolutionsTitle" id="">
+                    See How TTT Compares to Internal Hiring
+                </h2>
+                <div>
+                    <div class="row">
+                        <div class="col-lg-6 col-md-12 staffingSolutionsSection">
+                            <h4 class="ps-2">
+                                The Traveling Therapist
+                            </h4>
+                            <ul class="accordionList">
+                                <li>10 min post process</li>
+                                <li>2 weeks to complete a hire</li>
+                                <li>Transparent payment process</li>
+                                <li>Clinician is connected directly to you</li>
+                                <li>Free to post and create an account</li>
+                            </ul>
+                        </div>
+                        <div class="col-lg-6 col-md-12 staffingSolutionsSection">
+                            <h4>Internal Hiring</h4>
+                            <ul class="accordionList">
+                                <li>Back and forth process</li>
+                                <li>Inefficient Method</li>
+                                <li>Dependent on internal pool.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <a id="startAuctionButton" class="btn btn-primary btn-lg guidePageButton"
+            href="{% url 'create-auction' %}">Start for free now!</a>
+    </div>
+
+</div>
+<script src="{% static 'auction/user_guide_pages.js' %}"></script>
+{% endblock %}
