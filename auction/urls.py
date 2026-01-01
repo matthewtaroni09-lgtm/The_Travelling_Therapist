@@ -36,6 +36,7 @@ urlpatterns = [
     path("healthcare_facility_guide", views.healthcare_facility_guide, name="healthcare-facility-guide"),
     path("clinician_guide", views.clinician_guide, name="clinician-guide"),
     path("hospital_guide", views.hospital_guide, name="hospital-guide"),
+    path("hiring_healthcare_worker", views.hiring_healthcare_worker, name="hiring-healthcare-worker"),
 
     # AJAX Calls
     path('auction/data/auction/<auction_id>', views.get_auction_end, name="get-auction-end"),

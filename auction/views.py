@@ -223,6 +223,9 @@ def clinician_guide(request):
 def hospital_guide(request):
     return render(request, 'auction/hospital_guide.html', {})
 
+def hiring_healthcare_worker(request):
+    return render(request, 'auction/hiring_healthcare_worker.html', {})
+
 def profile(request):
     if request.user.is_authenticated == False:
         return render(request, 'auction/profile.html', {})

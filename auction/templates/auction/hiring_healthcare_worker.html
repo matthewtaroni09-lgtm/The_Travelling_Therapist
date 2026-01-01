@@ -1,0 +1,203 @@
+{% extends 'auction/base.html' %}
+{% load static %}
+{% block content %}
+<!-- content -->
+<p id="pageTitle" class="d-none">Hiring_Healthcare_Worker</p>
+<div class="container" style="background-color: rgba(0, 0, 0, 0);">
+    <div class=" row">
+        <div class="col-md-12">
+            <h1 class="text-center mb-5">Your Next Opportunity, Your Way</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-8 col-md-12">
+            <h2> You’re in demand. Now earn more, work on your own terms, and keep 100% of your rate.</h2>
+            <p> Traditional staffing models hold clinicians back—unpredictable schedules, wasted commutes, and pay
+                structures that never seem to work in your favour. The Traveling Therapist puts the power back in your
+                hands. Access temporary shifts across Canada, choose the work you want, and set the rate you deserve—all
+                in one clinician-first platform.</p>
+            <div class="text-center">
+                <a class="btn btn-primary btn-lg w-100" style="max-width: 420px;" href="{% url 'register' %}">
+                    Join for free
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-12"><img id="clinicOwnerGuideMainImage"
+                src="/media/images/hire_healthcare_worker.png" class="img-fluid" alt="healthcare facility staff"></div>
+    </div>
+    <hr>
+
+    <!-- SECTION 1 — The Reality Before The Traveling Therapist -->
+    <div class="row">
+        <h2>The Reality Before The Traveling Therapist</h2>
+        <p><b>Meet Alex</b><br><br>
+            A fully licensed clinician. Experienced. In demand.
+            Still struggling to find work that’s predictable, fair, and flexible.
+        </p>
+        <hr>
+        <p><b>Monday Morning</b><br>
+            Alex was scheduled to see nine patients.
+            Four late cancellations and one no-show meant only four were treated
+            Alex was paid only for the clients actually seen, despite remaining at the clinic all day. Unfortunately,
+            his clinic admin staff rarely enforces the cancellation policy - despite being assured by the clinic owner
+            when he was hired that “the policy is strictly enforced”. Empty promises - just like his last clinic.
+        </p>
+        <hr>
+        <p><b>Trying to Fix the Gaps</b><br>
+            To stabilize income, Alex tries everything:
+        <ul class="ps-5">
+            <li>Applies to postings that never respond</li>
+            <li>Emails clinics that say "we'll keep you on file"</li>
+            <li>Talks to recruiters who promise one rate… then never deliver</li>
+            <li>Accepts short contracts where agency cuts eat into pay</li>
+        </ul>
+        Each option <span class="fst-italic">technically</span> offers work.<br>
+        None offer the control he wants over his ability to practice.
+        </p>
+        <hr>
+        <p><b>The Breaking Point</b><br>
+            Alex doesn’t need more job listings.<br>
+            Alex needs:
+        <ul class="ps-5">
+            <li>Reliable opportunities</li>
+            <li>Transparent pay</li>
+            <li>The ability to choose work on terms they control</li>
+        </ul>
+        And most of all—a way to make unused time profitable instead of wasted.
+        </p>
+    </div>
+    <hr>
+
+    <!-- SECTION 2 — The Dissatisfaction Gap -->
+    <div class="row">
+        <h2>The Dissatisfaction Gap</h2>
+        <p><b>Clinicians across Canada feel the same.</b></p>
+        Underpaid. Undervalued. Overbooked one day and empty the next.
+        <blockquote>
+            <p>"I've been at a 45% split for three years despite advanced credentials and clinic growth."</p>
+            <footer>— M.G</footer>
+        </blockquote>
+        <div class="text-center">
+            <a class="btn btn-primary btn-lg w-100" style="max-width: 420px;" href="{% url 'register' %}">
+                Share My Story & Get Featured
+            </a>
+        </div>
+    </div>
+    <hr>
+
+    <!-- SECTION 3 — You’re Not Alone -->
+    <div class="row">
+        <h2>You're Not Alone</h2>
+        <p><b>There are many ways clinicians try to find work.</b></p>
+        <p>Job boards. Recruiters. Agencies. Cold outreach calls and emails.</p>
+        <p>Each comes with tradeoffs—and most were <b>not designed with clinicians in mind.</b></p>
+        <p>👉 We break them all down in our full guide: “The Clinician's Guide to Hiring & Work Models in Canada”</p>
+        <br>
+        <div class="text-center">
+            <a class="btn btn-primary btn-lg w-100" style="max-width: 420px;" href="{% url 'clinician-guide' %}">
+                Read the Clinician Hiring Guide
+            </a>
+        </div>
+        <br>
+        <div class="text-center"><img src="/media/images/hire_healthcare_worker_not_alone.png" class="img-fluid"
+                alt="Hiring option icons"></div>
+
+        <p class="text-center">Compare pay structures, timelines, flexibility, and hidden costs across every major
+            hiring path.</p>
+    </div>
+    <hr>
+
+    <!-- SECTION 4 — Introducing the Hero: The Traveling Therapist -->
+    <div class="row">
+        <h2>Introducing the Hero: The Traveling Therapist</h2>
+        <p><b>The turning point in Alex’s story.</b></p>
+        <p>Tired of uncertainty, Alex created a free profile on The Traveling Therapist.<br>
+
+            Within days, Alex saw shifts from clinics, LTC homes, and hospitals across Canada—each with transparent pay,
+            clear expectations, and the freedom to offer your own rate.<br>
+
+            <b>Why The Traveling Therapist Works</b><br>
+        <ul class="ps-5">
+            <li><b>No agency markups on contract and flat-rate work.</b> You negotiate and keep the full rate you agree
+                to.</li>
+            <li><b>See active opportunities from multiple healthcare facilities across Canada, and choose when, where,
+                    and
+                    at what rate you work.</b></li>
+            <li><b>Full transparency.</b> Rate, schedule, location, expectations—up front.</li>
+            <li><b>Fast matching.</b> Land work in as little as <b>7-14</b> days.</li>
+            <li><b>Built for your lifestyle.</b> Travel, build your network, or fill gaps locally.</li>
+        </ul>
+        <b>Case Study: Raj</b> posted his availability Monday → compared offers Thursday → accepted a 4-week OT contract
+        at +15% pay over his full time position.
+        </p>
+    </div>
+    <hr>
+
+    <!-- SECTION 4 — Introducing the Hero: The Traveling Therapist -->
+    <div class="row">
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Method</th>
+                    <th>Reach / Speed</th>
+                    <th>Flexibility</th>
+                    <th>Take-Home Pay</th>
+                    <th>Transparency</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Job Boards</td>
+                    <td>Wide / Slow</td>
+                    <td>Low</td>
+                    <td>Low–Medium</td>
+                    <td>Low</td>
+                </tr>
+                <tr>
+                    <td>Direct Outreach</td>
+                    <td>Medium / Slow</td>
+                    <td>Medium</td>
+                    <td>Fixed</td>
+                    <td>Low</td>
+                </tr>
+                <tr>
+                    <td>Recruiters / Agencies</td>
+                    <td>Medium–Fast</td>
+                    <td>Low–Medium</td>
+                    <td>Reduced by fees</td>
+                    <td>Medium</td>
+                </tr>
+                <tr class="highlight">
+                    <td><strong>The Traveling Therapist (You)</strong></td>
+                    <td><strong>Fast</strong></td>
+                    <td><strong>High</strong></td>
+                    <td>
+                        <strong>
+                            No agency markups on contract and flat-rate roles<br>
+                            (you keep the full agreed rate)
+                        </strong>
+                    </td>
+                    <td><strong>Full</strong></td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+    <hr>
+
+    <!-- FINAL CTA—Take Control of Your Career -->
+    <div class="row">
+        <h2>Take Control of Your Career</h2>
+        <p><b>Alex finally found work that fits their life—not the other way around.
+                Now it's your turn.</b></p>
+        <br>
+        <h3>You're already in demand. Make the market work for you.</h3>
+        <br>
+        <div class="text-center">
+            <a class="btn btn-primary btn-lg w-100" style="max-width: 420px;" href="{% url 'register' %}">
+                Create a Free Profile
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
