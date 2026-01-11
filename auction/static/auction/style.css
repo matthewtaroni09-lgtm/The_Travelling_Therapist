@@ -767,6 +767,46 @@ html {
     font-weight: 600;
 }
 
+.case-study-flow {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    font-family: system-ui, -apple-system, sans-serif;
+}
+
+.flow-box {
+    background: #ecfdf5;
+    ;
+    border: 2px solid #14f1a1;
+    border-radius: 14px;
+    padding: 14px 18px;
+    min-width: 190px;
+    text-align: center;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+}
+
+.flow-arrow {
+    font-size: 28px;
+    font-weight: 600;
+    color: #14f1a1;
+    margin: 0 4px;
+}
+
+.blockquote {
+    padding: 2rem;
+    background: #f8f9fa;
+    border-radius: 12px;
+}
+
+.story-card {
+    max-width: 720px;
+    border-radius: 16px;
+    border: none;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    background: linear-gradient(180deg, #ffffff, #f8f9fa);
+    padding: 1.5rem;
+}
 
 
 /**************************** 6. MISC ****************************/
