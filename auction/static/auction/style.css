@@ -154,6 +154,10 @@ body {
     /* Adding a comment for testing */
 }
 
+[id] {
+    scroll-margin-top: 114px;
+}
+
 /* Index */
 #tag-line {
     font-family: Futura-Italic, sans-serif;
