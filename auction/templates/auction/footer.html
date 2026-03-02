@@ -1,15 +1,60 @@
-<footer class="p-3 pt-5 bg-light text-center">
-    <h5 class="text-weight-normal">Quick Links</h5>
-    <div class="d-flex flex-column gap-2">
-        <a href="{% url 'faq' %}" class="link-dark text-decoration-none">FAQ</a>
-        <a href="{% url 'contact-us' %}" class="link-dark text-decoration-none">Contact</a>
-        <!-- Button trigger Terms & Conditions modal -->
-        <p type="button" data-bs-toggle="modal" data-bs-target="#tandcModal" class="mb-0">Terms & Conditions</p>
-        {% include 'auction/modal_terms_and_conditions.html' with id='tandcModal' %}
-        <!-- Button trigger Privacy Policy modal -->
-        <p type="button" data-bs-toggle="modal" data-bs-target="#privacyModal">Privacy Policy</p>
-        {% include 'auction/modal_privacy_policy.html' with id='privacyModal' %}
+<footer class="custom-footer">
+    <div class="container-fluid px-4 px-md-5">
+        <div class="row">
+
+            <div class="col-lg-4 col-md-12 mb-4 mb-lg-0 pe-lg-5">
+                <h5>The Traveling Therapist</h5>
+                <p>The Traveling Therapist is an auction based temporary work staffing solution for healthcare
+                    professionals. The Traveling Therapist connects clinics, hospitals, retirement homes and long term
+                    care facilities looking for temporary coverage for their healthcare workers on vacation, or who are
+                    otherwise absent to those providers looking for temporary, casual or extra work in new clinical
+                    environments.</p>
+            </div>
+
+            <div class="col-lg-2 col-md-6 mb-4 mb-lg-0">
+                <h5>How it Works</h5>
+                <a type="button" data-bs-toggle="modal" data-bs-target="#featuresModal" style="cursor: pointer;"
+                    href="#">Features</a>
+                <a href="/faq">Pricing</a>
+                <!-- <a href="#">Reviews</a> -->
+                <a href="/faq">FAQ</a>
+            </div>
+
+            <div class="col-lg-2 col-md-6 mb-4 mb-lg-0">
+                <h5>TTT</h5>
+                <a href="/what_is_TTT">About Us</a>
+                <a href="/register">Get Started</a>
+                <a href="/mission_vision">Company Mission</a>
+                <a href="/contact_us">Contact</a>
+            </div>
+
+            <!-- <div class="col-lg-4 col-md-12">
+                <h5>Newsletter</h5>
+                <p>Subscribe to our newsletter for the latest updates.</p>
+                <form class="newsletter-form" action="#" method="POST" onsubmit="event.preventDefault();">
+                    <input type="email" class="newsletter-input" placeholder="Email" required>
+                    <button type="submit" class="newsletter-btn">Subscribe</button>
+                </form>
+            </div> -->
+        </div>
+
+        <div class="custom-footer-divider"></div>
+
+        <div class="custom-footer-bottom">
+            <p>&copy; The Traveling Therapist.</p>
+            <div class="custom-footer-bottom-links">
+                <a type="button" data-bs-toggle="modal" data-bs-target="#privacyModal" style="cursor: pointer;"
+                    href="#">Privacy
+                    Policy</a>
+                <a type="button" data-bs-toggle="modal" data-bs-target="#tandcModal" style="cursor: pointer;"
+                    href="#">Terms of
+                    Service</a>
+                <a href="{% url 'cookie-policy' %}">Cookie Policy</a>
+            </div>
+        </div>
     </div>
 
-    <p class="mt-4 text-weight-light">&copy; <span id="current-year"></span> | The Traveling Therapist</p>
+    {% include 'auction/modal_terms_and_conditions.html' with id='tandcModal' %}
+    {% include 'auction/modal_privacy_policy.html' with id='privacyModal' %}
+    {% include 'auction/modal_features_video.html' with id='featuresModal' %}
 </footer>
