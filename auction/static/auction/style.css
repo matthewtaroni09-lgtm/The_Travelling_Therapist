@@ -1071,6 +1071,17 @@ input[type=number] {
     color: var(--primary-colour);
 }
 
+.footer-inline-link {
+    display: inline !important;
+    margin-bottom: 0 !important;
+    color: #e0e9eb !important;
+    text-decoration: underline !important;
+}
+
+.footer-inline-link:hover {
+    color: var(--primary-colour) !important;
+}
+
 .custom-footer-divider {
     border-top: 1px solid #4a6a72;
     margin: 3rem 0 1.5rem 0;
