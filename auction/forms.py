@@ -304,14 +304,18 @@ class RegisterAcount(UserCreationForm):
         else:
             if firstName == '' or firstName is None:
                 error_list.append(ValidationError("Please enter a first name."))
+            elif any(char.isdigit() for char in firstName):
+                error_list.append(ValidationError("First name cannot contain numbers."))
 
-            if len(firstName) <= 1:
+            if firstName is not None and len(firstName) <= 1:
                 error_list.append(ValidationError("Please enter a first name that is greater than 1 character."))
 
             if lastName == '' or lastName is None:
                 error_list.append(ValidationError("Please enter a last name."))
+            elif any(char.isdigit() for char in lastName):
+                error_list.append(ValidationError("Last name cannot contain numbers."))
 
-            if len(lastName) <= 1:
+            if lastName is not None and len(lastName) <= 1:
                 error_list.append(ValidationError("Please enter a last name that is greater than 1 character."))
 
             pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
@@ -369,9 +373,13 @@ class UserFormTherapist(forms.ModelForm):
 
         if firstName == '' or firstName is None:
             error_list.append(ValidationError("First name cannot be blank."))
+        elif any(char.isdigit() for char in firstName):
+            error_list.append(ValidationError("First name cannot contain numbers."))
 
         if lastName == '' or lastName is None:
             error_list.append(ValidationError("Last name cannot be blank."))
+        elif any(char.isdigit() for char in lastName):
+            error_list.append(ValidationError("Last name cannot contain numbers."))
 
         pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
         if not re.match(pattern, email):
