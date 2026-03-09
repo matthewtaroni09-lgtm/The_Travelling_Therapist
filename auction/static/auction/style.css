@@ -1028,11 +1028,61 @@ input[type=number] {
 }
 
 /* Match paragraph text style */
-.paragraph-text {
-    font-size: 1.05rem;
-    line-height: 1.65;
-    max-width: 700px;
-    margin: 0 auto;
-    color: #1f1f1f;
-    text-align: left;
+/* Survey CTA Components */
+.survey-cta-box {
+    background: linear-gradient(135deg, #f0fdf9 0%, #e6f6f2 100%);
+    border: 1px solid #c2e9df;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.survey-cta-banner {
+    background: linear-gradient(135deg, #e6f7f3 0%, #dcf0eb 100%);
+    border: 1px solid #bce2d8;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.survey-cta-banner-inner {
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
+}
+
+.survey-cta-button {
+    background-color: #2d8a6b;
+    color: white !important;
+    border-radius: 8px;
+    border: none;
+    padding: 10px 25px;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.survey-cta-button:hover {
+    background-color: #246e56;
+}
+
+.survey-cta-button-sm {
+    padding: 10px 20px;
+    font-size: 1.1rem;
+}
+
+.survey-cta-text-primary {
+    color: #2d8a6b;
+}
+
+.survey-cta-text-dark {
+    color: #2c3e41;
+}
+
+.survey-cta-footer-text {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.survey-cta-icon {
+    min-width: 45px;
+}
+
+.survey-cta-icon-color {
+    color: #2d8a6b;
 }
