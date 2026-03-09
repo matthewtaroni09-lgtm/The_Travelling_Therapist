@@ -453,7 +453,7 @@ ol {
 }
 
 /* Clinic Hiring Guide */
-.accordionIcon {
+.AccordionIcon {
     width: 35px;
     height: 35px;
     padding-right: 5px;
@@ -1081,4 +1081,128 @@ input[type=number] {
 
 .survey-cta-icon-color {
     color: #2d8a6b;
+.paragraph-text {
+    font-size: 1.05rem;
+    line-height: 1.65;
+    max-width: 700px;
+    margin: 0 auto;
+    color: #1f1f1f;
+    text-align: left;
+}
+
+/* Custom Footer */
+.custom-footer {
+    background-color: #2b4d55;
+    padding-top: 4rem;
+    padding-bottom: 1.5rem;
+}
+
+.custom-footer h5 {
+    color: #ffffff;
+    font-family: Futura-Normal, sans-serif;
+    margin-bottom: 1.5rem;
+    font-size: 1.15rem;
+    letter-spacing: 0.5px;
+}
+
+.custom-footer p {
+    color: #e0e9eb;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+
+.custom-footer a {
+    color: #e0e9eb;
+    text-decoration: none;
+    display: block;
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+}
+
+.custom-footer a:hover {
+    color: var(--primary-colour);
+}
+
+.footer-inline-link {
+    display: inline !important;
+    margin-bottom: 0 !important;
+    color: #e0e9eb !important;
+    text-decoration: underline !important;
+}
+
+.footer-inline-link:hover {
+    color: var(--primary-colour) !important;
+}
+
+.custom-footer-divider {
+    border-top: 1px solid #4a6a72;
+    margin: 3rem 0 1.5rem 0;
+}
+
+.custom-footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.95rem;
+    flex-wrap: wrap;
+    color: #e0e9eb;
+}
+
+.custom-footer-bottom p {
+    margin: 0;
+}
+
+.custom-footer-bottom-links {
+    display: flex;
+    gap: 2rem;
+}
+
+.custom-footer-bottom-links a {
+    margin-bottom: 0;
+    color: #e0e9eb;
+}
+
+/* Newsletter Input */
+.newsletter-form {
+    margin-top: 1rem;
+}
+
+.newsletter-input {
+    background-color: transparent;
+    border: 1px solid #4a6a72;
+    color: #ffffff;
+    border-radius: 6px;
+    padding: 0.6rem 1rem;
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.newsletter-input::placeholder {
+    color: #6d8e96;
+}
+
+.newsletter-input:focus {
+    outline: none;
+    border-color: var(--primary-colour);
+    box-shadow: 0 0 0 1px var(--primary-colour);
+    background-color: transparent;
+    color: #ffffff;
+}
+
+.newsletter-btn {
+    background-color: var(--primary-colour);
+    color: var(--dark-colour);
+    border: none;
+    border-radius: 6px;
+    padding: 0.6rem 1rem;
+    width: 100%;
+    font-family: Futura-Normal, sans-serif;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.newsletter-btn:hover {
+    background-color: var(--secondary-colour);
 }
