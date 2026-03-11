@@ -28,7 +28,7 @@ class AuctionAdmin(admin.ModelAdmin):
     exclude = ['startingBid', 'underEightteen', 'eightteenToSixtyFive', 'overSixtyFive', 'MSK', 'neuro', 'cardioResp', 'payFrequency']
 
     def save_model(self, request, obj, form, change):
-        admin = AdminSetting.objects.all()[:1].get()
+        admin = AdminSetting.objects.first()
         auction = Auction.objects.get(pk=obj.auctionID)
         print("auction = " + str(auction.active))
         print("obj = " + str(obj.active))

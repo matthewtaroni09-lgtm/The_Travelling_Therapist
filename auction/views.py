@@ -51,7 +51,7 @@ class PasswordsChangeView(PasswordChangeView):
     success_url = reverse_lazy('profile')
 
 def contact(request):
-    admin = AdminSetting.objects.all()[:1].get()
+    admin = AdminSetting.objects.first()
     if request.method == 'POST':
         form = ContactForm(request.POST)
         if form.is_valid():
@@ -229,6 +229,9 @@ def hiring_healthcare_worker(request):
 def direct_employer_recruitment(request):
     return render(request, 'auction/direct_employer_recruitment.html', {})
 
+def hire_without_headhunter(request):
+    return render(request, 'auction/hire_without_headhunter.html', {})
+
 def profile(request):
     if request.user.is_authenticated == False:
         return render(request, 'auction/profile.html', {})
@@ -326,7 +329,7 @@ def profile(request):
             return render(request, 'auction/profile.html', parameter)
 
 def view_auction(request, auction_id):
-    admin = AdminSetting.objects.all()[:1].get()
+    admin = AdminSetting.objects.first()
     auction = Auction.objects.get(pk=auction_id)
     print(auction.comments)
     num_bids = Bid.objects.filter(auction=auction_id).count()
@@ -451,7 +454,7 @@ def view_auction(request, auction_id):
         return render(request, 'auction/view_auction.html', context)
     
 def check_out_bid(auction_id, bid, request, current_lowest_bid_user, new_bid_user):
-    admin = AdminSetting.objects.all()[:1].get()
+    admin = AdminSetting.objects.first()
     auction = Auction.objects.get(pk=auction_id)
     bids = Bid.objects.filter(auction=auction_id)
     no_email_List = ""
@@ -751,7 +754,7 @@ def admin_summary(request):
 def create_auction(request):
     if request.user.is_authenticated == False:
         return render(request, 'auction/create_auction.html', {})
-    admin = AdminSetting.objects.all()[:1].get()
+    admin = AdminSetting.objects.first()
     # Not closed and not deleted counts any auctions that are active or have no status selected
     active_auctions_list = Auction.objects.filter(closed=False, deleted=False, clinic=request.user.account)
     last_auction = Auction.objects.filter(deleted=False, clinic=request.user.account).order_by('-created').first()
@@ -763,7 +766,7 @@ def create_auction(request):
     # If the user has selected remember previous data get their last selected auction type
     if active_auctions_list.count() > 0 and remember_last_auction:
         selected = last_auction.type
-    max_auctions = AdminSetting.objects.all()[0]
+    max_auctions = admin
     max_demographics = DemographicType.objects.all().count()
     # Areas of practice are specific to a user type so get the user's type
     max_practice_areas = 0 #PracticeAreaType.objects.all().count()
@@ -930,7 +933,7 @@ def check_user_payment_type(request):
 # @login_required
 # @transaction.atomic
 def register(request):
-    admin = AdminSetting.objects.all()[:1].get()
+    admin = AdminSetting.objects.first()
     if request.method == 'POST':
         form = RegisterAcount(request.POST, request.FILES)
         if form.is_valid():

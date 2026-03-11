@@ -1,0 +1,474 @@
+{% extends 'auction/base.html' %}
+{% load static %}
+{% block content %}
+<!-- content -->
+<p id="pageTitle" class="d-none">Hire_Without_Headhunter</p>
+<div class="container bg-transparent">
+
+    <!-- HERO SECTION -->
+    <div class="row align-items-center mt-4 mb-5">
+        <div class="col-lg-7 col-md-12 pe-lg-5">
+            <h1 class="mb-3 text-weight-bold display-4">Hire Without the Headhunter Tax</h1>
+            <h3 class="mb-4 text-weight-normal survey-cta-text-primary text-medium">Hire qualified clinicians faster,
+                with full
+                transparency—and without paying ongoing recruiter fees.</h3>
+            <p class="mb-4 paragraph-text fs-5">
+                Traditional healthcare recruitment relies on third-party recruiters who control access, inflate costs,
+                and slow hiring. Clinics are left paying placement fees, markups, or long-term percentages—often without
+                real visibility into who they’re hiring or why candidates accept.
+                <br><br>
+                The Traveling Therapist removes the middle layer. Clinics connect directly with verified clinicians
+                across Canada, post shifts or contracts, negotiate openly, and hire on terms that actually work—without
+                headhunter markups.
+            </p>
+            <a class="btn btn-primary btn-lg px-5 py-2 text-medium mt-2" href="{% url 'register' %}">Post a Role for
+                Free</a>
+        </div>
+        <div class="col-lg-5 col-md-12 mt-4 mt-lg-0 text-center">
+            <img src="/media/images/Hero.png" class="img-fluid rounded shadow-sm"
+                alt="Clinic hiring without headhunters">
+        </div>
+    </div>
+
+    <hr class="my-5">
+
+    <!-- SECTION 1: The Reality Before The Traveling Therapist -->
+    <div class="row mb-5">
+        <div class="col-12 text-center mb-5">
+            <h2 class="text-weight-bold">The Reality Before The Traveling Therapist</h2>
+        </div>
+
+        <div class="col-12">
+            <div id="storyCarousel" class="carousel slide custom-paragraph-carousel" data-bs-ride="false">
+                <div class="carousel-inner py-3">
+                    <!-- Block 1: Intro -->
+                    <div class="carousel-item active pb-1">
+                        <div class="card story-card mx-auto mb-4 h-100">
+                            <div class="card-body text-center d-flex flex-column justify-content-center py-5">
+                                <h3 class="card-title mb-3 text-weight-bold">Meet Sarah</h3>
+                                <p class="fs-5 mb-4 text-dark-colour">Clinic owner. Growing practice. Chronic staffing
+                                    gaps.<br><br><b>Still relying on recruiters to fill roles.</b></p>
+                                <!-- Carousel Navigation -->
+                                <div class="d-flex justify-content-between mt-4 col-md-10 mx-auto">
+                                    <button class="btn btn-outline-primary px-4" type="button"
+                                        data-bs-target="#storyCarousel" data-bs-slide="prev">Back</button>
+                                    <button class="btn btn-primary px-5" type="button" data-bs-target="#storyCarousel"
+                                        data-bs-slide="next">See Sarah’s Challenge</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Block 2: The Recruiter Loop -->
+                    <div class="carousel-item pb-1">
+                        <div class="card story-card mx-auto mb-4 h-100">
+                            <div class="card-body d-flex flex-column justify-content-center p-md-4">
+                                <h3 class="card-title text-center mb-4 text-weight-bold survey-cta-text-primary">The
+                                    Recruiter Loop</h3>
+                                <p class="text-center fs-5 mb-4 text-dark-colour">Sarah needs an experienced
+                                    physiotherapist—fast. What happens instead:</p>
+                                <div class="col-lg-10 mx-auto">
+                                    <ul class="list-unstyled text-start fs-5">
+                                        <li class="mb-3"><span class="text-danger me-2 text-weight-bold">✗</span>
+                                            Recruiter promises “top candidates”</li>
+                                        <li class="mb-3"><span class="text-danger me-2 text-weight-bold">✗</span> Weeks
+                                            pass before resumes arrive</li>
+                                        <li class="mb-3"><span class="text-danger me-2 text-weight-bold">✗</span> Salary
+                                            expectations are unclear or inflated</li>
+                                        <li class="mb-3"><span class="text-danger me-2 text-weight-bold">✗</span>
+                                            Placement fee lands at 15–25% of annual salary</li>
+                                    </ul>
+                                </div>
+                                <p class="mt-4 text-center fw-bold fs-5 mb-4 text-dark-colour">If the hire leaves early?
+                                    Back to square one.</p>
+                                <!-- Carousel Navigation -->
+                                <div class="d-flex justify-content-between mt-auto col-md-8 mx-auto">
+                                    <button class="btn btn-outline-primary px-4" type="button"
+                                        data-bs-target="#storyCarousel" data-bs-slide="prev">Back</button>
+                                    <button class="btn btn-primary px-5" type="button" data-bs-target="#storyCarousel"
+                                        data-bs-slide="next">See Sarah’s Realization</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Block 3: The Realization -->
+                    <div class="carousel-item pb-1">
+                        <div class="card story-card mx-auto mb-4 h-100">
+                            <div class="card-body d-flex flex-column justify-content-center p-md-5">
+                                <h3 class="card-title text-center mb-4 text-weight-bold">The Realization</h3>
+                                <p class="text-center fs-5 mb-4 fw-bold text-dark-colour">Even when hiring works, Sarah
+                                    realizes:</p>
+                                <div class="col-lg-10 mx-auto mb-4">
+                                    <ul class="list-unstyled text-start fs-5 text-dark-colour">
+                                        <li class="mb-3">• She never spoke to most candidates directly.</li>
+                                        <li class="mb-3">• She doesn’t know what they were promised.</li>
+                                        <li class="mb-3">• Her clinic brand was represented by someone else.</li>
+                                    </ul>
+                                </div>
+                                <div class="d-flex justify-content-between mt-auto col-md-8 mx-auto">
+                                    <button class="btn btn-outline-primary px-4" type="button"
+                                        data-bs-target="#storyCarousel" data-bs-slide="prev">Back</button>
+                                    <button class="btn btn-primary px-5" type="button" data-bs-target="#storyCarousel"
+                                        data-bs-slide="next">See how Sarah solves this</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Block 4: Trying to Improve -->
+                    <div class="carousel-item pb-1">
+                        <div class="card story-card mx-auto mb-4 h-100">
+                            <div class="card-body d-flex flex-column justify-content-center p-md-4">
+                                <h3 class="card-title text-center mb-4 text-weight-bold">Trying to Improve</h3>
+                                <p class="text-center fs-5 mb-4 fw-bold text-dark-colour">To reduce risk and cost, Sarah
+                                    tries:</p>
+                                <div class="col-lg-10 mx-auto">
+                                    <ul class="list-unstyled text-start fs-5 text-dark-colour">
+                                        <li class="mb-3 d-flex align-items-center">
+                                            <span class="material-icons text-warning me-3">loop</span>
+                                            Multiple recruiters competing for the same role
+                                        </li>
+                                        <li class="mb-3 d-flex align-items-center">
+                                            <span class="material-icons text-warning me-3">search_off</span>
+                                            Internal job boards with low response
+                                        </li>
+                                        <li class="mb-3 d-flex align-items-center">
+                                            <span class="material-icons text-warning me-3">monetization_on</span>
+                                            Paying for “urgent” or “priority” placements
+                                        </li>
+                                        <li class="mb-3 d-flex align-items-center">
+                                            <span class="material-icons text-warning me-3">hourglass_empty</span>
+                                            Short-term agency contracts to fill gaps
+                                        </li>
+                                    </ul>
+                                </div>
+                                <hr class="w-50 mx-auto my-4 text-dark-colour">
+                                <p class="text-center mt-3 fst-italic text-muted fs-5 mb-4">
+                                    Each option technically fills a role.<br>
+                                    <span class="fw-bold text-dark-colour">None give her control, speed, or cost
+                                        certainty.</span>
+                                </p>
+                                <!-- Carousel Navigation -->
+                                <div class="d-flex justify-content-between mt-auto col-md-8 mx-auto">
+                                    <button class="btn btn-outline-primary px-4" type="button"
+                                        data-bs-target="#storyCarousel" data-bs-slide="prev">Back</button>
+                                    <button class="btn btn-primary px-5" type="button" data-bs-target="#storyCarousel"
+                                        data-bs-slide="next">See the Breaking Point</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Block 5: The Breaking Point -->
+                    <div class="carousel-item pb-1">
+                        <div class="card story-card mx-auto mb-2 h-100 survey-cta-box border border-2 border-success">
+                            <div class="card-body text-center d-flex flex-column justify-content-center p-md-4">
+                                <h3 class="card-title mb-4 text-weight-bold text-dark-colour">The Breaking Point</h3>
+                                <p class="fs-4 mb-4 fw-bold text-dark-colour">
+                                    Sarah doesn’t need more recruiters. She needs:
+                                </p>
+                                <div class="col-lg-10 mx-auto mb-4">
+                                    <ul class="list-unstyled text-start fs-5">
+                                        <li class="mb-3 d-flex align-items-center">
+                                            <span
+                                                class="material-icons me-3 survey-cta-text-primary">check_circle</span>
+                                            <span class="text-dark-colour">Direct access to clinicians</span>
+                                        </li>
+                                        <li class="mb-3 d-flex align-items-center">
+                                            <span
+                                                class="material-icons me-3 survey-cta-text-primary">check_circle</span>
+                                            <span class="text-dark-colour">Transparent compensation conversations</span>
+                                        </li>
+                                        <li class="mb-3 d-flex align-items-center">
+                                            <span
+                                                class="material-icons me-3 survey-cta-text-primary">check_circle</span>
+                                            <span class="text-dark-colour">Faster hiring without long-term fees</span>
+                                        </li>
+                                        <li class="mb-3 d-flex align-items-start">
+                                            <span
+                                                class="material-icons me-3 mt-1 survey-cta-text-primary">check_circle</span>
+                                            <span class="text-dark-colour">A way to fill short-term gaps without
+                                                recruiter dependency.</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <!-- Carousel Navigation -->
+                                <div class="d-flex justify-content-between mt-auto col-md-8 mx-auto">
+                                    <button class="btn btn-outline-primary px-4" type="button"
+                                        data-bs-target="#storyCarousel" data-bs-slide="prev">Back</button>
+                                    <button class="btn btn-primary px-5" type="button" data-bs-target="#storyCarousel"
+                                        data-bs-slide="next">See the Results</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECTION 2: The Hiring Frustration Gap -->
+    <div class="row mb-5 mt-4">
+        <div class="col-12">
+            <div class="p-5 rounded survey-cta-box shadow-sm">
+                <h2 class="text-center mb-4 text-weight-bold text-dark-colour">The Hiring Frustration Gap</h2>
+                <p class="text-center fs-5 mb-5 text-dark-colour">Clinic owners across Canada feel the same pressure.
+                    High demand.
+                    Limited supply. Rising recruitment costs.</p>
+
+                <blockquote class="quote-card mx-auto mb-4">
+                    <p class="mb-3 fs-4 text-center text-dark-colour text-weight-normal">
+                        “We paid over $5,000 in recruiter fees last year—and still had turnover.”
+                    </p>
+                    <footer class="text-center mt-3 fs-6 text-muted">
+                        — Clinic Owner, Ontario
+                    </footer>
+                </blockquote>
+
+                <p class="text-center fs-5 mt-5 mb-5 text-dark-colour">
+                    Recruiters optimize for placements. <b class="text-weight-bold">Clinics need retention, flexibility,
+                        and cost control.</b>
+                </p>
+
+                <div class="text-center">
+                    <a href="https://forms.gle/UJzcTFQQnRzg9i1L7" target="_blank"
+                        class="btn btn-primary btn-lg survey-cta-button shadow">
+                        Share Your Hiring Problems & receive a discount code for your next listing!
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECTION 3: Why Clinics Turn to Recruiters -->
+    <div class="row mb-5 mt-5">
+        <div class="col-12 text-center mb-5">
+            <h2 class="text-weight-bold">Why Clinics Turn to Recruiters (and Where It Breaks Down)</h2>
+            <p class="fs-5 text-dark-colour">Recruiters exist because hiring is hard. But the traditional model creates
+                tradeoffs:</p>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm border-0 text-center p-4">
+                <div class="mb-4 mt-2">
+                    <span class="material-icons survey-cta-text-primary display-3">timer</span>
+                </div>
+                <h4 class="text-weight-bold text-dark-colour">Speed vs. Cost</h4>
+                <p class="text-muted fs-5">Faster hires mean higher fees</p>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm border-0 text-center p-4">
+                <div class="mb-4 mt-2">
+                    <span class="material-icons survey-cta-text-primary display-3">lock</span>
+                </div>
+                <h4 class="text-weight-bold text-dark-colour">Access vs. Control</h4>
+                <p class="text-muted fs-5">Recruiters gatekeep candidates</p>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm border-0 text-center p-4">
+                <div class="mb-4 mt-2">
+                    <span class="material-icons survey-cta-text-primary display-3">visibility_off</span>
+                </div>
+                <h4 class="text-weight-bold text-dark-colour">Convenience vs. Transparency</h4>
+                <p class="text-muted fs-5">Clinics don’t see the full picture</p>
+            </div>
+        </div>
+
+        <div class="col-12 mt-4 text-center">
+            <div class="col-lg-10 mx-auto p-4 rounded bg-white shadow-sm border border-light">
+                <p class="mb-3 text-weight-bold fs-5 text-dark-colour">We break this down fully in our
+                    guide:<br>"Recruiters, Agencies, or Direct
+                    Hiring? A Clinic’s Guide to Staffing in Canada"</p>
+                <a href="{% url 'healthcare-facility-guide' %}"
+                    class="btn btn-primary btn-outline-primary btn-lg mb-3">Read the
+                    Clinic Hiring Guide</a>
+                <p class="text-muted small mt-2 mb-0">Compare recruiter fees, agency markups, timelines, and long-term
+                    hiring outcomes—side by side.</p>
+            </div>
+        </div>
+    </div>
+
+    <hr class="my-5">
+
+    <!-- SECTION 4: Introducing the Better Way -->
+    <div class="row mb-5 mt-5">
+        <div class="col-12 text-center mb-5">
+            <h2 class="mb-4 text-weight-bold">Introducing the Better Way: The Traveling Therapist</h2>
+            <div class="col-lg-10 mx-auto">
+                <p class="fs-5 paragraph-text">
+                    <b class="text-weight-bold text-dark-colour">The turning point in Sarah’s hiring process.</b>
+                    Instead of calling another recruiter, Sarah posts
+                    her need on The Traveling Therapist—for free.
+                    <br><br>
+                    Within days: Licensed clinicians view the opportunity directly. Clinics and clinicians share key
+                    details
+                    like rates, availability, and role expectations directly in their listings and offers. This helps
+                    both
+                    sides align early and decide whether it’s a good fit before moving forward. Short-term coverage is
+                    secured without agency fees. Longer-term fits emerge organically.
+                </p>
+            </div>
+        </div>
+
+        <div class="col-lg-6 mb-4 pe-lg-4">
+            <ul class="list-group list-group-flush fs-5">
+                <li class="list-group-item bg-transparent border-0 mb-3 d-flex align-items-start px-0">
+                    <span class="material-icons me-3 text-primary-colour mt-1">check_circle</span>
+                    <div>
+                        <strong class="text-dark-colour">No placement fees or ongoing percentages:</strong> <span
+                            class="text-dark-colour">Post roles, shifts, or contracts
+                            without paying 15–25% of salary to a third party.</span>
+                        <p class="small text-muted mt-2 lh-base">Because TTT connects clinics and clinicians directly
+                            through a digital marketplace, we can operate at a significantly lower cost than traditional
+                            agencies (as low as ~5%) to support matching, tooling, and operations. <a
+                                href="{% url 'faq' %}">Learn more in our FAQ
+                                &rarr;</a></p>
+                    </div>
+                </li>
+                <li class="list-group-item bg-transparent border-0 mb-3 d-flex align-items-start px-0">
+                    <span class="material-icons me-3 text-primary-colour mt-1">check_circle</span>
+                    <div class="text-dark-colour">
+                        <strong>Direct access to clinicians:</strong> Clinicians choose to engage with your clinic—no
+                        gatekeepers, no filtered messaging.
+                    </div>
+                </li>
+                <li class="list-group-item bg-transparent border-0 mb-3 d-flex align-items-start px-0">
+                    <span class="material-icons me-3 text-primary-colour mt-1">check_circle</span>
+                    <div class="text-dark-colour">
+                        <strong>Transparent hiring conversations (coming soon):</strong> We’re building tools to support
+                        clearer, in-platform discussions around rates, schedules, start dates, and expectations —
+                        reducing back-and-forth and keeping everything in one place.
+                    </div>
+                </li>
+                <li class="list-group-item bg-transparent border-0 mb-3 d-flex align-items-start px-0">
+                    <span class="material-icons me-3 text-primary-colour mt-1">check_circle</span>
+                    <div class="text-dark-colour">
+                        <strong>Flexible hiring models:</strong> Fill: Single-day or weekend shifts; Short-term coverage
+                        gaps; Trial contracts before full-time offers.
+                    </div>
+                </li>
+                <li class="list-group-item bg-transparent border-0 d-flex align-items-start px-0">
+                    <span class="material-icons me-3 text-primary-colour mt-1">check_circle</span>
+                    <div class="text-dark-colour">
+                        <strong>Faster, lower-risk hiring:</strong> Hire in 7–14 days, without committing to expensive
+                        long-term recruiter agreements.
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow border-0 rounded-3 overflow-hidden h-100">
+                <div class="survey-cta-button p-1"></div>
+                <div class="card-body p-4 p-md-5">
+                    <h4 class="card-title mb-4 border-bottom pb-3 text-weight-bold text-dark-colour">Real Example</h4>
+                    <p class="mb-3 text-dark-colour"><strong>Clinic:</strong> Multidisciplinary clinic, BC</p>
+                    <p class="mb-3 text-dark-colour"><strong>Need:</strong> 4-week PT coverage during an employee’s
+                        leave of absence</p>
+                    <p class="mb-5 text-dark-colour"><strong>Old option:</strong> Agency at premium weekly markup</p>
+
+                    <!-- Timeline Layout: Horizontal Progress Line -->
+                    <div class="mt-5 mb-4 px-2">
+                        <p class="text-center fw-bold text-dark-colour mb-4">With The Traveling Therapist:</p>
+                        <div class="position-relative mt-2">
+                            <hr class="border-success opacity-100">
+                            <div
+                                class="d-flex justify-content-between position-absolute top-0 w-100 translate-middle-y">
+                                <span
+                                    class="material-icons survey-cta-text-primary bg-white rounded-circle">check_circle</span>
+                                <span
+                                    class="material-icons survey-cta-text-primary bg-white rounded-circle">check_circle</span>
+                                <span
+                                    class="material-icons survey-cta-text-primary bg-white rounded-circle">check_circle</span>
+                            </div>
+                            <div class="d-flex justify-content-between mt-3">
+                                <small class="text-dark-colour text-weight-bold">Posted Monday</small>
+                                <small class="text-dark-colour text-weight-bold">Offer Wednesday</small>
+                                <small class="text-dark-colour text-weight-bold">Hired Friday</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-3 rounded survey-cta-banner shadow-sm mt-5">
+                        <p class="mb-0 text-dark-colour small"><strong class="text-weight-bold">Result:</strong>
+                            Coverage filled at market rate, zero recruiter fees,
+                            clinician open to extending.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Comparison Table -->
+    <div class="row mb-5 mt-5">
+        <div class="col-12">
+            <h3 class="text-center mb-5 text-weight-bold">Comparison: The Cost of Hiring</h3>
+            <div class="table-responsive bg-white rounded shadow-sm p-4">
+                <table class="comparison-table table table-hover border-0 m-0">
+                    <thead>
+                        <tr>
+                            <th class="border-0 bg-transparent text-dark-colour text-weight-bold">Hiring Method</th>
+                            <th class="border-0 bg-transparent text-dark-colour text-weight-bold">Speed</th>
+                            <th class="border-0 bg-transparent text-dark-colour text-weight-bold">Cost to Clinic</th>
+                            <th class="border-0 bg-transparent text-dark-colour text-weight-bold">Flexibility</th>
+                            <th class="border-0 bg-transparent text-dark-colour text-weight-bold">Transparency</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="text-dark-colour border-light">Recruiters / Headhunters</td>
+                            <td class="text-dark-colour border-light">Medium–Fast</td>
+                            <td class="text-danger border-light fw-bold">High (15–25% fees)</td>
+                            <td class="text-dark-colour border-light">Low</td>
+                            <td class="text-dark-colour border-light">Medium</td>
+                        </tr>
+                        <tr>
+                            <td class="text-dark-colour border-light">Staffing Agencies</td>
+                            <td class="text-dark-colour border-light">Fast</td>
+                            <td class="text-danger border-light fw-bold">High (weekly markups)</td>
+                            <td class="text-dark-colour border-light">Low–Medium</td>
+                            <td class="text-dark-colour border-light">Medium</td>
+                        </tr>
+                        <tr>
+                            <td class="text-dark-colour border-light">Job Boards</td>
+                            <td class="text-dark-colour border-light">Slow</td>
+                            <td class="text-success border-light fw-bold">Low</td>
+                            <td class="text-dark-colour border-light">Low</td>
+                            <td class="text-dark-colour border-light">Low</td>
+                        </tr>
+                        <tr class="highlight rounded">
+                            <td class="fw-bold text-dark-colour border-0">The Traveling Therapist</td>
+                            <td class="fw-bold text-dark-colour border-0">Fast</td>
+                            <td class="fw-bold survey-cta-text-primary border-0">$0 recruiter fees</td>
+                            <td class="fw-bold text-dark-colour border-0">Total Control</td>
+                            <td class="fw-bold text-dark-colour border-0">100% Direct</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Final CTA -->
+    <div class="row mb-5 mt-5">
+        <div class="col-lg-10 mx-auto">
+            <div class="text-center p-4 rounded shadow survey-cta-banner">
+                <h2 class="mb-3 text-weight-bold text-dark-colour h3">Hire on Your Terms</h2>
+                <p class="fs-5 text-dark-colour text-weight-normal lh-base mb-4 px-md-5">
+                    Sarah stopped paying for access to talent. She started building direct relationships instead.
+                    <b>Your clinic doesn’t need another recruiter. You need a better hiring platform.</b>
+                </p>
+                <a href="{% url 'register' %}" class="btn btn-primary btn-lg px-5 py-2 text-medium shadow-sm">Post Your
+                    First Role for Free</a>
+                <p class="mt-3 text-muted small mb-0">No placement fees. No contracts. Just better hiring.</p>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

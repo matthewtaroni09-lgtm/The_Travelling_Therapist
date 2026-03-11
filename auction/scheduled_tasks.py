@@ -50,7 +50,7 @@ def auction_closed(id):
     logger.warning(auction.auctionID)
     bids = Bid.objects.filter(auction=id, active=True).annotate(Min('amount')).order_by('amount')
     winningBid = ""
-    admin = AdminSetting.objects.all()[:1].get()
+    admin = AdminSetting.objects.first()
     bidding_emails = []
     
     auction.active = False
