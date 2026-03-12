@@ -56,7 +56,17 @@ To access the Django Admin panel:
 python manage.py createsuperuser
 ```
 
-### 7. Run the Development Server
+### 7. Seed Admin Settings
+Initial admin settings (like email sending and auction limits) must be set for the site to function correctly. Run the provided script:
+```bash
+python seed_admin_settings.py
+```
+This initializes:
+- **Send Emails:** Enabled (TRUE)
+- **Max Active Listings:** 1
+- **Default Listing Length:** 3600 seconds (1 hour)
+
+### 8. Run the Development Server
 Start the local server:
 ```bash
 python manage.py runserver
