@@ -2,6 +2,49 @@
 {% load static %}
 {% block content %}
 <!-- content -->
+<style>
+    /* 
+     * INTERACTIVE & VISUAL ENHANCEMENTS
+     */
+
+    /* Smooth transitions for buttons and icons */
+    .btn,
+    .material-icons {
+        transition: all 0.3s ease !important;
+    }
+
+    /* Button Hover Effects: Lift and Color Shift */
+    .btn:hover {
+        transform: translateY(-3px) !important;
+        box-shadow: 0 5px 15px rgba(23, 141, 52, 0.1) !important;
+    }
+
+    .btn-primary:hover {
+        background-color: #14804e !important;
+        border-color: #14804e !important;
+    }
+
+    .btn-outline-primary:hover {
+        background-color: #198754 !important;
+        color: white !important;
+    }
+
+    /* Significantly increase icon sizes for timer, lock, and visibility_off */
+    .material-icons.display-3 {
+        font-size: 7rem !important;
+    }
+
+    .material-icons.display-3:hover {
+        transform: scale(1.1);
+        color: #14804e !important;
+    }
+
+    /* Icon Colors Sync */
+    .survey-cta-text-primary,
+    .text-primary-colour {
+        color: #1ca062 !important;
+    }
+</style>
 <p id="pageTitle" class="d-none">headhunter_recruitment</p>
 <div class="container bg-transparent">
 
@@ -9,7 +52,7 @@
     <div class="row align-items-center mt-4 mb-5">
         <div class="col-lg-7 col-md-12 pe-lg-5">
             <h1 class="mb-3 text-weight-bold display-4">Hire Without the Headhunter Tax</h1>
-            <h3 class="mb-4 text-weight-normal survey-cta-text-primary text-medium">Hire qualified clinicians faster,
+            <h3 class="mb-4 text-weight-normal text-medium">Hire qualified clinicians faster,
                 with full
                 transparency—and without paying ongoing recruiter fees.</h3>
             <p class="mb-4 paragraph-text fs-5">
@@ -197,8 +240,7 @@
                                 <div class="d-flex justify-content-between mt-auto col-md-8 mx-auto">
                                     <button class="btn btn-outline-primary px-4" type="button"
                                         data-bs-target="#storyCarousel" data-bs-slide="prev">Back</button>
-                                    <button class="btn btn-primary px-5" type="button" data-bs-target="#storyCarousel"
-                                        data-bs-slide="next">See the Results</button>
+                                    <a href="#TTT-solution" class="btn btn-primary px-5">See the Results</a>
                                 </div>
                             </div>
                         </div>
@@ -298,7 +340,8 @@
     <!-- SECTION 4: Introducing the Better Way -->
     <div class="row mb-5 mt-5">
         <div class="col-12 text-center mb-5">
-            <h2 class="mb-4 text-weight-bold">Introducing the Better Way: The Traveling Therapist</h2>
+            <h2 id="TTT-solution" class="mb-4 text-weight-bold">Introducing the Better Way: The Traveling
+                Therapist</h2>
             <div class="col-lg-10 mx-auto">
                 <p class="fs-5 paragraph-text">
                     <b class="text-weight-bold text-dark-colour">The turning point in Sarah’s hiring process.</b>
@@ -437,7 +480,7 @@
                         <tr>
                             <td class="text-dark-colour border-light">Job Boards</td>
                             <td class="text-dark-colour border-light">Slow</td>
-                            <td class="text-success border-light fw-bold">Low</td>
+                            <td class="text-dark-colour border-light">Low</td>
                             <td class="text-dark-colour border-light">Low</td>
                             <td class="text-dark-colour border-light">Low</td>
                         </tr>
