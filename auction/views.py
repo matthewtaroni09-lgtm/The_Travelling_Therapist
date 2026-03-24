@@ -229,8 +229,8 @@ def hiring_healthcare_worker(request):
 def direct_employer_recruitment(request):
     return render(request, 'auction/direct_employer_recruitment.html', {})
 
-def hire_without_headhunter(request):
-    return render(request, 'auction/hire_without_headhunter.html', {})
+def headhunter_recruitment(request):
+    return render(request, 'auction/headhunter_recruitment.html', {})
 
 def profile(request):
     if request.user.is_authenticated == False:
