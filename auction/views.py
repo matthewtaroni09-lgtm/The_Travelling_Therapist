@@ -1112,3 +1112,6 @@ def service_benefits_page(request):
 # why use - static page
 def what_is_TTT(request):
     return render(request, 'auction/what_is_TTT.html', {})
+
+def hiring_with_the_traveling_therapist_view(request):
+    return render(request, 'auction/hiring_with_the_traveling_therapist.html', {})

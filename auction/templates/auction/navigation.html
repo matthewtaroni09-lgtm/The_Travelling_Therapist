@@ -49,6 +49,11 @@
                             <a class="nav-link text-weight-normal {% if path == 'profile' %}active{% endif %}"
                                 href="{% url 'headhunter_recruitment' %}">Hiring With A Headhunter</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-weight-normal {% if path == 'profile' %}active{% endif %}"
+                                href="{% url 'hiring-with-the-traveling-therapist' %}">Hiring with the Traveling
+                                Therapist</a>
+                        </li>
                     </ul>
                 </li>
                 {% if user.is_authenticated %}
