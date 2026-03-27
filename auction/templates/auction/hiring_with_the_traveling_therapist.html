@@ -1,0 +1,473 @@
+{% extends 'auction/base.html' %}
+{% load static %}
+{% block content %}
+<!-- content -->
+<style>
+    /* 
+     * INTERACTIVE & VISUAL ENHANCEMENTS
+     * Shared styling based on headhunter_recruitment for brand consistency
+     */
+
+    /* Smooth transitions for buttons and icons */
+    .btn,
+    .material-icons,
+    .card {
+        transition: all 0.3s ease !important;
+    }
+
+    /* Refined Borders and Corners */
+    .btn {
+        border-radius: 50px !important;
+    }
+
+    .card {
+        border-radius: 20px !important;
+        border: 1px solid #E2E8F0 !important;
+    }
+
+    /* Button Hover Effects: Lift and Color Shift */
+    .btn:hover {
+        transform: translateY(-3px) !important;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1) !important;
+    }
+
+    .btn-primary:hover {
+        background-color: #14804e !important;
+        border-color: #14804e !important;
+    }
+
+    .btn-outline-primary:hover {
+        background-color: #198754 !important;
+        color: white !important;
+    }
+
+    /* Card Hover Effects */
+    .card:hover {
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
+        transform: translateY(-3px) !important;
+    }
+
+    /* Icon Colors Sync */
+    .survey-cta-text-primary,
+    .text-primary-colour {
+        color: #198754 !important;
+    }
+</style>
+<p id="pageTitle" class="d-none">Direct_Employer_Recruitment</p>
+<div class="container bg-transparent">
+
+    <!-- HERO SECTION -->
+    <div class="row align-items-center mt-4 mb-5">
+        <div class="col-lg-7 col-md-12 pe-lg-5">
+            <h1 class="mb-3 text-weight-bold display-4">Direct Clinician Access for Healthcare Facilities</h1>
+            <h3 class="mb-4 text-weight-normal text-medium">From temporary & contract to long -
+                term coverage—without agency markups. Hire a clinician long & short term without an additional “finders
+                fee” after the contract period</h3>
+            <p class="mb-4 paragraph-text fs-5">
+                Healthcare facilities require reliable clinical coverage without unnecessary cost, delay, or loss of
+                control.<br><br>
+                The Traveling Therapist is a digital healthcare hiring marketplace that combines the reach of a job
+                board, the speed of agency staffing, and the control of direct hiring — all in one platform.<br><br>
+                It enables healthcare facilities across Canada to connect directly with licensed and unlicensed
+                clinicians (depending on their professional requirements) for temporary and contract work, from which
+                point, you can onboard them for the long-term
+                independently without extra costs!<br><br>
+                Facilities post contract, temporary, or fixed-term opportunities on the platform. Full-time permanent
+                roles are not posted, but many clinics use contracts as a pathway to permanent employment.<br><br>
+                Facilities post opportunities, clinicians respond, and terms are agreed directly—without staffing agency
+                markups or intermediaries.
+            </p>
+            <div class="d-flex flex-wrap gap-3 mt-2 mb-3">
+                <a class="btn btn-primary btn-lg px-5 py-2 text-medium" href="{% url 'register' %}">Post a Shift</a>
+                <a class="btn btn-outline-primary btn-lg px-5 py-2 text-medium" href="{% url 'how-it-works' %}">View How
+                    It Works</a>
+            </div>
+            <div class="mt-2">
+                <a href="{% url 'about' %}" class="text-decoration-none fw-bold">Learn more
+                    about our marketplace model &rarr;</a>
+            </div>
+        </div>
+        <div class="col-lg-5 col-md-12 mt-4 mt-lg-0 text-center">
+            <img src="/media/images/doctor_using_laptop.png" class="img-fluid rounded shadow-sm"
+                alt="Hero Image Placeholder">
+        </div>
+    </div>
+
+    <hr class="my-5">
+
+    <!-- SECTION 1: Facility Staffing Challenges -->
+    <div class="row mb-5 mt-4">
+        <div class="col-12">
+            <div class="p-5 rounded survey-cta-box shadow-sm border border-light bg-white">
+                <h2 class="mb-4 text-weight-bold text-dark-colour text-center">Facility Staffing Challenges</h2>
+                <p class="fs-5 mb-4 text-dark-colour text-center">Healthcare facilities commonly experience:</p>
+
+                <div class="col-lg-8 mx-auto mb-4">
+                    <ul class="list-unstyled text-start fs-5">
+                        <li class="mb-3 d-flex align-items-center">
+                            <span class="material-icons text-warning me-3">warning</span>
+                            <span class="text-dark-colour">Variable patient demand and scheduling gaps</span>
+                        </li>
+                        <li class="mb-3 d-flex align-items-center">
+                            <span class="material-icons text-warning me-3">warning</span>
+                            <span class="text-dark-colour">Inconsistent response rates from traditional job
+                                postings</span>
+                        </li>
+                        <li class="mb-3 d-flex align-items-center">
+                            <span class="material-icons text-warning me-3">warning</span>
+                            <span class="text-dark-colour">High administrative burden associated with recruitment</span>
+                        </li>
+                        <li class="mb-3 d-flex align-items-center">
+                            <span class="material-icons text-warning me-3">warning</span>
+                            <span class="text-dark-colour">Increased costs and reduced transparency when using staffing
+                                agencies</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <p class="text-center fs-5 mt-4 mb-4 text-dark-colour">
+                    These challenges impact continuity of care, staff workload, and operational efficiency.
+                </p>
+                <div class="text-center">
+                    <a href="{% url 'healthcare-facility-guide' %}" class="text-decoration-none fw-bold fs-5">Read our
+                        hiring landscape
+                        overview &rarr; here</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr class="my-5">
+
+    <!-- SECTION 2: Limitations of Traditional Hiring Channels -->
+    <div class="row mb-5 mt-5">
+        <div class="col-12 text-center mb-5">
+            <h2 class="text-weight-bold">Limitations of Traditional Hiring Channels</h2>
+        </div>
+
+        <div class="col-lg-12 mx-auto">
+            <div class="card shadow-sm border-0 rounded-4 overflow-hidden mb-4 bg-white">
+                <div class="row g-0">
+                    <!-- Left Side: Channels -->
+                    <div class="col-md-6 p-4 p-md-5 border-end border-light" style="background-color: #f8f9fa;">
+                        <p class="fs-5 text-dark-colour mb-4 pb-2 border-bottom fw-bold text-center text-md-start"
+                            style="min-height: 3.5rem;">Facilities typically rely on a combination of:</p>
+
+                        <ul class="list-unstyled fs-5 text-dark-colour mt-4 mb-0">
+                            <li
+                                class="mb-3 d-flex align-items-center p-3 bg-white rounded-3 shadow-sm border-start border-danger border-4 hover-lift">
+                                <span class="material-icons text-danger me-3">dashboard</span>
+                                <span class="fw-bold">Public job boards</span>
+                            </li>
+                            <li
+                                class="mb-3 d-flex align-items-center p-3 bg-white rounded-3 shadow-sm border-start border-danger border-4 hover-lift">
+                                <span class="material-icons text-danger me-3">person_search</span>
+                                <span class="fw-bold">Recruiters</span>
+                            </li>
+                            <li
+                                class="mb-3 d-flex align-items-center p-3 bg-white rounded-3 shadow-sm border-start border-danger border-4 hover-lift">
+                                <span class="material-icons text-danger me-3">business</span>
+                                <span class="fw-bold">Staffing agencies</span>
+                            </li>
+                            <li
+                                class="mb-0 d-flex align-items-center p-3 bg-white rounded-3 shadow-sm border-start border-danger border-4 hover-lift">
+                                <span class="material-icons text-danger me-3">campaign</span>
+                                <span class="fw-bold">Internal referrals and outreach</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Right Side: Tradeoffs -->
+                    <div class="col-md-6 p-4 p-md-5" style="background-color: #f8f9fa;">
+                        <p class="fs-5 text-dark-colour mb-4 pb-2 border-bottom fw-bold text-center text-md-start"
+                            style="min-height: 3.5rem;">While each option can generate candidates, facilities often face
+                            tradeoffs related to:</p>
+
+                        <ul class="list-unstyled fs-5 text-dark-colour mt-4 mb-0">
+                            <li
+                                class="mb-3 d-flex align-items-center p-3 bg-white rounded-3 shadow-sm border-start border-warning border-4 hover-lift">
+                                <span class="material-icons text-warning me-3">schedule</span>
+                                <span class="fw-bold">Time-to-fill</span>
+                            </li>
+                            <li
+                                class="mb-3 d-flex align-items-center p-3 bg-white rounded-3 shadow-sm border-start border-warning border-4 hover-lift">
+                                <span class="material-icons text-warning me-3">price_change</span>
+                                <span class="fw-bold">Cost predictability</span>
+                            </li>
+                            <li
+                                class="mb-3 d-flex align-items-center p-3 bg-white rounded-3 shadow-sm border-start border-warning border-4 hover-lift">
+                                <span class="material-icons text-warning me-3">visibility_off</span>
+                                <span class="fw-bold">Rate transparency</span>
+                            </li>
+                            <li
+                                class="mb-0 d-flex align-items-center p-3 bg-white rounded-3 shadow-sm border-start border-warning border-4 hover-lift">
+                                <span class="material-icons text-warning me-3">tune</span>
+                                <span class="fw-bold">Control over clinician selection and terms</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center mt-5">
+        <a href="{% url 'healthcare-facility-guide' %}" class="text-decoration-none fw-bold fs-5">View full comparison
+            guide &rarr;
+            here</a>
+    </div>
+</div>
+</div>
+
+<hr class="my-5">
+
+<!-- SECTION 3: The Traveling Therapist Platform -->
+<div class="row align-items-center mb-5 mt-5">
+    <div class="col-lg-5 col-md-12 mb-4 mb-lg-0 text-center">
+        <img src="\media\images\connect_hire_TTT.png" class="img-fluid rounded shadow-sm"
+            alt="Section Image Placeholder">
+    </div>
+    <div class="col-lg-7 col-md-12 ps-lg-5">
+        <h2 class="mb-4 text-weight-bold">The Traveling Therapist Platform</h2>
+        <p class="fs-5 text-weight-bold mb-4">
+            The Traveling Therapist isn’t a traditional staffing agency — it’s a modern hiring marketplace built for
+            healthcare facilities.<br>
+        <p class="fs-5 text-black-colour mb-4">It gives healthcare facilities: </p>
+        </p>
+
+        <ul class="list-group list-group-flush fs-5 mb-4">
+            <li class="list-group-item bg-transparent border-0 mb-2 d-flex align-items-start px-0">
+                <span class="material-icons me-3 survey-cta-text-primary mt-1">star</span>
+                <strong class="text-dark-colour">The reach and visibility of a job board</strong>
+            </li>
+            <li class="list-group-item bg-transparent border-0 mb-2 d-flex align-items-start px-0">
+                <span class="material-icons me-3 survey-cta-text-primary mt-1">star</span>
+                <strong class="text-dark-colour">The speed and responsiveness of an agency</strong>
+            </li>
+            <li class="list-group-item bg-transparent border-0 mb-2 d-flex align-items-start px-0">
+                <span class="material-icons me-3 survey-cta-text-primary mt-1">star</span>
+                <strong class="text-dark-colour">The control and transparency of direct hiring</strong>
+            </li>
+        </ul>
+
+        <p class="fs-5 text-dark-colour mb-4">
+            All without agency markups or loss of ownership over the hiring relationship.<br> <br>
+            Clinics connect directly with licensed clinicians and <strong>unlicensed clinicians, where appropriate based
+                on the
+                position requirements</strong>, set terms together, and decide how work is structured — while remaining
+            fully in
+            control of compensation, scheduling, and clinical oversight.
+        </p>
+
+        <a href="{% url 'terms-and-conditions' %}" class="text-decoration-none fw-bold fs-5">See
+            platform terms &rarr; here</a>
+    </div>
+</div>
+
+<hr class="my-5">
+
+<!-- SECTION 4: How the Platform Is Used by Facilities -->
+<div class="row mb-5 mt-5">
+    <div class="col-12 text-center mb-5">
+        <h2 class="text-weight-bold">How the Platform Is Used by Facilities</h2>
+    </div>
+
+    <div class="col-md-6 mb-4">
+        <div class="card h-100 shadow-sm border-0 p-4 p-md-5 bg-white rounded-3">
+            <div class="text-center mb-4 mt-2">
+                <img src="/media/images/simple_cost_comparison_graph.png" class="img-fluid rounded"
+                    style="max-height: 240px;" alt="Cost Structure and Transparency">
+            </div>
+            <h4 class="text-weight-bold text-dark-colour text-center mb-4">Cost Structure and Transparency</h4>
+            <ul class="list-unstyled text-start fs-5 text-dark-colour mb-4">
+                <li class="mb-3 d-flex align-items-start">
+                    <span class="material-icons text-success me-3 mt-1">check</span>
+                    <span>No percentage-based agency fees on contract or flat-rate roles</span>
+                </li>
+                <li class="mb-3 d-flex align-items-start">
+                    <span class="material-icons text-success me-3 mt-1">check</span>
+                    <span>Facilities and clinicians agree directly on compensation</span>
+                </li>
+                <li class="mb-3 d-flex align-items-start">
+                    <span class="material-icons text-success me-3 mt-1">check</span>
+                    <span>Clinicians retain the full agreed rate</span>
+                </li>
+                <li class="mb-3 d-flex align-items-start">
+                    <span class="material-icons text-success me-3 mt-1">check</span>
+                    <span>1 simple invoice based on who you choose as a candidate, invoiced directly to the facility,
+                        disclosed upfront, and billed separately from clinician compensation.</span>
+                </li>
+            </ul>
+            <div class="mt-auto pt-4 border-top">
+                <p class="fst-italic text-muted mb-0">This structure provides facilities with improved cost visibility
+                    and budgeting predictability compared to traditional agency models.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 mb-4">
+        <div class="card h-100 shadow-sm border-0 p-4 p-md-5 bg-white rounded-3">
+            <div class="text-center mb-4">
+                <img src="/media/images/doctors_in_hallway.png" class="img-fluid rounded" style="max-height: 250px;"
+                    alt="Section Image Placeholder">
+            </div>
+            <h4 class="text-weight-bold text-dark-colour text-center mb-4">Operational Benefits</h4>
+            <p class="fs-5 text-dark-colour text-center mb-4">Facilities report that the platform supports:</p>
+            <ul class="list-unstyled text-start fs-5 text-dark-colour">
+                <li class="mb-3 d-flex align-items-start">
+                    <span class="material-icons text-success me-3 mt-1">check</span>
+                    <span>Faster access to available clinicians relative to traditional posting-only channels</span>
+                </li>
+                <li class="mb-3 d-flex align-items-start">
+                    <span class="material-icons text-success me-3 mt-1">check</span>
+                    <span>Increased transparency in rates, expectations, and availability</span>
+                </li>
+                <li class="mb-3 d-flex align-items-start">
+                    <span class="material-icons text-success me-3 mt-1">check</span>
+                    <span>Greater flexibility in addressing short-term, seasonal, or planned coverage needs</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<hr class="my-5">
+
+<!-- SECTION 5: Illustrative Example (Case Snapshot) -->
+<div class="row mb-5 mt-5">
+    <div class="col-lg-10 mx-auto">
+        <div class="card shadow border-0 rounded-3 overflow-hidden h-100">
+            <div class="survey-cta-button p-1" style="background-color: #198754;"></div>
+            <div class="card-body p-4 p-md-5 bg-white">
+                <h2 class="card-title mb-2 text-weight-bold text-dark-colour text-center">Illustrative Example</h2>
+                <h3 class="mb-4 border-bottom pb-3 text-weight-normal text-muted text-center h5">Case Snapshot</h3>
+
+                <div class="text-center mb-5 mt-4">
+                    <img src="\media\images\illustrative_example_case_snapshot.png"
+                        class="img-fluid rounded shadow-sm mx-auto d-block" alt="Snapshot Image Placeholder"
+                        style="max-width: 80%;">
+                </div>
+
+                <p class="fs-5 text-dark-colour mb-4">A community physiotherapy clinic faced an unexpected long-term
+                    health leave of absence when a physiotherapist required extended time away from work. With no clear
+                    return date, the clinic was forced to manage patient continuity, rising waitlists, and increased
+                    workload for remaining staff.</p>
+
+                <p class="fs-5 text-dark-colour mb-3">Instead of contacting multiple agencies or relying on informal
+                    referrals, the clinic used The Traveling Therapist platform to:</p>
+                <ul class="list-unstyled text-start fs-5 text-dark-colour mb-4 ms-3">
+                    <li class="mb-2">• Post the role with clear dates and scope to receive PT offers</li>
+                    <li class="mb-2">• Review clinician interest and proposed terms over several days</li>
+                    <li class="mb-2">• Connect directly with a clinician whose availability aligned immediately</li>
+                </ul>
+
+                <p class="fs-5 text-dark-colour mb-5">The clinic engaged the clinician at a rate <strong>below previous
+                        agency-based arrangements,</strong> without markups or back-and-forth negotiation.</p>
+
+                <div class="p-4 rounded shadow-sm" style="background-color: #f8f9fa; border-left: 4px solid #198754;">
+                    <h4 class="fw-bold text-dark-colour mb-3">Outcome</h4>
+                    <ul class="list-unstyled text-start fs-5 text-dark-colour mb-0">
+                        <li class="mb-2 d-flex align-items-start"><span
+                                class="material-icons text-success me-2">check_circle</span> <span>Coverage secured
+                                before patient appointments were cancelled</span></li>
+                        <li class="mb-2 d-flex align-items-start"><span
+                                class="material-icons text-success me-2">check_circle</span> <span>Administrative time
+                                reduced by avoiding repeated agency outreach</span></li>
+                        <li class="mb-2 d-flex align-items-start"><span
+                                class="material-icons text-success me-2">check_circle</span> <span>Clinician received
+                                full rate transparency and clear expectations</span></li>
+                        <li class="mb-2 d-flex align-items-start"><span
+                                class="material-icons text-success me-2">check_circle</span> <span>Patients experienced
+                                continuity of care instead of delays</span></li>
+                    </ul>
+                </div>
+
+                <p class="mt-4 text-muted small mb-0 fst-italic text-center">This example illustrates how reducing
+                    friction — fewer intermediaries, clearer information, and direct connection — can lead to better
+                    outcomes for clinics, clinicians, and patients. Actual outcomes may differ based on role, timing,
+                    and location.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<hr class="my-5">
+
+<!-- SECTION 6: Risk, Control, and Responsibility -->
+<div class="row mb-5 mt-5">
+    <div class="col-lg-10 mx-auto">
+        <h2 class="text-center mb-5 text-weight-bold text-dark-colour">Risk, Control, and Responsibility</h2>
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <div class="d-flex align-items-start p-4 h-100 rounded shadow-sm border border-light bg-white card">
+                    <span class="material-icons survey-cta-text-primary me-4 display-4"
+                        style="font-size: 3rem;">gavel</span>
+                    <div>
+                        <span class="fs-5 text-dark-colour fw-bold">Facilities retain full control over hiring
+                            decisions</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 mb-4">
+                <div class="d-flex align-items-start p-4 h-100 rounded shadow-sm border border-light bg-white card">
+                    <span class="material-icons survey-cta-text-primary me-4 display-4"
+                        style="font-size: 3rem;">person</span>
+                    <div>
+                        <span class="fs-5 text-dark-colour fw-bold">Clinicians independently determine availability and
+                            rates</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 mb-4">
+                <div class="d-flex align-items-start p-4 h-100 rounded shadow-sm border border-light bg-white card">
+                    <span class="material-icons survey-cta-text-primary me-4 display-4"
+                        style="font-size: 3rem;">shield</span>
+                    <div>
+                        <span class="fs-5 text-dark-colour fw-bold">The platform does not direct, supervise, or manage
+                            clinical work</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 mb-4">
+                <div class="d-flex align-items-start p-4 h-100 rounded shadow-sm border border-light bg-white card">
+                    <span class="material-icons survey-cta-text-primary me-4 display-4"
+                        style="font-size: 3rem;">verified_user</span>
+                    <div>
+                        <span class="fs-5 text-dark-colour fw-bold">Credential verification, onboarding, and compliance
+                            remain with the facility</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- FINAL CTA SECTION -->
+<div class="row mb-5 mt-5 pb-5">
+    <div class="col-lg-10 mx-auto">
+        <div class="text-center p-5 rounded shadow survey-cta-banner"
+            style="background-color: #f8f9fa; border: 1px solid #e2e8f0; position: relative; overflow: hidden;">
+            <div
+                style="position: absolute; top: 0; right: 0; width: 60%; height: 100%; background: radial-gradient(circle at top right, rgba(28, 160, 98, 0.1), transparent 60%); pointer-events: none;">
+            </div>
+            <h2 class="mb-4 text-dark-colour display-6" style="position: relative; z-index: 2;">Summary
+            </h2>
+            <p class="fs-5 lh-base mb-5 px-md-4" style="position: relative; z-index: 2;">
+                The Traveling Therapist offers healthcare facilities a modern alternative to <strong>traditional hiring
+                    methods</strong>
+                — including staffing agencies and standalone job boards — by combining reach, speed, and control in one
+                platform.<br><br>
+                By enabling direct engagement with licensed clinicians and eliminating agency markups, the platform
+                improves cost visibility, flexibility, and operational control, while preserving independent
+                decision-making for clinics and clinicians alike.
+            </p>
+            <h3 class="mb-4 text-weight-bold text-dark-colour h4" style="position: relative; z-index: 2;">Ready to Get
+                Started?</h3>
+            <a href="{% url 'register' %}" class="btn btn-primary btn-lg px-5 py-3 text-medium shadow-sm"
+                style="position: relative; z-index: 2;">Post a Shift</a>
+        </div>
+    </div>
+</div>
+
+</div>
+{% endblock %}
