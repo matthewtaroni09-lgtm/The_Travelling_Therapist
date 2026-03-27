@@ -3,9 +3,7 @@
 {% block content %}
 <!-- content -->
 <style>
-    /* 
-     * INTERACTIVE & VISUAL ENHANCEMENTS
-     */
+    /*INTERACTIVE & VISUAL ENHANCEMENTS*/
 
     /* Smooth transitions for buttons and icons */
     .btn,
@@ -19,6 +17,35 @@
         box-shadow: 0 5px 15px rgba(23, 141, 52, 0.1) !important;
     }
 
+    /* Adds hover effects, smooth transitions, and refined borders to buttons and cards. */
+
+    /* Smooth transitions for all interactive elements */
+    .btn,
+    .card,
+    .story-card,
+    img {
+        transition: all 0.3s ease !important;
+    }
+
+    /* Refined Borders and Corners */
+    .btn {
+        border-radius: 50px !important;
+    }
+
+    .card,
+    .story-card {
+        border-radius: 20px !important;
+        border: 1px solid #E2E8F0 !important;
+    }
+
+    /* Subtle 'Lift' effect on Hover */
+    .btn:hover,
+    .card:hover,
+    .story-card:hover {
+        transform: translateY(-3px) !important;
+    }
+
+    /* Slightly darker brand green on hover for buttons */
     .btn-primary:hover {
         background-color: #14804e !important;
         border-color: #14804e !important;
@@ -39,10 +66,17 @@
         color: #14804e !important;
     }
 
+    /* Slightly deeper shadow on hover for cards */
+    .card:hover,
+    .story-card:hover {
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
+
+    }
+
     /* Icon Colors Sync */
     .survey-cta-text-primary,
     .text-primary-colour {
-        color: #1ca062 !important;
+        color: #198754 !important;
     }
 </style>
 <p id="pageTitle" class="d-none">headhunter_recruitment</p>
@@ -349,19 +383,22 @@
         <div class="col-12 text-center mb-5">
             <h2 id="TTT-solution" class="mb-4 text-weight-bold">Introducing the Better Way: The Traveling
                 Therapist</h2>
-            <div class="col-lg-10 mx-auto">
+            <div class="col-lg-10 mx-auto text-start">
                 <p class="fs-5 paragraph-text">
                     <b class="text-weight-bold text-dark-colour">The turning point in Sarah’s hiring process.</b>
                     Instead of calling another recruiter, Sarah posts
-                    her need on The Traveling Therapist—for free.
-                    <br><br>
-                    Within days: Licensed clinicians view the opportunity directly. Clinics and clinicians share key
-                    details
-                    like rates, availability, and role expectations directly in their listings and offers. This helps
-                    both
-                    sides align early and decide whether it’s a good fit before moving forward. Short-term coverage is
-                    secured without agency fees. Longer-term fits emerge organically.
+                    her need on The Traveling Therapist—for free. <br><br>
+                <h2 class="mb-4 text-weight-bold text-dark-colour">Within days:<br> </h2>
                 </p>
+                <ul class="fs-5 text-dark-colour list-unstyled mb-4 ps-0">
+                    <li class="mb-2">• Licensed clinicians view the opportunity directly.</li>
+                    <li class="mb-2">• Clinics and clinicians share key details like rates, availability, and role
+                        expectations directly in their listings and offers.</li>
+                    <li class="mb-2">• This helps both sides align early and decide whether it’s a good fit before
+                        moving forward.</li>
+                    <li class="mb-2">• Short-term coverage is secured <strong>without agency fees</strong>.</li>
+                    <li class="mb-0">• Longer-term fits emerge organically.</li>
+                </ul>
             </div>
         </div>
 
@@ -373,7 +410,8 @@
                         <strong class="text-dark-colour">No placement fees or ongoing percentages:</strong> <span
                             class="text-dark-colour">Post roles, shifts, or contracts
                             without paying 15–25% of salary to a third party.</span>
-                        <p class="text-dark-colour">Because TTT connects clinics and clinicians directly
+                        <p class="text-dark-colour">Because The Traveling Therapist connects clinics and clinicians
+                            directly
                             through a digital marketplace, we can operate at a significantly lower cost than traditional
                             agencies (as low as ~5%) to support matching, tooling, and operations. <a
                                 href="{% url 'faq' %}">Learn more in our FAQ
@@ -398,8 +436,12 @@
                 <li class="list-group-item bg-transparent border-0 mb-3 d-flex align-items-start px-0">
                     <span class="material-icons me-3 text-primary-colour mt-1">check_circle</span>
                     <div class="text-dark-colour">
-                        <strong>Flexible hiring models:</strong> Fill: Single-day or weekend shifts; Short-term coverage
-                        gaps; Trial contracts before full-time offers.
+                        <strong>Flexible hiring models:</strong>
+                        <ul class="list-unstyled mt-2 ms-4">
+                            <li class="mb-1">• Single-day or weekend shifts</li>
+                            <li class="mb-1">• Short-term coverage gaps</li>
+                            <li>• Trial contracts before full-time offers</li>
+                        </ul>
                     </div>
                 </li>
                 <li class="list-group-item bg-transparent border-0 d-flex align-items-start px-0">
