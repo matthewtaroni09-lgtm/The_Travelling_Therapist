@@ -1,6 +1,6 @@
 @echo off
-cd ../venv/Scripts
+cd ./venv/Scripts
 call activate
-cd ../../The_Travelling_Therapist
+cd ../../
 py manage.py runserver
 pause
