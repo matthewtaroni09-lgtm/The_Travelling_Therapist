@@ -232,6 +232,9 @@ def direct_employer_recruitment(request):
 def headhunter_recruitment(request):
     return render(request, 'auction/headhunter_recruitment.html', {})
 
+def hiring_with_the_traveling_therapist_view(request):
+    return render(request, 'auction/hiring_with_the_traveling_therapist.html', {})
+
 def profile(request):
     if request.user.is_authenticated == False:
         return render(request, 'auction/profile.html', {})
