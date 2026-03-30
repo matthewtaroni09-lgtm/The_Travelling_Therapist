@@ -116,10 +116,10 @@
         </div>
 
         <div class="col-12">
-            <div id="storyCarousel" class="carousel slide custom-paragraph-carousel" data-bs-ride="false">
+            <div id="storyCarousel" class="carousel slide custom-paragraph-carousel" data-bs-ride="carousel">
                 <div class="carousel-inner py-3">
                     <!-- Block 1: Intro -->
-                    <div class="carousel-item active pb-1">
+                    <div class="carousel-item active pb-1" data-bs-interval="2000" style="transition-duration: 0.8s;">
                         <div class="card story-card mx-auto mb-4 h-100">
                             <div class="card-body text-center d-flex flex-column justify-content-center py-5">
                                 <h3 class="card-title mb-3 text-weight-bold">Meet Sarah</h3>
@@ -141,7 +141,7 @@
                     </div>
 
                     <!-- Block 2: The Recruiter Loop -->
-                    <div class="carousel-item pb-1">
+                    <div class="carousel-item pb-1" data-bs-interval="8000" style="transition-duration: 0.8s;">
                         <div class="card story-card mx-auto mb-4 h-100">
                             <div class="card-body d-flex flex-column justify-content-center p-md-4">
                                 <h3 class="card-title text-center mb-4 text-weight-bold">The
@@ -174,7 +174,7 @@
                     </div>
 
                     <!-- Block 3: The Realization -->
-                    <div class="carousel-item pb-1">
+                    <div class="carousel-item pb-1" data-bs-interval="5000" style="transition-duration: 0.8s;">
                         <div class="card story-card mx-auto mb-4 h-100">
                             <div class="card-body d-flex flex-column justify-content-center p-md-5">
                                 <h3 class="card-title text-center mb-4 text-weight-bold">The Realization</h3>
@@ -198,7 +198,7 @@
                     </div>
 
                     <!-- Block 4: Trying to Improve -->
-                    <div class="carousel-item pb-1">
+                    <div class="carousel-item pb-1" data-bs-interval="8000" style="transition-duration: 0.8s;">
                         <div class="card story-card mx-auto mb-4 h-100">
                             <div class="card-body d-flex flex-column justify-content-center p-md-4">
                                 <h3 class="card-title text-center mb-4 text-weight-bold">Trying to Improve the Process
@@ -243,7 +243,7 @@
                     </div>
 
                     <!-- Block 5: The Breaking Point -->
-                    <div class="carousel-item pb-1">
+                    <div class="carousel-item pb-1" data-bs-interval="8000" style="transition-duration: 0.8s;">
                         <div class="card story-card mx-auto mb-2 h-100 survey-cta-box border border-2 border-success">
                             <div class="card-body text-center d-flex flex-column justify-content-center p-md-4">
                                 <h3 class="card-title mb-4 text-weight-bold text-dark-colour">The Breaking Point</h3>
@@ -316,7 +316,7 @@
                 <div class="text-center">
                     <a href="https://forms.gle/UJzcTFQQnRzg9i1L7" target="_blank"
                         class="btn btn-primary btn-lg survey-cta-button shadow">
-                        Share Your Hiring Problems & receive a discount code for your next listing!
+                        Share your hiring holes & receive a discount code for your next listing!
                     </a>
                 </div>
             </div>
@@ -366,7 +366,7 @@
                 <p class="mb-3 fs-5 text-dark-colour">We break this down fully in our
                     guide:<br> </p>
                 <p class="mb-3 fs-5 text-dark-colour text-weight-bold">Recruiters, Agencies, or Direct
-                    Hiring? A Clinic’s Guide to Staffing in Canada"</p>
+                    Hiring? A Clinic’s Guide to Staffing in Canada</p>
                 <a href="{% url 'healthcare-facility-guide' %}"
                     class="btn btn-primary btn-outline-primary btn-lg mb-3">Read the
                     Clinic Hiring Guide</a>
@@ -410,12 +410,13 @@
                         <strong class="text-dark-colour">No placement fees or ongoing percentages:</strong> <span
                             class="text-dark-colour">Post roles, shifts, or contracts
                             without paying 15–25% of salary to a third party.</span>
-                        <p class="text-dark-colour">Because The Traveling Therapist connects clinics and clinicians
+                        <p class="mt-3 text-muted small mb-0">Because The Traveling Therapist connects clinics and
+                            clinicians
                             directly
                             through a digital marketplace, we can operate at a significantly lower cost than traditional
-                            agencies (as low as ~5%) to support matching, tooling, and operations. <a
-                                href="{% url 'faq' %}">Learn more in our FAQ
-                                &rarr;</a></p>
+                            agencies (as low as ~5%) to support matching, tooling, and operations. </p> <a
+                            href="{% url 'faq' %}">Learn more in our FAQ
+                            &rarr;</a></p>
                     </div>
                 </li>
                 <li class="list-group-item bg-transparent border-0 mb-3 d-flex align-items-start px-0">
@@ -459,7 +460,8 @@
                 <div class="survey-cta-button p-1"></div>
                 <div class="card-body p-4 p-md-5">
                     <h4 class="card-title mb-4 border-bottom pb-3 text-weight-bold text-dark-colour">Real Example</h4>
-                    <p class="mb-3 text-dark-colour"><strong>Clinic:</strong> Multidisciplinary clinic, BC</p>
+                    <p class="mb-3 text-dark-colour"><strong>Clinic:</strong> Multidisciplinary clinic, British Columbia
+                    </p>
                     <p class="mb-3 text-dark-colour"><strong>Need:</strong> 4-week PT coverage during an employee’s
                         leave of absence</p>
                     <p class="mb-5 text-dark-colour"><strong>Old option:</strong> Agency at premium weekly markup</p>
