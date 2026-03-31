@@ -57,13 +57,30 @@
 <div class="container bg-transparent">
 
     <!-- HERO SECTION -->
-    <div class="row align-items-center mt-4 mb-5">
-        <div class="col-lg-7 col-md-12 pe-lg-5">
-            <h1 class="mb-3 text-weight-bold display-4">Direct Clinician Access for Healthcare Facilities</h1>
-            <h3 class="mb-4 text-weight-normal text-medium">From temporary & contract to long -
-                term coverage—without agency markups. Hire a clinician long & short term without an additional “finders
-                fee” after the contract period</h3>
-            <p class="mb-4 paragraph-text fs-5">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="text-center mb-5">Direct Clinician Access for Healthcare Facilities</h1>
+        </div>
+    </div>
+    <div class="row text-center mb-4" id="intro">
+        <div class="col-lg-10 mx-auto">
+            <h2>From temporary & contract to long-term coverage—without agency markups. Hire a clinician long & short
+                term without an additional “finders fee” after the contract period</h2>
+        </div>
+    </div>
+
+    <!-- Centered Image Section -->
+    <div class="row justify-content-center mb-5">
+        <div class="col-lg-10 text-center">
+            <img src="/media/images/doctor_using_laptop.png" class="img-fluid rounded shadow-lg w-100"
+                style="max-height: 500px; object-fit: cover;" alt="Hero Image Placeholder">
+        </div>
+    </div>
+
+    <!-- Centered Description Section -->
+    <div class="row justify-content-center">
+        <div class="col-lg-10 text-center">
+            <p class="paragraph-text fs-5">
                 Healthcare facilities require reliable clinical coverage without unnecessary cost, delay, or loss of
                 control.<br><br>
                 The Traveling Therapist is a digital healthcare hiring marketplace that combines the reach of a job
@@ -77,19 +94,21 @@
                 Facilities post opportunities, clinicians respond, and terms are agreed directly—without staffing agency
                 markups or intermediaries.
             </p>
-            <div class="d-flex flex-wrap gap-3 mt-2 mb-3">
-                <a class="btn btn-primary btn-lg px-5 py-2 text-medium" href="{% url 'register' %}">Post a Shift</a>
-                <a class="btn btn-outline-primary btn-lg px-5 py-2 text-medium" href="{% url 'how-it-works' %}">View How
-                    It Works</a>
-            </div>
-            <div class="mt-2">
-                <a href="{% url 'about' %}" class="text-decoration-none fw-bold">Learn more
+        </div>
+    </div>
+
+    <!-- Centered Buttons Section -->
+    <div class="row text-center mt-5">
+        <div class="col-12">
+            <a class="btn btn-primary btn-lg px-5 py-3 text-medium shadow-sm" href="{% url 'register' %}">Post a
+                Shift</a>
+            <a class="btn btn-outline-primary btn-lg px-5 py-3 text-medium ms-3 shadow-sm"
+                href="{% url 'how-it-works' %}">View How
+                It Works</a>
+            <div class="mt-4">
+                <a href="{% url 'about' %}" class="text-decoration-none fw-bold fs-5">Learn more
                     about our marketplace model &rarr;</a>
             </div>
-        </div>
-        <div class="col-lg-5 col-md-12 mt-4 mt-lg-0 text-center">
-            <img src="/media/images/doctor_using_laptop.png" class="img-fluid rounded shadow-sm"
-                alt="Hero Image Placeholder">
         </div>
     </div>
 
@@ -148,63 +167,79 @@
         <div class="col-lg-12 mx-auto">
             <div class="card shadow-sm border-0 rounded-4 overflow-hidden mb-4 bg-white">
                 <div class="row g-0">
-                    <!-- Left Side: Channels -->
-                    <div class="col-md-6 p-4 p-md-5 border-end border-light" style="background-color: #f8f9fa;">
-                        <p class="fs-5 text-dark-colour mb-4 pb-2 border-bottom fw-bold text-center text-md-start"
-                            style="min-height: 3.5rem;">Facilities typically rely on a combination of:</p>
+                    <!-- Top Section: Channels -->
+                    <div class="col-12 p-4 p-md-5 border-bottom border-light" style="background-color: #f8f9fa;">
+                        <p class="fs-5 text-dark-colour mb-4 pb-2 border-bottom fw-bold text-center text-md-start">
+                            Facilities typically rely on a combination of:</p>
 
-                        <ul class="list-unstyled fs-5 text-dark-colour mt-4 mb-0">
-                            <li
-                                class="mb-3 d-flex align-items-center p-3 bg-white rounded-3 shadow-sm border-start border-danger border-4 hover-lift">
-                                <span class="material-icons text-danger me-3">dashboard</span>
-                                <span class="fw-bold">Public job boards</span>
-                            </li>
-                            <li
-                                class="mb-3 d-flex align-items-center p-3 bg-white rounded-3 shadow-sm border-start border-danger border-4 hover-lift">
-                                <span class="material-icons text-danger me-3">person_search</span>
-                                <span class="fw-bold">Recruiters</span>
-                            </li>
-                            <li
-                                class="mb-3 d-flex align-items-center p-3 bg-white rounded-3 shadow-sm border-start border-danger border-4 hover-lift">
-                                <span class="material-icons text-danger me-3">business</span>
-                                <span class="fw-bold">Staffing agencies</span>
-                            </li>
-                            <li
-                                class="mb-0 d-flex align-items-center p-3 bg-white rounded-3 shadow-sm border-start border-danger border-4 hover-lift">
-                                <span class="material-icons text-danger me-3">campaign</span>
-                                <span class="fw-bold">Internal referrals and outreach</span>
-                            </li>
-                        </ul>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div
+                                    class="d-flex align-items-center p-3 bg-white rounded-3 shadow-sm border-start border-danger border-4 hover-lift">
+                                    <span class="material-icons text-danger me-3">dashboard</span>
+                                    <span class="fw-bold">Public job boards</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div
+                                    class="d-flex align-items-center p-3 bg-white rounded-3 shadow-sm border-start border-danger border-4 hover-lift">
+                                    <span class="material-icons text-danger me-3">person_search</span>
+                                    <span class="fw-bold">Recruiters</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div
+                                    class="d-flex align-items-center p-3 bg-white rounded-3 shadow-sm border-start border-danger border-4 hover-lift">
+                                    <span class="material-icons text-danger me-3">business</span>
+                                    <span class="fw-bold">Staffing agencies</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div
+                                    class="d-flex align-items-center p-3 bg-white rounded-3 shadow-sm border-start border-danger border-4 hover-lift">
+                                    <span class="material-icons text-danger me-3">campaign</span>
+                                    <span class="fw-bold">Internal referrals and outreach</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
-                    <!-- Right Side: Tradeoffs -->
-                    <div class="col-md-6 p-4 p-md-5" style="background-color: #f8f9fa;">
-                        <p class="fs-5 text-dark-colour mb-4 pb-2 border-bottom fw-bold text-center text-md-start"
-                            style="min-height: 3.5rem;">While each option can generate candidates, facilities often face
+                    <!-- Bottom Section: Tradeoffs -->
+                    <div class="col-12 p-4 p-md-5" style="background-color: #f8f9fa;">
+                        <p class="fs-5 text-dark-colour mb-4 pb-2 border-bottom fw-bold text-center text-md-start">While
+                            each option can generate candidates, facilities often face
                             tradeoffs related to:</p>
 
-                        <ul class="list-unstyled fs-5 text-dark-colour mt-4 mb-0">
-                            <li
-                                class="mb-3 d-flex align-items-center p-3 bg-white rounded-3 shadow-sm border-start border-warning border-4 hover-lift">
-                                <span class="material-icons text-warning me-3">schedule</span>
-                                <span class="fw-bold">Time-to-fill</span>
-                            </li>
-                            <li
-                                class="mb-3 d-flex align-items-center p-3 bg-white rounded-3 shadow-sm border-start border-warning border-4 hover-lift">
-                                <span class="material-icons text-warning me-3">price_change</span>
-                                <span class="fw-bold">Cost predictability</span>
-                            </li>
-                            <li
-                                class="mb-3 d-flex align-items-center p-3 bg-white rounded-3 shadow-sm border-start border-warning border-4 hover-lift">
-                                <span class="material-icons text-warning me-3">visibility_off</span>
-                                <span class="fw-bold">Rate transparency</span>
-                            </li>
-                            <li
-                                class="mb-0 d-flex align-items-center p-3 bg-white rounded-3 shadow-sm border-start border-warning border-4 hover-lift">
-                                <span class="material-icons text-warning me-3">tune</span>
-                                <span class="fw-bold">Control over clinician selection and terms</span>
-                            </li>
-                        </ul>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div
+                                    class="d-flex align-items-center p-3 bg-white rounded-3 shadow-sm border-start border-warning border-4 hover-lift">
+                                    <span class="material-icons text-warning me-3">schedule</span>
+                                    <span class="fw-bold">Time-to-fill</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div
+                                    class="d-flex align-items-center p-3 bg-white rounded-3 shadow-sm border-start border-warning border-4 hover-lift">
+                                    <span class="material-icons text-warning me-3">price_change</span>
+                                    <span class="fw-bold">Cost predictability</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div
+                                    class="d-flex align-items-center p-3 bg-white rounded-3 shadow-sm border-start border-warning border-4 hover-lift">
+                                    <span class="material-icons text-warning me-3">visibility_off</span>
+                                    <span class="fw-bold">Rate transparency</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div
+                                    class="d-flex align-items-center p-3 bg-white rounded-3 shadow-sm border-start border-warning border-4 hover-lift">
+                                    <span class="material-icons text-warning me-3">tune</span>
+                                    <span class="fw-bold">Control over clinician selection and terms</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
