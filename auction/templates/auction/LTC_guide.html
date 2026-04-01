@@ -1,0 +1,485 @@
+{% extends 'auction/base.html' %}
+{% load static %}
+{% block content %}
+<!-- content -->
+<p id="pageTitle" class="d-none">LTC_Guide</p>
+
+<style>
+    /* LTC Guide Specific Styles - Restoring the "Fully White" card design on the "Old Background" */
+
+    /* Ensure the parent main container is transparent for this page to show the white card on the body background */
+    main.container {
+        background-color: transparent !important;
+        box-shadow: none !important;
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+    }
+
+    .ltc-main-container {
+        background-color: #ffffff;
+        border-radius: 30px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        padding: 60px;
+        margin: 20px 0;
+        width: 100%;
+    }
+
+    .hero-title {
+        font-family: Futura-Bold, sans-serif;
+        font-size: 3rem;
+        color: var(--dark-colour);
+        margin-bottom: 20px;
+    }
+
+    .hero-subtitle {
+        font-size: 1.25rem;
+        color: #555;
+        margin-bottom: 30px;
+        line-height: 1.6;
+    }
+
+    .pathway-card-custom {
+        background: #fff;
+        border: 1px solid #eee;
+        border-radius: 20px;
+        padding: 30px;
+        height: 100%;
+        transition: transform 0.2s, box-shadow 0.2s;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+    }
+
+    .pathway-card-custom:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .pathway-icon {
+        font-size: 3rem;
+        color: #2d8a6b;
+        margin-bottom: 20px;
+    }
+
+    .pathway-card-custom h3 {
+        font-family: Futura-Bold, sans-serif;
+        margin-bottom: 15px;
+    }
+
+    .pathway-card-custom ul {
+        list-style: none;
+        padding: 0;
+        text-align: left;
+    }
+
+    .pathway-card-custom ul li {
+        margin-bottom: 10px;
+        padding-left: 25px;
+        position: relative;
+    }
+
+    .pathway-card-custom ul li::before {
+        content: "•";
+        color: #2d8a6b;
+        position: absolute;
+        left: 0;
+        font-weight: bold;
+    }
+
+    .struggle-item {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 25px;
+        gap: 20px;
+        text-align: center;
+    }
+
+    .struggle-icon {
+        font-size: 2.5rem;
+        color: #d9534f;
+    }
+
+    /* Struggles Carousel Styles */
+    .struggles-carousel {
+        position: relative;
+        padding: 0 20px;
+    }
+
+    .struggles-carousel .carousel-control-prev,
+    .struggles-carousel .carousel-control-next {
+        width: 40px;
+        height: 40px;
+        background-color: rgba(217, 83, 79, 0.1);
+        border-radius: 50%;
+        top: 50%;
+        transform: translateY(-50%);
+        opacity: 0.8;
+    }
+
+    .struggles-carousel .carousel-control-prev {
+        left: -5px;
+    }
+
+    .struggles-carousel .carousel-control-next {
+        right: -5px;
+    }
+
+    .struggles-carousel .carousel-item {
+        padding: 10px 20px;
+    }
+
+    .struggles-carousel .carousel-control-prev-icon,
+    .struggles-carousel .carousel-control-next-icon {
+        filter: invert(36%) sepia(48%) saturate(1263%) hue-rotate(320deg) brightness(94%) contrast(87%);
+        width: 20px;
+        height: 20px;
+    }
+
+    .ttt-way-box {
+        background-color: #f0fdf9;
+        border: 2px solid #2d8a6b;
+        border-radius: 20px;
+        padding: 40px;
+    }
+
+    .ttt-way-box h3 {
+        font-family: Futura-Bold, sans-serif;
+        color: #2d8a6b;
+        margin-bottom: 25px;
+    }
+
+    .stat-box {
+        background: #fff;
+        border: 1px solid #eee;
+        border-radius: 20px;
+        padding: 30px;
+        text-align: center;
+        width: 100%;
+        min-height: 200px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+        transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+    }
+
+    .stat-box:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+        border-color: #2d8a6b;
+    }
+
+    .stat-link {
+        text-decoration: none !important;
+        color: inherit !important;
+        display: block;
+    }
+
+    .stat-number {
+        font-family: Futura-Bold, sans-serif;
+        font-size: 2.2rem;
+        color: #2d8a6b;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 80px;
+        line-height: 1.2;
+        width: 100%;
+    }
+
+    .stat-desc {
+        font-size: 1rem;
+        color: #555;
+        margin-bottom: 0;
+    }
+
+    .click-hint {
+        font-size: 0.75rem;
+        color: #999;
+        margin-top: 15px;
+    }
+
+    .case-study-section {
+        background-color: #f8fdfb;
+        border: 1px solid #e6f6ef;
+        border-radius: 20px;
+        padding: 40px;
+        margin-bottom: 50px;
+    }
+
+    .case-study-title {
+        font-family: Futura-Bold, sans-serif;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .btn-ltc-cta:hover {
+        background-color: var(--secondary-colour) !important;
+        border-color: var(--dark-colour) !important;
+        color: var(--dark-colour) !important;
+    }
+
+    .survey-cta-text-primary {
+        color: #198754 !important;
+    }
+
+    @media (max-width: 768px) {
+        .ltc-main-container {
+            padding: 30px;
+            border-radius: 15px;
+        }
+
+        .hero-title {
+            font-size: 2rem;
+        }
+    }
+</style>
+
+<div class="ltc-main-container">
+    <!-- Hero Section -->
+    <div class="row hero-section align-items-center mb-5">
+        <div class="col-lg-7">
+            <h1 class="hero-title">Hiring in Long-Term Care Shouldn't Be This Hard</h1>
+            <p class="hero-subtitle">Staffing shortages, high turnover, and rising agency costs - it’s familiar. Let’s
+                walk through how you hire today, what gets in the way, and a smarter path forward.</p>
+            <a href="{% url 'what-is-TTT' %}" class="btn btn-primary btn-lg" style="padding: 15px 30px;">Explore Your
+                Hiring
+                Options →</a>
+        </div>
+        <div class="col-lg-5 text-center mt-5 mt-lg-0">
+            <img src="/media/images/guy_in_teal_shirt.png" alt="LTC Staffing Illustration" class="img-fluid"
+                style="max-height: 400px;">
+        </div>
+    </div>
+
+    <hr class="my-5">
+
+    <!-- Pathways -->
+    <div class="row mb-5">
+        <div class="col-12 text-center mb-5">
+            <h2 class="section-title" style="font-size: 2.2rem;">Your Long-Term Care Hiring Pathways</h2>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="pathway-card-custom text-center">
+                <span class="material-icons pathway-icon">work</span>
+                <h3>Agency Staffing</h3>
+                <ul>
+                    <li>High Fees via Commission</li>
+                    <li>Inconsistent Quality</li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="pathway-card-custom text-center">
+                <span class="material-icons pathway-icon">person_add</span>
+                <h3>Internal Hiring</h3>
+                <ul>
+                    <li>Time Consuming</li>
+                    <li>Limited Talent Pool</li>
+                    <li>Unreliable</li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="pathway-card-custom text-center">
+                <span class="material-icons pathway-icon">assignment</span>
+                <h3>Digital Staffing Platform</h3>
+                <ul>
+                    <li>High Fees</li>
+                    <li>Pay per Post</li>
+                    <li>Limited Control</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <hr class="my-5">
+
+    <!-- Struggles -->
+    <div class="row mb-5 align-items-center">
+        <div class="col-lg-6">
+            <h2 class="section-title mb-5" style="font-size: 2.2rem;">Where Long-Term Care Facilities Struggle:</h2>
+
+            <div id="strugglesCarousel" class="carousel slide struggles-carousel" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    <!-- Slide 1 -->
+                    <div class="carousel-item active">
+                        <div class="struggle-item">
+                            <span class="material-icons struggle-icon">loop</span>
+                            <h4 class="mb-0">High Staff Turnover</h4>
+                        </div>
+                        <div class="struggle-item">
+                            <span class="material-icons struggle-icon">search_off</span>
+                            <h4 class="mb-0">Staff Shortages</h4>
+                        </div>
+                        <div class="struggle-item">
+                            <span class="material-icons struggle-icon">block</span>
+                            <h4 class="mb-0">Unreliable Coverage</h4>
+                        </div>
+                    </div>
+                    <!-- Slide 2 -->
+                    <div class="carousel-item">
+                        <div class="struggle-item">
+                            <span class="material-icons struggle-icon">event_note</span>
+                            <h4 class="mb-0">High Admin Effort</h4>
+                        </div>
+                        <div class="struggle-item">
+                            <span class="material-icons struggle-icon">attach_money</span>
+                            <h4 class="mb-0">Heavy Reliance on Staffing Agencies</h4>
+                        </div>
+                        <div class="struggle-item">
+                            <span class="material-icons struggle-icon">verified_user</span>
+                            <h4 class="mb-0">Inconsistent Quality of Hires from Staffing Agencies</h4>
+                        </div>
+                    </div>
+                </div>
+                <!-- Controls -->
+                <button class="carousel-control-prev" type="button" data-bs-target="#strugglesCarousel"
+                    data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#strugglesCarousel"
+                    data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div>
+        <div class="col-lg-6 mt-5 mt-lg-0">
+            <div class="ttt-way-box">
+                <h3 class="mb-4">The Traveling Therapist’s Way:</h3>
+                <div class="mb-4 d-flex align-items-start">
+                    <span class="material-icons me-3 survey-cta-text-primary mt-1">check_circle</span>
+                    <div>
+                        <strong class="text-weight-bold d-block" style="font-size: 1.3rem;">Low Fees</strong>
+                        <span class="text-muted">Only pay when you get a hire.</span>
+                    </div>
+                </div>
+                <div class="mb-4 d-flex align-items-start">
+                    <span class="material-icons me-3 survey-cta-text-primary mt-1">check_circle</span>
+                    <div>
+                        <strong class="text-weight-bold d-block" style="font-size: 1.3rem;">100% Transparency</strong>
+                    </div>
+                </div>
+                <div class="d-flex align-items-start">
+                    <span class="material-icons me-3 survey-cta-text-primary mt-1">check_circle</span>
+                    <div>
+                        <strong class="text-weight-bold d-block" style="font-size: 1.3rem;">Low admin hours</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr class="my-5">
+
+    <!-- Stats -->
+    <div class="row mb-5 d-flex align-items-stretch">
+        <div class="col-12 text-center mb-5">
+            <h2 class="section-title" style="font-size: 2.2rem;">📊 Impact Stats (Simple + Clear)</h2>
+        </div>
+        <div class="col-md-4 mb-4 text-center d-flex flex-column">
+            <span class="stat-number">$1 Billion</span>
+            <a href="https://www.cjme.com/2024/03/25/ontario-hospitals-ltc-homes-spent-nearly-1b-on-agency-staff-last-year/"
+                target="_blank" rel="noopener noreferrer" class="stat-link flex-grow-1">
+                <div class="stat-box h-100">
+                    <p class="stat-desc">spent on agencies by Ontario Long-Term Care facilities & hospitals. Could have
+                        been
+                        patient care.</p>
+                    <small class="click-hint">Click to view source</small>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-4 mb-4 text-center d-flex flex-column">
+            <span class="stat-number">Weeks, not days</span>
+            <a href="https://www.nsinursingsolutions.com/documents/library/nsi_national_health_care_retention_report.pdf?"
+                target="_blank" rel="noopener noreferrer" class="stat-link flex-grow-1">
+                <div class="stat-box h-100">
+                    <p class="stat-desc">average time to fill short-term roles using traditional job boards.<br>
+                        <small class="text-muted">(Industry averages across Long-Term Care and allied health
+                            staffing)</small>
+                    </p>
+                    <small class="click-hint">Click to view source</small>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-4 mb-4 text-center d-flex flex-column">
+            <span class="stat-number">Vacancies often 90 days+ </span>
+            <a href="https://www.cihi.ca/en/health-workforce-overtime-and-staffing-challenges-in-hospitals"
+                target="_blank" rel="noopener noreferrer" class="stat-link flex-grow-1">
+                <div class="stat-box h-100">
+                    <p class="stat-desc">Healthcare labor market reports show vacancy durations often exceed 90 days for
+                        some roles nationwide.</p>
+                    <small class="click-hint">Click to view source</small>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <hr class="my-5">
+
+    <!-- Case Study -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="case-study-section">
+                <h2 class="case-study-title section-title mb-4" style="font-size: 2rem;">Case Study: Real Results with
+                    The Traveling Therapist</h2>
+                <div class="row">
+                    <div class="col-lg-7">
+                        <p class="paragraph-text mb-4" style="font-size: 1.1rem; line-height: 1.7; max-width: 100%;">
+                            A mid-sized Ontario Long-Term Care home was trapped in a cycle of high-cost agency reliance
+                            and heavy administrative burdens.
+                            After switching to <strong>The Traveling Therapist</strong>, they transformed their hiring
+                            strategy from reactive shift-filling
+                            to proactive, sustainable staffing.
+                        </p>
+                    </div>
+                    <div class="col-lg-5">
+                        <ul class="list-unstyled">
+                            <li class="mb-3 d-flex align-items-start">
+                                <span class="material-icons me-2 survey-cta-text-primary">check_circle</span>
+                                <span><strong>40% Drop</strong> in staffing spend within 60 days</span>
+                            </li>
+                            <li class="mb-3 d-flex align-items-start">
+                                <span class="material-icons me-2 survey-cta-text-primary">check_circle</span>
+                                <span><strong>Direct Hiring:</strong> 2 clinicians moved to permanent roles at $0
+                                    cost</span>
+                            </li>
+                            <li class="mb-3 d-flex align-items-start">
+                                <span class="material-icons me-2 survey-cta-text-primary">check_circle</span>
+                                <span><strong>Improved Care:</strong> Better continuity for residents</span>
+                            </li>
+                            <li class="mb-3 d-flex align-items-start">
+                                <span class="material-icons me-2 survey-cta-text-primary">check_circle</span>
+                                <span><strong>Zero Markups:</strong> Clear, upfront pricing with no hidden fees</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Final CTA -->
+    <div class="row text-center mb-5">
+        <div class="col-12">
+            <h2 class="section-title mb-4" style="font-size: 2.5rem;">Ready to Simplify Hiring for your Long-Term Care
+                Facility?
+            </h2>
+            <p class="hero-subtitle mb-5">See how The Traveling Therapist can help you fill shifts <strong> faster, cut
+                    costs,
+                    and reduce staffing
+                    risk.</strong></p>
+            <div class="d-flex justify-content-center gap-4 flex-wrap">
+                <a href="/register" class="btn btn-primary btn-lg" style="padding: 15px 40px;">Sign Up Now</a>
+                <a href="{% url 'what-is-TTT' %}" class="btn btn-primary btn-lg" style="padding: 15px 40px;">Learn
+                    More</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'auction/user_guide_pages.js' %}"></script>
+{% endblock %}
