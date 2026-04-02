@@ -86,22 +86,31 @@
 
     .struggle-item {
         display: flex;
+        flex-direction: row;
         align-items: center;
-        justify-content: center;
+        justify-content: flex-start;
         margin-bottom: 25px;
         gap: 20px;
-        text-align: center;
+        text-align: left;
+        width: 100%;
+        max-width: 450px;
+        margin-left: auto;
+        margin-right: auto;
     }
 
     .struggle-icon {
         font-size: 2.5rem;
         color: #d9534f;
+        flex-shrink: 0;
+        width: 40px;
+        display: flex;
+        justify-content: center;
     }
 
     /* Struggles Carousel Styles */
     .struggles-carousel {
         position: relative;
-        padding: 0 20px;
+        padding: 0 40px;
     }
 
     .struggles-carousel .carousel-control-prev,
@@ -116,15 +125,23 @@
     }
 
     .struggles-carousel .carousel-control-prev {
-        left: -5px;
+        left: -10px;
     }
 
     .struggles-carousel .carousel-control-next {
-        right: -5px;
+        right: -10px;
     }
 
     .struggles-carousel .carousel-item {
-        padding: 10px 20px;
+        padding: 20px;
+    }
+
+    .struggle-carousel-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
     }
 
     .struggles-carousel .carousel-control-prev-icon,
@@ -305,32 +322,36 @@
                 <div class="carousel-inner">
                     <!-- Slide 1 -->
                     <div class="carousel-item active">
-                        <div class="struggle-item">
-                            <span class="material-icons struggle-icon">loop</span>
-                            <h4 class="mb-0">High Staff Turnover</h4>
-                        </div>
-                        <div class="struggle-item">
-                            <span class="material-icons struggle-icon">search_off</span>
-                            <h4 class="mb-0">Staff Shortages</h4>
-                        </div>
-                        <div class="struggle-item">
-                            <span class="material-icons struggle-icon">block</span>
-                            <h4 class="mb-0">Unreliable Coverage</h4>
+                        <div class="struggle-carousel-container">
+                            <div class="struggle-item">
+                                <span class="material-icons struggle-icon">loop</span>
+                                <h4 class="mb-0">High Staff Turnover</h4>
+                            </div>
+                            <div class="struggle-item">
+                                <span class="material-icons struggle-icon">search_off</span>
+                                <h4 class="mb-0">Staff Shortages</h4>
+                            </div>
+                            <div class="struggle-item">
+                                <span class="material-icons struggle-icon">block</span>
+                                <h4 class="mb-0">Unreliable Coverage</h4>
+                            </div>
                         </div>
                     </div>
                     <!-- Slide 2 -->
                     <div class="carousel-item">
-                        <div class="struggle-item">
-                            <span class="material-icons struggle-icon">event_note</span>
-                            <h4 class="mb-0">High Admin Effort</h4>
-                        </div>
-                        <div class="struggle-item">
-                            <span class="material-icons struggle-icon">attach_money</span>
-                            <h4 class="mb-0">Heavy Reliance on Staffing Agencies</h4>
-                        </div>
-                        <div class="struggle-item">
-                            <span class="material-icons struggle-icon">verified_user</span>
-                            <h4 class="mb-0">Inconsistent Quality of Hires from Staffing Agencies</h4>
+                        <div class="struggle-carousel-container">
+                            <div class="struggle-item">
+                                <span class="material-icons struggle-icon">event_note</span>
+                                <h4 class="mb-0">High Admin Effort</h4>
+                            </div>
+                            <div class="struggle-item">
+                                <span class="material-icons struggle-icon">attach_money</span>
+                                <h4 class="mb-0">Heavy Reliance on Staffing Agencies</h4>
+                            </div>
+                            <div class="struggle-item">
+                                <span class="material-icons struggle-icon">verified_user</span>
+                                <h4 class="mb-0">Inconsistent Quality of Hires from Staffing Agencies</h4>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -427,7 +448,7 @@
                 <h2 class="case-study-title section-title mb-4" style="font-size: 2rem;">Case Study: Real Results with
                     The Traveling Therapist</h2>
                 <div class="row">
-                    <div class="col-lg-7">
+                    <div class="col-12">
                         <p class="paragraph-text mb-4" style="font-size: 1.1rem; line-height: 1.7; max-width: 100%;">
                             A mid-sized Ontario Long-Term Care home was trapped in a cycle of high-cost agency reliance
                             and heavy administrative burdens.
@@ -436,7 +457,7 @@
                             to proactive, sustainable staffing.
                         </p>
                     </div>
-                    <div class="col-lg-5">
+                    <div class="col-12">
                         <ul class="list-unstyled">
                             <li class="mb-3 d-flex align-items-start">
                                 <span class="material-icons me-2 survey-cta-text-primary">check_circle</span>
