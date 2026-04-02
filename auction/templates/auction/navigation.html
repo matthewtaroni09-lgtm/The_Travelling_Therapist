@@ -32,6 +32,10 @@
                                 href="{% url 'healthcare-facility-guide' %}">Healthcare Facility Hiring Guide</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link text-weight-normal {% if path == 'retirement-home-hiring-guide' %}active{% endif %}"
+                                href="{% url 'retirement-home-hiring-guide' %}">Retirement Home Hiring Guide</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link text-weight-normal {% if path == 'profile' %}active{% endif %}"
                                 href="{% url 'clinician-guide' %}">Clinician Hiring Guide</a>
                         </li>

@@ -1,0 +1,821 @@
+{% extends 'auction/base.html' %}
+{% load static %}
+{% block content %}
+<style>
+    /* INTERACTIVE & VISUAL ENHANCEMENTS */
+
+    /* Smooth transitions for buttons, icons, and cards */
+    .btn,
+    .material-icons,
+    .card,
+    .data-card,
+    .accordion-item,
+    .cta-box,
+    .solution-section {
+        transition: all 0.3s ease !important;
+    }
+
+    /* Refined Borders and Corners */
+    .btn {
+        border-radius: 50px !important;
+    }
+
+    .card,
+    .data-card,
+    .cta-box,
+    .solution-section,
+    .accordion-item {
+        border-radius: 20px !important;
+        border: 1px solid #E2E8F0 !important;
+    }
+
+    /* Button Hover Effects: Lift and Color Shift */
+    .btn:hover {
+        transform: translateY(-3px) !important;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1) !important;
+    }
+
+    .btn-primary:hover {
+        background-color: #14804e !important;
+        border-color: #14804e !important;
+    }
+
+    .btn-outline-dark:hover {
+        background-color: var(--dark-colour) !important;
+        color: white !important;
+    }
+
+    /* Card Hover Effects */
+    .data-card:hover,
+    .card:hover {
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
+        transform: translateY(-3px) !important;
+    }
+
+    /* Icon Colors Sync */
+    .survey-cta-text-primary,
+    .text-primary-colour,
+    .checklist-icon {
+        color: #198754 !important;
+    }
+
+    /* Specific Page Styles */
+    :root {
+        --dark-teal: #2b4d55;
+        --soft-green: #C9FFE5;
+        --off-white: #f8f9fa;
+        --slate-grey: #6c757d;
+    }
+
+    .kicker {
+        text-transform: uppercase;
+        font-weight: bold;
+        font-size: 0.85rem;
+        letter-spacing: 1px;
+        color: #198754;
+        display: inline-block;
+        margin-bottom: 0.5rem;
+    }
+
+    .hero-section {
+        padding: 4rem 0;
+        text-align: center;
+    }
+
+    .data-card {
+        overflow: hidden;
+        height: 100%;
+        background: white;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .data-card-header {
+        background-color: var(--dark-teal);
+        color: white;
+        padding: 1.5rem 1rem;
+        text-align: center;
+    }
+
+    .data-card-header h4 {
+        margin: 0;
+        color: white;
+    }
+
+    .data-card-body {
+        padding: 1.5rem;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .card-icon {
+        width: 60px;
+        height: 60px;
+        object-fit: contain;
+    }
+
+    .markup-bar-container {
+        margin-top: auto;
+    }
+
+    .markup-bar-label {
+        font-size: 0.9rem;
+        margin-bottom: 0.25rem;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .progress {
+        height: 1.5rem;
+        background-color: #e9ecef;
+        border-radius: 0.25rem;
+    }
+
+    .progress-bar {
+        background-color: #198754;
+        color: white;
+        font-weight: bold;
+    }
+
+    .material-icons.checklist-icon {
+        font-size: 1.2rem;
+        vertical-align: middle;
+        margin-right: 0.5rem;
+    }
+
+    .material-icons.warning-icon {
+        color: #dc3545;
+        font-size: 1.2rem;
+        vertical-align: middle;
+        margin-right: 0.5rem;
+    }
+
+    .accordion-item {
+        margin-bottom: 1rem;
+        overflow: hidden;
+    }
+
+    .accordion-button {
+        border-radius: 20px !important;
+    }
+
+    .accordion-button:not(.collapsed) {
+        background-color: var(--soft-green);
+        color: var(--dark-colour);
+        box-shadow: none;
+    }
+
+    .pathway-grid {
+        display: flex;
+        gap: 2rem;
+    }
+
+    .pathway-column {
+        flex: 1;
+    }
+
+    .cta-box {
+        background-color: var(--dark-teal);
+        color: white;
+        padding: 3.5rem;
+        text-align: center;
+        margin: 4rem 0;
+        border: none !important;
+    }
+
+    .cta-box h3,
+    .cta-box p {
+        color: white;
+    }
+
+    .solution-section {
+        background-color: white;
+        padding: 3rem;
+        margin: 4rem 0;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .block-quote {
+        border-left: 5px solid #198754;
+        padding: 1rem 2rem;
+        font-size: 1.25rem;
+        font-weight: bold;
+        background: var(--off-white);
+        margin: 2rem 0;
+        border-radius: 0 10px 10px 0;
+    }
+
+    .check-list-custom {
+        list-style: none;
+        padding-left: 0;
+    }
+
+    .check-list-custom li {
+        margin-bottom: 0.75rem;
+        display: flex;
+        align-items: center;
+    }
+
+    .warning-list-custom {
+        list-style: none;
+        padding-left: 0;
+    }
+
+    .warning-list-custom li {
+        margin-bottom: 0.75rem;
+        display: flex;
+        align-items: center;
+    }
+
+    @media (max-width: 768px) {
+        .pathway-grid {
+            flex-direction: column;
+        }
+    }
+
+    /* Infographic Card Styles */
+    .infographic-card {
+        background-color: #fcfcfc;
+        border-radius: 24px !important;
+        border: 1px solid #E2E8F0 !important;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05) !important;
+        overflow: hidden;
+        margin: 3rem 0;
+    }
+
+    .infographic-header {
+        background-color: var(--dark-teal);
+        color: white;
+        padding: 1rem;
+        text-align: center;
+        font-weight: bold;
+        letter-spacing: 1px;
+        font-size: 0.9rem;
+    }
+
+    .infographic-column {
+        padding: 2rem;
+    }
+
+    .infographic-column:first-child {
+        border-right: 1px solid #E2E8F0;
+    }
+
+    .infographic-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .infographic-item:last-child {
+        margin-bottom: 0;
+    }
+
+    .infographic-icon {
+        color: #26706f;
+        font-size: 2.5rem;
+    }
+
+    .infographic-content {
+        flex: 1;
+    }
+
+    .infographic-label {
+        font-size: 1rem;
+        color: var(--slate-grey);
+        margin-bottom: 0.25rem;
+    }
+
+    .infographic-value {
+        font-size: 2rem;
+        font-weight: 800;
+        color: var(--dark-colour);
+        line-height: 1.1;
+    }
+
+    .infographic-subtext {
+        font-size: 0.9rem;
+        color: var(--slate-grey);
+    }
+
+    .infographic-progress {
+        height: 8px;
+        background-color: #E2E8F0;
+        border-radius: 4px;
+        margin-top: 0.75rem;
+        overflow: hidden;
+    }
+
+    .infographic-progress-bar {
+        height: 100%;
+        background-color: var(--dark-teal);
+    }
+
+    @media (max-width: 768px) {
+        .infographic-column:first-child {
+            border-right: none;
+            border-bottom: 1px solid #E2E8F0;
+        }
+    }
+</style>
+
+<div class="container bg-transparent py-5">
+    <!-- 1. Hero Section -->
+    <section class="hero-section">
+        <h1 class="text-weight-bold display-4 mb-4">Hiring for Retirement Homes Doesn’t Have to Be Hard</h1>
+        <span class="kicker">With 2023–2025 Ontario Data</span>
+        <div class="row justify-content-center">
+            <div class="col-md-9">
+                <p class="paragraph-text fs-5 mb-4">
+                    Retirement homes and long-term care (LTC) homes across Ontario are operating in one of the most
+                    complex staffing environments in decades. Administrators face rising labour costs, chronic
+                    short-notice absences, shrinking local talent pools, and increasing compliance and administrative
+                    demands.
+                </p>
+                <p class="paragraph-text fs-5">
+                    Ontario spending data and audit findings show that reliance on external staffing agencies—while
+                    often necessary—can significantly increase costs and disrupt continuity of care. This guide outlines
+                    what the current Ontario landscape looks like, how homes typically staff today, and where
+                    alternative models for flexible coverage are emerging.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2. Data & Market Reality Section -->
+    <section class="my-5">
+        <h2 class="text-center text-weight-bold mb-3">What the Ontario Data & Market Reality Show</h2>
+        <h1 class="text-center text-primary-colour display-6 mb-4"> Agency Pricing (Typical Ontario Ranges):</h1>
+        <p class="text-center fs-5 mb-5">
+            According to an Independent Retirement Home owner in Ontario with
+            agency experience, when staffing agencies are used in Retirement Home and Long Term Care settings:
+        </p>
+
+        <div class="row g-4">
+            <!-- Data Card 1: PSWs -->
+            <div class="col-md-4">
+                <div class="data-card shadow-sm">
+                    <div class="data-card-header">
+                        <h4 class="text-weight-bold">PSWs</h4>
+                    </div>
+                    <div class="data-card-body">
+                        <div class="d-flex align-items-center justify-content-between mb-4">
+                            <div>
+                                <p class="fs-5 mb-2"><strong>Billed at:</strong> $55–$60/hour</p>
+                                <p class="fs-5 mb-0"><strong>Paid at:</strong> ~$30/hour</p>
+                            </div>
+                            <img src="/media/images/price.png" class="card-icon" alt="Money Icon">
+                        </div>
+                        <div class="markup-bar-container">
+                            <div class="markup-bar-label">
+                                <span class="fw-bold">Agency Margin</span>
+                                <span class="text-primary-colour fw-bold">$25–$30/hr</span>
+                            </div>
+                            <div class="progress">
+                                <div class="progress-bar" role="progressbar" style="width: 50%;" aria-valuenow="50"
+                                    aria-valuemin="0" aria-valuemax="100">~45%–50% Markup</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Data Card 2: RPNs -->
+            <div class="col-md-4">
+                <div class="data-card shadow-sm">
+                    <div class="data-card-header">
+                        <h4 class="text-weight-bold">RPNs</h4>
+                    </div>
+                    <div class="data-card-body">
+                        <div class="d-flex align-items-center justify-content-between mb-4">
+                            <div>
+                                <p class="fs-5 mb-2"><strong>Billed at:</strong> $75–$80/hour</p>
+                                <p class="fs-5 mb-0"><strong>Paid at:</strong> $35–$40/hour</p>
+                            </div>
+                            <img src="/media/images/price.png" class="card-icon" alt="Money Icon">
+                        </div>
+                        <div class="markup-bar-container">
+                            <div class="markup-bar-label">
+                                <span class="fw-bold">Agency Margin</span>
+                                <span class="text-primary-colour fw-bold">$35–$45/hr</span>
+                            </div>
+                            <div class="progress">
+                                <div class="progress-bar" role="progressbar" style="width: 56%;" aria-valuenow="56"
+                                    aria-valuemin="0" aria-valuemax="100">~47%–56% Markup</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Data Card 3: RNs (LTC) -->
+            <div class="col-md-4">
+                <div class="data-card shadow-sm">
+                    <div class="data-card-header">
+                        <h4 class="text-weight-bold">RNs (LTC)</h4>
+                    </div>
+                    <div class="data-card-body">
+                        <div class="d-flex align-items-center justify-content-between mb-4">
+                            <div>
+                                <p class="fs-5 mb-2"><strong>Billed at:</strong> $60–$100+/hour</p>
+                                <p class="fs-5 mb-0"><strong>Paid at:</strong> $40–$60+/hour</p>
+                            </div>
+                            <img src="/media/images/price.png" class="card-icon" alt="Money Icon">
+                        </div>
+                        <div class="markup-bar-container">
+                            <div class="markup-bar-label">
+                                <span class="fw-bold">Agency Margin (Urgent)</span>
+                                <span class="text-primary-colour fw-bold">$40–$60+/hr</span>
+                            </div>
+                            <div class="progress">
+                                <div class="progress-bar" role="progressbar" style="width: 55%;" aria-valuenow="55"
+                                    aria-valuemin="0" aria-valuemax="100">~40%–55%+ Markup</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. Compliance & Benefits Section -->
+    <section class="my-5 py-5">
+        <div class="row align-items-center">
+            <div class="col-md-12">
+                <h3 class="text-weight-bold display-6 mb-4">Built for Retirement Homes. Aligned with Ontario Law.</h3>
+                <p class="fs-5 mb-3">
+                    Ontario’s Retirement Homes Act, 2010 places the responsibility on operators to ensure every staff
+                    member working in the home is properly qualified, trained, and capable of delivering safe
+                    care—especially in areas like emergency response and infection prevention.
+                </p>
+                <h4 class="text-weight-bold text-primary-colour mb-3">That’s where The Traveling Therapist makes a
+                    difference.</h4>
+                <p class="fs-5 mb-4">
+                    Every clinician on our platform meets Ontario’s qualification and training expectations, helping
+                    homes stay compliant without scrambling for last-minute agency coverage or risking gaps in care.
+                    While the Act doesn’t mandate exact staffing ratios (like one nurse per floor), it does require that
+                    the right people are in place when care is needed—and that’s exactly what flexible, pre-vetted
+                    coverage supports.
+                </p>
+                <p class="fs-5 mb-3 fw-bold">Instead of overpaying for agencies or stretching permanent staff thin,
+                    homes can access professionals who are:</p>
+                <ul class="check-list-custom fs-5 mb-4">
+                    <li><span class="material-icons checklist-icon">check_circle</span> Properly credentialed</li>
+                    <li><span class="material-icons checklist-icon">check_circle</span> Trained for retirement-home
+                        environments</li>
+                    <li><span class="material-icons checklist-icon">check_circle</span> Ready to step in when coverage
+                        matters most</li>
+                </ul>
+                <div class="p-3 rounded survey-cta-banner shadow-sm bg-light">
+                    <p class="font-italic mb-0">
+                        The result: less risk, more control, and confidence that your staffing approach supports both
+                        resident safety and regulatory expectations—without the agency premium.
+                    </p>
+                </div>
+
+                <!-- Comparison Infographic Card -->
+                <div class="infographic-card my-5 shadow">
+                    <div class="row g-0">
+                        <!-- Left Column: Agency / Recruiter Model -->
+                        <div class="col-md-6 infographic-column">
+                            <div class="infographic-header rounded mb-4">AGENCY / RECRUITER MODEL</div>
+
+                            <div class="infographic-item">
+                                <span class="material-icons infographic-icon">payments</span>
+                                <div class="infographic-content">
+                                    <div class="infographic-label">Typical recruitment fees</div>
+                                    <div class="infographic-value">15%–30%</div>
+                                    <div class="infographic-subtext">of first-year salary</div>
+                                    <div class="infographic-progress mt-2">
+                                        <div class="infographic-progress-bar" style="width: 70%;"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="infographic-item">
+                                <span class="material-icons infographic-icon">savings</span>
+                                <div class="infographic-content">
+                                    <div class="infographic-label">Temporary staffing markups</div>
+                                    <div class="infographic-value">25%–40%</div>
+                                    <div class="infographic-subtext">on hourly pay</div>
+                                    <div class="infographic-progress mt-2">
+                                        <div class="infographic-progress-bar" style="width: 65%;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right Column: Internal / Direct Hiring -->
+                        <div class="col-md-6 infographic-column border-start">
+                            <div class="infographic-header rounded mb-4">INTERNAL / DIRECT HIRING</div>
+
+                            <div class="infographic-item">
+                                <span class="material-icons infographic-icon">calendar_today</span>
+                                <div class="infographic-content">
+                                    <div class="infographic-label">Job posting fees</div>
+                                    <div class="infographic-value">$300–$800</div>
+                                </div>
+                            </div>
+
+                            <div class="infographic-item">
+                                <span class="material-icons infographic-icon">schedule</span>
+                                <div class="infographic-content">
+                                    <div class="infographic-label">Screening/ onboarding</div>
+                                    <div class="infographic-value">~$4,800–$5,000</div>
+                                </div>
+                            </div>
+
+                            <div class="infographic-item">
+                                <span class="material-icons infographic-icon">history</span>
+                                <div class="infographic-content">
+                                    <div class="infographic-label">HR time investment</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. System-Level Impact & Mid-Page CTA -->
+    <section class="my-5">
+        <h3 class="text-weight-bold display-6 mb-4">System-Level Impact</h3>
+        <ul class="fs-5 mb-5">
+            <li class="mb-2">Ontario spent <strong>$1 billion</strong> on agency staff in <strong>2022–23,</strong> with
+                a significant
+                portion tied
+                to PSW coverage</li>
+            <li class="mb-2">Agency usage (hours and cost) increased by <strong>100% year-over-year</strong> during that
+                period</li>
+            <li class="mb-2">Rural and northern homes continue to pay higher premiums due to smaller local staffing
+                pools</li>
+            <li class="mb-2">Higher reliance on rotating temporary staff is associated with <strong>continuity of care
+                    and
+                    reduced resident familiarity</strong></li>
+        </ul>
+
+        <div class="cta-box shadow">
+            <h3 class="text-weight-bold mb-3">The Traveling Therapist is more efficient than an Agency - more flexible
+                than a job board.</h3>
+            <p class="fs-4 mb-4">Watch us save your home money on its agency spend today</p>
+            <a href="{% url 'register' %}" class="btn btn-primary btn-lg px-5 py-3">Save me money on agency fees</a>
+        </div>
+    </section>
+
+    <!-- 5. Common Hiring Pathways -->
+    <section class="my-5">
+        <h2 class="text-center text-weight-bold mb-3">Common Hiring Pathways for Retirement Homes</h2>
+        <p class="text-center fs-5 mb-5">Most retirement homes use <strong>a mix of approaches</strong>, depending on
+            urgency, role type,
+            and internal capacity.</p>
+
+        <div class="accordion" id="pathwayAccordion">
+            <!-- Item 1: Staffing Agencies -->
+            <div class="accordion-item shadow-sm">
+                <h2 class="accordion-header" id="headingOne">
+                    <button class="accordion-button fs-4 text-weight-bold" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        1. Staffing Agencies
+                    </button>
+                </h2>
+                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+                    data-bs-parent="#pathwayAccordion">
+                    <div class="accordion-body">
+                        <h2 class="text-weight-bold mb-4 text-dark-colour text-center display-5">What happens in
+                            practice</h2>
+                        <div class="text-center mb-5">
+                            <img src="/media/images/agency_invoice.png" class="img-fluid rounded shadow-lg"
+                                alt="Agency Invoice Example" style="max-height: 700px; width: auto;">
+                        </div>
+                        <div class="row justify-content-center">
+                            <div class="col-lg-10">
+                                <div class="pathway-grid">
+                                    <div class="pathway-column">
+                                        <h5 class="text-weight-bold mb-3 text-dark-colour">Homes may:</h5>
+                                        <ul class="fs-5">
+                                            <li>Run <strong>open bidding</strong> across multiple agencies</li>
+                                            <li>Work exclusively with <strong>one large agency</strong></li>
+                                            <li>Use agencies as a “backup” while recruiting internally</li>
+                                        </ul>
+                                    </div>
+                                    <div class="pathway-column">
+                                        <h5 class="text-weight-bold mb-3 text-dark-colour">Tradeoffs:</h5>
+                                        <ul class="fs-5">
+                                            <li>High and unpredictable costs</li>
+                                            <li>Limited continuity of care</li>
+                                            <li>Rotating staff unfamiliar with residents</li>
+                                            <li>Contracts or minimums that reduce flexibility</li>
+                                            <li>Little transparency into pay vs. markup</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row justify-content-center">
+                            <div class="col-lg-10">
+                                <p class="mt-4 fs-6 font-italic text-muted">(Most often used for urgent or last-minute
+                                    gaps,
+                                    according to an Independent Retirement Home owner in Ontario with agency experience)
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Item 2: Internal Hiring & Casual Pools -->
+            <div class="accordion-item shadow-sm">
+                <h2 class="accordion-header" id="headingTwo">
+                    <button class="accordion-button collapsed fs-4 text-weight-bold" type="button"
+                        data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false"
+                        aria-controls="collapseTwo">
+                        2. Internal Hiring & Casual Pools
+                    </button>
+                </h2>
+                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
+                    data-bs-parent="#pathwayAccordion">
+                    <div class="accordion-body">
+                        <h2 class="text-weight-bold mb-4 text-dark-colour text-center display-5">What happens in
+                            practice</h2>
+                        <div class="text-center mb-5">
+                            <img src="/media/images/internal_hiring.png" class="img-fluid rounded shadow-lg"
+                                alt="Internal Hiring Example" style="max-height: 700px; width: auto;">
+                        </div>
+                        <div class="row justify-content-center">
+                            <div class="col-lg-10">
+                                <div class="pathway-grid">
+                                    <div class="pathway-column">
+                                        <h5 class="text-weight-bold mb-3 text-primary-colour">Strengths:</h5>
+                                        <ul class="fs-5">
+                                            <li>Familiarity with residents and workflows</li>
+                                            <li>Lower per-hour cost than agencies</li>
+                                        </ul>
+                                    </div>
+                                    <div class="pathway-column">
+                                        <h5 class="text-weight-bold mb-3 text-danger">Challenges:</h5>
+                                        <ul class="fs-5">
+                                            <li>Time-intensive recruitment</li>
+                                            <li>Smaller local talent pools</li>
+                                            <li>Ongoing admin workload</li>
+                                            <li>Vulnerable to sick calls, burnout, and turnover</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Item 3: Job Boards -->
+            <div class="accordion-item shadow-sm">
+                <h2 class="accordion-header" id="headingThree">
+                    <button class="accordion-button collapsed fs-4 text-weight-bold" type="button"
+                        data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false"
+                        aria-controls="collapseThree">
+                        3. Job Boards (Indeed, LinkedIn, Kijiji, etc.)
+                    </button>
+                </h2>
+                <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree"
+                    data-bs-parent="#pathwayAccordion">
+                    <div class="accordion-body">
+                        <div class="pathway-grid">
+                            <div class="pathway-column">
+                                <h5 class="text-weight-bold mb-3 text-primary-colour">Strengths:</h5>
+                                <ul class="fs-5">
+                                    <li>Broader reach than manual recruiting</li>
+                                    <li>Faster than traditional posting cycles</li>
+                                </ul>
+                            </div>
+                            <div class="pathway-column">
+                                <h5 class="text-weight-bold mb-3 text-danger">Limitations:</h5>
+                                <ul class="fs-5">
+                                    <li>Not healthcare-specific</li>
+                                    <li>Limited credential validation</li>
+                                    <li>Not designed for RH/LTC shift coverage or short-term needs</li>
+                                    <li>Mixed quality and reliability</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. Pain Points & Solution -->
+    <section class="my-5 py-4">
+        <div class="row align-items-center">
+            <div class="col-lg-7">
+                <h3 class="text-weight-bold display-6 mb-4">Where Homes Feel the Most Pressure</h3>
+                <p class="fs-5 mb-4">Across Ontario, operators consistently report stress from:</p>
+                <div class="row">
+                    <div class="col-md-6">
+                        <ul class="warning-list-custom fs-5">
+                            <li><span class="material-icons warning-icon">report_problem</span> Rising staffing costs
+                                (especially post-2022)</li>
+                            <li><span class="material-icons warning-icon">report_problem</span> Chronic short-notice
+                                absences
+                            </li>
+                            <li><span class="material-icons warning-icon">report_problem</span> Over-reliance on agency
+                                coverage
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <ul class="warning-list-custom fs-5">
+                            <li><span class="material-icons warning-icon">report_problem</span> Limited transparency
+                                around
+                                pricing and bidding</li>
+                            <li><span class="material-icons warning-icon">report_problem</span> Rural and regional
+                                premiums</li>
+                            <li><span class="material-icons warning-icon">report_problem</span> Managing multiple
+                                vendors and
+                                contracts</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5 text-center mt-4 mt-lg-0">
+                <img src="/media/images/pressure.png" class="img-fluid" alt="Workplace Pressure Illustration"
+                    style="max-height: 400px;">
+            </div>
+        </div>
+    </section>
+
+    <section class="solution-section">
+        <h2 class="text-weight-bold display-6 mb-4">Where The Traveling Therapist Fits In</h2>
+        <div class="block-quote mb-4">
+            The Traveling Therapist is not a staffing agency.
+        </div>
+
+        <p class="fs-5 mb-4">
+            It’s a <strong>direct-connection platform</strong> designed to give retirement and long-term care homes
+            another option for
+            flexible coverage—without recruiter markups, bidding wars, or long-term contracts.
+        </p>
+        <p class="fs-5 mb-5">
+            The Traveling Therapist allows homes to connect <strong>directly</strong> with vetted, licensed clinicians
+            who want flexible
+            or short-term work that can transition into a long term position if they are a good fit for the retirement
+            home. This is all while maintaining clearer expectations and communication much better than an agency does.
+        </p>
+
+        <h3 class="text-weight-bold mb-4 h4 text-center">Why Homes Use The Traveling Therapist</h3>
+        <div class="row">
+            <!-- Care roles list now on the left (5 points) -->
+            <div class="col-md-6">
+                <h5 class="text-weight-bold mb-3 fs-5">Designed for seniors’ care roles:</h5>
+                <ul class="check-list-custom fs-5">
+                    <li><span class="material-icons checklist-icon">check_circle</span> Registered Nurse (RN)</li>
+                    <li><span class="material-icons checklist-icon">check_circle</span> Registered Practical Nurse (RPN)
+                    </li>
+                    <li><span class="material-icons checklist-icon">check_circle</span> Personal Support Worker (PSW)
+                    </li>
+                    <li><span class="material-icons checklist-icon">check_circle</span> Dietary Aide</li>
+                    <li><span class="material-icons checklist-icon">check_circle</span> Other allied health
+                        professionals</li>
+                </ul>
+            </div>
+            <!-- Core benefits list now on the right (3 points) -->
+            <div class="col-md-6">
+                <h5 class="text-weight-bold mb-3 fs-5">Core Benefits:</h5>
+                <ul class="check-list-custom fs-5">
+                    <li><span class="material-icons checklist-icon">check_circle</span> Transparent pricing (no hidden
+                        agency margins)</li>
+                    <li><span class="material-icons checklist-icon">check_circle</span> Direct communication with
+                        clinicians after matching</li>
+                    <li><span class="material-icons checklist-icon">check_circle</span> No long-term commitments or
+                        exclusivity</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="text-center my-5">
+            <img src="/media/images/where_the_TTT_fits_in.png" class="img-fluid rounded shadow-lg" alt="Caregiver and Resident" style="width: 100%; max-width: 800px; height: auto;">
+        </div>
+
+        <p class="mt-5 fs-5 font-italic text-muted">
+            As the Long Term Care and Retirement Home landscape evolves, models that prioritize <strong>consistency,
+                reliability, and local clinician access</strong> are becoming increasingly important alongside cost
+            control. By using
+            The Traveling Therapist, retirement homes can secure dependable local coverage, reduce reliance on expensive
+            agencies, and maintain continuity of care—without sacrificing flexibility.
+        </p>
+    </section>    <!-- 7. Footer CTA -->
+    <section class="text-center my-5 py-5">
+        <div class="p-5 rounded shadow survey-cta-banner bg-light border">
+            <h2 class="text-weight-bold display-6 mb-4">Next Steps</h2>
+            <p class="fs-5 mb-5">Join the platform today and take control of your home's staffing needs.</p>
+            <div class="d-flex justify-content-center flex-wrap gap-3">
+                <a href="{% url 'register' %}" class="btn btn-primary btn-lg px-5 py-3">Sign Up Free</a>
+                <a href="{% url 'about' %}" class="btn btn-outline-dark btn-lg px-5 py-3">Learn More</a>
+            </div>
+        </div>
+    </section>
+</div>
+
+{% endblock %}

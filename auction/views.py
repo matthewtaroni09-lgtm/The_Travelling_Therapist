@@ -1118,3 +1118,6 @@ def what_is_TTT(request):
 
 def hiring_with_the_traveling_therapist_view(request):
     return render(request, 'auction/hiring_with_the_traveling_therapist.html', {})
+
+def retirement_home_hiring_guide(request):
+    return render(request, 'auction/retirement_home_hiring_guide.html', {})
