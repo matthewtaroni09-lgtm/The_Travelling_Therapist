@@ -1,0 +1,445 @@
+{% extends 'auction/base.html' %}
+{% load static %}
+{% block content %}
+<style>
+    /* Visual Continuity Styles from retirement_home_hiring_guide.html */
+    .pathway-card-custom {
+        background: #fff;
+        border: 1px solid #eee;
+        border-radius: 20px;
+        padding: 30px;
+        height: 100%;
+        transition: transform 0.2s, box-shadow 0.2s;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+    }
+
+    .pathway-card-custom:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .btn {
+        border-radius: 50px !important;
+        transition: all 0.3s ease !important;
+    }
+
+    .btn:hover {
+        transform: translateY(-3px) !important;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1) !important;
+    }
+
+    .hero-section {
+        padding: 4rem 0;
+        text-align: center;
+    }
+
+    .kicker {
+        text-transform: uppercase;
+        font-weight: bold;
+        font-size: 0.85rem;
+        letter-spacing: 1px;
+        color: #198754;
+        display: inline-block;
+        margin-bottom: 0.5rem;
+    }
+
+    .cta-box {
+        background-color: #2b4d55;
+        color: white;
+        padding: 3.5rem;
+        text-align: center;
+        margin: 4rem 0;
+        border-radius: 20px !important;
+    }
+
+    .cta-box h3, .cta-box p {
+        color: white;
+    }
+
+    .data-card {
+        border-radius: 20px !important;
+        border: 1px solid #E2E8F0 !important;
+        overflow: hidden;
+        background: white;
+        height: 100%;
+    }
+
+    .data-card-header {
+        background-color: #2b4d55;
+        color: white;
+        padding: 1.5rem 1rem;
+        text-align: center;
+    }
+
+    .data-card-header h4 {
+        margin: 0;
+        color: white;
+    }
+
+    .table-custom {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        border-radius: 15px;
+        overflow: hidden;
+        border: 1px solid #E2E8F0;
+        margin: 2rem 0;
+    }
+
+    .table-custom th {
+        background-color: #2b4d55;
+        color: white;
+        padding: 1rem;
+        text-align: left;
+    }
+
+    .table-custom td {
+        padding: 1rem;
+        border-bottom: 1px solid #E2E8F0;
+    }
+
+    .table-custom tr:last-child td {
+        border-bottom: none;
+    }
+
+    .highlight-row {
+        background-color: #f8f9fa;
+        font-weight: bold;
+    }
+
+    .pill-danger {
+        background-color: #f8d7da;
+        color: #842029;
+        border-radius: 50px;
+        padding: 2rem;
+    }
+
+    .placeholder-img {
+        background-color: #e9ecef;
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-style: italic;
+        color: #6c757d;
+        min-height: 250px;
+        border: 2px dashed #dee2e6;
+        margin: 1.5rem 0;
+    }
+
+    .video-container {
+        position: relative;
+        padding-bottom: 56.25%; /* 16:9 */
+        height: 0;
+        overflow: hidden;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        margin: 2rem 0;
+    }
+
+    .video-container iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+    .check-list-custom {
+        list-style: none;
+        padding-left: 0;
+    }
+
+    .check-list-custom li {
+        margin-bottom: 0.75rem;
+        display: flex;
+        align-items: center;
+    }
+
+    .checklist-icon {
+        color: #198754 !important;
+        margin-right: 0.5rem;
+    }
+
+    .visual-flow {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+        margin: 3rem 0;
+    }
+
+    .flow-step {
+        background: #fff;
+        border: 1px solid #eee;
+        border-radius: 15px;
+        padding: 1rem 1.5rem;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        font-weight: bold;
+    }
+
+    .flow-arrow {
+        color: #198754;
+        font-size: 1.5rem;
+    }
+
+    @media (max-width: 768px) {
+        .visual-flow {
+            flex-direction: column;
+        }
+        .flow-arrow {
+            transform: rotate(90deg);
+        }
+    }
+</style>
+
+<div class="container py-5">
+    <!-- Section 1 -->
+    <section class="mb-5">
+        <h1 class="display-4 text-weight-bold mb-4">Hiring Healthcare Staff Is Broken</h1>
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <div class="placeholder-img">
+                    [Image Placeholder: Two side-by-side exam rooms with doctors and patients]
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="video-container">
+                    <iframe src="https://www.youtube.com/embed/DNizF1JkgqA" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+        <p class="fs-5 mt-4">
+            Healthcare facilities don’t struggle because they can’t post jobs . They struggle because job boards were never designed for urgent, short-term, clinical coverage & don’t offer enough incentive to keep them long term. When a physio is off sick, a therapist goes on leave, or patient demand spikes unexpectedly, posting a job and waiting weeks is not a solution,it’s a liability.
+        </p>
+    </section>
+
+    <!-- Section 2 -->
+    <section class="mb-5 py-5">
+        <h2 class="text-weight-bold mb-4">The Reality Facilities Are Facing</h2>
+        <div class="row align-items-center">
+            <div class="col-md-4">
+                <div class="placeholder-img">
+                    [Image Placeholder: Arrow pointing upwards over a bar chart]
+                </div>
+            </div>
+            <div class="col-md-8">
+                <p class="fs-5">
+                    Physiotherapy and allied health roles grew 4.9% from 2023–2024 - faster than the national average. Demand is rising, but hiring systems haven’t evolved. Facilities are left choosing between:
+                </p>
+                <ul class="check-list-custom fs-5">
+                    <li><span class="material-icons checklist-icon">arrow_forward</span> Paying recurring fees just to stay visible</li>
+                    <li><span class="material-icons checklist-icon">arrow_forward</span> Sorting through unqualified applicants</li>
+                    <li><span class="material-icons checklist-icon">arrow_forward</span> Letting postings sit unfilled for months</li>
+                    <li><span class="material-icons checklist-icon">arrow_forward</span> Overworking existing staff</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 3: Table -->
+    <section class="mb-5">
+        <h3 class="text-weight-bold mb-4">The Cost Reality</h3>
+        <div class="table-responsive">
+            <table class="table-custom">
+                <thead>
+                    <tr>
+                        <th>Platform</th>
+                        <th>1-Month Post</th>
+                        <th>Featured</th>
+                        <th>Membership</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>CPA (Member)</td>
+                        <td>$300–$600</td>
+                        <td>$125</td>
+                        <td>$238–$297/year</td>
+                    </tr>
+                    <tr>
+                        <td>CPA (Non-Member)</td>
+                        <td>$600–$1200</td>
+                        <td>$150</td>
+                        <td>Required</td>
+                    </tr>
+                    <tr>
+                        <td>OrthoDiv</td>
+                        <td>$100–$1025</td>
+                        <td>Included via eBlasts</td>
+                        <td>Mandatory</td>
+                    </tr>
+                    <tr class="highlight-row" style="background-color: #d1f7e8;">
+                        <td>Traveling Therapist</td>
+                        <td>Free for a 2 weeks post - only pay a small fee when you complete a hire.</td>
+                        <td>All postings are featured the same.</td>
+                        <td>Free to sign up. Forever!</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <p class="fs-5 mt-3">
+            <strong>The Core Issue:</strong> If you don’t pay extra to be featured, your role quickly gets buried. Listings are mostly sorted by recency — not urgency — meaning short-term roles lose visibility within weeks.
+        </p>
+    </section>
+
+    <!-- Section 4 -->
+    <section class="mb-5 py-5">
+        <h2 class="text-weight-bold mb-4">General Job Boards (Indeed, Kijiji)</h2>
+        <div class="table-responsive">
+            <table class="table-custom">
+                <thead>
+                    <tr>
+                        <th>Strengths</th>
+                        <th>Weaknesses</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Massive reach & brand recognition</td>
+                        <td>Not healthcare-specific</td>
+                    </tr>
+                    <tr>
+                        <td>Advanced filters & keyword matching</td>
+                        <td>"Pay-per-click, not pay-per-hire"</td>
+                    </tr>
+                    <tr>
+                        <td>Free to start</td>
+                        <td>High volume of unqualified applicants</td>
+                    </tr>
+                    <tr>
+                        <td>Applicant management tools</td>
+                        <td>Visibility ≠ outcomes</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="row mt-5 align-items-center">
+            <div class="col-md-7">
+                <h3 class="text-weight-bold">Visibility ≠ Hiring</h3>
+                <p class="fs-5">
+                    Employers pay $5+/day ($150+/month) just to stay visible — with no guarantee of resumes, interviews, or offers. You’re paying for attention , not coverage .
+                </p>
+            </div>
+            <div class="col-md-5">
+                <div class="placeholder-img">
+                    [Image Placeholder: Infographic showing the problem of too many applicants, endless screening, and hard to find the right match]
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 5 -->
+    <section class="mb-5">
+        <div class="pill-danger text-center mb-5" style="border-radius: 20px;">
+            <h2 class="text-weight-bold">The Structural Hole Job Boards Can’t Fix</h2>
+            <p class="fs-4 mb-0">Job boards are designed to market jobs .Short-term & long term healthcare hiring requires deploying people</p>
+        </div>
+
+        <div class="text-center mb-5">
+            <h2 class="display-5 text-weight-bold">Enter: The Traveling Therapist</h2>
+            <h4 class="text-primary-colour">Built for Short-Term Coverage, with a long term employment option, Not “Job Ads”</h4>
+        </div>
+        
+        <p class="fs-5 text-center px-lg-5">
+            The Traveling Therapist is not another job board. It’s a staffing solution designed specifically for temporary, short-term, and urgent healthcare needs. Think of The Traveling Therapist like a cross between a digital job board and an agency - the strengths of both, with the limitations of both minimized!
+        </p>
+    </section>
+
+    <!-- Section 6 -->
+    <section class="mb-5 py-5 bg-light rounded-4 px-4">
+        <h2 class="text-weight-bold text-center mb-4">How The Traveling Therapist Works (Visual Flow)</h2>
+        <div class="visual-flow">
+            <div class="flow-step">Post Coverage Need</div>
+            <span class="material-icons flow-arrow">arrow_forward</span>
+            <div class="flow-step">Match With Available Therapists</div>
+            <span class="material-icons flow-arrow">arrow_forward</span>
+            <div class="flow-step">Confirm Dates</div>
+            <span class="material-icons flow-arrow">arrow_forward</span>
+            <div class="flow-step">Care Continues</div>
+        </div>
+        <p class="text-center fs-4 text-weight-bold mt-4">No bidding for visibility. No reposting. No waiting.</p>
+    </section>
+
+    <!-- Section 7 -->
+    <section class="mb-5">
+        <h2 class="text-weight-bold mb-4">Job Board vs. The Traveling Therapist</h2>
+        <div class="table-responsive">
+            <table class="table-custom">
+                <thead>
+                    <tr>
+                        <th>Hiring Need</th>
+                        <th>Job Boards</th>
+                        <th>TTT logo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Short-term coverage</td>
+                        <td>❌ Not optimized</td>
+                        <td>✅ Purpose-built</td>
+                    </tr>
+                    <tr>
+                        <td>Pay structure</td>
+                        <td>Pay per post / click</td>
+                        <td>Pay for coverage</td>
+                    </tr>
+                    <tr>
+                        <td>Speed to fill</td>
+                        <td>Weeks–months</td>
+                        <td>Days</td>
+                    </tr>
+                    <tr>
+                        <td>Admin workload</td>
+                        <td>High</td>
+                        <td>Low</td>
+                    </tr>
+                    <tr>
+                        <td>Web experience</td>
+                        <td>Often poor - Cluttered</td>
+                        <td>Designed for Ease</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- Section 8 -->
+    <section class="mb-5 py-5">
+        <div class="row">
+            <div class="col-md-6">
+                <h3 class="text-weight-bold mb-4">Why Facilities Are Switching</h3>
+                <ul class="check-list-custom fs-5">
+                    <li><span class="material-icons checklist-icon">warning</span> Demand is rising</li>
+                    <li><span class="material-icons checklist-icon">warning</span> Staff burnout is real</li>
+                    <li><span class="material-icons checklist-icon">warning</span> Vacancies are more frequent</li>
+                    <li><span class="material-icons checklist-icon">warning</span> Clinics are paying more, for worse results</li>
+                </ul>
+                <p class="fs-5 mt-4">
+                    Facilities don’t need more applicants . They need the right clinician, at the right time, for the right duration . At the right cost.
+                </p>
+            </div>
+            <div class="col-md-6">
+                <div class="pathway-card-custom">
+                    <h3 class="text-weight-bold mb-4">When The Traveling Therapist Makes the Most Sense</h3>
+                    <ul class="check-list-custom fs-5">
+                        <li><span class="material-icons checklist-icon">check_circle</span> Sick leave</li>
+                        <li><span class="material-icons checklist-icon">check_circle</span> Maternity or parental leave</li>
+                        <li><span class="material-icons checklist-icon">check_circle</span> Vacation gaps</li>
+                        <li><span class="material-icons checklist-icon">check_circle</span> Temporary surges in patient volume</li>
+                        <li><span class="material-icons checklist-icon">check_circle</span> While a permanent hire is still open</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer CTA -->
+    <section class="cta-box shadow">
+        <h3 class="text-weight-bold mb-3">See how The Traveling Therapist fills short-term roles faster.</h3>
+        <a href="{% url 'register' %}" class="btn btn-primary btn-lg px-5 py-3">Link to sign up page</a>
+    </section>
+</div>
+{% endblock %}
