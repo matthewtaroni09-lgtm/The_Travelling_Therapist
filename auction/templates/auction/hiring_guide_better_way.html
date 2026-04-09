@@ -1,0 +1,204 @@
+{% extends 'auction/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Hero Section -->
+    <section class="hero-section py-5 bg-light mb-5 rounded p-4 p-md-5">
+        <h1 class="display-4 fw-bold mb-4 text-center">A Better Way to Hire Medical Staff<br>Trial Staffing Before a
+            Permanent Hire.</h1><br>
+        <div class="row align-items-center">
+            <div class="col-lg-7">
+                <p class="h2 mb-4"><strong>Staffing gaps can’t wait weeks for your facility.</strong><br><br></p>
+                <p class="lead mb-4">Traditional hiring methods weren’t built for urgent healthcare openings - The
+                    Traveling Therapist is.
+                    A healthcare staffing marketplace designed to
+                    fill roles fast, without huge markups, long screening processes, or high admin hours. By helping
+                    to match facility owners to clinicians, we take the advantages of a digital job board and an
+                    agency, and combine them - leaving you with a fast, reliable option for your facility’s
+                    needs.
+                </p>
+                <div class="text-center text-lg-start">
+                    <a href="{% url 'create-auction' %}" class="btn btn-primary btn-lg">Fill a Shift Fast</a>
+                </div>
+            </div>
+            <div class="col-lg-5 text-center mt-4 mt-lg-0">
+                <img src="/media/images/a_better_way_to_hire.png" alt="A Better Way to Hire"
+                    class="img-fluid rounded shadow-sm" style="width: 300px;">
+            </div>
+        </div>
+    </section>
+
+    <!-- Built for Other Medical Facilities -->
+    <section class="mb-5">
+        <h2 class="h3 fw-bold mb-4">Built for Other Medical Facilities</h2>
+        <p>Not every facility operates like a large hospital but staffing pressure is just as real.</p>
+        <p><strong>We support a wide range of environments, including:</strong></p>
+        <div class="row">
+            <div class="col-md-6">
+                <ul class="list-unstyled">
+                    <li class="mb-2"><i class="material-icons align-middle text-success me-2">check_circle</i> Clinics &
+                        Outpatient Centres</li>
+                    <li class="mb-2"><i class="material-icons align-middle text-success me-2">check_circle</i> Long-term
+                        Care & Rehab</li>
+                    <li class="mb-2"><i class="material-icons align-middle text-success me-2">check_circle</i> Specialty
+                        Practices</li>
+                    <li class="mb-2"><i class="material-icons align-middle text-success me-2">check_circle</i> Private
+                        Medical Offices</li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <ul class="list-unstyled">
+                    <li class="mb-2"><i class="material-icons align-middle text-success me-2">check_circle</i> Sports
+                        Centres & Schools</li>
+                    <li class="mb-2"><i class="material-icons align-middle text-success me-2">check_circle</i> Prisons &
+                        Correctional Facilities</li>
+                    <li class="mb-2"><i class="material-icons align-middle text-success me-2">check_circle</i> Military
+                        Bases</li>
+                    <li class="mb-2"><i class="material-icons align-middle text-success me-2">check_circle</i> Group
+                        Homes & more</li>
+                </ul>
+            </div>
+        </div>
+        <p class="mt-3">If you deal with last-minute absences, temporary gaps, or fluctuating demand, this was built for
+            you.</p>
+    </section>
+
+    <!-- A New Model -->
+    <section class="mb-5">
+        <h2 class="h3 fw-bold mb-4">A New Model — Designed for Simplicity and Ease.</h2>
+        <p>Instead of long hiring cycles or paid posts that attract low eye traffic, we connect facilities directly with
+            qualified medical professionals who are ready to work.</p>
+        <p><strong>No inflated fees. No wasted time. Free of hassle.</strong></p>
+        <div class="text-center mt-4">
+            <img src="/media/images/how_it_works_other_facilities.png" alt="How It Works"
+                class="img-fluid rounded shadow-sm" style="width: 700px;">
+        </div>
+    </section>
+
+
+    <!-- Common Use Cases -->
+    <section class="mb-5">
+        <h2 class="h3 fw-bold mb-4">Common Use Cases</h2>
+        <p>Same-day sick calls. Vacation coverage. Maternity leave. Patient volume spikes. Trial staffing before a
+            permanent hire.</p>
+    </section>
+
+    <!-- Case Studies Component (Accordion) -->
+    <section class="mb-5">
+        <h2 class="h3 fw-bold mb-4">Case Studies: How Traveling Therapist Helps</h2>
+        <div class="accordion" id="caseStudiesAccordion">
+            <!-- High Schools -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingOne">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        High Schools & School Boards
+                    </button>
+                </h2>
+                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+                    data-bs-parent="#caseStudiesAccordion">
+                    <div class="accordion-body">
+                        <p><strong>Need:</strong> On-site nurses for student illness, injuries, sports events, and
+                            chronic conditions</p>
+                        <p><strong>Currently:</strong> ~50% rely on part-time/casual nurses¹; gaps peak during flu
+                            season,
+                            sports, exams; teachers/admin cover in emergencies</p>
+                        <p><strong>Opportunity:</strong> Fast access to casual staff reduces stress and ensures safety
+                        </p>
+                        <p><strong>Traveling Therapist:</strong> Quickly fills shifts with verified clinicians</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Universities -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingTwo">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                        Universities & Campus Health Centers
+                    </button>
+                </h2>
+                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
+                    data-bs-parent="#caseStudiesAccordion">
+                    <div class="accordion-body">
+                        <p><strong>Need:</strong> Routine care, mental health crises, flu season, vaccination clinics
+                        </p>
+                        <p><strong>Currently:</strong> 35–40% of staff are part-time²; gaps during midterms/finals;
+                            limited local hires</p>
+                        <p><strong>Opportunity:</strong> Temporary clinicians maintain continuity of care, nursing
+                            coverage for school season changes and graduating employees</p>
+                        <p><strong>Traveling Therapist:</strong> Rapidly fills coverage gaps</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Adult Day Centers -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingThree">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                        Adult Day Centers & Group Homes
+                    </button>
+                </h2>
+                <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree"
+                    data-bs-parent="#caseStudiesAccordion">
+                    <div class="accordion-body">
+                        <p><strong>Need:</strong> Medication administration, chronic care, emergency response</p>
+                        <p><strong>Currently:</strong> Chronic shortages, internal call lists exhausted, spikes in
+                            resident needs</p>
+                        <p><strong>Opportunity:</strong> Speed and reliability without extra paperwork</p>
+                        <p><strong>Traveling Therapist:</strong> Trusted clinicians fill shifts quickly, reducing
+                            burnout</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Prisons -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingFour">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                        Prisons & Correctional Facilities
+                    </button>
+                </h2>
+                <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour"
+                    data-bs-parent="#caseStudiesAccordion">
+                    <div class="accordion-body">
+                        <p><strong>Need:</strong> Injuries, chronic conditions, mental health crises</p>
+                        <p><strong>Currently:</strong> High turnover, vacancies for weeks, delayed coverage risks
+                            liability</p>
+                        <p><strong>Opportunity:</strong> Temporary staffing fills urgent gaps and gives you access to
+                            onboard full time afterwards</p>
+                        <p><strong>Traveling Therapist:</strong> On-demand vetted clinicians for timely care</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Military Bases -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingFive">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                        Military Bases
+                    </button>
+                </h2>
+                <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive"
+                    data-bs-parent="#caseStudiesAccordion">
+                    <div class="accordion-body">
+                        <p><strong>Need:</strong> Routine care, training injuries, vaccinations, seasonal illness</p>
+                        <p><strong>Currently:</strong> Rotating/part-time staff; unfilled shifts during deployments;
+                            high
+                            admin burden</p>
+                        <p><strong>Opportunity:</strong> Ensure operational readiness without overstaffing</p>
+                        <p><strong>Traveling Therapist:</strong> Pre-vetted clinicians fill shifts on short notice and
+                            gives you access to onboard full time afterwards</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA Section -->
+    <section class="final-cta text-center py-5 border-top">
+        <h2 class="h3 fw-bold mb-4">Stop relying on hiring solutions that weren’t built for your needs.</h2>
+        <a href="{% url 'register' %}" class="btn btn-primary btn-lg">Get Started Today For Free</a>
+    </section>
+</div>
+{% endblock %}
