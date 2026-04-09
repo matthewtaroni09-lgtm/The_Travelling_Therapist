@@ -35,6 +35,7 @@ urlpatterns = [
     path("mission_vision", views.mission_vision, name="mission-vision"),
     path("healthcare_facility_guide", views.healthcare_facility_guide, name="healthcare-facility-guide"),
     path("clinician_guide", views.clinician_guide, name="clinician-guide"),
+    path("hiring_guide_better_way", views.hiring_guide_better_way, name="hiring-guide-better-way"),
     path("hospital_guide", views.hospital_guide, name="hospital-guide"),
     path("LTC_guide", views.LTC_guide, name="LTC-guide"),
     path("hiring_healthcare_worker", views.hiring_healthcare_worker, name="hiring-healthcare-worker"),
