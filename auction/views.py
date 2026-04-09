@@ -1127,3 +1127,6 @@ def hiring_with_the_traveling_therapist_view(request):
 
 def retirement_home_hiring_guide(request):
     return render(request, 'auction/retirement_home_hiring_guide.html', {})
+
+def job_boards(request):
+    return render(request, 'auction/job_boards.html', {})
