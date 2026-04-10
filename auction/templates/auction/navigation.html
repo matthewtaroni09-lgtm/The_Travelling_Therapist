@@ -45,6 +45,10 @@
                             <a class="nav-link text-weight-normal" href="{% url 'hiring-guide-better-way' %}">A Better
                                 Way to Hire</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-weight-normal {% if path == 'job-boards' %}active{% endif %}"
+                                href="{% url 'job-boards' %}">Job Boards Guide</a>
+                        </li>
                     </ul>
                 </li>
                 <li class="nav-item dropdown">
