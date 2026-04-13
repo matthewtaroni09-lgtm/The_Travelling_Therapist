@@ -52,7 +52,8 @@
         border-radius: 20px !important;
     }
 
-    .cta-box h3, .cta-box p {
+    .cta-box h3,
+    .cta-box p {
         color: white;
     }
 
@@ -129,20 +130,47 @@
 
     .video-container {
         position: relative;
-        padding-bottom: 56.25%; /* 16:9 */
+        padding-bottom: 56.25%;
+        /* 16:9 */
         height: 0;
         overflow: hidden;
         border-radius: 20px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         margin: 2rem 0;
+        background: #000;
     }
 
-    .video-container iframe {
-        position: absolute;
-        top: 0;
-        left: 0;
+
+    .video-placeholder {
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10;
+    }
+
+    .video-placeholder img {
         width: 100%;
         height: 100%;
+        object-fit: cover;
+        opacity: 0.8;
+        transition: opacity 0.3s;
+    }
+
+    .video-placeholder:hover img {
+        opacity: 0.6;
+    }
+
+    .play-button-custom {
+        position: absolute;
+        font-size: 80px;
+        color: white;
+        text-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        transition: transform 0.3s ease;
+    }
+
+    .video-placeholder:hover .play-button-custom {
+        transform: scale(1.1);
     }
 
     .check-list-custom {
@@ -175,7 +203,7 @@
         border: 1px solid #eee;
         border-radius: 15px;
         padding: 1rem 1.5rem;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
         font-weight: bold;
     }
 
@@ -188,6 +216,7 @@
         .visual-flow {
             flex-direction: column;
         }
+
         .flow-arrow {
             transform: rotate(90deg);
         }
@@ -198,40 +227,48 @@
     <!-- Section 1 -->
     <section class="mb-5">
         <h1 class="display-4 text-weight-bold mb-4">Hiring Healthcare Staff Is Broken</h1>
-        <div class="row align-items-center">
-            <div class="col-md-6">
-                <div class="placeholder-img">
-                    [Image Placeholder: Two side-by-side exam rooms with doctors and patients]
-                </div>
-            </div>
+        <div class="row align-items-start">
             <div class="col-md-6">
                 <div class="video-container">
-                    <iframe src="https://www.youtube.com/embed/DNizF1JkgqA" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    <iframe src="https://www.youtube.com/embed/DNizF1JkgqA" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen></iframe>
                 </div>
             </div>
+            <div class="col-md-6">
+                <img src="/media/images/job_boards1.png" alt="Two side-by-side exam rooms with doctors and patients"
+                    class="img-fluid rounded-4 shadow-sm mb-3">
+                <p class="fs-5">
+                    Healthcare facilities don’t struggle because they can’t post jobs . They struggle because job boards
+                    were never designed for urgent, short-term, clinical coverage & don’t offer enough incentive to keep
+                    them long term. When a physio is off sick, a therapist goes on leave, or patient demand spikes
+                    unexpectedly, posting a job and waiting weeks is not a solution,it’s a liability.
+                </p>
+            </div>
         </div>
-        <p class="fs-5 mt-4">
-            Healthcare facilities don’t struggle because they can’t post jobs . They struggle because job boards were never designed for urgent, short-term, clinical coverage & don’t offer enough incentive to keep them long term. When a physio is off sick, a therapist goes on leave, or patient demand spikes unexpectedly, posting a job and waiting weeks is not a solution,it’s a liability.
-        </p>
     </section>
 
     <!-- Section 2 -->
     <section class="mb-5 py-5">
         <h2 class="text-weight-bold mb-4">The Reality Facilities Are Facing</h2>
         <div class="row align-items-center">
-            <div class="col-md-4">
-                <div class="placeholder-img">
-                    [Image Placeholder: Arrow pointing upwards over a bar chart]
-                </div>
+            <div class="col-md-5">
+                <img src="/media/images/job_boards3.png" alt="Growth chart showing rising demand"
+                    class="rounded-4 shadow-sm" style="width: 350px; max-width: 100%; height: auto;">
             </div>
-            <div class="col-md-8">
+            <div class="col-md-7">
                 <p class="fs-5">
-                    Physiotherapy and allied health roles grew 4.9% from 2023–2024 - faster than the national average. Demand is rising, but hiring systems haven’t evolved. Facilities are left choosing between:
+                    <strong>Physiotherapy and allied health roles grew 4.9% from 2023–2024</strong> - faster than the
+                    national average.
+                    Demand is rising, but hiring systems haven’t evolved. Facilities are left choosing between:
                 </p>
                 <ul class="check-list-custom fs-5">
-                    <li><span class="material-icons checklist-icon">arrow_forward</span> Paying recurring fees just to stay visible</li>
-                    <li><span class="material-icons checklist-icon">arrow_forward</span> Sorting through unqualified applicants</li>
-                    <li><span class="material-icons checklist-icon">arrow_forward</span> Letting postings sit unfilled for months</li>
+                    <li><span class="material-icons checklist-icon">arrow_forward</span> Paying recurring fees just to
+                        stay visible</li>
+                    <li><span class="material-icons checklist-icon">arrow_forward</span> Sorting through unqualified
+                        applicants</li>
+                    <li><span class="material-icons checklist-icon">arrow_forward</span> Letting postings sit unfilled
+                        for months</li>
                     <li><span class="material-icons checklist-icon">arrow_forward</span> Overworking existing staff</li>
                 </ul>
             </div>
@@ -265,7 +302,7 @@
                         <td>Required</td>
                     </tr>
                     <tr>
-                        <td>OrthoDiv</td>
+                        <td>Ortho Division</td>
                         <td>$100–$1025</td>
                         <td>Included via eBlasts</td>
                         <td>Mandatory</td>
@@ -280,53 +317,101 @@
             </table>
         </div>
         <p class="fs-5 mt-3">
-            <strong>The Core Issue:</strong> If you don’t pay extra to be featured, your role quickly gets buried. Listings are mostly sorted by recency — not urgency — meaning short-term roles lose visibility within weeks.
+            <strong>The Core Issue:</strong> If you don’t pay extra to be featured, your role quickly gets buried.
+            Listings are mostly sorted by recency — not urgency — meaning short-term roles lose visibility within weeks.
         </p>
     </section>
 
     <!-- Section 4 -->
     <section class="mb-5 py-5">
-        <h2 class="text-weight-bold mb-4">General Job Boards (Indeed, Kijiji)</h2>
-        <div class="table-responsive">
-            <table class="table-custom">
-                <thead>
-                    <tr>
-                        <th>Strengths</th>
-                        <th>Weaknesses</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Massive reach & brand recognition</td>
-                        <td>Not healthcare-specific</td>
-                    </tr>
-                    <tr>
-                        <td>Advanced filters & keyword matching</td>
-                        <td>"Pay-per-click, not pay-per-hire"</td>
-                    </tr>
-                    <tr>
-                        <td>Free to start</td>
-                        <td>High volume of unqualified applicants</td>
-                    </tr>
-                    <tr>
-                        <td>Applicant management tools</td>
-                        <td>Visibility ≠ outcomes</td>
-                    </tr>
-                </tbody>
-            </table>
+        <div class="row">
+            <div class="col-md-6">
+                <h2 class="text-weight-bold mb-4">General Job Boards (Indeed, Kijiji)</h2>
+                <div class="table-responsive">
+                    <table class="table-custom">
+                        <thead>
+                            <tr>
+                                <th>Strengths</th>
+                                <th>Weaknesses</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Massive reach & brand recognition</td>
+                                <td>Not healthcare-specific</td>
+                            </tr>
+                            <tr>
+                                <td>Advanced filters & keyword matching</td>
+                                <td>"Pay-per-click, not pay-per-hire"</td>
+                            </tr>
+                            <tr>
+                                <td>Free to start</td>
+                                <td>High volume of unqualified applicants</td>
+                            </tr>
+                            <tr>
+                                <td>Applicant management tools</td>
+                                <td>Visibility ≠ outcomes</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h2 class="text-weight-bold mb-4">Job Board vs. The Traveling Therapist</h2>
+                <div class="table-responsive">
+                    <table class="table-custom">
+                        <thead>
+                            <tr>
+                                <th>Hiring Need</th>
+                                <th>Job Boards</th>
+                                <th>TTT logo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Short-term coverage</td>
+                                <td> Not optimized</td>
+                                <td> Purpose-built</td>
+                            </tr>
+                            <tr>
+                                <td>Pay structure</td>
+                                <td>Pay per post / click</td>
+                                <td>Pay for coverage</td>
+                            </tr>
+                            <tr>
+                                <td>Speed to fill</td>
+                                <td>Weeks–months</td>
+                                <td>Days</td>
+                            </tr>
+                            <tr>
+                                <td>Admin workload</td>
+                                <td>High</td>
+                                <td>Low</td>
+                            </tr>
+                            <tr>
+                                <td>Web experience</td>
+                                <td>Often poor - Cluttered</td>
+                                <td>Designed for Ease</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
-        
+
         <div class="row mt-5 align-items-center">
-            <div class="col-md-7">
+            <div class="col-md-6">
+                <img src="/media/images/job_boards2.png"
+                    alt="Infographic showing the problem of too many applicants, endless screening, and hard to find the right match"
+                    class="rounded-4 shadow-sm mb-4 mb-md-0" style="width: 400px; max-width: 100%; height: auto;">
+            </div>
+            <div class="col-md-6">
                 <h3 class="text-weight-bold">Visibility ≠ Hiring</h3>
                 <p class="fs-5">
-                    Employers pay $5+/day ($150+/month) just to stay visible — with no guarantee of resumes, interviews, or offers. You’re paying for attention , not coverage .
+                    Employers pay <strong>$5+/day ($150+/month)</strong> just to stay visible — with no guarantee of
+                    resumes, interviews,
+                    or offers. You’re paying for attention , not coverage .
                 </p>
-            </div>
-            <div class="col-md-5">
-                <div class="placeholder-img">
-                    [Image Placeholder: Infographic showing the problem of too many applicants, endless screening, and hard to find the right match]
-                </div>
             </div>
         </div>
     </section>
@@ -335,16 +420,21 @@
     <section class="mb-5">
         <div class="pill-danger text-center mb-5" style="border-radius: 20px;">
             <h2 class="text-weight-bold">The Structural Hole Job Boards Can’t Fix</h2>
-            <p class="fs-4 mb-0">Job boards are designed to market jobs .Short-term & long term healthcare hiring requires deploying people</p>
+            <p class="fs-4 mb-0">Job boards are designed to <strong>market jobs</strong>.<br>Short-term & long term
+                healthcare hiring
+                requires <strong>deploying people</strong></p>
         </div>
 
         <div class="text-center mb-5">
             <h2 class="display-5 text-weight-bold">Enter: The Traveling Therapist</h2>
-            <h4 class="text-primary-colour">Built for Short-Term Coverage, with a long term employment option, Not “Job Ads”</h4>
+            <h4 style="color: #198754;">Built for Short-Term Coverage, with a long term employment option, Not “Job
+                Ads”</h4>
         </div>
-        
+
         <p class="fs-5 text-center px-lg-5">
-            The Traveling Therapist is not another job board. It’s a staffing solution designed specifically for temporary, short-term, and urgent healthcare needs. Think of The Traveling Therapist like a cross between a digital job board and an agency - the strengths of both, with the limitations of both minimized!
+            The Traveling Therapist is not another job board. It’s a staffing solution designed specifically for
+            temporary, short-term, and urgent healthcare needs. Think of The Traveling Therapist like a cross between a
+            digital job board and an agency - the strengths of both, with the limitations of both minimized!
         </p>
     </section>
 
@@ -378,8 +468,8 @@
                 <tbody>
                     <tr>
                         <td>Short-term coverage</td>
-                        <td>❌ Not optimized</td>
-                        <td>✅ Purpose-built</td>
+                        <td> Not optimized</td>
+                        <td> Purpose-built</td>
                     </tr>
                     <tr>
                         <td>Pay structure</td>
@@ -411,14 +501,16 @@
         <div class="row">
             <div class="col-md-6">
                 <h3 class="text-weight-bold mb-4">Why Facilities Are Switching</h3>
-                <ul class="check-list-custom fs-5">
-                    <li><span class="material-icons checklist-icon">warning</span> Demand is rising</li>
-                    <li><span class="material-icons checklist-icon">warning</span> Staff burnout is real</li>
-                    <li><span class="material-icons checklist-icon">warning</span> Vacancies are more frequent</li>
-                    <li><span class="material-icons checklist-icon">warning</span> Clinics are paying more, for worse results</li>
+                <ul class="fs-5" style="list-style-type: disc; padding-left: 1.5rem;">
+                    <li class="mb-2">Demand is rising</li>
+                    <li class="mb-2">Staff burnout is real</li>
+                    <li class="mb-2">Vacancies are more frequent</li>
+                    <li class="mb-2">Clinics are paying more, for worse results</li>
                 </ul>
                 <p class="fs-5 mt-4">
-                    Facilities don’t need more applicants . They need the right clinician, at the right time, for the right duration . At the right cost.
+                    Facilities don’t need more applicants . They need the <strong>right clinician,</strong> at the
+                    <strong>right time</strong>, for the
+                    <strong>right duration</strong> . At the <strong>right cost</strong>.
                 </p>
             </div>
             <div class="col-md-6">
@@ -426,10 +518,13 @@
                     <h3 class="text-weight-bold mb-4">When The Traveling Therapist Makes the Most Sense</h3>
                     <ul class="check-list-custom fs-5">
                         <li><span class="material-icons checklist-icon">check_circle</span> Sick leave</li>
-                        <li><span class="material-icons checklist-icon">check_circle</span> Maternity or parental leave</li>
+                        <li><span class="material-icons checklist-icon">check_circle</span> Maternity or parental leave
+                        </li>
                         <li><span class="material-icons checklist-icon">check_circle</span> Vacation gaps</li>
-                        <li><span class="material-icons checklist-icon">check_circle</span> Temporary surges in patient volume</li>
-                        <li><span class="material-icons checklist-icon">check_circle</span> While a permanent hire is still open</li>
+                        <li><span class="material-icons checklist-icon">check_circle</span> Temporary surges in patient
+                            volume</li>
+                        <li><span class="material-icons checklist-icon">check_circle</span> While a permanent hire is
+                            still open</li>
                     </ul>
                 </div>
             </div>
