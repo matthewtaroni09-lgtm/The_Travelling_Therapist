@@ -1,0 +1,449 @@
+{% extends 'auction/base.html' %}
+{% load static %}
+{% block content %}
+<style>
+    /* REUSING STYLES FROM RECENT PAGES */
+    :root {
+        --dark-teal: #2b4d55;
+        --soft-green: #C9FFE5;
+        --off-white: #f8f9fa;
+        --slate-grey: #6c757d;
+        --ttt-blue: #007bff;
+        --ttt-success: #198754;
+    }
+
+    /* Standardized Card Lift and Box Shadows */
+    .data-card, .pathway-card-custom, .grid-card {
+        transition: all 0.3s ease !important;
+        border-radius: 20px !important;
+        border: 1px solid #E2E8F0 !important;
+        background: #fff;
+    }
+
+    .data-card:hover, .pathway-card-custom:hover, .grid-card:hover {
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
+        transform: translateY(-5px) !important;
+    }
+
+    /* Standardized Buttons */
+    .btn {
+        border-radius: 50px !important;
+        transition: all 0.3s ease !important;
+    }
+
+    .btn:hover {
+        transform: translateY(-3px) !important;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1) !important;
+    }
+
+    /* Section Headers */
+    .hero-section {
+        padding: 4rem 0;
+        text-align: center;
+    }
+
+    .hero-title {
+        font-family: Futura-Bold, sans-serif;
+        font-weight: 700;
+        font-size: 2.5rem;
+        color: var(--dark-colour);
+        margin-bottom: 20px;
+    }
+
+    /* Timeline Styling */
+    .timeline-container {
+        position: relative;
+        padding: 40px 0;
+    }
+
+    .timeline-item {
+        text-align: center;
+        padding: 20px;
+    }
+
+    .timeline-icon {
+        font-size: 3rem;
+        color: var(--ttt-blue);
+        margin-bottom: 15px;
+    }
+
+    /* Infographic-style Dashboard Cards */
+    .data-card {
+        padding: 25px;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .data-card h4 {
+        font-family: Futura-Bold, sans-serif;
+        font-size: 1.1rem;
+        margin-bottom: 15px;
+        color: var(--dark-teal);
+    }
+
+    .data-card .stat {
+        font-size: 2rem;
+        font-weight: 800;
+        color: var(--ttt-blue);
+        line-height: 1.1;
+        margin-bottom: 5px;
+    }
+
+    .data-card .insight {
+        font-size: 0.9rem;
+        color: var(--slate-grey);
+        margin-top: auto;
+    }
+
+    /* 2x2 Grid Styles */
+    .grid-card {
+        padding: 30px;
+        text-align: center;
+    }
+
+    .grid-card .material-icons {
+        font-size: 3rem;
+        color: var(--ttt-blue);
+        margin-bottom: 15px;
+    }
+
+    /* CTA Box Style */
+    .cta-box-custom {
+        background-color: var(--dark-teal);
+        color: white;
+        padding: 4rem;
+        text-align: center;
+        margin: 4rem 0;
+        border-radius: 24px;
+    }
+
+    .cta-box-custom h2, .cta-box-custom p {
+        color: white;
+    }
+
+    /* Comparison Table Styling */
+    .comparison-table {
+        border-radius: 20px;
+        overflow: hidden;
+        border-collapse: separate;
+        border-spacing: 0;
+        border: 1px solid #E2E8F0;
+    }
+
+    .comparison-table th {
+        background-color: var(--off-white);
+        padding: 20px;
+    }
+
+    .comparison-table td {
+        padding: 15px 20px;
+        vertical-align: middle;
+    }
+
+    .ttt-col-highlight {
+        background-color: rgba(0, 123, 255, 0.03);
+    }
+
+    /* Utility */
+    .check-mark {
+        color: var(--ttt-success);
+        margin-right: 10px;
+        font-weight: bold;
+    }
+
+    canvas {
+        max-height: 150px;
+        margin-bottom: 15px;
+    }
+</style>
+
+<div class="container mt-4">
+
+    <!-- SECTION 1 — Header / Hero Section -->
+    <section class="hero-section">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <h1 class="hero-title">Hiring in Private Clinics Isn’t as Predictable as It Used to Be</h1>
+                <p class="lead text-muted mb-4">Running a private clinic depends on consistent clinician availability — but in 2025, workforce patterns have changed.</p>
+                <p class="px-md-5 mb-4">
+                    Parental leave, part-time transitions, burnout, and longer vacancy periods mean clinics can no longer rely on informal hiring or last-minute coverage.
+                </p>
+                <div class="block-quote text-center mb-5" style="border-left: 5px solid var(--ttt-blue);">
+                    The Traveling Therapist helps clinics plan ahead, see staffing gaps early, and secure qualified clinicians before disruptions affect patient care or revenue.
+                </div>
+                <a href="{% url 'how-it-works' %}" class="btn btn-primary btn-lg px-5 py-3">See How Clinics Use The Traveling Therapist →</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 2 — The Workforce Reality (Data Dashboard) -->
+    <section class="py-5">
+        <h2 class="text-center mb-5">The Workforce Reality</h2>
+        <div class="row g-4">
+            <!-- Card 1: Supply Pressure -->
+            <div class="col-md-6 col-lg-3">
+                <div class="data-card">
+                    <h4>Supply Pressure</h4>
+                    <canvas id="chartSupply"></canvas>
+                    <div class="stat">25%</div>
+                    <p class="small mb-2">of nursing and allied health professionals worked overtime in 2024.</p>
+                    <div class="insight"><strong>Insight:</strong> Clinicians are stretched thin. Fewer people are available to "pick up extra hours" when you need them.</div>
+                </div>
+            </div>
+            <!-- Card 2: The Parental Leave Factor -->
+            <div class="col-md-6 col-lg-3">
+                <div class="data-card">
+                    <h4>The Parental Leave Factor</h4>
+                    <canvas id="chartParental"></canvas>
+                    <div class="insight"><strong>Insight:</strong> In female-dominated fields like OT and Speech Therapy, parental leave is a forecastable staffing risk, not an anomaly.</div>
+                </div>
+            </div>
+            <!-- Card 3: The "Invisible" Gap -->
+            <div class="col-md-6 col-lg-3">
+                <div class="data-card">
+                    <h4>The "Invisible" Gap</h4>
+                    <canvas id="chartGap"></canvas>
+                    <div class="insight"><strong>Insight:</strong> Return-to-work often results in permanent capacity loss.</div>
+                </div>
+            </div>
+            <!-- Card 4: The Vacancy Crisis -->
+            <div class="col-md-6 col-lg-3">
+                <div class="data-card">
+                    <h4>The Vacancy Crisis</h4>
+                    <canvas id="chartVacancy"></canvas>
+                    <div class="stat">52.5%</div>
+                    <p class="small mb-2">of allied-health vacancies last 90+ days.</p>
+                    <div class="insight"><strong>Insight:</strong> Hiring delays lead to lost revenue and reduced appointment availability.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 3 — How Clinics Typically Handle Hiring Today -->
+    <section class="py-5">
+        <h2 class="text-center mb-5">How Clinics Typically Handle Hiring Today</h2>
+        <div class="row align-items-center timeline-container">
+            <div class="col-md-3 timeline-item">
+                <div class="timeline-icon"><i class="material-icons">calendar_today</i></div>
+                <p class="fw-bold">Clinician announces leave or reduced hours.</p>
+            </div>
+            <div class="col-md-3 timeline-item">
+                <div class="timeline-icon"><i class="material-icons">phone_iphone</i></div>
+                <p class="fw-bold">Owner checks internal contacts/texts staff.</p>
+            </div>
+            <div class="col-md-3 timeline-item">
+                <div class="timeline-icon"><i class="material-icons">grid_on</i></div>
+                <p class="fw-bold">Texts go unanswered; owner scrambles for locums.</p>
+            </div>
+            <div class="col-md-3 timeline-item">
+                <div class="timeline-icon"><i class="material-icons">sentiment_very_dissatisfied</i></div>
+                <p class="fw-bold">Appointments are canceled; waitlists grow.</p>
+            </div>
+        </div>
+        <div class="text-center mt-4">
+            <p class="h5 text-danger fw-bold">The Result: Reactive hiring, lost revenue, and operational stress.</p>
+        </div>
+    </section>
+
+    <!-- SECTION 4 — The Hidden Costs of Reactive Hiring -->
+    <section class="py-5 px-4 rounded-3" style="background-color: var(--off-white);">
+        <h2 class="text-center mb-5">The Hidden Costs of Reactive Hiring</h2>
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="grid-card h-100">
+                    <i class="material-icons">trending_down</i>
+                    <h5 class="fw-bold">Revenue Leakage</h5>
+                    <p>Unfilled slots quietly reduce monthly income.</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="grid-card h-100">
+                    <i class="material-icons">battery_alert</i>
+                    <h5 class="fw-bold">Burnout</h5>
+                    <p>Workload shifts to others, increasing turnover risk.</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="grid-card h-100">
+                    <i class="material-icons">visibility_off</i>
+                    <h5 class="fw-bold">No Predictive Insight</h5>
+                    <p>Lack of data on when gaps will occur.</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="grid-card h-100">
+                    <i class="material-icons">assignment</i>
+                    <h5 class="fw-bold">Admin Burden</h5>
+                    <p>Hours spent on coordination instead of patient care.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 5 — The Traveling Therapist Solution -->
+    <section class="py-5 mt-5">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h2 class="mb-4 fw-bold">Workforce Planning for Private Clinics</h2>
+                <ul class="list-unstyled lead">
+                    <li class="mb-3"><span class="check-mark">✔</span> Data-backed insight into staffing trends <span class="badge bg-secondary">Coming Soon</span></li>
+                    <li class="mb-3"><span class="check-mark">✔</span> Faster access to qualified temporary clinicians</li>
+                    <li class="mb-3"><span class="check-mark">✔</span> Coverage without long-term overhiring</li>
+                    <li class="mb-3"><span class="check-mark">✔</span> Transparent pricing — no agency markups</li>
+                    <li class="mb-3"><span class="check-mark">✔</span> Designed specifically for healthcare clinics</li>
+                </ul>
+            </div>
+            <div class="col-lg-6">
+                <img src="/media/images/clinic_guide_main.png" alt="Well-staffed clinic team" class="img-fluid rounded-3 shadow">
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 6 — TTT vs. Traditional Clinic Hiring -->
+    <section class="py-5">
+        <h2 class="text-center mb-5">TTT vs. Traditional Clinic Hiring</h2>
+        <div class="table-responsive">
+            <table class="table comparison-table">
+                <thead>
+                    <tr>
+                        <th style="width: 20%;">Feature</th>
+                        <th class="ttt-col-highlight text-center" style="width: 40%;">
+                            <img src="/media/images/TTT_LOGO.png" alt="TTT Logo" style="height: 35px;">
+                        </th>
+                        <th class="text-center" style="width: 40%;">Traditional Hiring</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="fw-bold">Speed</td>
+                        <td class="ttt-col-highlight text-center">Post coverage in minutes</td>
+                        <td class="text-center">Weeks or months to hire</td>
+                    </tr>
+                    <tr>
+                        <td class="fw-bold">Reach</td>
+                        <td class="ttt-col-highlight text-center">Beyond your internal network</td>
+                        <td class="text-center">Limited to known contacts</td>
+                    </tr>
+                    <tr>
+                        <td class="fw-bold">Focus</td>
+                        <td class="ttt-col-highlight text-center">Built for temporary/part-time</td>
+                        <td class="text-center">Built for permanent roles</td>
+                    </tr>
+                    <tr>
+                        <td class="fw-bold">Strategy</td>
+                        <td class="ttt-col-highlight text-center">Predictive workforce insight</td>
+                        <td class="text-center">Reactive decision-making</td>
+                    </tr>
+                    <tr>
+                        <td class="fw-bold">Costs</td>
+                        <td class="ttt-col-highlight text-center">Transparent & direct</td>
+                        <td class="text-center">Agency fees & hidden costs</td>
+                    </tr>
+                    <tr>
+                        <td class="fw-bold">Effort</td>
+                        <td class="ttt-col-highlight text-center">Reduces admin workload</td>
+                        <td class="text-center">Owner-managed chaos</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- SECTION 7 — Final Call to Action -->
+    <section class="cta-box-custom">
+        <div class="container">
+            <h2 class="display-5 fw-bold mb-3">Stop reacting to staffing gaps. Start planning for them.</h2>
+            <p class="lead mb-5">The Traveling Therapist helps private clinics anticipate workforce changes, manage parental leave transitions, and keep schedules full — without burning out your team.</p>
+            <a href="{% url 'register' %}" class="btn btn-light btn-lg px-5 py-3 fw-bold" style="color: var(--dark-teal);">Start for free today →</a>
+        </div>
+    </section>
+
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Shared Chart.js options for consistency
+        const chartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: { y: { display: false }, x: { display: true } }
+        };
+
+        // Chart 1: Supply Pressure (Line Chart)
+        const ctxSupply = document.getElementById('chartSupply').getContext('2d');
+        new Chart(ctxSupply, {
+            type: 'line',
+            data: {
+                labels: ['2020', '2021', '2022', '2023', '2024'],
+                datasets: [{
+                    data: [15, 18, 20, 22, 25],
+                    borderColor: '#007bff',
+                    backgroundColor: 'rgba(0, 123, 255, 0.1)',
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: chartOptions
+        });
+
+        // Card 2: The Parental Leave Factor (Bar Chart)
+        const ctxParental = document.getElementById('chartParental').getContext('2d');
+        new Chart(ctxParental, {
+            type: 'bar',
+            data: {
+                labels: ['Mothers', 'Fathers'],
+                datasets: [{
+                    data: [79.8, 93.4],
+                    backgroundColor: ['#007bff', '#6c757d']
+                }]
+            },
+            options: {
+                ...chartOptions,
+                scales: { y: { beginAtZero: true, max: 100 }, x: { display: true } }
+            }
+        });
+
+        // Card 3: The "Invisible" Gap (Pie Chart)
+        const ctxGap = document.getElementById('chartGap').getContext('2d');
+        new Chart(ctxGap, {
+            type: 'pie',
+            data: {
+                labels: ['Part-time', 'Full-time'],
+                datasets: [{
+                    data: [17.6, 82.4],
+                    backgroundColor: ['#dc3545', '#007bff']
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom', display: true } }
+            }
+        });
+
+        // Card 4: The Vacancy Crisis (Stacked Bar Chart)
+        const ctxVacancy = document.getElementById('chartVacancy').getContext('2d');
+        new Chart(ctxVacancy, {
+            type: 'bar',
+            data: {
+                labels: ['Allied Health'],
+                datasets: [
+                    { data: [52.5], backgroundColor: '#dc3545' },
+                    { data: [47.5], backgroundColor: '#28a745' }
+                ]
+            },
+            options: {
+                indexAxis: 'y',
+                ...chartOptions,
+                scales: { 
+                    x: { stacked: true, display: false },
+                    y: { stacked: true, display: false }
+                }
+            }
+        });
+    });
+</script>
+
+{% endblock %}
