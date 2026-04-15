@@ -1130,3 +1130,5 @@ def retirement_home_hiring_guide(request):
 
 def job_boards(request):
     return render(request, 'auction/job_boards.html', {})
+def private_clinic_hiring_guide(request):
+    return render(request, 'auction/private_clinic_hiring_guide.html', {'path': 'private-clinic-hiring-guide'})
