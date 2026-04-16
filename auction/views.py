@@ -220,8 +220,8 @@ def healthcare_facility_guide(request):
 def clinician_guide(request):
     return render(request, 'auction/clinician_guide.html', {})
 
-def hiring_guide_better_way(request):
-    return render(request, 'auction/hiring_guide_better_way.html', {})
+def non_traditional_hiring(request):
+    return render(request, 'auction/non_traditional_hiring.html', {})
 
 def hospital_guide(request):
     return render(request, 'auction/hospital_guide.html', {})

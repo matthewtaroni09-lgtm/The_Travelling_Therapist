@@ -92,15 +92,46 @@
         color: white;
         padding: 1rem;
         text-align: left;
+        border-right: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .table-custom th:last-child {
+        border-right: none;
     }
 
     .table-custom td {
         padding: 1rem;
         border-bottom: 1px solid #E2E8F0;
+        border-right: 1px solid #E2E8F0;
+    }
+
+    .table-custom td:last-child {
+        border-right: none;
     }
 
     .table-custom tr:last-child td {
         border-bottom: none;
+    }
+
+    .table-custom tr {
+        transition: background-color 0.2s;
+    }
+
+    .table-custom tr:hover {
+        background-color: rgba(0, 0, 0, 0.02);
+    }
+
+    .table-link-wrapper {
+        display: block;
+        text-decoration: none;
+        color: inherit;
+        transition: transform 0.2s, box-shadow 0.2s;
+        border-radius: 15px;
+    }
+
+    .table-link-wrapper:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
     }
 
     .highlight-row {
@@ -230,7 +261,8 @@
         <div class="row align-items-start">
             <div class="col-md-6">
                 <div class="ratio ratio-16x9 shadow rounded-3 overflow-hidden">
-                    <iframe class="howItWorksiFrame" src="https://www.youtube.com/embed/DNizF1JkgqA" title="YouTube video player" frameborder="0"
+                    <iframe class="howItWorksiFrame" src="https://www.youtube.com/embed/DNizF1JkgqA"
+                        title="YouTube video player" frameborder="0"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                         referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                 </div>
@@ -280,47 +312,52 @@
     <section class="mb-5">
         <h3 class="text-weight-bold mb-4">The Cost Reality</h3>
         <div class="table-responsive">
-            <table class="table-custom">
-                <thead>
-                    <tr>
-                        <th>Platform</th>
-                        <th>1-Month Post</th>
-                        <th>Featured</th>
-                        <th>Membership</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Physiotherapy Job Board (Member)</td>
-                        <td>$300–$600</td>
-                        <td>$125</td>
-                        <td>$238–$297/year</td>
-                    </tr>
-                    <tr>
-                        <td>Physiotherapy Job Board (Non-Member)</td>
-                        <td>$600–$1200</td>
-                        <td>$150</td>
-                        <td>Required</td>
-                    </tr>
-                    <tr>
-                        <td>Physiotherapy Divisional Job Board</td>
-                        <td>$100–$1025</td>
-                        <td>Included via eBlasts</td>
-                        <td>Mandatory</td>
-                    </tr>
+            <a href="https://physiotherapy.ca/app/uploads/2026/01/CPA-Media-Kit-2026-EN.pdf" target="_blank"
+                class="table-link-wrapper">
+                <table class="table-custom">
+                    <thead>
+                        <tr>
+                            <th style="width: 28%;">Platform</th>
+                            <th class="text-center">1-Month Post</th>
+                            <th class="text-center">Featured</th>
+                            <th class="text-center">Membership</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Physiotherapy Job Board (Member)</td>
+                            <td class="text-center">$300–$600</td>
+                            <td class="text-center">$125</td>
+                            <td class="text-center">$238–$297/year</td>
+                        </tr>
+                        <tr>
+                            <td>Physiotherapy Job Board (Non-Member)</td>
+                            <td class="text-center">$600–$1200</td>
+                            <td class="text-center">$150</td>
+                            <td class="text-center">Required</td>
+                        </tr>
+                        <tr>
+                            <td>Physiotherapy Divisional Job Board</td>
+                            <td class="text-center">$100–$1025</td>
+                            <td class="text-center">Included via eBlasts</td>
+                            <td class="text-center">Mandatory</td>
+                        </tr>
 
-                    <tr>
-                        <td>Staffy (<i>Case Study Coming Soon!</i>)</td>
-                    </tr>
-                    <tr class="highlight-row" style="background-color: #d1f7e8;">
-                        <td>Traveling Therapist</td>
-                        <td>Free for a 2 weeks post - only pay a small fee when you complete a hire.</td>
-                        <td>All postings are featured the same.</td>
-                        <td>Free to sign up. Forever!</td>
-                    </tr>
-                </tbody>
-            </table>
+                        <tr>
+                            <td colspan="4">Staffy (<i>Case Study Coming Soon!</i>)</td>
+                        </tr>
+                        <tr class="highlight-row" style="background-color: #d1f7e8;">
+                            <td>Traveling Therapist</td>
+                            <td>Free for a 2 weeks post - only pay a small fee when you complete a hire.</td>
+                            <td class="text-center">All postings are featured the same.</td>
+                            <td class="text-center">Free to sign up. Forever!</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </a>
+            <p class="text-muted small mb-4"><em>Click in the chart for more information</em></p><br>
         </div>
+
         <p class="fs-5 mt-3">
             <strong>The Core Issue:</strong> If you don’t pay extra to be featured, your role quickly gets buried.
             Listings are mostly sorted by recency — not urgency — meaning short-term roles lose visibility within weeks.
@@ -330,7 +367,7 @@
     <!-- Section 4 -->
     <section class="mb-5 py-5">
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <h2 class="text-weight-bold mb-4" style="color: #198754;">General Job Boards (Indeed, Kijiji)</h2>
                 <div class="table-responsive">
                     <table class="table-custom">
@@ -356,53 +393,6 @@
                             <tr>
                                 <td>Applicant management tools</td>
                                 <td>Visibility ≠ outcomes</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <h2 class="text-weight-bold mb-4" style="color: #198754;">Job Board vs. The Traveling Therapist</h2>
-                <div class="table-responsive">
-                    <table class="table-custom">
-                        <thead>
-                            <tr>
-                                <th>Hiring Need</th>
-                                <th>Job Boards</th>
-                                <th class="ttt-col-highlight text-center" style="width: 30%;">
-                                    <img src="/media/images/TTT_LOGO.png" alt="TTT Logo" style="height: 40px;">
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Short-term coverage</td>
-                                <td><span class="material-icons text-danger me-1"
-                                        style="vertical-align: middle; font-size: 1.2rem;">cancel</span> Not optimized
-                                </td>
-                                <td><span class="material-icons checklist-icon"
-                                        style="vertical-align: middle; font-size: 1.2rem;">check_circle</span>
-                                    Purpose-built</td>
-                            </tr>
-                            <tr>
-                                <td>Pay structure</td>
-                                <td>Pay per post / click</td>
-                                <td>Pay for coverage</td>
-                            </tr>
-                            <tr>
-                                <td>Speed to fill</td>
-                                <td>Weeks–months</td>
-                                <td>Days</td>
-                            </tr>
-                            <tr>
-                                <td>Admin workload</td>
-                                <td>High</td>
-                                <td>Low</td>
-                            </tr>
-                            <tr>
-                                <td>Web experience</td>
-                                <td>Often poor - Cluttered</td>
-                                <td>Designed for Ease</td>
                             </tr>
                         </tbody>
                     </table>
@@ -452,19 +442,70 @@
 
     <!-- Section 6 -->
     <section class="mb-5 py-5 bg-light rounded-4 px-4">
-        <h2 class="text-weight-bold text-center mb-4">How The Traveling Therapist Works</h2>
-        <div class="visual-flow">
-            <div class="flow-step">Post Coverage Need</div>
-            <span class="material-icons flow-arrow">arrow_forward</span>
-            <div class="flow-step">Match With Available Therapists</div>
-            <span class="material-icons flow-arrow">arrow_forward</span>
-            <div class="flow-step">Confirm Dates</div>
-            <span class="material-icons flow-arrow">arrow_forward</span>
-            <div class="flow-step">Care Continues</div>
-        </div>
-        <p class="text-center fs-4 text-weight-bold mt-4">No bidding for visibility. No reposting. No waiting.</p>
-        <div class="text-center mt-4">
-            <a href="{% url 'how-it-works' %}" class="fs-4 text-weight-bold text-dark">Learn More</a>
+        <div class="row gx-lg-5 align-items-start">
+            <div class="col-lg-6 border-end-lg">
+                <h2 class="text-weight-bold text-center mb-5">How The Traveling Therapist Works</h2>
+                <div class="d-flex flex-column align-items-center gap-3 my-4">
+                    <div class="flow-step shadow-sm">Post Coverage Need</div>
+                    <span class="material-icons flow-arrow">arrow_downward</span>
+                    <div class="flow-step shadow-sm">Match With Available Therapists</div>
+                    <span class="material-icons flow-arrow">arrow_downward</span>
+                    <div class="flow-step shadow-sm">Confirm Dates</div>
+                    <span class="material-icons flow-arrow">arrow_downward</span>
+                    <div class="flow-step shadow-sm">Care Continues</div>
+                </div>
+                <p class="text-center fs-4 text-weight-bold mt-5">No bidding for visibility. No reposting. No waiting.</p>
+                <div class="text-center mt-4">
+                    <a href="{% url 'how-it-works' %}" class="fs-4 text-weight-bold text-dark">Learn More</a>
+                </div>
+            </div>
+            <div class="col-lg-6 mt-5 mt-lg-0">
+                <h2 class="text-weight-bold mb-5 text-center text-lg-start" style="color: #198754;">Job Board vs. The Traveling Therapist</h2>
+                <div class="table-responsive">
+                    <table class="table-custom">
+                        <thead>
+                            <tr>
+                                <th>Hiring Need</th>
+                                <th>Job Boards</th>
+                                <th class="ttt-col-highlight text-center" style="width: 30%;">
+                                    <img src="/media/images/TTT_LOGO.png" alt="TTT Logo" style="height: 40px;">
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Short-term coverage</td>
+                                <td><span class="material-icons text-danger me-1"
+                                        style="vertical-align: middle; font-size: 1.2rem;">cancel</span> Not optimized
+                                </td>
+                                <td><span class="material-icons checklist-icon"
+                                        style="vertical-align: middle; font-size: 1.2rem;">check_circle</span>
+                                    Purpose-built</td>
+                            </tr>
+                            <tr>
+                                <td>Pay structure</td>
+                                <td>Pay per post / click</td>
+                                <td>Pay for coverage</td>
+                            </tr>
+                            <tr>
+                                <td>Speed to fill</td>
+                                <td>Weeks–months</td>
+                                <td>Days</td>
+                            </tr>
+                            <tr>
+                                <td>Admin workload</td>
+                                <td>High</td>
+                                <td>Low</td>
+                            </tr>
+                            <tr>
+                                <td>Web experience</td>
+                                <td>Often poor - Cluttered</td>
+                                <td>Designed for Ease</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </section>
 
