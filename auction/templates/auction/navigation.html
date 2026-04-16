@@ -25,7 +25,7 @@
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle text-weight-normal" href="#" id="navbarDropdown" role="button"
-                        data-bs-toggle="dropdown" aria-expanded="false">Hiring Guides</a>
+                        data-bs-toggle="dropdown" aria-expanded="false">Hire Clinicians Now</a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <li class="nav-item">
                             <a class="nav-link text-weight-normal {% if path == 'profile' %}active{% endif %}"
@@ -42,12 +42,8 @@
                         <li class="nav-item">
                             <a class="nav-link text-weight-normal {% if path == 'LTC-guide' %}active{% endif %}"
                                 href="{% url 'LTC-guide' %}">Long-Term Care Hiring Guide</a>
-                            <a class="nav-link text-weight-normal" href="{% url 'hiring-guide-better-way' %}">Non
+                            <a class="nav-link text-weight-normal" href="{% url 'non-traditional-hiring' %}">Non
                                 Traditional Healthcare Facilities</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-weight-normal {% if path == 'job-boards' %}active{% endif %}"
-                                href="{% url 'job-boards' %}">Job Boards Guide</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-weight-normal {% if path == 'private-clinic-hiring-guide' %}active{% endif %}"
@@ -57,19 +53,23 @@
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle text-weight-normal" href="#" id="navbarDropdown" role="button"
-                        data-bs-toggle="dropdown" aria-expanded="false">I'm Hiring</a>
+                        data-bs-toggle="dropdown" aria-expanded="false">I'm Hiring With</a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <li class="nav-item">
-                            <a class="nav-link text-weight-normal {% if path == 'profile' %}active{% endif %}"
-                                href="{% url 'direct-employer-recruitment' %}">Hiring With Direct Recruitment</a>
+                            <a class="nav-link text-weight-normal {% if path == 'job-boards' %}active{% endif %}"
+                                href="{% url 'job-boards' %}">Job Boards</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-weight-normal {% if path == 'profile' %}active{% endif %}"
-                                href="{% url 'headhunter_recruitment' %}">Hiring With A Headhunter</a>
+                                href="{% url 'direct-employer-recruitment' %}">Direct Recruitment</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-weight-normal {% if path == 'profile' %}active{% endif %}"
-                                href="{% url 'hiring-with-the-traveling-therapist' %}">Hiring with the Traveling
+                                href="{% url 'headhunter_recruitment' %}">A Headhunter</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-weight-normal {% if path == 'profile' %}active{% endif %}"
+                                href="{% url 'hiring-with-the-traveling-therapist' %}">The Traveling
                                 Therapist</a>
                         </li>
                     </ul>
