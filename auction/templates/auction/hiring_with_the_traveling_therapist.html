@@ -174,34 +174,43 @@
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <div
-                                    class="d-flex align-items-center p-3 bg-white rounded-3 shadow-sm border-start border-danger border-4 hover-lift">
-                                    <span class="material-icons text-danger me-3">dashboard</span>
-                                    <span class="fw-bold">Public job boards</span>
-                                </div>
+                                <a href="{% url 'job-boards' %}" class="text-decoration-none h-100 d-block">
+                                    <div
+                                        class="d-flex align-items-center p-3 bg-white rounded-3 shadow-sm border-start border-danger border-4 hover-lift h-100">
+                                        <span class="material-icons text-danger me-3">dashboard</span>
+                                        <span class="fw-bold text-dark-colour">Public job boards</span>
+                                    </div>
+                                </a>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <div
-                                    class="d-flex align-items-center p-3 bg-white rounded-3 shadow-sm border-start border-danger border-4 hover-lift">
-                                    <span class="material-icons text-danger me-3">person_search</span>
-                                    <span class="fw-bold">Recruiters</span>
-                                </div>
+                                <a href="{% url 'headhunter_recruitment' %}" class="text-decoration-none h-100 d-block">
+                                    <div
+                                        class="d-flex align-items-center p-3 bg-white rounded-3 shadow-sm border-start border-danger border-4 hover-lift h-100">
+                                        <span class="material-icons text-danger me-3">person_search</span>
+                                        <span class="fw-bold text-dark-colour">Recruiters</span>
+                                    </div>
+                                </a>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <div
-                                    class="d-flex align-items-center p-3 bg-white rounded-3 shadow-sm border-start border-danger border-4 hover-lift">
-                                    <span class="material-icons text-danger me-3">business</span>
-                                    <span class="fw-bold">Staffing agencies</span>
-                                </div>
+                                <a href="{% url 'healthcare-facility-guide' %}#StaffingAgency" class="text-decoration-none h-100 d-block">
+                                    <div
+                                        class="d-flex align-items-center p-3 bg-white rounded-3 shadow-sm border-start border-danger border-4 hover-lift h-100">
+                                        <span class="material-icons text-danger me-3">business</span>
+                                        <span class="fw-bold text-dark-colour">Staffing agencies</span>
+                                    </div>
+                                </a>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <div
-                                    class="d-flex align-items-center p-3 bg-white rounded-3 shadow-sm border-start border-danger border-4 hover-lift">
-                                    <span class="material-icons text-danger me-3">campaign</span>
-                                    <span class="fw-bold">Internal referrals and outreach</span>
-                                </div>
+                                <a href="{% url 'direct-employer-recruitment' %}" class="text-decoration-none h-100 d-block">
+                                    <div
+                                        class="d-flex align-items-center p-3 bg-white rounded-3 shadow-sm border-start border-danger border-4 hover-lift h-100">
+                                        <span class="material-icons text-danger me-3">campaign</span>
+                                        <span class="fw-bold text-dark-colour">Internal referrals and outreach</span>
+                                    </div>
+                                </a>
                             </div>
                         </div>
+                        <p class="text-muted small text-center mt-3"><em>Click a card to learn more</em></p>
                     </div>
 
                     <!-- Bottom Section: Tradeoffs -->

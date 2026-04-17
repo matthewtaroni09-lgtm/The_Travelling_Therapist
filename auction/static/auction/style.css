@@ -1199,12 +1199,41 @@ input[type=number] {
     border-radius: 6px;
     padding: 0.6rem 1rem;
     width: 100%;
-    font-family: Futura-Normal, sans-serif;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background-color 0.2s;
+    font-family: Futura-Medium, sans-serif;
+    transition: all 0.3s ease;
 }
 
 .newsletter-btn:hover {
-    background-color: var(--secondary-colour);
+    background-color: #ffffff;
+    transform: translateY(-2px);
+}
+
+/* Newsletter Overlay */
+.newsletter-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(100, 100, 100, 0.85);
+    /* Solid grey with transparency */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    border-radius: 10px;
+    cursor: not-allowed;
+    backdrop-filter: blur(0.5px);
+    /* Optional: add a slight blur to emphasize it's blocked */
+}
+
+.overlay-text {
+    color: #ffffff;
+    font-size: 1.8rem;
+    font-weight: bold;
+    font-family: Futura-Bold, sans-serif;
+    text-transform: uppercase;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    padding: 20px;
 }
