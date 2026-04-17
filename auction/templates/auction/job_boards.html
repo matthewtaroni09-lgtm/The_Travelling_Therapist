@@ -364,10 +364,11 @@
         </p>
     </section>
 
-    <!-- Section 4 -->
+    <!-- Section 4 & 4.5 Combined -->
     <section class="mb-5 py-5">
-        <div class="row">
-            <div class="col-md-12">
+        <div class="row gx-lg-5">
+            <!-- Section 4 (Table) -->
+            <div class="col-lg-6 mb-5 mb-lg-0">
                 <h2 class="text-weight-bold mb-4" style="color: #198754;">General Job Boards (Indeed, Kijiji)</h2>
                 <div class="table-responsive">
                     <table class="table-custom">
@@ -398,27 +399,20 @@
                     </table>
                 </div>
             </div>
-        </div>
 
-        <div class="row mt-5 align-items-center">
-            <div class="col-md-6">
-                <img src="/media/images/job_boards2.png"
-                    alt="Infographic showing the problem of too many applicants, endless screening, and hard to find the right match"
-                    class="rounded-4 shadow-sm mb-4 mb-md-0" style="width: 400px; max-width: 100%; height: auto;">
-            </div>
-            <div class="col-md-6">
-                <h3 class="text-weight-bold">Visibility ≠ Hiring</h3>
-                <p class="fs-5">
-                    Employers pay <strong>$5+/day ($150+/month)</strong> just to stay visible — with no guarantee of
-                    resumes, interviews,
-                    or offers. You’re paying for attention, not coverage .
-                </p>
-                <div class="pill-danger text-center mt-4" style="border-radius: 20px;">
-                    <h2 class="text-weight-bold">The Structural Hole Job Boards Can’t Fix</h2>
-                    <p class="fs-4 mb-0">Job boards are designed to <strong>market jobs</strong>.<br>Short-term & long
-                        term
-                        healthcare hiring
-                        requires <strong>deploying people</strong></p>
+            <!-- Section 4.5 (Insights) -->
+            <div class="col-lg-6">
+                <div class="bg-light rounded-4 p-4 p-md-5 h-100 d-flex flex-column justify-content-center">
+                    <h3 class="text-weight-bold h4 mb-3">Visibility ≠ Hiring</h3>
+                    <p class="fs-5 mb-4">
+                        Employers pay <strong>$5+/day ($150+/month)</strong> just to stay visible — with no guarantee of
+                        resumes, interviews, or offers. You’re paying for attention, not coverage.
+                    </p>
+                    <div class="pill-danger text-center mt-auto" style="border-radius: 20px; padding: 2rem;">
+                        <h4 class="text-weight-bold h5">The Structural Hole Job Boards Can’t Fix</h4>
+                        <p class="fs-5 mb-0">Job boards are designed to <strong>market jobs</strong>.<br>Short-term & long term
+                            healthcare hiring requires <strong>deploying people</strong></p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -454,13 +448,14 @@
                     <span class="material-icons flow-arrow">arrow_downward</span>
                     <div class="flow-step shadow-sm">Care Continues</div>
                 </div>
-                <p class="text-center fs-4 text-weight-bold mt-5">No bidding for visibility. No reposting. No waiting.</p>
-                <div class="text-center mt-4">
-                    <a href="{% url 'how-it-works' %}" class="fs-4 text-weight-bold text-dark">Learn More</a>
+                <div class="survey-cta-box p-4 text-center mt-5 shadow-sm border-0">
+                    <p class="fs-4 text-weight-bold mb-3 text-dark-colour">No bidding for visibility. No reposting. No waiting.</p>
+                    <a href="{% url 'how-it-works' %}" class="btn survey-cta-button btn-lg px-5">Learn More</a>
                 </div>
             </div>
             <div class="col-lg-6 mt-5 mt-lg-0">
-                <h2 class="text-weight-bold mb-5 text-center text-lg-start" style="color: #198754;">Job Board vs. The Traveling Therapist</h2>
+                <h2 class="text-weight-bold mb-5 text-center text-lg-start" style="color: #198754;">Job Board vs. The
+                    Traveling Therapist</h2>
                 <div class="table-responsive">
                     <table class="table-custom">
                         <thead>
