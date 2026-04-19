@@ -24,7 +24,7 @@
                     {% elif user.account.get_split_user_type == 'Clinic' %}
                     <a href="{% url 'create-auction' %}" class="btn btn-primary btn-lg">Fill a Shift Fast</a>
                     {% else %}
-                    <a href="{% url 'healthcare-facility-guide' %}" class="btn btn-primary btn-lg"
+                    <a href="{% url 'clinician-guide' %}" class="btn btn-primary btn-lg"
                         title="Only healthcare facilities can create listings.">Fill a Shift Fast</a>
                     {% endif %}
                 </div>
