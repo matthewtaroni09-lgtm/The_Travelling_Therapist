@@ -19,7 +19,14 @@
                     needs.
                 </p>
                 <div class="text-center text-lg-start">
+                    {% if not user.is_authenticated %}
+                    <a href="{% url 'register' %}" class="btn btn-primary btn-lg">Fill a Shift Fast</a>
+                    {% elif user.account.get_split_user_type == 'Clinic' %}
                     <a href="{% url 'create-auction' %}" class="btn btn-primary btn-lg">Fill a Shift Fast</a>
+                    {% else %}
+                    <a href="{% url 'healthcare-facility-guide' %}" class="btn btn-primary btn-lg"
+                        title="Only healthcare facilities can create listings.">Fill a Shift Fast</a>
+                    {% endif %}
                 </div>
             </div>
             <div class="col-lg-5 text-center mt-4 mt-lg-0">
@@ -241,7 +248,7 @@
                             boards</p>
 
                         <div class="status-pill pill-info"><span class="material-icons pill-icon">info</span>
-                            Hypothetical need for HCPs</div>
+                            Need</div>
                         <p>On site nursing coverage for student illness, injuries, conditions, sports events, and
                             allergic reactions.</p>
 
@@ -294,7 +301,7 @@
                             complexes</p>
 
                         <div class="status-pill pill-info"><span class="material-icons pill-icon">info</span>
-                            Hypothetical need for HCPs</div>
+                            Need</div>
                         <p>
                             First aid coverage for:<br>
                             - Youth programs<br>
@@ -346,7 +353,7 @@
                             programs</p>
 
                         <div class="status-pill pill-info"><span class="material-icons pill-icon">info</span>
-                            Hypothetical need for HCPs</div>
+                            Need</div>
                         <p>
                             On-site or on-call nurses for:<br>
                             - Daily care<br>
@@ -398,7 +405,7 @@
                             with wellness programs</p>
 
                         <div class="status-pill pill-info"><span class="material-icons pill-icon">info</span>
-                            Hypothetical need for HCPs</div>
+                            Need</div>
                         <p>
                             Part-time or casual clinicians for:<br>
                             - Employee wellness checks<br>
@@ -445,7 +452,7 @@
                         <p class="mb-3"><strong>Facility type:</strong> Post-secondary institutions, campus clinics</p>
 
                         <div class="status-pill pill-info"><span class="material-icons pill-icon">info</span>
-                            Hypothetical need for HCPs</div>
+                            Need</div>
                         <p>Routine care, mental health crises, flu season, and vaccination clinics.</p>
 
                         <div class="status-pill pill-danger"><span
@@ -482,7 +489,7 @@
                             centers</p>
 
                         <div class="status-pill pill-info"><span class="material-icons pill-icon">info</span>
-                            Hypothetical need for HCPs</div>
+                            Need</div>
                         <p>
                             Casual and temporary staff to cover:<br>
                             - Shift gaps<br>
@@ -528,7 +535,7 @@
                         <p class="mb-3"><strong>Facility type:</strong> Correctional facilities, juvenile detention</p>
 
                         <div class="status-pill pill-info"><span class="material-icons pill-icon">info</span>
-                            Hypothetical need for HCPs</div>
+                            Need</div>
                         <p>Injuries, chronic conditions, and mental health crises.</p>
 
                         <div class="status-pill pill-danger"><span
@@ -564,7 +571,7 @@
                         <p class="mb-3"><strong>Facility type:</strong> Base clinics, training centers</p>
 
                         <div class="status-pill pill-info"><span class="material-icons pill-icon">info</span>
-                            Hypothetical need for HCPs</div>
+                            Need</div>
                         <p>Routine care, training injuries, vaccinations, and seasonal illness.</p>
 
                         <div class="status-pill pill-danger"><span
