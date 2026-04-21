@@ -113,6 +113,10 @@
         border-bottom: 2px solid var(--ttt-success);
     }
 
+    .comparison-table tbody tr:hover {
+        background-color: rgba(0, 0, 0, 0.02);
+    }
+
     /* Utility */
     .section-dark {
         background-color: var(--dark-teal);
@@ -166,7 +170,8 @@
                 <p class="fs-5 mb-5 text-text-dark">
                     Traditional staffing models hold clinicians back—unpredictable schedules, wasted commutes, and pay
                     structures that never seem to work in your favour. The Traveling Therapist puts the power back in
-                    your hands. Access temporary shifts across Canada, choose the work you want, and set the rate you
+                    your hands. Access contract work across Canada that can transition to full time afterwards. Choose
+                    the work you want, and set the rate you
                     deserve—all in one clinician-first platform.
                 </p>
                 <div class="text-center text-lg-start">
@@ -197,7 +202,8 @@
                         <p class="fs-6">Alex was scheduled to see nine patients.</p>
                         <p class="fs-6">Four late cancellations and one no-show meant only four were treated</p>
                         <p class="fs-6">Alex was paid only for the clients actually seen, despite remaining at the
-                            clinic all day. Unfortunately, his clinic admin staff rarely enforces the cancellation
+                            clinic all day.<br><br>Unfortunately, his clinic admin staff rarely enforces the
+                            cancellation
                             policy - despite being assured by the clinic owner when he was hired that “the policy is
                             strictly enforced”. Empty promises - just like his last clinic.</p>
                     </div>
@@ -208,10 +214,10 @@
                                 class="material-icons align-middle me-2">search_off</span>Trying to Fix the Gaps</h3>
                         <p class="fw-bold mb-3">To stabilize income, Alex tries everything:</p>
                         <ul class="list-unstyled fs-6 text-muted">
-                            <li class="mb-2">• Applies to postings that never respond</li>
-                            <li class="mb-2">• Emails clinics that say “we’ll keep you on file”</li>
-                            <li class="mb-2">• Talks to recruiters who promise one rate… then never deliver</li>
-                            <li class="mb-2">• Accepts short contracts where agency cuts eat into pay</li>
+                            <li class="mb-2">1. Applies to postings that never respond</li>
+                            <li class="mb-2">2. Emails clinics that say “we’ll keep you on file”</li>
+                            <li class="mb-2">3. Talks to recruiters who promise one rate… then never deliver</li>
+                            <li class="mb-2">4. Accepts short contracts where agency cuts eat into pay</li>
                         </ul>
                         <div class="mt-auto pt-4 border-top">
                             <p class="mb-2">Each option technically offers work.</p>
@@ -249,7 +255,8 @@
     <section class="row mb-5 py-4">
         <div class="col-12">
             <div class="p-5 rounded survey-cta-box shadow-sm text-center">
-                <h2 class="fw-bold mb-4 text-dark-teal">Clinicians across Canada feel the same.</h2>
+                <h2 class="display-6 fw-bold mb-4 text-dark-teal">The Dissatisfaction Gap</h2>
+                <h3 class="h4 mb-4 fw-bold">Clinicians across Canada feel the same.</h3>
                 <p class="fs-4 mb-5 text-muted">Underpaid. Undervalued. Overbooked one day and empty the next.</p>
 
                 <div class="col-lg-8 mx-auto mb-5">
@@ -269,56 +276,65 @@
 
     <!-- SECTION 3 — You’re Not Alone -->
     <section class="py-5">
-        <div class="container text-center">
-            <h2 class="display-6 fw-bold mb-4 text-dark-teal">There are many ways clinicians try to find work.</h2>
-            <p class="fs-5 mb-5 text-dark-colour">Each comes with tradeoffs—and most were <strong>not designed with
-                    clinicians in mind.</strong></p>
+        <div class="container">
+            <div class="row align-items-center">
+                <!-- Left Column -->
+                <div class="col-lg-7 text-center text-lg-start pe-lg-5">
+                    <h1 class="display-6 fw-bold mb-4 text-dark-teal">You’re Not Alone</h1>
+                    <h3 class="h4 mb-4 fw-bold">There are many ways clinicians try to find work. </h3>
+                    <p class="fs-5 mb-5 text-dark-colour">Each comes with
+                        tradeoffs—and most were <strong>not designed with
+                            clinicians in mind.</strong></p>
 
-            <div class="row g-4 mb-5">
-                <div class="col-md-3">
-                    <a href="{% url 'job-boards' %}" class="text-decoration-none">
-                        <div class="card p-4 h-100 hover-lift shadow-sm border-light">
-                            <span class="material-icons display-4 mb-3 text-success">dashboard</span>
-                            <h4 class="h5 fw-bold text-dark-teal">Job Boards</h4>
+                    <div class="row g-4 mb-5">
+                        <div class="col-md-6">
+                            <a href="{% url 'job-boards' %}" class="text-decoration-none">
+                                <div class="card p-4 h-100 hover-lift shadow-sm border-light text-center">
+                                    <span class="material-icons display-4 mb-3 text-success">dashboard</span>
+                                    <h4 class="h5 fw-bold text-dark-teal">Job Boards</h4>
+                                </div>
+                            </a>
                         </div>
-                    </a>
-                </div>
-                <div class="col-md-3">
-                    <a href="{% url 'headhunter_recruitment' %}" class="text-decoration-none">
-                        <div class="card p-4 h-100 hover-lift shadow-sm border-light">
-                            <span class="material-icons display-4 mb-3 text-success">person_search</span>
-                            <h4 class="h5 fw-bold text-dark-teal">Recruiters</h4>
+                        <div class="col-md-6">
+                            <a href="{% url 'headhunter_recruitment' %}" class="text-decoration-none">
+                                <div class="card p-4 h-100 hover-lift shadow-sm border-light text-center">
+                                    <span class="material-icons display-4 mb-3 text-success">person_search</span>
+                                    <h4 class="h5 fw-bold text-dark-teal">Recruiters</h4>
+                                </div>
+                            </a>
                         </div>
-                    </a>
-                </div>
-                <div class="col-md-3">
-                    <a href="{% url 'healthcare-facility-guide' %}#StaffingAgency" class="text-decoration-none">
-                        <div class="card p-4 h-100 hover-lift shadow-sm border-light">
-                            <span class="material-icons display-4 mb-3 text-success">business</span>
-                            <h4 class="h5 fw-bold text-dark-teal">Agencies</h4>
+                        <div class="col-md-6">
+                            <a href="{% url 'healthcare-facility-guide' %}#StaffingAgency" class="text-decoration-none">
+                                <div class="card p-4 h-100 hover-lift shadow-sm border-light text-center">
+                                    <span class="material-icons display-4 mb-3 text-success">business</span>
+                                    <h4 class="h5 fw-bold text-dark-teal">Agencies</h4>
+                                </div>
+                            </a>
                         </div>
-                    </a>
-                </div>
-                <div class="col-md-3">
-                    <a href="{% url 'direct-employer-recruitment' %}" class="text-decoration-none">
-                        <div class="card p-4 h-100 hover-lift shadow-sm border-light">
-                            <span class="material-icons display-4 mb-3 text-success">campaign</span>
-                            <h4 class="h5 fw-bold text-dark-teal">Cold Outreach</h4>
+                        <div class="col-md-6">
+                            <a href="{% url 'direct-employer-recruitment' %}" class="text-decoration-none">
+                                <div class="card p-4 h-100 hover-lift shadow-sm border-light text-center">
+                                    <span class="material-icons display-4 mb-3 text-success">campaign</span>
+                                    <h4 class="h5 fw-bold text-dark-teal">Cold Outreach</h4>
+                                </div>
+                            </a>
                         </div>
-                    </a>
+                    </div>
                 </div>
-            </div>
 
-            <div class="col-lg-10 mx-auto">
-                <div class="p-5 rounded survey-cta-banner shadow-sm border border-light bg-light">
-                    <span class="material-icons display-3 mb-2 text-success">auto_stories</span>
-                    <h3 class="h4 fw-bold mb-4 text-dark-teal">We break them all down in our full guide:</h3>
-                    <h2 class="h3 fw-bold mb-4 text-dark-colour">“The Clinician’s Guide to Hiring & Work Models in
-                        Canada”</h2>
-                    <a href="{% url 'clinician-guide' %}" class="btn btn-primary btn-lg px-5 py-3 mb-3 shadow">Read the
-                        Clinician Hiring Guide</a>
-                    <p class="fs-6 text-muted mb-0">Compare pay structures, timelines, flexibility, and hidden costs
-                        across every major hiring path.</p>
+                <!-- Right Column -->
+                <div class="col-lg-5 mt-5 mt-lg-0">
+                    <div class="p-5 rounded survey-cta-banner shadow-sm border border-light bg-light text-center">
+                        <span class="material-icons display-3 mb-2 text-success">auto_stories</span>
+                        <h3 class="h4 fw-bold mb-4 text-dark-teal">We break them all down in our full guide:</h3>
+                        <h2 class="h3 fw-bold mb-4 text-dark-colour">“The Clinician’s Guide to Hiring & Work Models in
+                            Canada”</h2>
+                        <a href="{% url 'clinician-guide' %}"
+                            class="btn btn-primary btn-lg px-5 py-3 mb-3 shadow w-100">Read the
+                            Clinician Hiring Guide</a>
+                        <p class="fs-6 text-muted mb-0">Compare pay structures, timelines, flexibility, and hidden costs
+                            across every major hiring path.</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -327,23 +343,23 @@
     <!-- SECTION 4 — Introducing the Hero: The Traveling Therapist -->
     <section class="bg-light py-5">
         <div class="container py-5">
+            <div class="text-center mb-5">
+                <h2 class="display-6 fw-bold mb-4 text-dark-teal">Introducing your Hero: The Traveling Therapist</h2>
+            </div>
             <div class="row align-items-center mb-5">
-                <div class="col-lg-7">
-                    <h2 class="display-6 fw-bold mb-4">The turning point in Alex’s story.</h2>
+                <div class="col-lg-7 text-start">
+                    <h3 class="h4 mb-4 fw-bold">The turning point in Alex’s story.</h3>
                     <p class="fs-5 mb-4">Tired of uncertainty, Alex created a free profile on The Traveling Therapist.
                     </p>
-                    <p class="fs-5 text-muted">Within days, Alex saw shifts from clinics, LTC homes, and hospitals
+                    <p class="fs-5 text-muted">Within days, Alex saw contract positions from clinics, Long-Term care
+                        homes, and hospitals
                         across Canada—each with <strong>transparent pay, clear expectations, and the freedom to offer
                             your own
                             rate.</strong></p>
                 </div>
-                <div class="col-lg-5">
-                    <div class="p-4 case-study-box">
-                        <h4 class="fw-bold mb-3"><span class="material-icons align-middle me-2">bolt</span>Case Study:
-                            Raj</h4>
-                        <p class="mb-0 fs-5">Raj posted his availability Monday → compared offers Thursday → accepted a
-                            4-week OT contract at +15% pay over his full time position.</p>
-                    </div>
+                <div class="col-lg-5 text-center">
+                    <img src="/media/images/hiring_healthcare_worker_character.png" alt="Alex, a happy clinician"
+                        class="img-fluid" style="max-height: 350px;">
                 </div>
             </div>
 
@@ -360,9 +376,10 @@
                 <div class="col-md-4">
                     <div class="p-4 bg-white benefit-box h-100 shadow-sm">
                         <span class="material-icons display-5 text-success mb-3">map</span>
-                        <p class="fs-6 mb-0"><strong>See active opportunities from multiple healthcare facilities
-                                across Canada,
-                                and choose when, where, and at what rate you work.</strong></p>
+                        <p class="fs-6 mb-0"><strong>See active opportunities</strong> from multiple healthcare
+                            facilities
+                            across Canada,
+                            and choose when, where, and at what rate you work.</p>
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -439,14 +456,25 @@
 
     <!-- FINAL CTA—Take Control of Your Career -->
     <section class="cta-box shadow container">
-        <h2 class="display-5 fw-bold mb-4">Alex finally found work that fits their life—not the other way around. Now
+        <h2 class="display-6 fw-bold mb-4">Alex finally found work that fits their life—not the other way around. Now
             it’s your turn.</h2>
-        <h3 class="h4 mb-5 fw-bold">You’re already in demand. Make the market work for you.</h3>
-        <a href="{% url 'register' %}" class="btn btn-primary btn-lg px-5 py-3 shadow-lg fs-4">Create My Free
+        <h3 class="h5 mb-5 fw-bold">You’re already in demand. Make the market work for you.</h3>
+        <a href="{% url 'register' %}" class="btn btn-primary btn-lg px-5 py-3 shadow-lg fs-5">Create My Free
             Profile</a>
     </section>
 
 </div>
+
+<!-- Case Study Column
+      361 -     <div class="col-lg-5">
+      362 -         <div class="p-4 case-study-box">
+      363 -             <h4 class="fw-bold mb-3"><span class="material-icons align-middle me-2">bolt</span>Case Study:
+      364 -                 Raj</h4>
+      365 -             <p class="mb-0 fs-5">Raj posted his availability Monday → compared offers Thursday → accepted a
+      366 -                 4-week OT contract at +15% pay over his full time position.</p>
+      367 -         </div>
+      368 -     </div>
+      369 -         -->
 
 <script src="{% static 'auction/user_guide_pages.js' %}"></script>
 {% endblock %}
