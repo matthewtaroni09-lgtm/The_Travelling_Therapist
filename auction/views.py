@@ -1132,3 +1132,6 @@ def job_boards(request):
     return render(request, 'auction/job_boards.html', {})
 def private_clinic_hiring_guide(request):
     return render(request, 'auction/private_clinic_hiring_guide.html', {'path': 'private-clinic-hiring-guide'})
+
+def referrals_and_networks(request):
+    return render(request, "auction/referrals_and_networks.html", {})
