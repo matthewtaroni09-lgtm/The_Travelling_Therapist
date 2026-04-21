@@ -1,0 +1,506 @@
+{% extends 'auction/base.html' %}
+{% load static %}
+{% block content %}
+<!-- content -->
+<p id="pageTitle" class="d-none">Referrals_And_Networks</p>
+
+<style>
+    /* 
+     * REFERRALS & NETWORKS PAGE STYLES
+     * Reusing established UI patterns from TTT brand
+     */
+    :root {
+        --dark-teal: #2b4d55;
+        --ttt-success: #198754;
+        --soft-green: #C9FFE5;
+        --off-white: #f8f9fa;
+        --border-color: #E2E8F0;
+    }
+
+    /* Standardized Transitions */
+    .btn,
+    .card,
+    .material-icons,
+    .table-custom tr,
+    .pathway-card {
+        transition: all 0.3s ease !important;
+    }
+
+    /* Refined Borders and Corners */
+    .btn {
+        border-radius: 50px !important;
+    }
+
+    .card,
+    .metric-card {
+        border-radius: 24px !important;
+        border: 1px solid var(--border-color) !important;
+    }
+
+    /* Hover Effects */
+    .btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-primary:hover {
+        background-color: #14804e !important;
+        border-color: #14804e !important;
+    }
+
+    .hover-lift:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08) !important;
+    }
+
+    /* Hero Styling */
+    .hero-title {
+        font-family: Futura-Bold, sans-serif;
+        font-size: 3.5rem;
+        line-height: 1.1;
+    }
+
+    .hero-subhead {
+        font-size: 1.5rem;
+        color: var(--ttt-success);
+        font-weight: bold;
+    }
+
+    /* Story Card Styling */
+    .story-card {
+        position: relative;
+        background: white;
+        padding: 3.5rem 2rem 2rem 2rem;
+        text-align: center;
+        flex: 1;
+        min-height: 220px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .step-number {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        background-color: var(--off-white);
+        color: var(--dark-teal);
+        border: 1px solid var(--border-color);
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.9rem;
+        font-weight: 800;
+    }
+
+    .friction-hint {
+        font-size: 0.8rem;
+        background-color: #FEF3C7;
+        color: #92400E;
+        padding: 6px 14px;
+        border-radius: 50px;
+        margin-top: 1.25rem;
+        display: inline-flex;
+        align-items: center;
+        align-self: center;
+        font-weight: 700;
+        gap: 6px;
+    }
+
+    /* Metric Card Grid Styling */
+    .metric-card {
+        background: white;
+        padding: 2rem;
+        text-align: center;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .metric-label {
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text-muted);
+        margin-bottom: 0.5rem;
+    }
+
+    .metric-value {
+        font-size: 1.75rem;
+        font-weight: 800;
+        color: var(--dark-teal);
+        margin-bottom: 0.5rem;
+    }
+
+    .metric-descriptor {
+        font-size: 0.9rem;
+        color: #718096;
+    }
+
+    /* Table Styling from Job Boards */
+    .table-custom {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        border-radius: 20px;
+        overflow: hidden;
+        border: 1px solid var(--border-color);
+        margin: 2rem 0;
+    }
+
+    .table-custom th {
+        background-color: var(--dark-teal);
+        color: white;
+        padding: 1.25rem;
+        text-align: left;
+        border-right: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .table-custom td {
+        padding: 1.25rem;
+        border-bottom: 1px solid var(--border-color);
+        border-right: 1px solid var(--border-color);
+    }
+
+    .table-custom td:last-child {
+        border-right: none;
+    }
+
+    .table-custom tr:last-child td {
+        border-bottom: none;
+    }
+
+    .table-custom tr:hover {
+        background-color: rgba(0, 0, 0, 0.02);
+    }
+
+    /* Tag Styling */
+    .modern-tag {
+        background-color: var(--soft-green);
+        color: #14804e;
+        padding: 4px 12px;
+        border-radius: 50px;
+        font-size: 0.75rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        display: inline-block;
+        margin-bottom: 1rem;
+    }
+
+    /* Ghost Button Style */
+    .btn-ghost-teal {
+        color: var(--dark-teal) !important;
+        border: 2px solid var(--dark-teal) !important;
+        background-color: transparent !important;
+        border-radius: 50px !important;
+        padding: 12px 35px !important;
+        font-weight: 700 !important;
+        text-decoration: none !important;
+        display: inline-block;
+    }
+
+    .btn-ghost-teal:hover {
+        background-color: var(--dark-teal) !important;
+        color: white !important;
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(43, 77, 85, 0.2);
+    }
+
+    @media (max-width: 991px) {
+        .hero-title {
+            font-size: 2.5rem;
+        }
+    }
+</style>
+
+<div class="container-fluid bg-transparent py-4">
+
+    <!-- 1. HERO SECTION -->
+    <section class="container py-5 mt-4">
+        <div class="row align-items-center">
+            <!-- Text on the Left -->
+            <div class="col-lg-6 mb-5 mb-lg-0">
+                <h1 class="hero-title mb-4 text-dark-teal">The Familiar Path</h1>
+                <p class="hero-subhead mb-4 text-primary-colour">It Usually Starts With a Conversation.</p>
+                <div class="fs-5 text-text-dark">
+                    <p>The Referral: Referrals and personal networks are often the first place clinic owners turn when they need help.</p>
+                    <p>A colleague mentions a therapist they worked with years ago.</p>
+                    <p>A former staff member knows someone “looking for hours.”</p>
+                    <p>A quick message, a hopeful intro — and maybe a solution.</p>
+                    <p>It feels safe. Familiar. And fast.</p>
+                </div>
+            </div>
+            <!-- Image on the Right -->
+            <div class="col-lg-6 text-center">
+                <img src="/media/images/TTT_referrals_and_networks.png"
+                    alt="Illustration of interconnected people nodes representing a network"
+                    class="img-fluid rounded-4 shadow-lg" style="max-height: 600px; width: auto; object-fit: contain;">
+            </div>
+        </div>
+    </section>
+
+    <hr class="my-5 opacity-25">
+
+    <!-- 2. MINI STORY ARC -->
+    <section class="container py-5">
+        <h2 class="text-center fw-bold mb-5 display-6">MINI STORY ARC — How This Path Actually Unfolds</h2>
+        <div class="row g-4">
+            <div class="col-lg col-md-6">
+                <div class="card story-card shadow-sm hover-lift">
+                    <span class="step-number">1</span>
+                    <h4 class="fw-bold mb-3">The Ask</h4>
+                    <p class="small text-muted mb-0">Clinic owners reach out to peers, past staff, or professional
+                        groups.</p>
+                    <div class="friction-hint"><span class="text-warning">⚠</span> Effort required</div>
+                </div>
+            </div>
+            <div class="col-lg col-md-6">
+                <div class="card story-card shadow-sm hover-lift">
+                    <span class="step-number">2</span>
+                    <h4 class="fw-bold mb-3">The Introduction</h4>
+                    <p class="small text-muted mb-0">A name is shared — often without availability, credentials, or
+                        expectations clarified.</p>
+                    <div class="friction-hint"><span class="text-warning">⚠</span> Missing data</div>
+                </div>
+            </div>
+            <div class="col-lg col-md-6">
+                <div class="card story-card shadow-sm hover-lift">
+                    <span class="step-number">3</span>
+                    <h4 class="fw-bold mb-3">The Informal Vetting</h4>
+                    <p class="small text-muted mb-0">Trust is borrowed from the referrer rather than validated directly.
+                    </p>
+                    <div class="friction-hint"><span class="text-warning">⚠</span> Bias risk</div>
+                </div>
+            </div>
+            <div class="col-lg col-md-6">
+                <div class="card story-card shadow-sm hover-lift">
+                    <span class="step-number">4</span>
+                    <h4 class="fw-bold mb-3">The Wait</h4>
+                    <p class="small text-muted mb-0">Schedules don’t align. The candidate is “interested but unsure.”
+                    </p>
+                    <div class="friction-hint"><span class="text-warning">⚠</span> Slow progress</div>
+                </div>
+            </div>
+            <div class="col-lg col-md-6">
+                <div class="card story-card shadow-sm hover-lift">
+                    <span class="step-number">5</span>
+                    <h4 class="fw-bold mb-3">The Drop-Off</h4>
+                    <p class="small text-muted mb-0">The lead goes cold — or accepts a different offer first.</p>
+                    <div class="friction-hint"><span class="text-warning">⚠</span> Outcome failure</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <hr class="my-5 opacity-25">
+
+    <!-- 3. REALITY CHECK -->
+    <section class="container py-5">
+        <h2 class="text-center fw-bold mb-5 display-6">REALITY CHECK — Where Friction Creeps In</h2>
+        <div class="row">
+            <div class="col-lg-6 mb-4">
+                <div class="p-5 bg-white rounded-4 border h-100">
+                    <h3 class="fw-bold mb-4" style="color: var(--ttt-success);">What Clinic Owners Expect</h3>
+                    <ul class="list-unstyled fs-5">
+                        <li class="mb-3 d-flex align-items-center"><span
+                                class="material-icons text-success me-3">speed</span> Faster hiring</li>
+                        <li class="mb-3 d-flex align-items-center"><span
+                                class="material-icons text-success me-3">verified_user</span> Built-in trust</li>
+                        <li class="mb-3 d-flex align-items-center"><span
+                                class="material-icons text-success me-3">payments</span> Lower cost</li>
+                        <li class="mb-0 d-flex align-items-center"><span
+                                class="material-icons text-success me-3">groups</span> Cultural fit</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-6 mb-4">
+                <div class="p-5 bg-white rounded-4 border h-100">
+                    <h3 class="fw-bold mb-4 text-danger">What Often Happens</h3>
+                    <ul class="list-unstyled fs-5">
+                        <li class="mb-3 d-flex align-items-center"><span
+                                class="material-icons text-danger me-3">block</span> Limited candidate pool</li>
+                        <li class="mb-3 d-flex align-items-center"><span
+                                class="material-icons text-danger me-3">visibility_off</span> No pricing or availability
+                            transparency</li>
+                        <li class="mb-3 d-flex align-items-center"><span
+                                class="material-icons text-danger me-3">forum</span> Awkward follow-ups</li>
+                        <li class="mb-0 d-flex align-items-center"><span
+                                class="material-icons text-danger me-3">error_outline</span> Hiring decisions based on
+                            incomplete info</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <hr class="my-5 opacity-25">
+
+    <!-- 4. Referrals & Networks: Key Insights -->
+    <section class="container py-5">
+        <h2 class="text-center fw-bold mb-5 display-6">Referrals & Networks: Key Insights</h2>
+
+        <div class="table-responsive">
+            <table class="table-custom shadow-sm">
+                <thead>
+                    <tr>
+                        <th style="width: 50%;">
+                            <div class="d-flex align-items-center">
+                                <span class="material-icons me-2 text-success">check_circle</span>
+                                <span class="fw-bold" style="color: white !important;">Pros</span>
+                            </div>
+                        </th>
+                        <th style="width: 50%;">
+                            <div class="d-flex align-items-center">
+                                <span class="text-danger me-2 fs-4 fw-bold" style="line-height: 1;">☒</span>
+                                <span class="fw-bold" style="color: white !important;">Cons</span>
+                            </div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white">
+                    <tr>
+                        <td class="fs-5 fw-bold" style="color: var(--ttt-success);">No platform fees</td>
+                        <td class="fs-5 text-danger fw-bold">Slow timelines and Very limited reach</td>
+                    </tr>
+                    <tr>
+                        <td class="fs-5">High initial trust (existing relationships)</td>
+                        <td class="fs-5">Informal or inconsistent vetting</td>
+                    </tr>
+                    <tr>
+                        <td class="fs-5">Strong cultural familiarity</td>
+                        <td class="fs-5">No redundancy if the hire falls through</td>
+                    </tr>
+                    <tr>
+                        <td class="fs-5">Works well for rare, senior, or niche roles</td>
+                        <td class="fs-5">Candidate drop-off risk</td>
+                    </tr>
+                    <tr>
+                        <td class="fs-5">Effective for long-term hires when timing aligns</td>
+                        <td class="fs-5">Hidden opportunity cost when roles stay unfilled</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <hr class="my-5 opacity-25">
+
+    <!-- 5. COST & TIME REALITY -->
+    <section class="container py-5">
+        <h2 class="text-center fw-bold mb-5 display-6">COST & TIME REALITY — The Hidden Cost of "Free"</h2>
+        <div class="row g-4">
+            <div class="col-lg-3 col-md-6">
+                <div class="metric-card shadow-sm border-light">
+                    <div class="mb-3"><span class="material-icons text-danger"
+                            style="font-size: 3.5rem;">payments</span></div>
+                    <div class="metric-label">Out-of-Pocket Cost</div>
+                    <div class="metric-value">$0 (on paper)</div>
+                    <div class="metric-descriptor">No platform or agency fees</div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="metric-card shadow-sm border-light">
+                    <div class="mb-3"><span class="material-icons text-danger"
+                            style="font-size: 3.5rem;">schedule</span></div>
+                    <div class="metric-label">Time to Fill</div>
+                    <div class="metric-value" style="font-size: 1.4rem;">2–8+ weeks of manager's time.</div>
+                    <div class="metric-descriptor">Dependent on timing and availability</div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="metric-card shadow-sm border-light">
+                    <div class="mb-3"><span class="material-icons text-danger"
+                            style="font-size: 3.5rem;">report_problem</span></div>
+                    <div class="metric-label">Hiring Risk</div>
+                    <div class="metric-value">High</div>
+                    <div class="metric-descriptor">Single-candidate dependency</div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="metric-card shadow-sm border-light">
+                    <div class="mb-3"><span class="material-icons text-danger"
+                            style="font-size: 3.5rem;">assignment</span></div>
+                    <div class="metric-label">Admin Effort</div>
+                    <div class="metric-value">Moderate–High</div>
+                    <div class="metric-descriptor">Manual outreach, vetting, and follow-ups</div>
+                </div>
+            </div>
+        </div>
+        <p class="text-center text-muted small mt-4">This example is for illustration only. Actual time, cost, and
+            effort can vary depending on your clinic’s needs.</p>
+    </section>
+
+    <hr class="my-5 opacity-25">
+
+    <!-- 6. INSIGHT CALLOUT -->
+    <section class="container mb-5">
+        <h2 class="text-center fw-bold mb-4 display-6">INSIGHT CALLOUT — Why This Path Breaks at Scale</h2>
+        <div class="p-5 rounded-4 bg-light border border-light text-center">
+            <p class="fs-4 text-dark-teal mb-0">Referrals work best when hiring is occasional, timelines are flexible,
+                and risk tolerance is high. <br><br> As clinics grow — or need coverage now — the lack of visibility,
+                choice, and
+                speed becomes the bottleneck.</p>
+        </div>
+    </section>
+
+    <hr class="my-5 opacity-25">
+
+    <!-- 7. BRIDGE CTA -->
+    <section class="container py-5 text-center">
+        <h2 class="fw-bold display-6 mb-0">BRIDGE CTA — Explore Other Hiring Paths</h2>
+        <p class="text-muted small mb-5">More coming soon!</p>
+
+        <!-- Clickable CTA Card -->
+        <a href="{% url 'register' %}" class="text-decoration-none">
+            <div class="mb-5 p-5 bg-white rounded-4 shadow-sm text-center mx-auto hover-lift"
+                style="border: 2px solid #48bb78 !important; max-width: 700px;">
+                <span class="modern-tag">Modern Alternative</span>
+                <p class="fs-5 text-dark mb-4">A new way to hire direct at scale, built for transparency and efficiency.
+                </p>
+                <span class="btn btn-primary btn-lg px-5">Sign Up Now</span>
+            </div>
+        </a>
+
+        <div class="row g-5 justify-content-center">
+            <!-- Path 1: Direct-Connection Platforms -->
+            <div class="col-lg-12 mb-5">
+                <h4 class="fw-bold text-dark-teal mb-3">Direct-Connection Platforms</h4>
+                <img src="/media/images/Direct-Connection_platforms.png" alt="Direct-Connection Platforms Flowchart"
+                    class="img-fluid rounded-4 shadow-sm w-100 border">
+            </div>
+
+            <!-- Path 2: Job Boards / Marketplaces -->
+            <div class="col-lg-12 mb-5">
+                <h4 class="fw-bold text-dark-teal mb-3">Job Boards / Marketplaces</h4>
+                <a href="{% url 'job-boards' %}" class="text-decoration-none d-block">
+                    <img src="/media/images/Job_boards-Marketplaces.png" alt="Job Boards / Marketplaces Flowchart"
+                        class="img-fluid rounded-4 shadow-sm w-100 border hover-lift">
+                    <p class="text-muted small mt-2">Click to learn more!</p>
+                </a>
+            </div>
+
+            <!-- Path 3: Traditional Staffing Agencies -->
+            <div class="col-lg-12 mb-5">
+                <h4 class="fw-bold text-dark-teal mb-3">Traditional Staffing Agencies</h4>
+                <a href="{% url 'healthcare-facility-guide' %}#StaffingAgency" class="text-decoration-none d-block">
+                    <img src="/media/images/Traditional_Staffing_Agencies.png"
+                        alt="Traditional Staffing Agencies Flowchart"
+                        class="img-fluid rounded-4 shadow-sm w-100 border hover-lift">
+                    <p class="text-muted small mt-2">Click to learn more!</p>
+                </a>
+            </div>
+        </div>
+
+        <div class="mt-5">
+            <a href="{% url 'healthcare-facility-guide' %}" class="btn-ghost-teal">Explore other hiring paths →</a>
+        </div>
+    </section>
+
+</div>
+
+<script src="{% static 'auction/user_guide_pages.js' %}"></script>
+{% endblock %}
