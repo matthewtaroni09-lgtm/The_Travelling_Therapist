@@ -20,6 +20,7 @@
     /* Standardized Transitions */
     .btn,
     .card,
+    .metric-card,
     .material-icons,
     .table-custom tr,
     .pathway-card {
@@ -225,9 +226,10 @@
             <!-- Text on the Left -->
             <div class="col-lg-6 mb-5 mb-lg-0">
                 <h1 class="hero-title mb-4 text-dark-teal">The Familiar Path</h1>
-                <p class="hero-subhead mb-4 text-primary-colour">It Usually Starts With a Conversation.</p>
+                <p class="hero-subhead mb-4 text-primary-colour">It Usually Starts With a Referral Conversation.</p>
                 <div class="fs-5 text-text-dark">
-                    <p>The Referral: Referrals and personal networks are often the first place clinic owners turn when they need help.</p>
+                    <p> Referrals and personal networks are often the first place clinic owners turn when
+                        they need help.</p>
                     <p>A colleague mentions a therapist they worked with years ago.</p>
                     <p>A former staff member knows someone “looking for hours.”</p>
                     <p>A quick message, a hopeful intro — and maybe a solution.</p>
@@ -247,7 +249,7 @@
 
     <!-- 2. MINI STORY ARC -->
     <section class="container py-5">
-        <h2 class="text-center fw-bold mb-5 display-6">MINI STORY ARC — How This Path Actually Unfolds</h2>
+        <h2 class="text-center fw-bold mb-5 display-6">How This Path Actually Unfolds</h2>
         <div class="row g-4">
             <div class="col-lg col-md-6">
                 <div class="card story-card shadow-sm hover-lift">
@@ -300,7 +302,7 @@
 
     <!-- 3. REALITY CHECK -->
     <section class="container py-5">
-        <h2 class="text-center fw-bold mb-5 display-6">REALITY CHECK — Where Friction Creeps In</h2>
+        <h2 class="text-center fw-bold mb-5 display-6">Where Friction Creeps In</h2>
         <div class="row">
             <div class="col-lg-6 mb-4">
                 <div class="p-5 bg-white rounded-4 border h-100">
@@ -364,7 +366,7 @@
                 <tbody class="bg-white">
                     <tr>
                         <td class="fs-5 fw-bold" style="color: var(--ttt-success);">No platform fees</td>
-                        <td class="fs-5 text-danger fw-bold">Slow timelines and Very limited reach</td>
+                        <td class="fs-5 text-danger fw-bold">Slow timelines and very limited reach</td>
                     </tr>
                     <tr>
                         <td class="fs-5">High initial trust (existing relationships)</td>
@@ -391,10 +393,10 @@
 
     <!-- 5. COST & TIME REALITY -->
     <section class="container py-5">
-        <h2 class="text-center fw-bold mb-5 display-6">COST & TIME REALITY — The Hidden Cost of "Free"</h2>
+        <h2 class="text-center fw-bold mb-5 display-6">The Hidden Cost of "Free"</h2>
         <div class="row g-4">
             <div class="col-lg-3 col-md-6">
-                <div class="metric-card shadow-sm border-light">
+                <div class="metric-card shadow-sm border-light hover-lift">
                     <div class="mb-3"><span class="material-icons text-danger"
                             style="font-size: 3.5rem;">payments</span></div>
                     <div class="metric-label">Out-of-Pocket Cost</div>
@@ -403,16 +405,16 @@
                 </div>
             </div>
             <div class="col-lg-3 col-md-6">
-                <div class="metric-card shadow-sm border-light">
+                <div class="metric-card shadow-sm border-light hover-lift">
                     <div class="mb-3"><span class="material-icons text-danger"
                             style="font-size: 3.5rem;">schedule</span></div>
                     <div class="metric-label">Time to Fill</div>
-                    <div class="metric-value" style="font-size: 1.4rem;">2–8+ weeks of manager's time.</div>
+                    <div class="metric-value" style="font-size: 1.4rem;">2–8+ weeks</div>
                     <div class="metric-descriptor">Dependent on timing and availability</div>
                 </div>
             </div>
             <div class="col-lg-3 col-md-6">
-                <div class="metric-card shadow-sm border-light">
+                <div class="metric-card shadow-sm border-light hover-lift">
                     <div class="mb-3"><span class="material-icons text-danger"
                             style="font-size: 3.5rem;">report_problem</span></div>
                     <div class="metric-label">Hiring Risk</div>
@@ -421,7 +423,7 @@
                 </div>
             </div>
             <div class="col-lg-3 col-md-6">
-                <div class="metric-card shadow-sm border-light">
+                <div class="metric-card shadow-sm border-light hover-lift">
                     <div class="mb-3"><span class="material-icons text-danger"
                             style="font-size: 3.5rem;">assignment</span></div>
                     <div class="metric-label">Admin Effort</div>
@@ -438,32 +440,35 @@
 
     <!-- 6. INSIGHT CALLOUT -->
     <section class="container mb-5">
-        <h2 class="text-center fw-bold mb-4 display-6">INSIGHT CALLOUT — Why This Path Breaks at Scale</h2>
+        <h2 class="text-center fw-bold mb-4 display-6">Why This Path Breaks at Scale</h2>
         <div class="p-5 rounded-4 bg-light border border-light text-center">
             <p class="fs-4 text-dark-teal mb-0">Referrals work best when hiring is occasional, timelines are flexible,
                 and risk tolerance is high. <br><br> As clinics grow — or need coverage now — the lack of visibility,
                 choice, and
                 speed becomes the bottleneck.</p>
         </div>
+
+        <!-- CTA Card -->
+        <div class="mb-5 p-4 survey-cta-box text-center mx-auto" style="max-width: 700px;">
+            <p class="fs-5 text-dark-colour mb-4">A modern alternative to hiring with referrals, built for scale, transparency, and efficiency.</p>
+            <a href="{% url 'register' %}" class="btn btn-lg mb-3 survey-cta-button px-5">
+                Sign Up Now &rarr;
+            </a>
+            <div class="d-flex flex-wrap justify-content-center survey-cta-footer-text">
+                <span class="me-3">&bull; Faster Hiring</span>
+                <span class="me-3">&bull; Transparent Rates</span>
+                <span>&bull; Built for Healthcare</span>
+            </div>
+        </div>
+
     </section>
 
     <hr class="my-5 opacity-25">
 
     <!-- 7. BRIDGE CTA -->
     <section class="container py-5 text-center">
-        <h2 class="fw-bold display-6 mb-0">BRIDGE CTA — Explore Other Hiring Paths</h2>
+        <h2 class="fw-bold display-6 mb-0">Explore Other Hiring Paths</h2>
         <p class="text-muted small mb-5">More coming soon!</p>
-
-        <!-- Clickable CTA Card -->
-        <a href="{% url 'register' %}" class="text-decoration-none">
-            <div class="mb-5 p-5 bg-white rounded-4 shadow-sm text-center mx-auto hover-lift"
-                style="border: 2px solid #48bb78 !important; max-width: 700px;">
-                <span class="modern-tag">Modern Alternative</span>
-                <p class="fs-5 text-dark mb-4">A new way to hire direct at scale, built for transparency and efficiency.
-                </p>
-                <span class="btn btn-primary btn-lg px-5">Sign Up Now</span>
-            </div>
-        </a>
 
         <div class="row g-5 justify-content-center">
             <!-- Path 1: Direct-Connection Platforms -->

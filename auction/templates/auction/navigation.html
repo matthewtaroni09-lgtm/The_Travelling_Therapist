@@ -36,10 +36,6 @@
                                 href="{% url 'retirement-home-hiring-guide' %}">Retirement Home Hiring Guide</a>
                         </li> -->
                         <li class="nav-item">
-                            <a class="nav-link text-weight-normal {% if path == 'referrals-and-networks' %}active{% endif %}"
-                                href="{% url 'referrals-and-networks' %}">Referrals and Personal Networks</a>
-                        </li>
-                        <li class="nav-item">
                             <a class="nav-link text-weight-normal {% if path == 'profile' %}active{% endif %}"
                                 href="{% url 'clinician-guide' %}">Clinician Hiring Guide</a>
                         </li>
@@ -59,6 +55,10 @@
                     <a class="nav-link dropdown-toggle text-weight-normal" href="#" id="navbarDropdown" role="button"
                         data-bs-toggle="dropdown" aria-expanded="false">I'm Hiring With</a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li class="nav-item">
+                            <a class="nav-link text-weight-normal {% if path == 'referrals-and-networks' %}active{% endif %}"
+                                href="{% url 'referrals-and-networks' %}">Referrals and Personal Networks</a>
+                        </li>
                         <li class="nav-item">
                             <a class="nav-link text-weight-normal {% if path == 'job-boards' %}active{% endif %}"
                                 href="{% url 'job-boards' %}">Job Boards</a>
