@@ -3,149 +3,431 @@
 {% block content %}
 <!-- content -->
 <p id="pageTitle" class="d-none">Hospital_Guide</p>
-<div class="container" style="background-color: rgba(0, 0, 0, 0);">
-    <div class=" row">
-        <div class="col-md-12">
-            <h1 class="text-center mb-5">Hospital Guide to Hiring</h1>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-4 col-md-12"><img id="clinicOwnerGuideMainImage" src="/media/images/clinic_guide_main.png"
-                class="img-fluid" alt="healthcare facility staff"></div>
-        <div class="col-lg-8 col-md-12">
-            <h2>Internal Hiring Isn't Filling Shifts Like It Used To</h2>
-            <p>Most hospitals rely heavily on internal hiring lists. But in 2025, rising vacancies, clinician burnout,
-                and outdated HR workflows mean these lists are no longer enough. The Traveling Therapist helps hospitals
-                fill gaps faster, with verified staff ready when your internal pool can't deliver.</p>
-            <div class="text-center">
-                <a class="btn btn-primary btn-lg w-100" style="max-width: 420px;" href="{% url 'how-it-works' %}">
-                    See How The Traveling Therapist Works
-                </a>
-            </div>
 
-        </div>
-    </div>
-    <hr>
-    <div class="row">
-        <div class="col-lg-12 col-md-12">
-            <div class="container my-5">
-                <div class="row g-3">
-                    <div class="col-4 col-md-4">
-                        <blockquote class="quote-card quote-card-facility">
-                            <p>In 2023–2024, 8% of total hours worked by frontline care providers in hospital nursing
-                                units were overtime about 22.6 million overtime hours, equivalent to roughly 11,500
-                                full-time positions. <a
-                                    href="https://www.cihi.ca/en/health-workforce-overtime-and-staffing-challenges-in-hospitals?utm_source=chatgpt.com"
-                                    target="_blank">Reference
-                                    Link</a></p>
+<style>
+    /* HOSPITAL GUIDE REBRAND STYLES */
+    :root {
+        --dark-teal: #2b4d55;
+        --soft-green: #C9FFE5;
+        --off-white: #f8f9fa;
+        --ttt-success: #198754;
+        --ttt-danger: #dc3545;
+        --ttt-orange: #fd7e14;
+    }
 
-                        </blockquote>
+    /* Standardized Card Lift and Box Shadows */
+    .data-card,
+    .grid-card,
+    .comparison-container,
+    .solution-box {
+        transition: all 0.3s ease !important;
+        border-radius: 20px !important;
+        border: 1px solid #E2E8F0 !important;
+        background: #fff;
+    }
 
+    .data-card:hover,
+    .grid-card:hover,
+    .comparison-container:hover {
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1) !important;
+        transform: translateY(-5px) !important;
+    }
 
-                        <blockquote class="quote-card quote-card-facility">
-                            <p>Recent data supports that Ontario has a 651:100 000 ratio of RN to person. <a
-                                    href="https://ona.org/news/20240725-cihi-data-staffing/?utm_source=chatgpt.com"
-                                    target="_blank">Reference
-                                    Link</a>
-                            </p>
-                        </blockquote>
+    /* Hero Section */
+    .hero-section {
+        padding: 4rem 0;
+    }
 
-                        <blockquote class="quote-card quote-card-facility">
-                            <p>Huge rise in hospital job vacancies in Ontario: Between 2015 and 2024 the number of
-                                hospital job vacancies in Ontario increased by 331% and the vacancy rate nearly tripled.
-                                <a href="https://www.policyalternatives.ca/news-research/hollowed-out/?utm_source=chatgpt.com"
-                                    target="_blank">Reference
-                                    Link</a>
-                            </p>
-                        </blockquote>
-                    </div>
-                    <div class="col-lg-8 col-md-12 text-center">
-                        <img src="/media/images/hospital_guide_cycle.png" class="img-fluid"
-                            alt="Hospital staffing cycle">
-                    </div>
+    .hero-title {
+        font-family: Futura-Bold, sans-serif;
+        font-weight: 700;
+        font-size: 3.5rem;
+        color: var(--dark-colour);
+        line-height: 1.1;
+    }
 
+    .eyebrow {
+        text-transform: uppercase;
+        font-weight: bold;
+        font-size: 0.9rem;
+        letter-spacing: 1.5px;
+        color: var(--ttt-success);
+        display: block;
+        margin-bottom: 1rem;
+    }
+
+    /* Data Callout Cards */
+    .data-callout {
+        background: #fff;
+        border-left: 5px solid var(--ttt-success);
+        padding: 2rem;
+        border-radius: 0 20px 20px 0;
+        height: 100%;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease !important;
+    }
+
+    .data-callout:hover {
+        transform: translateY(-5px) !important;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
+    }
+
+    .data-link {
+        text-decoration: none !important;
+        color: inherit !important;
+        display: block;
+        height: 100%;
+    }
+
+    .click-hint {
+        font-size: 0.85rem;
+        color: #999;
+        margin-top: 1rem;
+        display: block;
+        font-style: italic;
+    }
+
+    .data-text {
+        font-size: 1.1rem;
+        line-height: 1.6;
+        margin-bottom: 0;
+    }
+
+    /* 2x2 Grid / Four Distinct Cards */
+    .cost-card {
+        padding: 1.25rem;
+        height: 100%;
+        border-top: 4px solid var(--ttt-danger);
+    }
+
+    .cost-number {
+        font-family: Futura-Bold, sans-serif;
+        font-size: 2rem;
+        color: var(--ttt-danger);
+        margin-right: 0.75rem;
+        line-height: 1;
+    }
+
+    .cost-card h4 {
+        font-size: 1.25rem;
+        margin-bottom: 0;
+    }
+
+    .cost-card ul,
+    .cost-card p {
+        font-size: 1rem !important;
+    }
+
+    .flow-arrow {
+        color: var(--ttt-danger);
+        font-size: 1.2rem;
+        vertical-align: middle;
+        margin: 0 4px;
+    }
+
+    /* Solution Section */
+
+    .solution-section {
+        background-color: var(--off-white);
+        padding: 5rem 0;
+        border-radius: 40px;
+    }
+
+    .checklist-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        font-size: 1.2rem;
+        font-weight: 500;
+    }
+
+    .checklist-icon {
+        color: var(--ttt-success);
+        margin-right: 1rem;
+        font-size: 1.5rem;
+    }
+
+    /* Comparison Table */
+    .comparison-table {
+        border-radius: 20px;
+        overflow: hidden;
+        border: 1px solid #E2E8F0;
+        width: 100%;
+    }
+
+    .comparison-table th {
+        background-color: var(--dark-teal);
+        color: white;
+        padding: 1.5rem;
+        text-align: center;
+    }
+
+    .comparison-table td {
+        padding: 1.25rem;
+        border-bottom: 1px solid #E2E8F0;
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .ttt-highlight {
+        background-color: rgba(25, 135, 84, 0.05);
+        font-weight: bold;
+    }
+
+    /* CTA Section */
+    .final-cta-box {
+        background-color: var(--dark-teal);
+        color: white;
+        padding: 4rem;
+        text-align: center;
+        border-radius: 30px;
+        margin-top: 4rem;
+    }
+
+    .final-cta-box h2 {
+        color: white !important;
+    }
+
+    .final-cta-box .btn-primary {
+        padding: 12px 30px !important;
+    }
+
+    .btn-primary {
+        border-radius: 50px !important;
+        padding: 15px 40px !important;
+        font-weight: bold !important;
+        transition: all 0.3s ease !important;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-3px) !important;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2) !important;
+    }
+
+    @media (max-width: 991px) {
+        .hero-title {
+            font-size: 2.5rem;
+        }
+
+        .hero-section {
+            text-align: center;
+        }
+    }
+</style>
+
+<div class="container bg-transparent py-4">
+    <!-- 1. HERO SECTION -->
+    <section class="hero-section">
+        <div class="row align-items-center">
+            <div class="col-lg-7 text-start">
+                <h1 class="hero-title mb-2">Hospital Guide to Hiring</h1>
+                <h2 class="h4 fw-bold mb-4" style="color: var(--ttt-success);">Internal Hiring Isn’t Filling Shifts Like
+                    It Used To</h2>
+                <p class="lead fs-4 mb-4" style="color: #555;">Most hospitals rely heavily on internal hiring lists. But
+                    in 2025, rising vacancies, clinician burnout, and outdated HR workflows mean these lists are no
+                    longer enough. <br><br>The Traveling Therapist helps hospitals fill gaps faster, with verified staff
+                    ready
+                    when your internal pool can’t deliver.</p>
+                <div class="d-flex justify-content-start">
+                    <a href="{% url 'how-it-works' %}" class="btn btn-primary btn-lg">See How The Traveling Therapist
+                        Works</a>
                 </div>
             </div>
-
+            <div class="col-lg-5 text-center mt-5 mt-lg-0">
+                <img id="clinicOwnerGuideMainImage" src="/media/images/clinic_guide_main.png"
+                    class="img-fluid rounded shadow-sm" alt="Stressed hospital staffing environment">
+            </div>
         </div>
-    </div>
-    <hr>
-    <div class="row">
-        <h2 class="text-center">The Hidden Costs of Relying Only on Internal Hiring</h2>
-        <h3>Administrative Overload</h3>
-        <ul>
-            <li>HR spends 7–12 hours/week trying to fill gaps through internal lists.</li>
-            <li>Most of this time is wasted on staff who never reply.</li>
-        </ul>
-        <h3>Shifts = Service Delays</h3>
-        <ul>
-            <li>Canadian hospitals reported 28% growth in unfilled temp shifts from 2023 to 2025.</li>
-            <li>Direct impact: delayed procedures, increased wait times, and increased overtime costs.</li>
-        </ul>
-        <h3>Burnout Reinforces Itself</h3>
-        <ul>
-            <li>Burned-out staff decline more shifts → internal pool weakens → more stress on remaining staff → cycle
-                repeats.</li>
-        </ul>
-        <h3>Lack of Real-Time Availability</h3>
-        <ul>
-            <li>Internal lists do not track:</li>
-            <ul>
-                <li>Who is available right now</li>
-                <li>Who is willing to take nights/weekends</li>
-                <li>Who is actively looking for shifts today</li>
-            </ul>
-        </ul>
-    </div>
-    <hr>
-    <div class="row" id="">
-        <h2 class="text-center">The Traveling Therapist</h2>
-        <ul class="TTTChecklist">
-            <li>Instant opening posting with quick responses</li>
-            <li>Zero manual follow-ups</li>
-            <li>Large pool beyond your internal staff</li>
-            <li>Specialized in healthcare staffing only</li>
-            <li>Transparent pricing, no agency markup</li>
-            <li>Reduces HR workload immediately</li>
-        </ul>
-        <div class="row staffingSolutionRow">
-            <div>
-                <h2 class="staffSolutionsTitle" id="">
-                    See How TTT Compares to Internal Hiring
-                </h2>
-                <div>
-                    <div class="row">
-                        <div class="col-lg-6 col-md-12 staffingSolutionsSection">
-                            <h4 class="ps-2">
-                                The Traveling Therapist
-                            </h4>
-                            <ul class="accordionList">
-                                <li>10 min post process</li>
-                                <li>2 weeks to complete a hire</li>
-                                <li>Transparent payment process</li>
-                                <li>Clinician is connected directly to you</li>
-                                <li>Free to post and create an account</li>
-                            </ul>
-                        </div>
-                        <div class="col-lg-6 col-md-12 staffingSolutionsSection">
-                            <h4>Internal Hiring</h4>
-                            <ul class="accordionList">
-                                <li>Back and forth process</li>
-                                <li>Inefficient Method</li>
-                                <li>Dependent on internal pool.</li>
-                            </ul>
-                        </div>
+    </section>
+
+    <hr class="my-5">
+
+    <!-- Section 2. DATA & INSIGHTS -->
+    <section class="py-5">
+        <h2 class="text-center fw-bold display-5 mb-5">How Internal Hiring Works Today</h2>
+        <div class="row g-4 align-items-center">
+            <div class="col-lg-6">
+                <div class="row g-4">
+                    <div class="col-12">
+                        <a href="https://www.cihi.ca/en/health-workforce-overtime-and-staffing-challenges-in-hospitals?utm_source=chatgpt.com"
+                            target="_blank" rel="noopener noreferrer" class="data-link">
+                            <div class="data-callout">
+                                <p class="data-text">In 2023–2024, 8% of total hours worked by frontline care providers
+                                    in hospital nursing units were overtime about 22.6 million overtime hours,
+                                    equivalent to roughly 11,500 full-time positions.</p>
+                                <span class="click-hint">Click to learn more!</span>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-12">
+                        <a href="https://ona.org/news/20240725-cihi-data-staffing/?utm_source=chatgpt.com"
+                            target="_blank" rel="noopener noreferrer" class="data-link">
+                            <div class="data-callout">
+                                <p class="data-text">Recent data supports that Ontario has a 651:100 000 ratio of RN to
+                                    person.</p>
+                                <span class="click-hint">Click to learn more!</span>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-12">
+                        <a href="https://www.policyalternatives.ca/news-research/hollowed-out/?utm_source=chatgpt.com"
+                            target="_blank" rel="noopener noreferrer" class="data-link">
+                            <div class="data-callout">
+                                <p class="data-text">Huge rise in hospital job vacancies in Ontario: Between 2015 and
+                                    2024 the number of hospital job vacancies in Ontario increased by 331% and the
+                                    vacancy rate nearly tripled</p>
+                                <span class="click-hint">Click to learn more!</span>
+                            </div>
+                        </a>
                     </div>
                 </div>
             </div>
+            <div class="col-lg-6 text-center">
+                <img src="/media/images/hospital_guide_cycle.png" class="img-fluid" alt="Cyclical HR process mapping">
+            </div>
         </div>
-    </div>
-    <br>
-    <div class="row">
-        <a id="startAuctionButton" class="btn btn-primary btn-lg guidePageButton"
-            href="{% url 'create-auction' %}">Start for free now!</a>
-    </div>
+    </section>
 
+    <hr class="my-5">
+
+    <!-- 3. SECTION 4 — The Hidden Costs -->
+    <section class="py-5">
+        <h2 class="text-center fw-bold display-5 mb-5">The Hidden Costs of Relying Only on Internal Hiring</h2>
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="grid-card cost-card shadow-sm">
+                    <div class="d-flex align-items-center mb-3">
+                        <span class="cost-number">1.</span>
+                        <h4 class="fw-bold">Administrative Overload</h4>
+                    </div>
+                    <ul class="fs-5 text-start">
+                        <li>HR spends 7–12 hours/week trying to fill gaps through internal lists.</li>
+                        <li>Sometimes staff do not reply which lead to wasted admin hours.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="grid-card cost-card shadow-sm">
+                    <div class="d-flex align-items-center mb-3">
+                        <span class="cost-number">2.</span>
+                        <h4 class="fw-bold">Unfilled Shifts = Service Delays</h4>
+                    </div>
+                    <ul class="fs-5 text-start">
+                        <li>Canadian hospitals reported 28% growth in unfilled temp shifts from 2023 to 2025.</li>
+                        <li>Direct impact: delayed procedures, increased wait times, and increased overtime costs.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="grid-card cost-card shadow-sm">
+                    <div class="d-flex align-items-center mb-3">
+                        <span class="cost-number">3.</span>
+                        <h4 class="fw-bold">Burnout Reinforces Itself</h4>
+                    </div>
+                    <p class="fs-5 text-start">Burned-out staff decline more shifts <span
+                            class="material-icons flow-arrow">arrow_forward</span> internal pool weakens <span
+                            class="material-icons flow-arrow">arrow_forward</span> more
+                        stress on remaining staff <span class="material-icons flow-arrow">arrow_forward</span> cycle
+                        repeats.</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="grid-card cost-card shadow-sm">
+                    <div class="d-flex align-items-center mb-3">
+                        <span class="cost-number">4.</span>
+                        <h4 class="fw-bold">Lack of Real-Time Availability</h4>
+                    </div>
+                    <p class="fs-5 text-start">Internal lists do not track:</p>
+                    <ul class="fs-5 text-start">
+                        <li>Who is available right now</li>
+                        <li>Who is willing to take nights/weekends</li>
+                        <li>Who is actively looking for shifts today</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. SECTION 5 — TTT Hero Section -->
+    <section class="solution-section my-5">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h2 class="fw-bold display-5 mb-5">Why Hospitals Choose The Traveling Therapist:</h2>
+                    <div class="checklist">
+                        <div class="checklist-item">
+                            <span class="material-icons checklist-icon">check_circle</span>
+                            <span>Near instant postings allow for quick responses from healthcare workers</span>
+                        </div>
+                        <div class="checklist-item">
+                            <span class="material-icons checklist-icon">check_circle</span>
+                            <span>Zero manual follow-ups</span>
+                        </div>
+                        <div class="checklist-item">
+                            <span class="material-icons checklist-icon">check_circle</span>
+                            <span>Large pool beyond your internal staff</span>
+                        </div>
+                        <div class="checklist-item">
+                            <span class="material-icons checklist-icon">check_circle</span>
+                            <span>Specialized in healthcare staffing only</span>
+                        </div>
+                        <div class="checklist-item">
+                            <span class="material-icons checklist-icon">check_circle</span>
+                            <span>Transparent pricing, no agency markup</span>
+                        </div>
+                        <div class="checklist-item">
+                            <span class="material-icons checklist-icon">check_circle</span>
+                            <span>Reduces HR workload immediately</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 text-center">
+                    <img src="/media/images/paper_doctor_Sarah.png" class="img-fluid" alt="TTT Clinical Professional">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. COMPARISON & CTA -->
+    <section class="py-5">
+        <h2 class="text-center fw-bold display-5 mb-5">See How The Traveling Therapist Compares to Internal Hiring</h2>
+        <div class="comparison-container shadow-sm mb-5">
+            <table class="comparison-table m-0">
+                <thead>
+                    <tr>
+                        <th class="ttt-highlight" style="width: 50%;">The Traveling Therapist</th>
+                        <th>Internal Hiring</th>
+                    </tr>
+                </thead>
+                <tbody class="fs-5">
+                    <tr>
+                        <td class="ttt-highlight">10 min post process</td>
+                        <td>Back and forth process</td>
+                    </tr>
+                    <tr>
+                        <td class="ttt-highlight">Transparent payment process</td>
+                        <td>Inefficient Method</td>
+                    </tr>
+                    <tr>
+                        <td class="ttt-highlight">Clinician is connected directly to you</td>
+                        <td>Dependent on internal pool.</td>
+                    </tr>
+                    <tr>
+                        <td class="ttt-highlight">Free to post and create an account</td>
+                        <td>High demands for HR staff time.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="final-cta-box shadow">
+            <h2 class="display-6 fw-bold mb-4">Ready to Optimize Your Hospital Staffing?</h2>
+            <div class="d-flex justify-content-center">
+                <a href="{% url 'register' %}" class="btn btn-primary btn-lg">Start for free now!</a>
+            </div>
+        </div>
+    </section>
 </div>
+
 <script src="{% static 'auction/user_guide_pages.js' %}"></script>
 {% endblock %}
