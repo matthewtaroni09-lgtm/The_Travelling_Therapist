@@ -825,6 +825,34 @@ html {
     color: var(--dark-colour);
 }
 
+/* Nested Dropdown Styling */
+.dropdown-submenu {
+    position: relative;
+}
+
+.dropdown-submenu .dropdown-menu {
+    display: none;
+    position: absolute;
+    left: 100%;
+    top: -7px;
+}
+
+.dropdown-submenu:hover > .dropdown-menu {
+    display: block;
+}
+
+/* Adjustments for mobile to ensure submenus are visible */
+@media (max-width: 991px) {
+    .dropdown-submenu .dropdown-menu {
+        position: static;
+        display: block;
+        border: none;
+        box-shadow: none;
+        padding-left: 1.5rem;
+        background-color: transparent;
+    }
+}
+
 .form-control:focus,
 input:focus {
     color: #212529;
