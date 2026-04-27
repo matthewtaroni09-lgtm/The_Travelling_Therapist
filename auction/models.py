@@ -151,7 +151,7 @@ class Auction(models.Model):
     def get_bid(self):
         # If the auction is open and there are no bids
         if self.currentLowBid is None and self.closed == False and self.active == True:
-            return str('0 bids')
+            return str('0 Offers')
         # If the auction is closed and there are no bids
         if self.currentLowBid is None and self.closed == True and self.active == False:
             return str('')
@@ -159,16 +159,16 @@ class Auction(models.Model):
             return 'Reserve price not met'
         elif self.closed == True and self.active == False and self.winningPrice is not None:
             if str(self.paymentType) == 'Flat Fee':
-                return 'Winning bid: $' + str("{:,}".format(self.winningPrice))
+                return 'Winning Offer: $' + str("{:,}".format(self.winningPrice))
             elif str(self.paymentType) == 'Fee Split':
-                return 'Winning bid: ' + str("{:,}".format(self.winningPrice)) + '%'
+                return 'Winning Offer: ' + str("{:,}".format(self.winningPrice)) + '%'
         elif self.closed == True and self.active == False and self.winningPrice is None:
             return 'No winner'
         else:
             if str(self.paymentType) == 'Flat Fee':
-                return 'Low Bid: $' + str("{:,}".format(self.currentLowBid))
+                return 'Low Offer: $' + str("{:,}".format(self.currentLowBid))
             elif str(self.paymentType) == 'Fee Split':
-                return 'Low Bid (HCP/Clinic): ' + str("{:,}".format(self.currentLowBid)) + '%'
+                return 'Low Offer (HCP/Clinic): ' + str("{:,}".format(self.currentLowBid)) + '%'
             
     def get_bid_number(self):
         if self.currentLowBid is None and self.paymentType.name == "Flat Fee":
@@ -212,25 +212,25 @@ class Auction(models.Model):
             diff = self.currentLowBid - self.minimumBidIncrement
             if diff > 0 and diff % self.minimumBidIncrement == 0 and self.currentLowBid > 2:
                 if str(self.paymentType) == 'Flat Fee':
-                    return 'Next Available Bid: ≤ $' + str("{:,}".format(diff))
+                    return 'Next Available Offer: ≤ $' + str("{:,}".format(diff))
                 elif str(self.paymentType) == 'Fee Split':
-                    return 'Next Available Bid: ≤ ' + str("{:,}".format(diff)) + "%"
+                    return 'Next Available Offer: ≤ ' + str("{:,}".format(diff)) + "%"
             elif diff > 0 and diff % self.minimumBidIncrement != 0 and self.currentLowBid > 2:
                 result = self.currentLowBid - (diff % self.minimumBidIncrement)
                 if str(self.paymentType) == 'Flat Fee':
-                    return 'Next Available Bid: ≤ $' + str("{:,}".format(result))
+                    return 'Next Available Offer: ≤ $' + str("{:,}".format(result))
                 elif str(self.paymentType) == 'Fee Split':
-                    return 'Next Available Bid: ≤ ' + str("{:,}".format(result)) + "%"
+                    return 'Next Available Offer: ≤ ' + str("{:,}".format(result)) + "%"
             elif self.currentLowBid == 2:
                 if str(self.paymentType) == 'Flat Fee':
-                    return 'Last bid available: $1'
+                    return 'Last Offer available: $1'
                 elif str(self.paymentType) == 'Fee Split':
-                    return 'Last bid available: 1%'
+                    return 'Last Offer available: 1%'
             else:
                 if str(self.paymentType) == 'Flat Fee':
-                    return 'Lowest possible bid has been reached: $1'
+                    return 'Lowest possible offer has been reached: $1'
                 elif str(self.paymentType) == 'Fee Split':
-                    return 'Lowest possible bid has been reached: 1%'
+                    return 'Lowest possible offer has been reached: 1%'
         else:
             return ""
 
