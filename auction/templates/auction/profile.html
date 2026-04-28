@@ -18,6 +18,10 @@
         <button class="btn-lg nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button"
           role="tab" aria-controls="profile" aria-selected="false">Update Profile</button>
       </li>
+      <li class="nav-item" role="presentation">
+        <button class="btn-lg nav-link" id="raffles-tab" data-bs-toggle="tab" data-bs-target="#raffles" type="button"
+          role="tab" aria-controls="raffles" aria-selected="false">Raffles</button>
+      </li>
     </ul>
     <div class="tab-content" id="therapistProfileContent">
       <div class="tab-pane fade show active p-3" id="auction-history" role="tabpanel" aria-labelledby="auction-tab">
@@ -106,6 +110,12 @@
           </div>
         </div>
       </div>
+      <div class="tab-pane fade" id="raffles" role="tabpanel" aria-labelledby="raffles-tab">
+        <div class="p-3">
+          <h2 class="mb-4">Raffles</h2>
+          <!-- Raffle content will go here -->
+        </div>
+      </div>
       {% else %}
       <!-- Content End -->
       <!-- Therapist -->
@@ -122,6 +132,10 @@
             <li class="nav-item" role="presentation">
               <button class="btn-lg nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile"
                 type="button" role="tab" aria-controls="profile" aria-selected="false">Update Profile</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="btn-lg nav-link" id="raffles-tab" data-bs-toggle="tab" data-bs-target="#raffles"
+                type="button" role="tab" aria-controls="raffles" aria-selected="false">Raffles</button>
             </li>
           </ul>
           <div class="tab-content" id="therapistProfileContent">
@@ -158,6 +172,12 @@
                   </div>
               </div>
               </form>
+            </div>
+            <div class="tab-pane fade" id="raffles" role="tabpanel" aria-labelledby="raffles-tab">
+              <div class="p-3">
+                <h2 class="mb-4">Raffles</h2>
+                <!-- Raffle content will go here -->
+              </div>
             </div>
           </div>
         </div>
