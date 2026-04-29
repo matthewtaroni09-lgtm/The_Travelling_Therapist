@@ -15,6 +15,12 @@ $(document).ready(function () {
     if ($('#error_1_id_imageFour').css("display") === "block") {
         $('#profile-tab').tab('show');
     }
+
+    // Handle hash in URL to show specific tab
+    var hash = window.location.hash;
+    if (hash) {
+        $('.nav-tabs button[data-bs-target="' + hash + '"]').tab('show');
+    }
 });
 const getActiveAuctionsClinic = () => {
     $.ajax({
