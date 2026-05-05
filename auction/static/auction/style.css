@@ -825,6 +825,12 @@ html {
     color: var(--dark-colour);
 }
 
+.nav-link.active,
+.dropdown-item.active {
+    background-color: var(--secondary-colour) !important;
+    color: var(--dark-colour) !important;
+}
+
 /* Nested Dropdown Styling */
 .dropdown-submenu {
     position: relative;

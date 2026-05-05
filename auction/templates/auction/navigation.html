@@ -39,12 +39,14 @@
                         <li class="dropdown-submenu">
                             <a class="dropdown-item dropdown-toggle text-weight-normal" href="#">Hire Clinicians Now</a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item text-weight-light {% if path == 'profile' %}active{% endif %}"
+                                <li><a class="dropdown-item text-weight-light {% if path == 'healthcare-facility-guide' %}active{% endif %}"
                                         href="{% url 'healthcare-facility-guide' %}">Healthcare Facility Hiring
                                         Guide</a></li>
+                                <li><a class="dropdown-item text-weight-light {% if path == 'hospital-guide' %}active{% endif %}"
+                                        href="{% url 'hospital-guide' %}">Hospital Hiring Guide</a></li>
                                 <li><a class="dropdown-item text-weight-light {% if path == 'LTC-guide' %}active{% endif %}"
                                         href="{% url 'LTC-guide' %}">Long-Term Care Hiring Guide</a></li>
-                                <li><a class="dropdown-item text-weight-light"
+                                <li><a class="dropdown-item text-weight-light {% if path == 'non-traditional-hiring' %}active{% endif %}"
                                         href="{% url 'non-traditional-hiring' %}">Non Traditional Healthcare
                                         Facilities</a></li>
                                 <li><a class="dropdown-item text-weight-light {% if path == 'private-clinic-hiring-guide' %}active{% endif %}"
@@ -55,16 +57,16 @@
                         <li class="dropdown-submenu">
                             <a class="dropdown-item dropdown-toggle text-weight-normal" href="#">I'm Hiring With</a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item text-weight-light {% if path == 'profile' %}active{% endif %}"
+                                <li><a class="dropdown-item text-weight-light {% if path == 'headhunter_recruitment' %}active{% endif %}"
                                         href="{% url 'headhunter_recruitment' %}">A Headhunter</a></li>
-                                <li><a class="dropdown-item text-weight-light {% if path == 'profile' %}active{% endif %}"
+                                <li><a class="dropdown-item text-weight-light {% if path == 'direct-employer-recruitment' %}active{% endif %}"
                                         href="{% url 'direct-employer-recruitment' %}">Direct Recruitment</a></li>
                                 <li><a class="dropdown-item text-weight-light {% if path == 'job-boards' %}active{% endif %}"
                                         href="{% url 'job-boards' %}">Job Boards</a></li>
                                 <li><a class="dropdown-item text-weight-light {% if path == 'referrals-and-networks' %}active{% endif %}"
                                         href="{% url 'referrals-and-networks' %}">Referrals and Personal Networks</a>
                                 </li>
-                                <li><a class="dropdown-item text-weight-light {% if path == 'profile' %}active{% endif %}"
+                                <li><a class="dropdown-item text-weight-light {% if path == 'hiring-with-the-traveling-therapist' %}active{% endif %}"
                                         href="{% url 'hiring-with-the-traveling-therapist' %}">The Traveling
                                         Therapist</a></li>
                             </ul>

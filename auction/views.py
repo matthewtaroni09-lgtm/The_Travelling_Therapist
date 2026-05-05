@@ -179,7 +179,8 @@ def index(request):
         'cities': cities,
         'payment_types': payment_types,
         'statuses': statuses,
-        'auction_search': False
+        'auction_search': False,
+        'path': 'home'
     }
     return render(request, 'auction/index.html', context)
 
@@ -215,31 +216,31 @@ def cookie_policy(request):
     return render(request, 'auction/cookie_policy.html', {})
 
 def healthcare_facility_guide(request):
-    return render(request, 'auction/healthcare_facility_guide.html', {})
+    return render(request, 'auction/healthcare_facility_guide.html', {'path': 'healthcare-facility-guide'})
 
 def clinician_guide(request):
-    return render(request, 'auction/clinician_guide.html', {})
+    return render(request, 'auction/clinician_guide.html', {'path': 'clinician-guide'})
 
 def non_traditional_hiring(request):
-    return render(request, 'auction/non_traditional_hiring.html', {})
+    return render(request, 'auction/non_traditional_hiring.html', {'path': 'non-traditional-hiring'})
 
 def hospital_guide(request):
-    return render(request, 'auction/hospital_guide.html', {})
+    return render(request, 'auction/hospital_guide.html', {'path': 'hospital-guide'})
 
 def LTC_guide(request):
-    return render(request, 'auction/LTC_guide.html', {})
+    return render(request, 'auction/LTC_guide.html', {'path': 'LTC-guide'})
 
 def hiring_healthcare_worker(request):
-    return render(request, 'auction/hiring_healthcare_worker.html', {})
+    return render(request, 'auction/hiring_healthcare_worker.html', {'path': 'hiring-healthcare-worker'})
 
 def direct_employer_recruitment(request):
-    return render(request, 'auction/direct_employer_recruitment.html', {})
+    return render(request, 'auction/direct_employer_recruitment.html', {'path': 'direct-employer-recruitment'})
 
 def headhunter_recruitment(request):
-    return render(request, 'auction/headhunter_recruitment.html', {})
+    return render(request, 'auction/headhunter_recruitment.html', {'path': 'headhunter_recruitment'})
 
 def hiring_with_the_traveling_therapist_view(request):
-    return render(request, 'auction/hiring_with_the_traveling_therapist.html', {})
+    return render(request, 'auction/hiring_with_the_traveling_therapist.html', {'path': 'hiring-with-the-traveling-therapist'})
 
 def profile(request):
     if request.user.is_authenticated == False:
@@ -1126,15 +1127,17 @@ def hiring_with_the_traveling_therapist_view(request):
     return render(request, 'auction/hiring_with_the_traveling_therapist.html', {})
 
 def retirement_home_hiring_guide(request):
-    return render(request, 'auction/retirement_home_hiring_guide.html', {})
+    return render(request, 'auction/retirement_home_hiring_guide.html', {'path': 'retirement-home-hiring-guide'})
 
 def job_boards(request):
-    return render(request, 'auction/job_boards.html', {})
+    return render(request, 'auction/job_boards.html', {'path': 'job-boards'})
+
 def private_clinic_hiring_guide(request):
     return render(request, 'auction/private_clinic_hiring_guide.html', {'path': 'private-clinic-hiring-guide'})
 
 def referrals_and_networks(request):
-    return render(request, "auction/referrals_and_networks.html", {})
+     return render(request, "auction/referrals_and_networks.html", {'path': 'referrals-and-networks'})
 
 def what_are_raffles(request):
     return render(request, 'auction/what_are_raffles.html', {'path': 'what-are-raffles'})
+   
