@@ -3,7 +3,7 @@ from The_Travelling_Therapist.settings import ACTIVE_LINK
 # email_templates.py
 
 # Placeholder logo URL - White Background
-LOGO_URL_WB = "https://travelingtherapist.ca/media/images/TTT_LOGO_white_BG.png"
+LOGO_URL_WB = ACTIVE_LINK + "/media/images/TTT_LOGO_white_BG.png"
 
 from datetime import datetime
 
@@ -160,8 +160,8 @@ def clinic_welcome(clinic_name):
   <p>Below are some quick access links for using The Traveling Therapist service:</p>
 
   <ol>
-    <li><a href="https://travelingtherapist.ca">Login</a>: login, create an listing, and view the progress of your existing listings once on the site.</li>
-    <li><a href="https://travelingtherapist.ca/about">FAQ</a>: interested in trying our service? See how it all works and answers to the most common questions we receive from therapists and healthcare facilities, here.</li>
+    <li><a href=""" + ACTIVE_LINK + """/login">Login</a>: login, create an listing, and view the progress of your existing listings once on the site.</li>
+    <li><a href=""" + ACTIVE_LINK + """/about">FAQ</a>: interested in trying our service? See how it all works and answers to the most common questions we receive from therapists and healthcare facilities, here.</li>
     <li>Questions for us? Feel free to reach out to us here info@travelingtherapist.ca, and we will get back to you as soon as possible.</li>
   </ol>
    
@@ -203,7 +203,7 @@ def clinic_auction_created(clinic_name):
     message = message + """<section style="font-size: 16px; margin-bottom: 1rem; padding: 10px;">
   <p>Hello <span class="text-weight-bold">""" + clinic_name + """</span>,</p>
   
-  <p>Thank you for creating a listing on our site! We will review the details of your listing and connect with you to collect payment information before your ad can be live on our site. Full details on this can be found on our <a href="https://travelingtherapist.ca/about">FAQ page</a>.</p>
+  <p>Thank you for creating a listing on our site! We will review the details of your listing and connect with you to collect payment information before your ad can be live on our site. Full details on this can be found on our <a href=""" + ACTIVE_LINK + """/about">FAQ page</a>.</p>
 
   <p>Look for us to reach out in the next 24-48h to get this moving for you.</p>
   <br>
@@ -285,7 +285,7 @@ def therapist_auction_not_met(first_name, last_name, clinic_name, start_date, en
   <p>You were bidding on a listing using The Traveling Therapist.</p>
   <p>This listing ended with a """ + str(reserve_type) +  """  which wasn't met. This means that there was no therapist willing to do this temporary job for a """ + str(reserve_type) +  """ low enough for the clinic.</p>
   <p>This listing may be reposted in the near future - stay tuned!</p>
-  <p>Not sure what the reserve price is? Check out our FAQ page <a href="https://travelingtherapist.ca/about">here</a>.</p>
+  <p>Not sure what the reserve price is? Check out our FAQ page <a href=""" + ACTIVE_LINK + """/about">here</a>.</p>
 
   <h3>Listing Details:</h3>
   <p>hHalthcare Facility Name: """ + str(clinic_name) + """</p>
@@ -356,8 +356,8 @@ def therapist_welcome(first_name, last_name):
   <p>Below are some quick access links for using The Traveling Therapist service:</p>
 
   <ol>
-    <li><a href="https://travelingtherapist.ca">Login</a>: view temporary therapist listings, bid, and change your profile details here.</li>
-    <li><a href="https://travelingtherapist.ca/about">FAQ</a>: interested in trying our service? See how it all works and answers to the most common questions we receive from therapists and clinics, here.</li>
+    <li><a href=""" + ACTIVE_LINK + """/login">Login</a>: view temporary therapist listings, bid, and change your profile details here.</li>
+    <li><a href=""" + ACTIVE_LINK + """/about">FAQ</a>: interested in trying our service? See how it all works and answers to the most common questions we receive from therapists and clinics, here.</li>
     <li>Questions for us? Feel free to reach out to us here info@travelingtherapist.ca, and we will get back to you as soon as possible.</li>
   </ol>
    
