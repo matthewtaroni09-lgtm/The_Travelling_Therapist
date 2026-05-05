@@ -1,0 +1,132 @@
+{% extends 'auction/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container" style="background-color: rgba(0, 0, 0, 0);">
+    <!-- HERO/HEADER SECTION -->
+    <div class="row text-center mb-5">
+        <div class="col-md-12">
+            <h1 class="text-weight-bold mb-3">Your Activity = Your Advantage</h1>
+            <p class="text-medium">Our new raffle system is a simple rewards game where you can earn tickets through
+                platform actions. Each action earns you a certain amount of tickets.</p>
+        </div>
+    </div>
+
+    <!-- CHALLENGES SECTION (How to Earn) -->
+    <div class="row mb-5">
+        <div class="col-md-12">
+            <h2 class="text-weight-bold mb-4">Challenges:</h2>
+        </div>
+        <div class="row g-4 justify-content-center">
+            <!-- Item 1 -->
+            <div class="col-md-4 col-sm-6 text-center">
+                <div class="card h-100 p-4 shadow-sm border-0 bg-white">
+                    <div class="mb-3 d-flex justify-content-center">
+                        <img src="/media/images/raffle_ticket.png" alt="Raffle Ticket" class="rounded-circle shadow-sm"
+                            style="width: 80px; height: 80px; object-fit: cover; border: 2px solid #fff;">
+                    </div>
+                    <p class="fs-5 mb-0">Sign up for the platform = 5 tickets</p>
+                </div>
+            </div>
+            <!-- Item 2 -->
+            <div class="col-md-4 col-sm-6 text-center">
+                <div class="card h-100 p-4 shadow-sm border-0 bg-white">
+                    <div class="mb-3 d-flex justify-content-center">
+                        <img src="/media/images/raffle_ticket.png" alt="Raffle Ticket" class="rounded-circle shadow-sm"
+                            style="width: 80px; height: 80px; object-fit: cover; border: 2px solid #fff;">
+                    </div>
+                    <p class="fs-5 mb-0">Complete a survey = 3 tickets/submission</p>
+                </div>
+            </div>
+            <!-- Item 3 -->
+            <div class="col-md-4 col-sm-6 text-center">
+                <div class="card h-100 p-4 shadow-sm border-0 bg-white">
+                    <div class="mb-3 d-flex justify-content-center">
+                        <img src="/media/images/raffle_ticket.png" alt="Raffle Ticket" class="rounded-circle shadow-sm"
+                            style="width: 80px; height: 80px; object-fit: cover; border: 2px solid #fff;">
+                    </div>
+                    <p class="fs-5 mb-0">Refer a colleague = 10 tickets/successful referral</p>
+                </div>
+            </div>
+            <!-- Item 4 -->
+            <div class="col-md-4 col-sm-6 text-center">
+                <div class="card h-100 p-4 shadow-sm border-0 bg-white">
+                    <div class="mb-3 d-flex justify-content-center">
+                        <img src="/media/images/raffle_ticket.png" alt="Raffle Ticket" class="rounded-circle shadow-sm"
+                            style="width: 80px; height: 80px; object-fit: cover; border: 2px solid #fff;">
+                    </div>
+                    <p class="fs-5 mb-0">Create a listing = 20 tickets</p>
+                </div>
+            </div>
+            <!-- Item 5 -->
+            <div class="col-md-4 col-sm-6 text-center">
+                <div class="card h-100 p-4 shadow-sm border-0 bg-white">
+                    <div class="mb-3 d-flex justify-content-center">
+                        <img src="/media/images/raffle_ticket.png" alt="Raffle Ticket" class="rounded-circle shadow-sm"
+                            style="width: 80px; height: 80px; object-fit: cover; border: 2px solid #fff;">
+                    </div>
+                    <p class="fs-5 mb-0">Place offers on listings = 15 tickets</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TICKET SPENDING SECTION -->
+    <div class="row mb-5">
+        <div class="col-md-12">
+            <div class="p-5 text-center rounded-3 shadow-sm" style="background-color: #2b4d55;">
+                <p class="fs-5 mb-4" style="color: #ffffff !important;">Your ticket balance is stored on your profile and your tickets never expire,
+                    however raffles do, so make sure to spend your tickets on raffles you want before it’s too late!
+                    Click on the raffle you want to spend your tickets on, find out more, and choose the amount you want
+                    to spend!</p>
+                <a href="{% url 'profile' %}#raffles" class="btn btn-primary btn-lg px-5">Go to Raffles!</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- RAFFLE PRIZES SECTION -->
+    <div class="row mb-5">
+        <div class="col-md-12 mb-4">
+            <h2 class="text-weight-bold">Raffle Prizes:</h2>
+        </div>
+        <div class="row g-4 text-center">
+            <!-- Prize Item 1 -->
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm overflow-hidden">
+                    <div
+                        style="height: 200px; background-color: #ffffff; display: flex; align-items: center; justify-content: center;">
+                        <img src="/media/images/gift_card_raffles.png" alt="Gift Card Raffle" style="width: 100%; height: 100%; object-fit: contain;">
+                    </div>
+                    <div class="card-body">
+                        <h4 class="text-weight-bold">Gift Cards</h4>
+                    </div>
+                </div>
+            </div>
+            <!-- Prize Item 2 -->
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm overflow-hidden">
+                    <div
+                        style="height: 200px; background-color: #ffffff; display: flex; align-items: center; justify-content: center;">
+                        <img src="/media/images/raffle_platform_discount.png" alt="Platform Discount Raffle" style="width: 100%; height: 100%; object-fit: contain;">
+                    </div>
+                    <div class="card-body">
+                        <h4 class="text-weight-bold">Platform Discounts</h4>
+                    </div>
+                </div>
+            </div>
+            <!-- Prize Item 3 -->
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm overflow-hidden">
+                    <div
+                        style="height: 200px; background-color: #ffffff; display: flex; align-items: center; justify-content: center;">
+                        <img src="/media/images/more_prizes_raffles.png" alt="More Prizes Raffle" style="width: 100%; height: 100%; object-fit: contain;">
+                    </div>
+                    <div class="card-body">
+                        <h4 class="text-weight-bold">And More!</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

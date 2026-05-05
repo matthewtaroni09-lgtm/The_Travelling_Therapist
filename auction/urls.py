@@ -46,6 +46,7 @@ urlpatterns = [
     path("job_boards", views.job_boards, name="job-boards"),
     path("private_clinic_hiring_guide", views.private_clinic_hiring_guide, name="private-clinic-hiring-guide"),
     path("referrals_and_networks", views.referrals_and_networks, name="referrals-and-networks"),
+    path("what_are_raffles", views.what_are_raffles, name="what-are-raffles"),
 
     # AJAX Calls
     path('auction/data/auction/<auction_id>', views.get_auction_end, name="get-auction-end"),
