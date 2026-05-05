@@ -1136,4 +1136,8 @@ def private_clinic_hiring_guide(request):
     return render(request, 'auction/private_clinic_hiring_guide.html', {'path': 'private-clinic-hiring-guide'})
 
 def referrals_and_networks(request):
-    return render(request, "auction/referrals_and_networks.html", {'path': 'referrals-and-networks'})
+     return render(request, "auction/referrals_and_networks.html", {'path': 'referrals-and-networks'})
+
+def what_are_raffles(request):
+    return render(request, 'auction/what_are_raffles.html', {'path': 'what-are-raffles'})
+   
