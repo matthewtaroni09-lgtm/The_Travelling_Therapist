@@ -1,0 +1,31 @@
+<!-- Raffle Details Modal -->
+<div class="modal fade" id="{{ id }}" tabindex="-1" aria-labelledby="raffleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="raffleModalLabel">Raffle Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="raffle-description-container" class="mb-4">
+                    <h5 id="modal-raffle-title" class="mb-3"></h5>
+                    <p id="modal-raffle-description"></p>
+                    <p id="modal-raffle-tickets-required" class="text-muted"></p>
+                </div>
+                
+                <div class="ticket-purchase-container text-center">
+                    <label for="ticket-count" class="form-label mb-2">How many tickets would you like to add?</label>
+                    <div class="input-group mb-3 justify-content-center" style="max-width: 200px; margin: 0 auto;">
+                        <button class="btn btn-outline-primary" type="button" id="decrement-tickets" style="width: 45px;">-</button>
+                        <input type="number" class="form-control text-center" id="ticket-count" value="1" min="1" style="max-width: 80px;">
+                        <button class="btn btn-outline-primary" type="button" id="increment-tickets" style="width: 45px;">+</button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="confirm-purchase">Add Tickets</button>
+            </div>
+        </div>
+    </div>
+</div>

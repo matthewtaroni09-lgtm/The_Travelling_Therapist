@@ -74,19 +74,105 @@ class Account(models.Model):
     pro = models.BooleanField(verbose_name='Pro Member', null=True, blank=True)
     remember_auction_data = models.BooleanField(verbose_name='Do you want your data to be pre-populated for your next listing?', null=True, blank=True)
     auction_message_displayed = models.BooleanField(verbose_name='Listing Message Displayed', null=True, blank=True)
+    numTickets = models.IntegerField(default=0, verbose_name='# of Tickets', help_text='The number of raffle tickets assigned to a user')
+    last_ticket_award_date = models.DateField(null=True, blank=True, verbose_name='Last Ticket Award Date')
+    
+    # Referral fields
+    referral_code = models.CharField(max_length=12, unique=True, blank=True, null=True)
+    referred_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='referrals_made')
 
     def __str__(self):
         return str(self.user)
+
+    @property
+    def total_tickets(self):
+        """Calculate total tickets from the RaffleTicket ledger."""
+        from django.db.models import Sum
+        return RaffleTicket.objects.filter(user=self.user).aggregate(Sum('amount'))['amount__sum'] or 0
+
+    def add_tickets(self, amount, reason):
+        """Utility to add tickets via the ledger and sync numTickets."""
+        RaffleTicket.objects.create(user=self.user, amount=amount, reason=reason)
+        self.numTickets = self.total_tickets
+        self.save()
 
     @receiver(post_save, sender=User)
     def update_profile_signal(sender, instance, created, **kwargs):
         print("inside update profile")
         if created:
-            Account.objects.create(user=instance)
-        instance.account.save()
+            import string
+            import random
+            
+            # Generate unique referral code
+            code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=8))
+            while Account.objects.filter(referral_code=code).exists():
+                code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=8))
+            
+            account = Account.objects.create(user=instance, numTickets=5, referral_code=code)
+            # Add initial signup tickets to ledger
+            RaffleTicket.objects.create(user=instance, amount=5, reason="Signup reward")
+        else:
+            instance.account.save()
+
+    def check_and_award_referral(self):
+        """
+        Verification Gate: Award 10 tickets to the referrer after the referred user 
+        is verified (completes profile or other meaningful action).
+        """
+        # Check if this account was referred by someone
+        try:
+            referral = Referral.objects.get(referred_user=self.user, status='pending')
+            
+            # Meaningful action: profile completion (e.g., licenseNumber and about are filled)
+            if self.licenseNumber and self.about:
+                referral.status = 'verified'
+                referral.verified_at = timezone.now()
+                referral.save()
+                
+                # Award 10 tickets to the referrer
+                referrer_account = referral.referrer.account
+                referrer_account.add_tickets(10, f"Referral reward for {self.user.username}")
+                print(f"Referral: Awarded 10 tickets to {referral.referrer.username} for referring {self.user.username}")
+                return True
+        except Referral.DoesNotExist:
+            pass
+        return False
+
+    def get_referral_link(self):
+        """Generate a shareable referral link."""
+        from django.conf import settings
+        domain = getattr(settings, 'ACTIVE_LINK', 'http://127.0.0.1:8000')
+        return f"{domain}/register?ref={self.referral_code}"
+
+    def get_successful_referrals_count(self):
+        """Count of users who were referred by this user and have completed verification."""
+        return Referral.objects.filter(referrer=self.user, status='verified').count()
 
     def get_split_user_type(self):
         return str(self.userType).split(' ')[-1]
+
+class Referral(models.Model):
+    STATUS_CHOICES = (
+        ('pending', 'Pending Verification'),
+        ('verified', 'Verified'),
+    )
+    referrer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='referral_records')
+    referred_user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='referred_record')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    created_at = models.DateTimeField(auto_now_add=True)
+    verified_at = models.DateTimeField(null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.referrer.username} referred {self.referred_user.username} ({self.status})"
+
+class RaffleTicket(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='ticket_ledger')
+    amount = models.IntegerField()
+    reason = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.amount} - {self.reason}"
 
 class PaymentType(models.Model):
     name = models.CharField(verbose_name='Payment Type', max_length=200, help_text='Select a payment type from the list.')
@@ -365,3 +451,30 @@ class Number(models.Model):
 
     def __str__(self):
         return str(self.category)
+
+class Raffle(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    title = models.CharField(max_length=200)
+    description = models.TextField()
+    tickets_required = models.IntegerField(default=1)
+    image_icon = models.CharField(max_length=50, default='confirmation_number', help_text='Material icon name')
+    value_text = models.CharField(max_length=100, blank=True, null=True, help_text='e.g., $50 Value')
+    active = models.BooleanField(default=True)
+    startDate = models.DateTimeField(null=True, blank=True)
+    endDate = models.DateTimeField(null=True, blank=True)
+    winner = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL, related_name='won_raffles')
+    numWinningTickets = models.IntegerField(null=True, blank=True)
+    cronID = models.TextField(verbose_name='Cron Job Timer ID', blank=True, null=True)
+
+    def __str__(self):
+        return self.title
+
+class RaffleEntry(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='raffle_entries')
+    raffle = models.ForeignKey(Raffle, on_delete=models.CASCADE, related_name='entries')
+    tickets_added = models.IntegerField(default=0)
+    created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.raffle.title}"

@@ -8,17 +8,123 @@ from django.http import JsonResponse, HttpResponse
 from .models import Account, Auction, Bid, User, Account, AdminSetting
 from django.db.models import Min
 from . import emails
-from apscheduler.schedulers.background import BackgroundScheduler
 from django_apscheduler.jobstores import DjangoJobStore, register_events, register_job
 import logging
+import pytz
+import random
+from django.utils import timezone
+
 logger = logging.getLogger(__name__)
 
-scheduler = BackgroundScheduler()
+# Initialize scheduler with the project's timezone
+scheduler = BackgroundScheduler(timezone=pytz.timezone(settings.TIME_ZONE))
 scheduler.add_jobstore(DjangoJobStore(), "default")
-
 register_events(scheduler)
 
+def execute_raffle_draw_task(raffle_id=None):
+    """
+    Logic to identify ended raffles and pick a winner.
+    """
+    from auction.models import Raffle, Account, AdminSetting, RaffleEntry
+    now = timezone.now()
+    
+    if raffle_id:
+        active_raffles = Raffle.objects.filter(id=raffle_id, active=True)
+    else:
+        active_raffles = Raffle.objects.filter(active=True, endDate__lte=now, winner__isnull=True)
+
+    if not active_raffles.exists():
+        logger.info(f"No raffles due for draw at {now}")
+        return
+
+    admin_setting = AdminSetting.objects.first()
+
+    for raffle in active_raffles:
+        logger.warning(f'Processing draw for raffle: {raffle.title} (ID: {raffle.id})')
+        
+        # Get all users who entered THIS specific raffle
+        entries = RaffleEntry.objects.filter(raffle=raffle).select_related('user')
+        
+        if not entries.exists():
+            logger.warning(f'No entries for raffle: {raffle.title}. Deactivating.')
+            raffle.active = False
+            raffle.save()
+            continue
+
+        users = [entry.user for entry in entries]
+        weights = [entry.tickets_added for entry in entries]
+
+        # Weighted random choice based on tickets entered
+        winner = random.choices(users, weights=weights, k=1)[0]
+        
+        # Get the entry record to see how many tickets they spent
+        winning_entry = entries.get(user=winner)
+
+        raffle.winner = winner
+        raffle.numWinningTickets = winning_entry.tickets_added
+        raffle.active = False
+        raffle.save()
+        logger.warning(f'Winner selected for {raffle.title}: {winner.username}')
+
+        if admin_setting and admin_setting.sendEmails:
+            try:
+                send_mail(
+                    subject="Congratulations! You've Won the Raffle!",
+                    message=f"Hi {winner.first_name},\n\nYou have been selected as the winner of the '{raffle.title}' raffle! Congratulations!",
+                    from_email=settings.EMAIL_HOST_USER,
+                    recipient_list=[winner.email],
+                )
+                send_mail(
+                    subject=f"Raffle Winner Selected: {raffle.title}",
+                    message=f"A winner has been selected for the raffle '{raffle.title}'.\n\nWinner: {winner.username} ({winner.email})\nTickets held: {winning_entry.tickets_added}",
+                    from_email=settings.EMAIL_HOST_USER,
+                    recipient_list=['info@travelingtherapist.ca'],
+                )
+            except Exception as e:
+                logger.error(f"Error sending raffle emails: {e}")
+
+    # Account.objects.update(numTickets=0) - Removed as per user request to keep tickets persistent.
+
+def start_raffle(run_date, raffle_id):
+    """
+    Schedules a one-time precise draw for a raffle.
+    """
+    from auction.models import Raffle
+    job_id = f"raffle_{raffle_id}"
+
+    # Ensure run_date is aware
+    if timezone.is_naive(run_date):
+        run_date = timezone.make_aware(run_date, pytz.timezone(settings.TIME_ZONE))
+
+    scheduler.add_job(
+        execute_raffle_draw_task, 
+        'date', 
+        run_date=run_date,
+        id=job_id,
+        args=[raffle_id],
+        replace_existing=True
+    )
+
+    raffle = Raffle.objects.get(id=raffle_id)
+    raffle.cronID = job_id
+    raffle.save()
+    logger.warning(f"Scheduled precise draw for raffle '{raffle.title}' at {run_date}")
+
+def raffle_check_job():
+    logger.info("Executing periodic raffle check...")
+    execute_raffle_draw_task()
+
+# Register the periodic check job directly
+scheduler.add_job(
+    raffle_check_job,
+    "interval",
+    minutes=1,
+    id="raffle_check_job",
+    replace_existing=True
+)
+
 scheduler.start()
+
 
 def start(year, month, day, hour, minute, second, id):
     schedule_id = scheduler.add_job(auction_closed, 'cron', year=year, month=month, day=day, hour=hour, minute=minute, second=second, id=id, args=(id,))

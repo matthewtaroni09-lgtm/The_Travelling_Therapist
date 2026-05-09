@@ -112,6 +112,30 @@
 
     <!-- Footer -->
     {% include 'auction/footer.html' %}
+    <!-- Message Notifications -->
+    {% if messages %}
+    <script>
+        $(document).ready(function() {
+            {% for message in messages %}
+                {% if 'ticket_earned' in message.tags %}
+                    Swal.fire({
+                        title: 'Ticket Earned!',
+                        text: '{{ message|escapejs }}',
+                        icon: 'success',
+                        imageUrl: "/media/images/raffle_ticket.png",
+                        imageWidth: 100,
+                        imageAlt: 'Raffle Ticket',
+                        customClass: {
+                            image: 'mx-auto d-block'
+                        },
+                        confirmButtonText: 'Nice!',
+                        confirmButtonColor: '#0f9972'
+                    });
+                {% endif %}
+            {% endfor %}
+        });
+    </script>
+    {% endif %}
     <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MQW4DK7" height="0" width="0"
             style="display:none;visibility:hidden"></iframe></noscript>

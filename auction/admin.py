@@ -3,7 +3,7 @@ from unicodedata import category
 from django import forms
 from django.contrib import admin
 from django.http import BadHeaderError, HttpResponse
-from .models import Auction, Bid, Account, PayFrequency, PracticeArea, PracticeAreaType, ProMember, UserType, Demographic, DemographicType, ProMember, AdminSetting, Page, PopupMessage, MessageAcknowledgement, PaymentType, Number
+from .models import Auction, Bid, Account, PayFrequency, PracticeArea, PracticeAreaType, ProMember, UserType, Demographic, DemographicType, ProMember, AdminSetting, Page, PopupMessage, MessageAcknowledgement, PaymentType, Number, Raffle, RaffleEntry, Referral, RaffleTicket
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
 from django.core.mail import send_mail
@@ -136,9 +136,36 @@ class BidAdmin(admin.ModelAdmin):
 class AccountInline(admin.StackedInline):
     readonly_fields = ('id',)
     model = Account
+    fk_name = 'user'
     can_delete = False
     verbose_name_plural = 'Accounts'
     exclude = ['practiceArea', 'demographic', 'licenseNumber', 'underEighteen', 'eighteenToSixtyFive', 'overSixtyFive', 'MSK', 'neuro', 'cardioResp']
+
+@admin.register(Raffle)
+class RaffleAdmin(admin.ModelAdmin):
+    list_display = ('title', 'active', 'startDate', 'endDate', 'winner', 'numWinningTickets')
+    search_fields = ('title',)
+    list_filter = ('active',)
+    readonly_fields = ('cronID',)
+
+    def save_model(self, request, obj, form, change):
+        super().save_model(request, obj, form, change)
+        if obj.active and obj.endDate:
+            from . import scheduled_tasks
+            # Remove existing job if it exists
+            if obj.cronID:
+                try:
+                    scheduled_tasks.remove_cron_job(obj.cronID)
+                except:
+                    pass
+            
+            # Schedule new job
+            scheduled_tasks.start_raffle(obj.endDate, str(obj.id))
+
+@admin.register(RaffleEntry)
+class RaffleEntryAdmin(admin.ModelAdmin):
+    list_display = ('user', 'raffle', 'tickets_added', 'created')
+    search_fields = ('user__username', 'raffle__title')
 
 class CustomizedUserAdmin(UserAdmin):
     inlines = (AccountInline,)
@@ -183,6 +210,8 @@ admin.site.register(AdminSetting)
 admin.site.register(Page)
 admin.site.register(PaymentType)
 admin.site.register(Number)
+admin.site.register(Referral)
+admin.site.register(RaffleTicket)
 
 def delete_bid(queryset):
     auctionID = queryset[0].auction.auctionID
@@ -212,10 +241,8 @@ def delete_bid(queryset):
 
     auction.save()
 
-from datetime import timedelta
-from django.utils import timezone  # Use Django's timezone-aware "now"
-
 def time_diff_from_now(target_datetime):
+    from django.utils import timezone
     now = timezone.now()  # timezone-aware
     if timezone.is_naive(target_datetime):
         # Make the target timezone-aware using current timezone
@@ -235,11 +262,3 @@ def time_diff_from_now(target_datetime):
     minutes = (total_seconds % 3600) // 60
 
     return f"{sign}{days} day{'s' if days != 1 else ''}, {hours} hour{'s' if hours != 1 else ''}, {minutes} minute{'s' if minutes != 1 else ''}"
-
-# Example usage
-from datetime import datetime
-
-# If you have a naive datetime
-future_time = datetime(2025, 6, 8, 15, 30)  # naive datetime
-print(time_diff_from_now(future_time))
-
