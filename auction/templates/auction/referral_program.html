@@ -1,0 +1,293 @@
+{% extends 'auction/base.html' %}
+{% load static %}
+{% block meta %}
+<meta name="description" content="Reward your facility for referrals. Earn 10% off your next invoice for every facility that signs up through your referral link. Quick to set up and easy to track.">
+{% endblock %}
+{% block content %}
+<p id="pageTitle" class="d-none">Referral Program</p>
+
+<style>
+    .referral-container {
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+    .hero-section {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(201, 255, 229, 0.4) 100%);
+        border-radius: 30px;
+        padding: 4rem 2rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    }
+    .trust-bar {
+        border: 1px solid var(--primary-colour);
+        background-color: #fff;
+        display: inline-block;
+        padding: 0.5rem 1.5rem;
+        border-radius: 50px;
+    }
+    .section-heading {
+        font-family: Futura-Bold, sans-serif;
+        font-size: 2.2rem;
+        margin-bottom: 1.5rem;
+    }
+    .sub-heading {
+        font-family: Futura-Normal, sans-serif;
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        color: var(--dark-colour);
+    }
+    .step-card {
+        background: #fff;
+        border-radius: 20px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        height: 100%;
+        border-bottom: 4px solid var(--primary-colour);
+        transition: transform 0.3s ease;
+    }
+    .step-card:hover {
+        transform: translateY(-5px);
+    }
+    .step-number {
+        font-family: Futura-Bold, sans-serif;
+        font-size: 2.5rem;
+        color: var(--primary-colour);
+        margin-bottom: 0.5rem;
+        line-height: 1;
+    }
+    .callout-box {
+        background-color: var(--secondary-colour);
+        border-radius: 20px;
+        padding: 2rem;
+        height: 100%;
+    }
+    .checklist-item {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 1rem;
+    }
+    .checklist-icon {
+        color: var(--primary-colour);
+        margin-right: 1rem;
+        font-weight: bold;
+    }
+    .faq-section .accordion-button:not(.collapsed) {
+        background-color: var(--secondary-colour);
+        color: var(--dark-colour);
+    }
+    @media (max-width: 768px) {
+        .section-heading {
+            font-size: 1.8rem;
+        }
+    }
+</style>
+
+<div class="referral-container">
+    <!-- SECTION 1 — Hero -->
+    <section class="hero-section text-center mb-5">
+        <h1 class="section-heading">Give a Referral. Get 10% Off Your Next Invoice.</h1>
+        <p class="text-medium mb-4 mx-auto" style="max-width: 800px;">
+            Thank you for using The Traveling Therapist. Refer other healthcare facilities and earn a 10% discount on your next invoice for every facility that signs up through your referral link.
+        </p>
+        <div class="trust-bar mb-4">
+            <p class="mb-0 text-weight-normal">Trusted by clinics across Ontario</p>
+        </div>
+        <div class="mt-4">
+            <a href="/account#raffles" class="btn btn-primary btn-lg px-5 py-3 text-weight-bold">Get Your Referral Link</a>
+        </div>
+    </section>
+
+    <!-- SECTION 2 — What It Is -->
+    <section class="py-5 mb-5">
+        <h2 class="section-heading">What It Is</h2>
+        <div class="row g-5">
+            <div class="col-md-6">
+                <p class="paragraph-text" style="font-size: 1.2rem;">
+                    We reward facilities that help grow our network. For every facility you refer that completes sign-up, your facility receives 10% off your next invoice. Discounts stack — refer more, save more.
+                </p>
+            </div>
+            <div class="col-md-6">
+                <div class="bg-white p-4 rounded-3 shadow-sm" style="border-left: 5px solid var(--primary-colour);">
+                    <h3 class="sub-heading">Why it matters</h3>
+                    <ul class="list-unstyled">
+                        <li class="checklist-item">
+                            <span class="checklist-icon">✓</span>
+                            <span>Lower operating costs for facilities that regularly employ healthcare staff - whether short term or long term.</span>
+                        </li>
+                        <li class="checklist-item">
+                            <span class="checklist-icon">✓</span>
+                            <span>Faster matches as more facilities and clinicians join our service!</span>
+                        </li>
+                        <li class="checklist-item">
+                            <span class="checklist-icon">✓</span>
+                            <span>Simple, tracked, and automatic — we handle verification and delivery of the discount code.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 3 — How It Works -->
+    <section class="py-5 mb-5">
+        <h2 class="section-heading">How It Works</h2>
+        <div class="row g-4">
+            <div class="col-lg-8">
+                <h3 class="sub-heading mb-4">Step-by-step</h3>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="step-card">
+                            <div class="step-number">1</div>
+                            <p class="mb-0">Generate your referral link from your <a href="/account#raffles">account page</a>.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="step-card">
+                            <div class="step-number">2</div>
+                            <p class="mb-0">Share the link with colleagues who own or operate healthcare facilities.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="step-card">
+                            <div class="step-number">3</div>
+                            <p class="mb-0">They sign up using your link and create an account.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="step-card">
+                            <div class="step-number">4</div>
+                            <p class="mb-0">We verify their account and flag your account as eligible.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="step-card">
+                            <div class="step-number">5</div>
+                            <p class="mb-0">You receive a 10% discount code applied to your next invoice; we’ll email you the code and show it in your account.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="callout-box">
+                    <h3 class="sub-heading">Tracking and timing</h3>
+                    <ul class="list-unstyled">
+                        <li class="mb-4">
+                            <span class="text-weight-bold d-block">Automatic Tracking</span>
+                            Referrals are tracked automatically when your referral signs-up.
+                        </li>
+                        <li class="mb-4">
+                            <span class="text-weight-bold d-block">Quick Verification</span>
+                            Expect an email notification within 48 hours of verification form us to confirm!
+                        </li>
+                        <li>
+                            <span class="text-weight-bold d-block">Invoice Application</span>
+                            Discounts apply to the next invoice issued after the referral is approved.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 4 — Get Started -->
+    <section class="py-5 mb-5 bg-white rounded-3 shadow-sm p-4 p-md-5">
+        <h2 class="section-heading">Get Started</h2>
+        <div class="row g-4 align-items-center">
+            <div class="col-md-7">
+                <h3 class="sub-heading">Quick checklist</h3>
+                <ul class="list-unstyled">
+                    <li class="checklist-item">
+                        <span class="checklist-icon">☐</span>
+                        <span><a href="/login" class="text-dark-colour text-weight-bold">Login</a></span>
+                    </li>
+                    <li class="checklist-item">
+                        <span class="checklist-icon">☐</span>
+                        <span>Open Account and click <a href="/account#raffles" class="text-dark-colour text-weight-bold">Referral Program</a></span>
+                    </li>
+                    <li class="checklist-item">
+                        <span class="checklist-icon">☐</span>
+                        <span>Copy your referral link and send it to facility owners you know</span>
+                    </li>
+                    <li class="checklist-item">
+                        <span class="checklist-icon">☐</span>
+                        <span>Watch for confirmation — we’ll notify you and deliver the discount code</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-5 text-center">
+                <div class="d-grid gap-3">
+                    <a href="/account#raffles" class="btn btn-primary py-3 text-weight-bold">Copy Referral Link</a>
+                    <a href="https://mail.google.com/mail/?view=cm&fs=1&tf=1&su=Referral%20for%20The%20Traveling%20Therapist" target="_blank" rel="noopener noreferrer" class="btn btn-outline-dark py-3 text-weight-bold">Email Link to Colleague</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 5 — FAQ -->
+    <section class="faq-section py-5 mb-5">
+        <h2 class="section-heading">FAQ</h2>
+        <div class="accordion" id="referralFAQ">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingOne">
+                    <button class="accordion-button text-weight-normal" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        Can I use my referral link more than once?
+                    </button>
+                </h2>
+                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#referralFAQ">
+                    <div class="accordion-body text-weight-light">
+                        Yes. Use it as many times as you like. Each successful facility sign-up earns you a separate 10% discount. Every year the facility with the most referrals receives an additional special discount.
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingTwo">
+                    <button class="accordion-button text-weight-normal collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                        What if a practitioner (not a facility) signs up?
+                    </button>
+                </h2>
+                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#referralFAQ">
+                    <div class="accordion-body text-weight-light">
+                        Thank you — practitioners help the platform grow. Currently we only issue discount codes for facility sign-ups, but more practitioners on the platform increases your listing visibility and future offers.
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingThree">
+                    <button class="accordion-button text-weight-normal collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                        When will I receive my discount code?
+                    </button>
+                </h2>
+                <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#referralFAQ">
+                    <div class="accordion-body text-weight-light">
+                        After the referred facility completes sign-up and verification, you’ll get an email and an in-account notification within 48 hours.
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingFour">
+                    <button class="accordion-button text-weight-normal collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                        Is there a limit to how many discounts I can earn?
+                    </button>
+                </h2>
+                <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#referralFAQ">
+                    <div class="accordion-body text-weight-light">
+                        No hard limit. Discounts are issued per verified facility referral and apply to your next invoice each time.
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingFive">
+                    <button class="accordion-button text-weight-normal collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                        What if I am a clinician, could I use the referral link?
+                    </button>
+                </h2>
+                <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive" data-bs-parent="#referralFAQ">
+                    <div class="accordion-body text-weight-light">
+                        Clinicians benefit from the referrals by earning tickets each time a new user sign-up using their code. <a href="{% url 'what-are-raffles' %}" class="text-weight-bold">Learn More Here!</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+{% endblock %}

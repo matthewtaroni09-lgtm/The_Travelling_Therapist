@@ -1195,6 +1195,12 @@ def private_clinic_hiring_guide(request):
 def referrals_and_networks(request):
      return render(request, "auction/referrals_and_networks.html", {'path': 'referrals-and-networks'})
 
+def referral_program(request):
+    referral_link = ""
+    if request.user.is_authenticated:
+        referral_link = request.user.account.get_referral_link()
+    return render(request, "auction/referral_program.html", {'path': 'facility-referral', 'referral_link': referral_link})
+
 def what_are_raffles(request):
     return render(request, 'auction/what_are_raffles.html', {'path': 'what-are-raffles'})
 

@@ -14,6 +14,7 @@ urlpatterns = [
     path('', views.index, name="index"),
     path("about", views.about, name="about"),
     path("profile", views.profile, name="profile"),
+    path("account", views.profile),
     path("create_auction", views.create_auction, name="create-auction"),
     path("register", views.register, name="register"),
     path("login", views.login_user, name="login"),
@@ -46,6 +47,7 @@ urlpatterns = [
     path("job_boards", views.job_boards, name="job-boards"),
     path("private_clinic_hiring_guide", views.private_clinic_hiring_guide, name="private-clinic-hiring-guide"),
     path("referrals_and_networks", views.referrals_and_networks, name="referrals-and-networks"),
+    path("facility-referral", views.referral_program, name="referral-program"),
     path("what_are_raffles", views.what_are_raffles, name="what-are-raffles"),
     path("surveys", views.surveys, name="surveys"),
 

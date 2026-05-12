@@ -52,6 +52,23 @@ $(document).ready(function () {
         }
     });
 
+    // Referral Modal Copy Logic
+    $('#copyReferralBtn').on('click', function() {
+        const copyText = document.getElementById("referralLinkInput");
+        copyText.select();
+        copyText.setSelectionRange(0, 99999); // For mobile devices
+        
+        navigator.clipboard.writeText(copyText.value).then(() => {
+            const feedback = $('#copyFeedback');
+            feedback.fadeIn();
+            setTimeout(() => {
+                feedback.fadeOut();
+            }, 2000);
+        }).catch(err => {
+            console.error('Failed to copy: ', err);
+        });
+    });
+
     $('#confirm-purchase').on('click', function() {
         const ticketCount = $('#ticket-count').val();
         const raffleTitle = $('#modal-raffle-title').text();

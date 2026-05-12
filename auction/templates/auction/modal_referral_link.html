@@ -1,0 +1,25 @@
+<div class="modal fade" id="referralModal" tabindex="-1" aria-labelledby="referralModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow-lg">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title" id="referralModalLabel">Your Shareable Link</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-4 text-center">
+        <p class="mb-3 text-muted">Copy this link and send it to your friends!</p>
+        <div class="input-group mb-3">
+          <input type="text" id="referralLinkInput" class="form-control text-center bg-light" value="{{ referral_link }}" readonly>
+        </div>
+        <button id="copyReferralBtn" class="btn btn-secondary px-4 py-2">
+          <span class="d-flex align-items-center gap-2">
+            <i class="material-icons" style="font-size: 1.2rem;">content_copy</i>
+            Copy
+          </span>
+        </button>
+        <div id="copyFeedback" class="mt-2 text-success fw-bold" style="display: none; height: 1.5rem;">
+          Copied to clipboard!
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
