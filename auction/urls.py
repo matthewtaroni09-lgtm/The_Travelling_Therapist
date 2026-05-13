@@ -14,6 +14,7 @@ urlpatterns = [
     path('', views.index, name="index"),
     path("about", views.about, name="about"),
     path("profile", views.profile, name="profile"),
+    path("account", views.profile),
     path("create_auction", views.create_auction, name="create-auction"),
     path("register", views.register, name="register"),
     path("login", views.login_user, name="login"),
@@ -46,7 +47,9 @@ urlpatterns = [
     path("job_boards", views.job_boards, name="job-boards"),
     path("private_clinic_hiring_guide", views.private_clinic_hiring_guide, name="private-clinic-hiring-guide"),
     path("referrals_and_networks", views.referrals_and_networks, name="referrals-and-networks"),
+    path("facility-referral", views.referral_program, name="referral-program"),
     path("what_are_raffles", views.what_are_raffles, name="what-are-raffles"),
+    path("surveys", views.surveys, name="surveys"),
 
     # AJAX Calls
     path('auction/data/auction/<auction_id>', views.get_auction_end, name="get-auction-end"),
@@ -59,6 +62,7 @@ urlpatterns = [
     path("auction/data/get_popups", views.get_popups, name="get-popups"), 
     path("auction/data/set_acknowledgement", views.set_acknowledgement, name="set-acknowledgement"), 
     path("auction/data/check_user_payment_type", views.check_user_payment_type, name="check-user-payment-type"), 
+    path("auction/data/join_raffle", views.join_raffle, name="join-raffle"), 
     
     path("password_reset", views.password_reset_request, name="password_reset"),
     path("password", PasswordsChangeView.as_view(template_name="auction/registration/change_password.html"), name="change-password")

@@ -1,0 +1,113 @@
+{% extends 'auction/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row text-center mb-5">
+        <div class="col-md-12">
+            <h1 class="text-weight-bold mb-3">Surveys</h1>
+            <p class="text-medium">Help us improve the platform by sharing your feedback through these role-specific surveys.</p>
+        </div>
+    </div>
+
+    {% if user_type != 'Clinic' %}
+    <!-- Clinician Surveys Section -->
+    <div class="row mb-5 justify-content-center">
+        <div class="col-md-10">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white p-4 border-0">
+                    <div class="d-flex align-items-center">
+                        <img class="img-fluid me-3" src="/media/images/therapy.png" alt="Healthcare Professional as a cartoon" style="width: 60px; height: 60px; object-fit: contain;">
+                        <h2 class="text-weight-bold mb-0">Clinician Surveys</h2>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <div class="accordion" id="clinicianSurveyAccordion">
+                        <div class="accordion-item border-0">
+                            <h2 class="accordion-header" id="clinicianHeadingOne">
+                                <button class="accordion-button text-weight-normal" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#clinicianCollapseOne" aria-expanded="true" aria-controls="clinicianCollapseOne">
+                                    Clinician Pain Points
+                                </button>
+                            </h2>
+                            <div id="clinicianCollapseOne" class="accordion-collapse collapse show" aria-labelledby="clinicianHeadingOne"
+                                data-bs-parent="#clinicianSurveyAccordion">
+                                <div class="accordion-body">
+                                    <div class="ratio ratio-4x3 shadow-sm rounded overflow-hidden">
+                                        <iframe src="https://docs.google.com/forms/d/1jTOVph8EwIDOfoF2egFB-FbbEu8U8RF0jjBt-TiRhT8/viewform?embedded=true" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item border-0">
+                            <h2 class="accordion-header" id="clinicianHeadingTwo">
+                                <button class="accordion-button text-weight-normal collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#clinicianCollapseTwo" aria-expanded="false" aria-controls="clinicianCollapseTwo">
+                                    Future Surveys
+                                </button>
+                            </h2>
+                            <div id="clinicianCollapseTwo" class="accordion-collapse collapse" aria-labelledby="clinicianHeadingTwo"
+                                data-bs-parent="#clinicianSurveyAccordion">
+                                <div class="accordion-body text-weight-light">
+                                    More surveys coming soon!
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if user_type == 'Clinic' %}
+    <!-- Clinic Owner Surveys Section -->
+    <div class="row mb-5 justify-content-center">
+        <div class="col-md-10">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white p-4 border-0">
+                    <div class="d-flex align-items-center">
+                        <img class="img-fluid me-3" src="/media/images/clinic.png" alt="Clinic office as a cartoon" style="width: 60px; height: 60px; object-fit: contain;">
+                        <h2 class="text-weight-bold mb-0">Healthcare Facility Surveys</h2>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <div class="accordion" id="clinicSurveyAccordion">
+                        <div class="accordion-item border-0">
+                            <h2 class="accordion-header" id="clinicHeadingOne">
+                                <button class="accordion-button text-weight-normal" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#clinicCollapseOne" aria-expanded="true" aria-controls="clinicCollapseOne">
+                                    Healthcare Facility "Hiring Holes"
+                                </button>
+                            </h2>
+                            <div id="clinicCollapseOne" class="accordion-collapse collapse show" aria-labelledby="clinicHeadingOne"
+                                data-bs-parent="#clinicSurveyAccordion">
+                                <div class="accordion-body">
+                                    <div class="ratio ratio-4x3 shadow-sm rounded overflow-hidden">
+                                        <iframe src="https://docs.google.com/forms/d/1imkuBs0uMvlv8T4kmp3s1R8iNqfSgiV8qs12E_6Njn8/viewform?embedded=true" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item border-0">
+                            <h2 class="accordion-header" id="clinicHeadingTwo">
+                                <button class="accordion-button text-weight-normal collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#clinicCollapseTwo" aria-expanded="false" aria-controls="clinicCollapseTwo">
+                                    Future Surveys
+                                </button>
+                            </h2>
+                            <div id="clinicCollapseTwo" class="accordion-collapse collapse" aria-labelledby="clinicHeadingTwo"
+                                data-bs-parent="#clinicSurveyAccordion">
+                                <div class="accordion-body text-weight-light">
+                                    More surveys coming soon!
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

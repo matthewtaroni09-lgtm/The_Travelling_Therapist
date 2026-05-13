@@ -5,6 +5,7 @@ import uuid
 from wsgiref.simple_server import demo_app
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from django.views.generic import ListView, CreateView
@@ -16,7 +17,7 @@ from .forms import RegisterAcount, AuctionForm, BidForm, UserFormClinic, UserFor
 from django.urls import reverse_lazy
 import datetime
 from . import scheduled_tasks
-from .models import PROVINCES, Account, AdminSetting, Auction, Bid, Demographic, DemographicType, PracticeArea, PracticeAreaType, User, Account, UserType, PopupMessage, MessageAcknowledgement, Page, PaymentType, Number
+from .models import PROVINCES, Account, AdminSetting, Auction, Bid, Demographic, DemographicType, PracticeArea, PracticeAreaType, User, Account, UserType, PopupMessage, MessageAcknowledgement, Page, PaymentType, Number, Raffle, RaffleEntry
 from django.contrib.auth.forms import PasswordResetForm
 from django.utils.http import urlsafe_base64_encode
 from django.contrib.auth.tokens import default_token_generator
@@ -248,6 +249,19 @@ def profile(request):
     parameter = {}
     show_form = False
     user = request.user
+    account = user.account
+    
+    # Trigger referral verification check
+    account.check_and_award_referral()
+    
+    # Raffle and Referral data
+    tickets = account.numTickets  # Sync'd by add_tickets or can use total_tickets property
+    joined_raffles = RaffleEntry.objects.filter(user=user).select_related('raffle')
+    active_raffles = Raffle.objects.filter(active=True)
+    
+    referral_link = account.get_referral_link()
+    successful_referrals = account.get_successful_referrals_count()
+    
     # Clinic Profile
     if str(request.user.account.userType).split(' ')[-1] == "Clinic":
         print(request.method)
@@ -283,7 +297,12 @@ def profile(request):
                     'submitted_profile': submitted_profile,
                     'submitted_auction': submitted_auction,
                     'show_form': show_form,
-                    'user': user
+                    'user': user,
+                    'tickets': tickets,
+                    'joined_raffles': joined_raffles,
+                    'active_raffles': active_raffles,
+                    'referral_link': referral_link,
+                    'successful_referrals': successful_referrals
                 })
                 return render(request, 'auction/profile.html', parameter)
         else:
@@ -301,7 +320,12 @@ def profile(request):
                     'submitted_profile': submitted_profile,
                     'submitted_auction': submitted_auction,
                     'show_form': show_form,
-                    'user': user
+                    'user': user,
+                    'tickets': tickets,
+                    'joined_raffles': joined_raffles,
+                    'active_raffles': active_raffles,
+                    'referral_link': referral_link,
+                    'successful_referrals': successful_referrals
                 })
             return render(request, 'auction/profile.html', parameter)
     # Therapist Profile
@@ -323,7 +347,12 @@ def profile(request):
                     'active_auctions_list': active_auctions_list,
                     'past_auctions_list': past_auctions_list,
                     'user_therapist_form': user_therapist_form,
-                    'user': user
+                    'user': user,
+                    'tickets': tickets,
+                    'joined_raffles': joined_raffles,
+                    'active_raffles': active_raffles,
+                    'referral_link': referral_link,
+                    'successful_referrals': successful_referrals
                 })
                 return render(request, 'auction/profile.html', parameter)
         else:
@@ -334,9 +363,14 @@ def profile(request):
                 'active_auctions_list': active_auctions_list,
                 'past_auctions_list': past_auctions_list,
                 'user_therapist_form': user_therapist_form,
-                'user': user
+                'user': user,
+                'tickets': tickets,
+                'joined_raffles': joined_raffles,
+                'referral_link': referral_link,
+                'successful_referrals': successful_referrals
             })
             return render(request, 'auction/profile.html', parameter)
+
 
 def view_auction(request, auction_id):
     admin = AdminSetting.objects.first()
@@ -761,6 +795,7 @@ def admin_summary(request):
     }
     return render(request, 'auction/admin_summary.html', context)
 
+@login_required
 def create_auction(request):
     if request.user.is_authenticated == False:
         return render(request, 'auction/create_auction.html', {})
@@ -960,7 +995,28 @@ def register(request):
             user.account.imageTwo = form.cleaned_data.get('imageTwo')
             user.account.imageThree = form.cleaned_data.get('imageThree')
             user.account.imageFour = form.cleaned_data.get('imageFour')
+            
+            # Referral logic
+            referral_code = request.session.get('referral_code')
+            if referral_code:
+                try:
+                    referrer_account = Account.objects.get(referral_code=referral_code)
+                    referrer = referrer_account.user
+                    
+                    # Self-referral block
+                    if referrer.email != user.email:
+                        user.account.referred_by = referrer
+                        Referral.objects.create(referrer=referrer, referred_user=user)
+                        print(f"Referral: {user.username} was referred by {referrer.username}")
+                    else:
+                        print(f"Referral: Self-referral attempt blocked for {user.username}")
+                except Account.DoesNotExist:
+                    print(f"Referral: Invalid referral code {referral_code}")
+                # Clean up session
+                del request.session['referral_code']
+
             user.save()
+            user.account.save()
             
             recaptcha_response = request.POST.get('g-recaptcha-response')
             data = {
@@ -1036,6 +1092,7 @@ def register(request):
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=user.username, password=raw_password)
             login(request, user)
+            messages.success(request, 'Welcome! You have earned 5 raffle tickets for signing up!', extra_tags='ticket_earned')
             return redirect('index')
         else:
             print("not valid")
@@ -1138,6 +1195,73 @@ def private_clinic_hiring_guide(request):
 def referrals_and_networks(request):
      return render(request, "auction/referrals_and_networks.html", {'path': 'referrals-and-networks'})
 
+def referral_program(request):
+    referral_link = ""
+    if request.user.is_authenticated:
+        referral_link = request.user.account.get_referral_link()
+    return render(request, "auction/referral_program.html", {'path': 'facility-referral', 'referral_link': referral_link})
+
 def what_are_raffles(request):
     return render(request, 'auction/what_are_raffles.html', {'path': 'what-are-raffles'})
-   
+
+@login_required
+def surveys(request):
+    """
+    Role-based surveys page. 
+    Redirects unauthenticated users to login (via @login_required).
+    Filters visible surveys based on user type.
+    """
+    user_type = request.user.account.get_split_user_type()
+    context = {
+        'user_type': user_type,
+        'path': 'surveys'
+    }
+    return render(request, 'auction/surveys.html', context)
+
+def join_raffle(request):
+    if request.method == 'POST':
+        if not request.user.is_authenticated:
+            return JsonResponse({'status': 'error', 'message': 'You must be logged in to enter a raffle.'})
+        
+        try:
+            data = json.loads(request.body)
+            raffle_title = data.get('raffle_title')
+            tickets_to_add = int(data.get('ticket_count', 0))
+            
+            if tickets_to_add <= 0:
+                return JsonResponse({'status': 'error', 'message': 'Please enter a valid number of tickets.'})
+                
+            account = request.user.account
+            
+            # Check balance
+            if account.numTickets < tickets_to_add:
+                return JsonResponse({
+                    'status': 'error', 
+                    'message': f'You only have {account.numTickets} tickets available.'
+                })
+            
+            raffle = Raffle.objects.get(title=raffle_title, active=True)
+            
+            # Deduct tickets via ledger
+            account.add_tickets(-tickets_to_add, f"Raffle entry: {raffle.title}")
+            
+            # Create or update entry
+            entry, created = RaffleEntry.objects.get_or_create(
+                user=request.user,
+                raffle=raffle
+            )
+            entry.tickets_added += tickets_to_add
+            entry.save()
+            
+            return JsonResponse({
+                'status': 'success', 
+                'message': f'Successfully added {tickets_to_add} tickets to {raffle.title}.',
+                'new_balance': account.numTickets
+            })
+            
+        except Raffle.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'Raffle not found or is no longer active.'})
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)})
+            
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method.'})
