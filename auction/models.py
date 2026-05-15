@@ -453,12 +453,18 @@ class Number(models.Model):
         return str(self.category)
 
 class Raffle(models.Model):
+    AUDIENCE_CHOICES = [
+        ('Both', 'Both'),
+        ('Clinician', 'Clinician'),
+        ('Clinic', 'Clinic'),
+    ]
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField(max_length=200)
     description = models.TextField()
     tickets_required = models.IntegerField(default=1)
     image_icon = models.CharField(max_length=50, default='confirmation_number', help_text='Material icon name')
     value_text = models.CharField(max_length=100, blank=True, null=True, help_text='e.g., $50 Value')
+    target_audience = models.CharField(max_length=20, choices=AUDIENCE_CHOICES, default='Both', help_text='Who can see and enter this raffle?')
     active = models.BooleanField(default=True)
     startDate = models.DateTimeField(null=True, blank=True)
     endDate = models.DateTimeField(null=True, blank=True)
