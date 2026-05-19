@@ -257,13 +257,13 @@ def profile(request):
     # Raffle and Referral data
     tickets = account.numTickets  # Sync'd by add_tickets or can use total_tickets property
     joined_raffles = RaffleEntry.objects.filter(user=user).select_related('raffle')
-    active_raffles = Raffle.objects.filter(active=True)
     
     referral_link = account.get_referral_link()
     successful_referrals = account.get_successful_referrals_count()
     
     # Clinic Profile
     if str(request.user.account.userType).split(' ')[-1] == "Clinic":
+        active_raffles = Raffle.objects.filter(active=True, target_audience__in=['Both', 'Clinic'])
         print(request.method)
         # Not closed and not deleted counts any auctions that are active or have no status selected
         active_auctions_list = Auction.objects.filter(active=True, closed=False, deleted=False, clinic=request.user.account)
@@ -330,6 +330,7 @@ def profile(request):
             return render(request, 'auction/profile.html', parameter)
     # Therapist Profile
     else:
+        active_raffles = Raffle.objects.filter(active=True, target_audience__in=['Both', 'Clinician'])
         print(request.method)
         user_id = str(request.user.id)
         active_auctions_list = Bid.objects.raw('SELECT DISTINCT AA.auctionID, AB.bidID, AA.placementStart, AA.placementEnd, AA.clinic_id, AA.currentLowBid, AA.winningPrice, AC.user_id , AC.clinicName, AC.city, AC.province, AC.about, AC.imageOne, AC.imageTwo, UTA.name "type", AA.type_id, count(*) "get_num_bids", CASE WHEN AA.currentLowBid IS NULL THEN "No Bids Yet" WHEN AA.closed = 1 AND AA.active = 0 and AA.winningPrice IS NOT NULL THEN CONCAT("Winning Bid: $", AA.winningPrice) WHEN AA.closed = 1 AND AA.active = 0 and AA.winningPrice IS NULL THEN "No winner" ELSE CONCAT("Current Low Bid: $", AA.currentLowBid) END "get_bid", CASE WHEN UT.name = "Physiotherapy Clinic" THEN "Temporary Physiotherapist" ELSE "" END "get_position_type", PT.name "paymentType" FROM auction_auction AA LEFT JOIN auction_bid AB ON AA.auctionID = AB.auction_id LEFT JOIN auction_account AC ON AA.clinic_id = AC.id LEFT JOIN auction_usertype UT ON AC.userType_id = UT.id JOIN auction_usertype UTA on AA.type_id = UTA.id JOIN auction_paymenttype PT ON AA.paymenttype_id = PT.id WHERE AB.user_id = ' + user_id + ' AND AA.active = 1 AND AA.closed = 0 AND AA.deleted = 0 GROUP BY auctionID, AA.placementStart, AB.amount, AA.placementEnd, AA.clinic_id, AC.user_id , AC.clinicName, AC.city, AC.about, AC.imageOne, AC.imageTwo, UT.name, AA.type_id, PT.name;')
@@ -366,6 +367,7 @@ def profile(request):
                 'user': user,
                 'tickets': tickets,
                 'joined_raffles': joined_raffles,
+                'active_raffles': active_raffles,
                 'referral_link': referral_link,
                 'successful_referrals': successful_referrals
             })
@@ -447,6 +449,14 @@ def view_auction(request, auction_id):
             if len(bids) > 0:
                 current_lowest_bid_user = bids[0].user
             bid.save()
+
+            # Reward the clinician with 5 tickets for placing a bid (only once per listing)
+            if hasattr(request.user, 'account'):
+                if Bid.objects.filter(user=request.user, auction=auction).count() == 1:
+                    request.user.account.add_tickets(5, f"Placed bid on listing {auction.auctionID}")
+                    messages.success(request, 'You have earned 5 raffle tickets for placing an offer!', extra_tags='ticket_earned')
+                else:
+                    messages.success(request, 'Your offer has been successfully placed!')
 
             # If there are existing bids and the current bid is lower than the current best bid, check if the emails that need to be sent out
             # If the current bid if higher than the current minimum then there is no need to send this email
@@ -922,6 +932,12 @@ def create_auction(request):
                         logger.warning('Admin copy of healthcare facility email failed to send for Listing Creation.')
 
                 scheduled_tasks.start(auction.auctionEnd.year, auction.auctionEnd.month, auction.auctionEnd.day, auction.auctionEnd.hour, auction.auctionEnd.minute, auction.auctionEnd.second, str(auction.auctionID))
+                
+                # Reward the clinic with 5 tickets for creating a listing
+                if hasattr(request.user, 'account'):
+                    request.user.account.add_tickets(5, f"Created listing {auction.auctionID}")
+                    messages.success(request, 'You have earned 5 raffle tickets for creating a job listing!', extra_tags='ticket_earned')
+                
                 return HttpResponseRedirect('/profile?submitted=True')
             else:
                 print("else")

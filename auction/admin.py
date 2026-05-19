@@ -143,9 +143,9 @@ class AccountInline(admin.StackedInline):
 
 @admin.register(Raffle)
 class RaffleAdmin(admin.ModelAdmin):
-    list_display = ('title', 'active', 'startDate', 'endDate', 'winner', 'numWinningTickets')
+    list_display = ('title', 'target_audience', 'active', 'startDate', 'endDate', 'winner', 'numWinningTickets')
     search_fields = ('title',)
-    list_filter = ('active',)
+    list_filter = ('active', 'target_audience')
     readonly_fields = ('cronID',)
 
     def save_model(self, request, obj, form, change):
