@@ -450,10 +450,13 @@ def view_auction(request, auction_id):
                 current_lowest_bid_user = bids[0].user
             bid.save()
 
-            # Reward the clinician with 5 tickets for placing a bid
+            # Reward the clinician with 5 tickets for placing a bid (only once per listing)
             if hasattr(request.user, 'account'):
-                request.user.account.add_tickets(5, f"Placed bid on listing {auction.auctionID}")
-                messages.success(request, 'You have earned 5 raffle tickets for placing an offer!', extra_tags='ticket_earned')
+                if Bid.objects.filter(user=request.user, auction=auction).count() == 1:
+                    request.user.account.add_tickets(5, f"Placed bid on listing {auction.auctionID}")
+                    messages.success(request, 'You have earned 5 raffle tickets for placing an offer!', extra_tags='ticket_earned')
+                else:
+                    messages.success(request, 'Your offer has been successfully placed!')
 
             # If there are existing bids and the current bid is lower than the current best bid, check if the emails that need to be sent out
             # If the current bid if higher than the current minimum then there is no need to send this email
