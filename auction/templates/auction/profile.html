@@ -150,7 +150,11 @@
                         <h6 class="mb-1">{{ entry.raffle.title }}</h6>
                         <small class="text-muted">Tickets Entered: {{ entry.tickets_added }}</small>
                       </div>
+                      {% if entry.raffle.active %}
                       <span class="badge bg-success rounded-pill">Active</span>
+                      {% else %}
+                      <span class="badge bg-secondary rounded-pill">Ended</span>
+                      {% endif %}
                     </div>
                   </div>
                 </div>
@@ -172,9 +176,13 @@
                 <div class="card mb-3 shadow-sm text-decoration-none text-dark">
                   <div class="position-relative bg-light d-flex align-items-center justify-content-center"
                     style="height: 120px; {% if forloop.counter|divisibleby:2 %}background: linear-gradient(45deg, #f3f3f3, #e9ecef) !important;{% endif %}">
+                    {% if raffle.image %}
+                    <img src="{{ raffle.image.url }}" alt="{{ raffle.title }}" style="max-height: 100%; max-width: 100%; object-fit: contain;">
+                    {% else %}
                     <span class="material-icons"
                       style="font-size: 3rem; color: {% if forloop.counter|divisibleby:2 %}#0AEAA9{% else %}#ccc{% endif %};">{{
                       raffle.image_icon }}</span>
+                    {% endif %}
                   </div>
                   <div class="card-body text-center p-3">
                     <h5 class="card-title">{{ raffle.title }}</h5>
@@ -291,7 +299,11 @@
                             <h6 class="mb-1">{{ entry.raffle.title }}</h6>
                             <small class="text-muted">Tickets Entered: {{ entry.tickets_added }}</small>
                           </div>
+                          {% if entry.raffle.active %}
                           <span class="badge bg-success rounded-pill">Active</span>
+                          {% else %}
+                          <span class="badge bg-secondary rounded-pill">Ended</span>
+                          {% endif %}
                         </div>
                       </div>
                     </div>
@@ -313,9 +325,13 @@
                     <div class="card mb-3 shadow-sm text-decoration-none text-dark">
                       <div class="position-relative bg-light d-flex align-items-center justify-content-center"
                         style="height: 120px; {% if forloop.counter|divisibleby:2 %}background: linear-gradient(45deg, #f3f3f3, #e9ecef) !important;{% endif %}">
+                        {% if raffle.image %}
+                        <img src="{{ raffle.image.url }}" alt="{{ raffle.title }}" style="max-height: 100%; max-width: 100%; object-fit: contain;">
+                        {% else %}
                         <span class="material-icons"
                           style="font-size: 3rem; color: {% if forloop.counter|divisibleby:2 %}#0AEAA9{% else %}#ccc{% endif %};">{{
                           raffle.image_icon }}</span>
+                        {% endif %}
                       </div>
                       <div class="card-body text-center p-3">
                         <h5 class="card-title">{{ raffle.title }}</h5>

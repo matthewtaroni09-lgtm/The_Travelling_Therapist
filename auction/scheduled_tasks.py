@@ -70,7 +70,7 @@ def execute_raffle_draw_task(raffle_id=None):
             try:
                 send_mail(
                     subject="Congratulations! You've Won the Raffle!",
-                    message=f"Hi {winner.first_name},\n\nYou have been selected as the winner of the '{raffle.title}' raffle! Congratulations!",
+                    message=f"Hi {winner.first_name},\n\nGreat News — you’ve been selected as the winner of this month’s Traveling Therapist Raffle!'\n\nYour entry was randomly chosen from all eligible submissions, and we’re excited to award you the following prize:\n\n Prize: {raffle.title}!\n\nRaffle Month: {raffle.endDate.strftime('%B %Y')}\n\nYour prize will be delivered to you via info@travelingtherapist.com within the next few days.\n\nYour current ticket balance is {Account.objects.get(user=winner).numTickets} tickets.\n\nThanks for being an engaged member of The Traveling Therapist coommunity — and enjoy your prize!\n\nWarmly,\nThe Traveling Therapist Team",
                     from_email=settings.EMAIL_HOST_USER,
                     recipient_list=[winner.email],
                 )

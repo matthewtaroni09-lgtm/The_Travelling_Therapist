@@ -19,7 +19,7 @@ $(document).ready(function () {
     // Handle hash in URL to show specific tab
     var hash = window.location.hash;
     if (hash) {
-        $('.nav-tabs button[data-bs-target="' + hash + '"]').tab('show');
+        $('button[data-bs-target="' + hash + '"]').tab('show');
     }
 
     // Raffle Modal Logic
@@ -96,7 +96,8 @@ $(document).ready(function () {
                     }).then(() => {
                         // Update the balance in the UI
                         $('h2:contains("Available Tickets")').next().text(response.new_balance);
-                        // Refresh page to show new entry in Participating Raffles
+                        // Set hash to load the raffles tab and refresh page
+                        window.location.hash = 'raffles';
                         location.reload(); 
                     });
                 } else {

@@ -465,6 +465,7 @@ class Raffle(models.Model):
     image_icon = models.CharField(max_length=50, default='confirmation_number', help_text='Material icon name')
     value_text = models.CharField(max_length=100, blank=True, null=True, help_text='e.g., $50 Value')
     target_audience = models.CharField(max_length=20, choices=AUDIENCE_CHOICES, default='Both', help_text='Who can see and enter this raffle?')
+    image = models.ImageField(upload_to='raffle_images/', null=True, blank=True, help_text='Upload an image for the raffle. If not provided, the Material Icon will be used.')
     active = models.BooleanField(default=True)
     startDate = models.DateTimeField(null=True, blank=True)
     endDate = models.DateTimeField(null=True, blank=True)
