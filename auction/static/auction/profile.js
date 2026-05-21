@@ -1,25 +1,33 @@
 $(document).ready(function () {
+    const showTab = (selector) => {
+        const el = document.querySelector(selector);
+        if (el) {
+            const tab = new bootstrap.Tab(el);
+            tab.show();
+        }
+    };
+
     if ($('.alert-block').css("display") === "block") {
-        $('#profile-tab').tab('show');
+        showTab('#profile-tab');
     }
 
     if ($('#error_1_id_imageOne').css("display") === "block") {
-        $('#profile-tab').tab('show');
+        showTab('#profile-tab');
     }
     if ($('#error_1_id_imageTwo').css("display") === "block") {
-        $('#profile-tab').tab('show');
+        showTab('#profile-tab');
     }
     if ($('#error_1_id_imageThree').css("display") === "block") {
-        $('#profile-tab').tab('show');
+        showTab('#profile-tab');
     }
     if ($('#error_1_id_imageFour').css("display") === "block") {
-        $('#profile-tab').tab('show');
+        showTab('#profile-tab');
     }
 
     // Handle hash in URL to show specific tab
     var hash = window.location.hash;
     if (hash) {
-        $('button[data-bs-target="' + hash + '"]').tab('show');
+        showTab('button[data-bs-target="' + hash + '"]');
     }
 
     // Raffle Modal Logic
@@ -97,7 +105,7 @@ $(document).ready(function () {
                         // Update the balance in the UI
                         $('h2:contains("Available Tickets")').next().text(response.new_balance);
                         // Set hash to load the raffles tab and refresh page
-                        window.location.hash = 'raffles';
+                        window.location.hash = '#raffles';
                         location.reload(); 
                     });
                 } else {
