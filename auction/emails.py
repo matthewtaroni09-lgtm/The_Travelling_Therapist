@@ -420,3 +420,18 @@ def new_auction_email_to_all(first_name, last_name, link, start_date, end_date, 
 </section>"""
     message = message + email_footer
     return message
+
+def referral_success_email(referrer_name, new_facility_name, ticket_amount, account_url):
+    message = email_header
+    message = message + """<section style="font-size: 16px; margin-bottom: 1rem; padding: 10px;">
+    <p>A new facility joined using your referral link. Your Tickets are now ready for use in your profile account.</p>
+
+    <p>Hi """ + referrer_name + """, great news — """ + new_facility_name + """ just signed up using your referral link. As a thank-you, here’s """ + str(ticket_amount) + """ tickets for you to spend in our raffles! Thanks for helping grow our network. View your referrals: <a href='""" + account_url + """'>here</a>.</p>
+
+    <p>Thanks again for helping grow our community. More facilities means faster matches and better coverage for everyone.</p>
+
+    <p>Warm regards,</p>
+    <p style="font-weight: 700; padding-top: 0rem; margin-top: 0; line-height: 0;">The Traveling Therapist Team</p>
+</section>"""
+    message = message + email_footer
+    return message

@@ -133,6 +133,41 @@ class Account(models.Model):
                 referrer_account = referral.referrer.account
                 referrer_account.add_tickets(10, f"Referral reward for {self.user.username}")
                 print(f"Referral: Awarded 10 tickets to {referral.referrer.username} for referring {self.user.username}")
+
+                # Send referral success email
+                from django.core.mail import send_mail
+                from django.conf import settings
+                from . import emails
+                
+                new_facility_name = self.clinicName if self.clinicName else f"{self.user.first_name} {self.user.last_name}"
+                if not new_facility_name.strip():
+                    new_facility_name = self.user.username
+                
+                account_url = f"{settings.ACTIVE_LINK}/profile#raffles"
+                
+                try:
+                    send_mail(
+                        subject=f"You earned 10 tickets! a new facility signed up with your referral",
+                        message="",
+                        html_message=emails.referral_success_email(
+                            referral.referrer.first_name, 
+                            new_facility_name, 
+                            10, 
+                            account_url
+                        ),
+                        from_email=settings.EMAIL_HOST_USER,
+                        recipient_list=[referral.referrer.email]
+                    )
+                    # Admin copy
+                    send_mail(
+                        subject=f"**ADMIN COPY** Referral Success: {referral.referrer.username} referred {self.user.username}",
+                        message=f"Referrer: {referral.referrer.username}\nNew User: {self.user.username}\nTickets Awarded: 10",
+                        from_email=settings.EMAIL_HOST_USER,
+                        recipient_list=['info@travelingtherapist.ca']
+                    )
+                except Exception as e:
+                    print(f"Error sending referral email: {e}")
+
                 return True
         except Referral.DoesNotExist:
             pass
