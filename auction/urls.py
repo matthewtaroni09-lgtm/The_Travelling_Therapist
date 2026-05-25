@@ -28,6 +28,7 @@ urlpatterns = [
     path("terms_and_conditions", views.terms_and_conditions, name="terms-and-conditions"),
     path("privacy_policy", views.privacy_policy, name="privacy-policy"),
     path("admin_summary", views.admin_summary, name="admin-summary"),
+    path("admin_raffle_management", views.admin_raffle_management, name="admin-raffle-management"),
     path("test", views.test, name="test"),
     path("benefits", views.service_benefits_page, name="benefits"),
     path("what_is_TTT", views.what_is_TTT, name="what-is-TTT"),
@@ -63,6 +64,7 @@ urlpatterns = [
     path("auction/data/set_acknowledgement", views.set_acknowledgement, name="set-acknowledgement"), 
     path("auction/data/check_user_payment_type", views.check_user_payment_type, name="check-user-payment-type"), 
     path("auction/data/join_raffle", views.join_raffle, name="join-raffle"), 
+    path("auction/data/admin_raffle_api", views.admin_raffle_api, name="admin-raffle-api"), 
     
     path("password_reset", views.password_reset_request, name="password_reset"),
     path("password", PasswordsChangeView.as_view(template_name="auction/registration/change_password.html"), name="change-password")
