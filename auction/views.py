@@ -5,10 +5,11 @@ import uuid
 from wsgiref.simple_server import demo_app
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from django.views.generic import ListView, CreateView
+from django.utils import timezone
 
 from The_Travelling_Therapist.settings import ACTIVE_LINK
 
@@ -16,8 +17,9 @@ from The_Travelling_Therapist.settings import ACTIVE_LINK
 from .forms import RegisterAcount, AuctionForm, BidForm, UserFormClinic, UserFormTherapist, ProfileUpdateClinic, CreateUserForm, PasswordChangingForm, ContactForm, DemographicForm, PracticeAreaForm, AuctionAccountForm, MessageAcknowledgementForm
 from django.urls import reverse_lazy
 import datetime
+from datetime import timedelta
 from . import scheduled_tasks
-from .models import PROVINCES, Account, AdminSetting, Auction, Bid, Demographic, DemographicType, PracticeArea, PracticeAreaType, User, Account, UserType, PopupMessage, MessageAcknowledgement, Page, PaymentType, Number, Raffle, RaffleEntry
+from .models import PROVINCES, Account, AdminSetting, Auction, Bid, Demographic, DemographicType, PracticeArea, PracticeAreaType, User, Account, UserType, PopupMessage, MessageAcknowledgement, Page, PaymentType, Number, Raffle, RaffleEntry, Referral
 from django.contrib.auth.forms import PasswordResetForm
 from django.utils.http import urlsafe_base64_encode
 from django.contrib.auth.tokens import default_token_generator
@@ -29,19 +31,7 @@ from django.contrib.auth.views import PasswordChangeView
 from django.contrib.auth.models import User
 from django.template.loader import render_to_string
 from django.db.models.query_utils import Q
-from django.conf import settings
-from django.shortcuts import render, redirect
-from django.contrib import messages
-from . import emails
-from django.core.mail import EmailMessage
-from pytz import timezone
-from django.core import serializers
-from django.contrib import messages # For message alerts
-from django.forms import inlineformset_factory
-from django.forms import formset_factory
-from functools import partial, wraps
-from django.http import JsonResponse
-from django.db.models import Min
+from django.db.models import Min, Sum
 import json
 import requests
 import logging
@@ -1233,6 +1223,159 @@ def surveys(request):
         'path': 'surveys'
     }
     return render(request, 'auction/surveys.html', context)
+
+@login_required
+@user_passes_test(lambda u: u.is_staff)
+def admin_raffle_management(request):
+    """
+    Raffle Management Dashboard for Admins.
+    Organizes raffles into Live, Scheduled, and Ended streams.
+    Calculates ticket distribution metrics for each raffle.
+    """
+    now = timezone.now()
+    seven_days_ago = now - timedelta(days=7)
+
+    # 1. LIVE RAFFLES: Active, Start in past/present, End in future
+    live_raffles_qs = Raffle.objects.filter(
+        active=True, 
+        startDate__lte=now, 
+        endDate__gt=now
+    ).order_by('endDate')
+
+    # 2. SCHEDULED RAFFLES: Active, Start in future
+    scheduled_raffles_qs = Raffle.objects.filter(
+        active=True, 
+        startDate__gt=now
+    ).order_by('startDate')
+
+    # 3. INACTIVE RAFFLES: Not active, and either haven't ended yet or were never started
+    inactive_raffles_qs = Raffle.objects.filter(
+        active=False,
+        endDate__gt=now
+    ).order_by('-startDate')
+
+    # 4. RECENTLY ENDED RAFFLES: End in past, within last 7 days
+    ended_raffles_qs = Raffle.objects.filter(
+        endDate__lte=now,
+        endDate__gte=seven_days_ago
+    ).order_by('-endDate')
+
+    def get_raffle_stats(raffles_qs):
+        processed = []
+        for raffle in raffles_qs:
+            entries = RaffleEntry.objects.filter(raffle=raffle).select_related('user__account__userType')
+            total_tickets = entries.aggregate(Sum('tickets_added'))['tickets_added__sum'] or 0
+            
+            clinics_count = 0
+            clinicians_total = 0
+            sub_breakdown = {} # { 'Physiotherapist': 10, ... }
+
+            for entry in entries:
+                u_type = entry.user.account.userType.name if entry.user.account.userType else "Unknown"
+                is_clinic = "Clinic" in u_type
+                
+                if is_clinic:
+                    clinics_count += entry.tickets_added
+                else:
+                    clinicians_total += entry.tickets_added
+                    sub_breakdown[u_type] = sub_breakdown.get(u_type, 0) + entry.tickets_added
+
+            processed.append({
+                'obj': raffle,
+                'total_tickets': total_tickets,
+                'clinics_count': clinics_count,
+                'clinicians_total': clinicians_total,
+                'sub_breakdown': sub_breakdown,
+                'clinics_perc': (clinics_count / total_tickets * 100) if total_tickets > 0 else 0,
+                'clinicians_perc': (clinicians_total / total_tickets * 100) if total_tickets > 0 else 0,
+            })
+        return processed
+
+    context = {
+        'path': 'admin-raffle-management',
+        'live_raffles': get_raffle_stats(live_raffles_qs),
+        'inactive_raffles': get_raffle_stats(inactive_raffles_qs),
+        'scheduled_raffles': get_raffle_stats(scheduled_raffles_qs),
+        'ended_raffles': get_raffle_stats(ended_raffles_qs),
+    }
+    return render(request, 'auction/admin_raffle_management.html', context)
+
+@login_required
+@user_passes_test(lambda u: u.is_staff)
+def admin_raffle_api(request):
+    """
+    AJAX API for Raffle CRUD and Administrative Actions.
+    """
+    if request.method != 'POST':
+        return JsonResponse({'status': 'error', 'message': 'Invalid request method.'})
+
+    try:
+        data = json.loads(request.body)
+        action = data.get('action')
+        raffle_id = data.get('raffle_id')
+
+        if action == 'delete':
+            raffle = Raffle.objects.get(id=raffle_id)
+            if raffle.cronID:
+                from . import scheduled_tasks
+                try: scheduled_tasks.remove_cron_job(raffle.cronID)
+                except: pass
+            raffle.delete()
+            return JsonResponse({'status': 'success', 'message': 'Raffle deleted successfully.'})
+
+        elif action == 'toggle_status':
+            raffle = Raffle.objects.get(id=raffle_id)
+            raffle.active = not raffle.active
+            raffle.save()
+            return JsonResponse({'status': 'success', 'message': f'Raffle {"activated" if raffle.active else "deactivated"} successfully.'})
+
+        elif action == 'force_draw':
+            from . import scheduled_tasks
+            scheduled_tasks.execute_raffle_draw_task(raffle_id=raffle_id)
+            return JsonResponse({'status': 'success', 'message': 'Manual draw executed successfully.'})
+
+        elif action in ['create', 'edit']:
+            title = data.get('title')
+            description = data.get('description')
+            start_date_str = data.get('startDate')
+            end_date_str = data.get('endDate')
+            tickets_required = data.get('tickets_required', 1)
+            target_audience = data.get('target_audience', 'Both')
+
+            # Parse dates (expecting ISO format from JS)
+            from django.utils.dateparse import parse_datetime
+            start_date = parse_datetime(start_date_str)
+            end_date = parse_datetime(end_date_str)
+
+            if action == 'edit':
+                raffle = Raffle.objects.get(id=raffle_id)
+            else:
+                raffle = Raffle()
+
+            raffle.title = title
+            raffle.description = description
+            raffle.startDate = start_date
+            raffle.endDate = end_date
+            raffle.tickets_required = tickets_required
+            raffle.target_audience = target_audience
+            raffle.save()
+
+            # Handle cron rescheduling
+            from . import scheduled_tasks
+            if raffle.cronID:
+                try: scheduled_tasks.remove_cron_job(raffle.cronID)
+                except: pass
+            
+            if raffle.active and raffle.endDate:
+                scheduled_tasks.start_raffle(raffle.endDate, str(raffle.id))
+
+            return JsonResponse({'status': 'success', 'message': f'Raffle {"updated" if action == "edit" else "created"} successfully.'})
+
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)})
+
+    return JsonResponse({'status': 'error', 'message': 'Unknown action.'})
+
 
 def join_raffle(request):
     if request.method == 'POST':
