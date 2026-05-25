@@ -105,35 +105,35 @@
 }
 
 .bg-primary {
-    background-color: var(--primary-colour);
+    background-color: var(--primary-colour) !important;
 }
 
 .bg-secondary {
-    background-color: var(--secondary-colour);
+    background-color: var(--secondary-colour) !important;
 }
 
 .bg-dark {
-    background-color: var(--dark-colour);
+    background-color: var(--dark-colour) !important;
 }
 
 .bg-white {
-    background-color: #fff;
+    background-color: #fff !important;
 }
 
 /**************************** 4. BUTTONS ****************************/
 .btn-primary {
-    background-color: var(--primary-colour);
-    border-color: var(--primary-colour);
-    color: var(--dark-colour);
+    background-color: var(--primary-colour) !important;
+    border-color: var(--primary-colour) !important;
+    color: var(--dark-colour) !important;
 }
 
 .btn-primary:hover,
 .btn-primary:focus,
 .btn-primary:disabled,
 .btn-disabled {
-    background-color: var(--secondary-colour);
-    border-color: var(--dark-colour);
-    color: var(--dark-colour);
+    background-color: var(--secondary-colour) !important;
+    border-color: var(--dark-colour) !important;
+    color: var(--dark-colour) !important;
     transition: 0.2s ease-in-out;
 }
 
