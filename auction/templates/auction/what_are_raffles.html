@@ -236,6 +236,40 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- FAQ Item: Cross-Role Referral -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="raffleHeadingCrossReferral">
+                        <button class="accordion-button text-weight-normal collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#raffleCollapseCrossReferral" aria-expanded="false" aria-controls="raffleCollapseCrossReferral">
+                            I'm a clinician, can I refer a Healthcare Facility? (OR vice versa)
+                        </button>
+                    </h2>
+                    <div id="raffleCollapseCrossReferral" class="accordion-collapse collapse" aria-labelledby="raffleHeadingCrossReferral"
+                        data-bs-parent="#raffleFaqAccordion">
+                        <div class="accordion-body text-weight-light">
+                            Yes! Our referral links work no differently if a clinician or facility owner signs up - so as long as you use your specific referral link found on your <a href="{% url 'profile' %}#raffles" class="text-dark">profile</a> tab, you will receive your referral tickets.
+                            <br><br>
+                            We have a page coming soon with more details on our referral program - stay tuned!
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item: Self-Referral -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="raffleHeadingSelfRefer">
+                        <button class="accordion-button text-weight-normal collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#raffleCollapseSelfRefer" aria-expanded="false" aria-controls="raffleCollapseSelfRefer">
+                            I'm a facility owner and ALSO a practitioner, can I refer myself?
+                        </button>
+                    </h2>
+                    <div id="raffleCollapseSelfRefer" class="accordion-collapse collapse" aria-labelledby="raffleHeadingSelfRefer"
+                        data-bs-parent="#raffleFaqAccordion">
+                        <div class="accordion-body text-weight-light">
+                            Yes, so long as your "clinician" self uses a different email to create the account, you will receive your raffle tickets. Be aware that it is the referring account that receives the raffle tickets, not the new sign up, so choose wisely if you'd like your "facility" or "practitioner" account to receive the tickets when you "self refer".
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
