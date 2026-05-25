@@ -85,7 +85,7 @@
               </div>
 
               <div class="row">
-                <p>Images must be 10 MB or less and in one of the following formats: jpg, jpeg or png.</p>
+                <p>Images must be 10 MB or less and in one of the following formats: jpg, jpeg, png, or heic.</p>
                 <div class="mb-3">
                   <span class="clinicField">{{ profile_clinic_form.imageOne | as_crispy_field }}</span>
                 </div>
@@ -148,7 +148,10 @@
                     <div class="card-body p-3 d-flex justify-content-between align-items-center">
                       <div>
                         <h6 class="mb-1">{{ entry.raffle.title }}</h6>
-                        <small class="text-muted">Tickets Entered: {{ entry.tickets_added }}</small>
+                        <small class="text-muted d-block">Tickets Entered: {{ entry.tickets_added }}</small>
+                        {% if entry.raffle.active and entry.raffle.endDate %}
+                        <small class="text-danger fw-bold"><span class="material-icons fs-6 align-middle">timer</span> Ends: {{ entry.raffle.endDate|date:"M j, Y" }}</small>
+                        {% endif %}
                       </div>
                       {% if entry.raffle.active %}
                       <span class="badge bg-success rounded-pill">Active</span>
@@ -187,12 +190,14 @@
                   <div class="card-body text-center p-3">
                     <h5 class="card-title">{{ raffle.title }}</h5>
                     {% if raffle.value_text %}<h6 class="text-muted mb-2">{{ raffle.value_text }}</h6>{% endif %}
-                    <p class="card-text mb-2">Tickets Required: {{ raffle.tickets_required }}</p>
+                    <p class="card-text mb-1">Tickets Required: {{ raffle.tickets_required }}</p>
+                    {% if raffle.endDate %}
+                    <p class="card-text mb-2 small text-danger fw-bold"><span class="material-icons fs-6 align-middle">timer</span> Ends: {{ raffle.endDate|date:"M j, Y" }}</p>
+                    {% endif %}
                     <a href="#" class="btn btn-primary btn-sm w-100 raffle-details-btn" data-bs-toggle="modal"
                       data-bs-target="#raffleModal" data-title="{{ raffle.title }}"
-                      data-description="{{ raffle.description }}" data-tickets="{{ raffle.tickets_required }}">Raffle
-                      Details</a>
-                  </div>
+                      data-description="{{ raffle.description }}" data-tickets="{{ raffle.tickets_required }}"
+                      data-end-date="{{ raffle.endDate|date:'M j, Y' }}">Raffle Details</a>                  </div>
                 </div>
                 {% empty %}
                 <p class="text-center text-muted">No featured raffles at the moment.</p>
@@ -297,7 +302,10 @@
                         <div class="card-body p-3 d-flex justify-content-between align-items-center">
                           <div>
                             <h6 class="mb-1">{{ entry.raffle.title }}</h6>
-                            <small class="text-muted">Tickets Entered: {{ entry.tickets_added }}</small>
+                            <small class="text-muted d-block">Tickets Entered: {{ entry.tickets_added }}</small>
+                            {% if entry.raffle.active and entry.raffle.endDate %}
+                            <small class="text-danger fw-bold"><span class="material-icons fs-6 align-middle">timer</span> Ends: {{ entry.raffle.endDate|date:"M j, Y" }}</small>
+                            {% endif %}
                           </div>
                           {% if entry.raffle.active %}
                           <span class="badge bg-success rounded-pill">Active</span>
@@ -336,7 +344,10 @@
                       <div class="card-body text-center p-3">
                         <h5 class="card-title">{{ raffle.title }}</h5>
                         {% if raffle.value_text %}<h6 class="text-muted mb-2">{{ raffle.value_text }}</h6>{% endif %}
-                        <p class="card-text mb-2">Tickets Required: {{ raffle.tickets_required }}</p>
+                        <p class="card-text mb-1">Tickets Required: {{ raffle.tickets_required }}</p>
+                        {% if raffle.endDate %}
+                        <p class="card-text mb-2 small text-danger fw-bold"><span class="material-icons fs-6 align-middle">timer</span> Ends: {{ raffle.endDate|date:"M j, Y" }}</p>
+                        {% endif %}
                         <a href="#" class="btn btn-primary btn-sm w-100 raffle-details-btn" data-bs-toggle="modal"
                           data-bs-target="#raffleModal" data-title="{{ raffle.title }}"
                           data-description="{{ raffle.description }}"

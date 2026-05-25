@@ -1,9 +1,9 @@
 <div class="col-xl-6">
     <div class="card h-100 raffle-card shadow-sm border-0">
-        <div class="card-header bg-white d-flex justify-content-between align-items-center py-3 border-bottom">
+        <div class="card-header bg-brand-green d-flex justify-content-between align-items-center py-3 border-bottom">
             <div>
-                <span class="badge {{ badge_class }} mb-1">{{ badge_text }}</span>
-                <h3 class="h5 mb-0 fw-bold">{{ raffle.title }}</h3>
+                <span class="badge {{ badge_class }} mb-1 border border-white">{{ badge_text }}</span>
+                <h3 class="h5 mb-0 fw-bold text-dark">{{ raffle.title }}</h3>
             </div>
             <div class="dropdown">
                 <button class="btn btn-light btn-sm border" type="button" data-bs-toggle="dropdown">
@@ -56,7 +56,7 @@
                 
                 <div class="mb-2 d-flex justify-content-between">
                     <span class="fw-bold">Total Tickets Active:</span>
-                    <span class="badge bg-dark">{{ stats.total_tickets }}</span>
+                    <span class="badge bg-brand-green text-dark">{{ stats.total_tickets }}</span>
                 </div>
 
                 <!-- CLINICS PROGRESS -->

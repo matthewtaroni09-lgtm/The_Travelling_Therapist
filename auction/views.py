@@ -795,7 +795,7 @@ def admin_summary(request):
     }
     return render(request, 'auction/admin_summary.html', context)
 
-@login_required
+@login_required(login_url='login')
 def create_auction(request):
     if request.user.is_authenticated == False:
         return render(request, 'auction/create_auction.html', {})
@@ -981,7 +981,7 @@ def check_user_payment_type(request):
         'feeSplit': user_type.feeSplit
     })
 
-# @login_required
+# @login_required(login_url='login')
 # @transaction.atomic
 def register(request):
     admin = AdminSetting.objects.first()
@@ -1210,11 +1210,11 @@ def referral_program(request):
 def what_are_raffles(request):
     return render(request, 'auction/what_are_raffles.html', {'path': 'what-are-raffles'})
 
-@login_required
+@login_required(login_url='login')
 def surveys(request):
     """
     Role-based surveys page. 
-    Redirects unauthenticated users to login (via @login_required).
+    Redirects unauthenticated users to login (via @login_required(login_url='login')).
     Filters visible surveys based on user type.
     """
     user_type = request.user.account.get_split_user_type()
@@ -1224,7 +1224,7 @@ def surveys(request):
     }
     return render(request, 'auction/surveys.html', context)
 
-@login_required
+@login_required(login_url='login')
 @user_passes_test(lambda u: u.is_staff)
 def admin_raffle_management(request):
     """
@@ -1300,7 +1300,7 @@ def admin_raffle_management(request):
     }
     return render(request, 'auction/admin_raffle_management.html', context)
 
-@login_required
+@login_required(login_url='login')
 @user_passes_test(lambda u: u.is_staff)
 def admin_raffle_api(request):
     """

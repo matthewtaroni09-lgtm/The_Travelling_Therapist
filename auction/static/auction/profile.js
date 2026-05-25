@@ -35,10 +35,16 @@ $(document).ready(function () {
         const title = $(this).data('title');
         const description = $(this).data('description');
         const tickets = $(this).data('tickets');
+        const endDate = $(this).data('end-date');
         
         $('#modal-raffle-title').text(title);
         $('#modal-raffle-description').text(description);
         $('#modal-raffle-tickets-required').text('Tickets Required per Entry: ' + tickets);
+        if (endDate) {
+            $('#modal-raffle-end-date').html('<span class="material-icons fs-6 align-middle">timer</span> Ends: ' + endDate).show();
+        } else {
+            $('#modal-raffle-end-date').hide();
+        }
         $('#ticket-count').val(1);
     });
 
