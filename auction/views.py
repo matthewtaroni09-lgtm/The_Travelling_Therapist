@@ -1116,6 +1116,9 @@ def login_user(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
+            next_url = request.GET.get('next')
+            if next_url:
+                return redirect(next_url)
             return redirect('index')
         else:
             messages.error(request, ("Login was unsuccessful. Please check your email and password."))
@@ -1305,12 +1308,20 @@ def admin_raffle_management(request):
 def admin_raffle_api(request):
     """
     AJAX API for Raffle CRUD and Administrative Actions.
+    Handles both JSON and FormData (for image uploads).
     """
     if request.method != 'POST':
         return JsonResponse({'status': 'error', 'message': 'Invalid request method.'})
 
     try:
-        data = json.loads(request.body)
+        # Determine how to parse data based on Content-Type
+        if request.content_type.startswith('multipart/form-data'):
+            data = request.POST
+            is_form_data = True
+        else:
+            data = json.loads(request.body)
+            is_form_data = False
+
         action = data.get('action')
         raffle_id = data.get('raffle_id')
 
@@ -1358,6 +1369,15 @@ def admin_raffle_api(request):
             raffle.endDate = end_date
             raffle.tickets_required = tickets_required
             raffle.target_audience = target_audience
+
+            # Handle Image Upload if present in request.FILES
+            if 'image' in request.FILES:
+                image_file = request.FILES['image']
+                # Server-side size validation (10MB)
+                if image_file.size > 10 * 1024 * 1024:
+                    return JsonResponse({'status': 'error', 'message': 'Image file exceeds 10MB limit.'})
+                raffle.image = image_file
+
             raffle.save()
 
             # Handle cron rescheduling
