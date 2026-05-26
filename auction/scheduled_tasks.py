@@ -68,11 +68,25 @@ def execute_raffle_draw_task(raffle_id=None):
 
         if admin_setting and admin_setting.sendEmails:
             try:
+                # Generate HTML email content
+                raffle_month = raffle.endDate.strftime('%B %Y')
+                ticket_balance = Account.objects.get(user=winner).numTickets
+                html_message = emails.raffle_winner_email(
+                    winner.first_name or winner.username, 
+                    raffle.title, 
+                    raffle_month, 
+                    ticket_balance
+                )
+                
+                # Plain text fallback
+                text_message = f"Hi {winner.first_name or winner.username},\n\nGreat News — you’ve been selected as the winner of this month’s Traveling Therapist Raffle!\n\nYour entry was randomly chosen from all eligible submissions, and we’re excited to award you the following prize:\n\nPrize: {raffle.title}\nRaffle Month: {raffle_month}\n\nYour prize will be delivered to you via info@travelingtherapist.com within the next few days.\n\nYour current ticket balance is {ticket_balance} tickets.\n\nThanks for being an engaged member of The Traveling Therapist community — and enjoy your prize!\n\nWarmly,\nThe Traveling Therapist Team"
+
                 send_mail(
                     subject="Congratulations! You've Won the Raffle!",
-                    message=f"Hi {winner.first_name},\n\nGreat News — you’ve been selected as the winner of this month’s Traveling Therapist Raffle!'\n\nYour entry was randomly chosen from all eligible submissions, and we’re excited to award you the following prize:\n\n Prize: {raffle.title}!\n\nRaffle Month: {raffle.endDate.strftime('%B %Y')}\n\nYour prize will be delivered to you via info@travelingtherapist.com within the next few days.\n\nYour current ticket balance is {Account.objects.get(user=winner).numTickets} tickets.\n\nThanks for being an engaged member of The Traveling Therapist coommunity — and enjoy your prize!\n\nWarmly,\nThe Traveling Therapist Team",
+                    message=text_message,
                     from_email=settings.EMAIL_HOST_USER,
                     recipient_list=[winner.email],
+                    html_message=html_message
                 )
                 send_mail(
                     subject=f"Raffle Winner Selected: {raffle.title}",

@@ -435,3 +435,28 @@ def referral_success_email(referrer_name, new_facility_name, ticket_amount, acco
 </section>"""
     message = message + email_footer
     return message
+
+def raffle_winner_email(first_name, raffle_title, raffle_month, ticket_balance):
+    message = email_header
+    message = message + f"""<section style="font-size: 16px; margin-bottom: 1rem; padding: 10px;">
+  <p>Hi {first_name},</p>
+  
+  <p>Great News — you’ve been selected as the winner of this month’s Traveling Therapist Raffle!</p>
+
+  <p>Your entry was randomly chosen from all eligible submissions, and we’re excited to award you the following prize:</p>
+
+  <p><b>Prize: {raffle_title}</b></p>
+  <p><b>Raffle Month: {raffle_month}</b></p>
+
+  <p>Your prize will be delivered to you via info@travelingtherapist.com within the next few days.</p>
+
+  <p>Your current ticket balance is {ticket_balance} tickets.</p>
+
+  <p>Thanks for being an engaged member of The Traveling Therapist community — and enjoy your prize!</p>
+
+  <p>Warmly,</p>
+  <p style="font-weight: 700; padding-top: 0rem; margin-top: 0; line-height: 0;">The Traveling Therapist Team</p>
+
+</section>"""
+    message = message + email_footer
+    return message

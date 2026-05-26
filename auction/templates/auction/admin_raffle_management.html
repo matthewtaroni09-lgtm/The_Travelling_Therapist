@@ -141,11 +141,11 @@
                         </div>
                         <div class="col-12">
                             <label class="form-label fw-bold">Custom Banner Image (Optional)</label>
-                            <div class="p-4 border-2 border-dashed rounded text-center bg-light">
-                                <span class="material-icons text-muted fs-1">image</span>
-                                <p class="small text-muted mb-0"><strong>Note:</strong> Maximum image size is <strong>5MB</strong>. Images must be in jpg, jpeg, or png format.</p>
-                                <p class="small text-muted mb-0 mt-2">Note: Image upload via Dashboard is a placeholder in this version. Use Django Admin for full media management.</p>
+                            <input type="file" class="form-control" id="raffle_image" accept="image/png, image/jpeg, image/jpg" onchange="validateImageSize(this)">
+                            <div id="imagePreviewContainer" class="mt-2 d-none">
+                                <img id="imagePreview" src="#" alt="Preview" class="img-fluid rounded border" style="max-height: 150px;">
                             </div>
+                            <p class="small text-muted mb-0 mt-1"><strong>Note:</strong> Maximum image size is <strong>10MB</strong>. Images must be in jpg, jpeg, or png format.</p>
                         </div>
                     </div>
                 </form>
@@ -172,10 +172,36 @@
 <script>
 const CSRF_TOKEN = '{{ csrf_token }}';
 
+function validateImageSize(input) {
+    const file = input.files[0];
+    const preview = document.getElementById('imagePreview');
+    const container = document.getElementById('imagePreviewContainer');
+    
+    if (file) {
+        if (file.size > 10 * 1024 * 1024) { // 10MB
+            Swal.fire('File Too Large', 'Maximum image size is 10MB. Please select a smaller file.', 'error');
+            input.value = '';
+            container.classList.add('d-none');
+            return;
+        }
+        
+        // Show preview
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            preview.src = e.target.result;
+            container.classList.remove('d-none');
+        }
+        reader.readAsDataURL(file);
+    } else {
+        container.classList.add('d-none');
+    }
+}
+
 function prepareCreateModal() {
     document.getElementById('raffleForm').reset();
     document.getElementById('raffle_id').value = '';
     document.getElementById('modalTitle').innerText = 'Create New Raffle';
+    document.getElementById('imagePreviewContainer').classList.add('d-none');
 }
 
 function prepareEditModal(id, title, desc, start, end, tickets, audience) {
@@ -187,6 +213,8 @@ function prepareEditModal(id, title, desc, start, end, tickets, audience) {
     document.getElementById('raffle_tickets_required').value = tickets;
     document.getElementById('raffle_target_audience').value = audience;
     document.getElementById('modalTitle').innerText = 'Edit Raffle';
+    document.getElementById('imagePreviewContainer').classList.add('d-none');
+    document.getElementById('raffle_image').value = '';
     
     var myModal = new bootstrap.Modal(document.getElementById('raffleEditModal'));
     myModal.show();
@@ -205,27 +233,35 @@ function formatToISO(dateStr) {
 
 async function submitRaffleForm() {
     const id = document.getElementById('raffle_id').value;
-    const data = {
-        action: id ? 'edit' : 'create',
-        raffle_id: id,
-        title: document.getElementById('raffle_title').value,
-        description: document.getElementById('raffle_description').value,
-        startDate: document.getElementById('raffle_startDate').value,
-        endDate: document.getElementById('raffle_endDate').value,
-        tickets_required: document.getElementById('raffle_tickets_required').value,
-        target_audience: document.getElementById('raffle_target_audience').value,
-    };
-
-    if (!data.title || !data.startDate || !data.endDate) {
+    const title = document.getElementById('raffle_title').value;
+    const startDate = document.getElementById('raffle_startDate').value;
+    const endDate = document.getElementById('raffle_endDate').value;
+    
+    if (!title || !startDate || !endDate) {
         Swal.fire('Error', 'Please fill in all required fields.', 'error');
         return;
+    }
+
+    const formData = new FormData();
+    formData.append('action', id ? 'edit' : 'create');
+    formData.append('raffle_id', id);
+    formData.append('title', title);
+    formData.append('description', document.getElementById('raffle_description').value);
+    formData.append('startDate', startDate);
+    formData.append('endDate', endDate);
+    formData.append('tickets_required', document.getElementById('raffle_tickets_required').value);
+    formData.append('target_audience', document.getElementById('raffle_target_audience').value);
+    
+    const imageInput = document.getElementById('raffle_image');
+    if (imageInput.files[0]) {
+        formData.append('image', imageInput.files[0]);
     }
 
     try {
         const res = await fetch("{% url 'admin-raffle-api' %}", {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': CSRF_TOKEN },
-            body: JSON.stringify(data)
+            headers: { 'X-CSRFToken': CSRF_TOKEN }, // Content-Type is auto-set by browser for FormData
+            body: formData
         });
         const result = await res.json();
         if (result.status === 'success') {

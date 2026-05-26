@@ -29,6 +29,11 @@
             <div class="mb-4">
                 <h6 class="text-uppercase text-muted fw-bold small mb-3">(Raffle Information)</h6>
                 <div class="bg-light p-3 rounded-3">
+                    {% if raffle.image %}
+                        <div class="mb-3">
+                            <img src="{{ raffle.image.url }}" class="img-fluid rounded shadow-sm border" style="max-height: 150px; width: 100%; object-fit: cover;">
+                        </div>
+                    {% endif %}
                     <p class="mb-2"><strong>Description:</strong> {{ raffle.description }}</p>
                     <p class="mb-2"><strong>Timeline Frame:</strong> 
                         <span class="text-primary fw-bold">{{ raffle.startDate|date:"m/d/Y" }}</span> to 
