@@ -51,8 +51,20 @@ def execute_raffle_draw_task(raffle_id=None):
             raffle.save()
             continue
 
-        users = [entry.user for entry in entries]
-        weights = [entry.tickets_added for entry in entries]
+        users = []
+        weights = []
+        for entry in entries:
+            # Exclude Admin/Staff from winning (Ghost Tickets)
+            if entry.user.is_superuser or entry.user.is_staff:
+                continue
+            users.append(entry.user)
+            weights.append(entry.tickets_added)
+
+        if not users:
+            logger.warning(f'No eligible entries (non-admin) for raffle: {raffle.title}. Deactivating.')
+            raffle.active = False
+            raffle.save()
+            continue
 
         # Weighted random choice based on tickets entered
         winner = random.choices(users, weights=weights, k=1)[0]

@@ -128,16 +128,19 @@
                 </div>
               </div>
 
-                  <div class="card mb-4 shadow-sm border-0" style="background: linear-gradient(135deg, #0f9972 0%, #0aeaa9 100%); color: white;">
-                    <div class="card-body p-4 text-center">
-                      <h5 class="card-title fw-bold mb-3">Earn More Tickets!</h5>
-                      <p class="card-text mb-4">Share The Traveling Therapist with a friend and after their login receive 10 tickets!</p>
-                      <a href="#" role="button" class="btn btn-light text-primary fw-bold px-4 py-2" data-bs-toggle="modal" data-bs-target="#referralModal">
-                        Share with a friend
-                      </a>
+              <div class="card mb-4 shadow-sm border-0"
+                style="background: linear-gradient(135deg, #0f9972 0%, #0aeaa9 100%); color: white;">
+                <div class="card-body p-4 text-center">
+                  <h5 class="card-title fw-bold mb-3">Earn More Tickets!</h5>
+                  <p class="card-text mb-4">Share The Traveling Therapist with a friend and after their login receive 10
+                    tickets!</p>
+                  <a href="#" role="button" class="btn btn-light text-primary fw-bold px-4 py-2" data-bs-toggle="modal"
+                    data-bs-target="#referralModal">
+                    Share with a friend
+                  </a>
 
-                    </div>
-                  </div>
+                </div>
+              </div>
 
               <h4 class="mb-3">Participating Raffles</h4>
               {% if joined_raffles %}
@@ -150,7 +153,8 @@
                         <h6 class="mb-1">{{ entry.raffle.title }}</h6>
                         <small class="text-muted d-block">Tickets Entered: {{ entry.tickets_added }}</small>
                         {% if entry.raffle.active and entry.raffle.endDate %}
-                        <small class="text-danger fw-bold"><span class="material-icons fs-6 align-middle">timer</span> Ends: {{ entry.raffle.endDate|date:"M j, Y" }}</small>
+                        <small class="text-danger fw-bold"><span class="material-icons fs-6 align-middle">timer</span>
+                          Ends: {{ entry.raffle.endDate|date:"M j, Y" }}</small>
                         {% endif %}
                       </div>
                       {% if entry.raffle.active %}
@@ -180,7 +184,8 @@
                   <div class="position-relative bg-light d-flex align-items-center justify-content-center"
                     style="height: 120px; {% if forloop.counter|divisibleby:2 %}background: linear-gradient(45deg, #f3f3f3, #e9ecef) !important;{% endif %}">
                     {% if raffle.image %}
-                    <img src="{{ raffle.image.url }}" alt="{{ raffle.title }}" style="max-height: 100%; max-width: 100%; object-fit: contain;">
+                    <img src="{{ raffle.image.url }}" alt="{{ raffle.title }}"
+                      style="max-height: 100%; max-width: 100%; object-fit: contain;">
                     {% else %}
                     <span class="material-icons"
                       style="font-size: 3rem; color: {% if forloop.counter|divisibleby:2 %}#0AEAA9{% else %}#ccc{% endif %};">{{
@@ -190,14 +195,17 @@
                   <div class="card-body text-center p-3">
                     <h5 class="card-title">{{ raffle.title }}</h5>
                     {% if raffle.value_text %}<h6 class="text-muted mb-2">{{ raffle.value_text }}</h6>{% endif %}
-                    <p class="card-text mb-1">Tickets Required: {{ raffle.tickets_required }}</p>
+                    <p class="card-text mb-1">Minimum Tickets Required: {{ raffle.tickets_required }}</p>
                     {% if raffle.endDate %}
-                    <p class="card-text mb-2 small text-danger fw-bold"><span class="material-icons fs-6 align-middle">timer</span> Ends: {{ raffle.endDate|date:"M j, Y" }}</p>
+                    <p class="card-text mb-2 small text-danger fw-bold"><span
+                        class="material-icons fs-6 align-middle">timer</span> Ends: {{ raffle.endDate|date:"M j, Y" }}
+                    </p>
                     {% endif %}
                     <a href="#" class="btn btn-primary btn-sm w-100 raffle-details-btn" data-bs-toggle="modal"
                       data-bs-target="#raffleModal" data-title="{{ raffle.title }}"
                       data-description="{{ raffle.description }}" data-tickets="{{ raffle.tickets_required }}"
-                      data-end-date="{{ raffle.endDate|date:'M j, Y' }}">Raffle Details</a>                  </div>
+                      data-end-date="{{ raffle.endDate|date:'M j, Y' }}">Raffle Details</a>
+                  </div>
                 </div>
                 {% empty %}
                 <p class="text-center text-muted">No featured raffles at the moment.</p>
@@ -282,11 +290,14 @@
                     </div>
                   </div>
 
-                  <div class="card mb-4 shadow-sm border-0" style="background: linear-gradient(135deg, #0f9972 0%, #0aeaa9 100%); color: white;">
+                  <div class="card mb-4 shadow-sm border-0"
+                    style="background: linear-gradient(135deg, #0f9972 0%, #0aeaa9 100%); color: white;">
                     <div class="card-body p-4 text-center">
                       <h5 class="card-title fw-bold mb-3">Earn More Tickets!</h5>
-                      <p class="card-text mb-4">Share The Traveling Therapist with a friend and after their login receive 10 tickets!</p>
-                      <a href="#" role="button" class="btn btn-light text-primary fw-bold px-4 py-2" data-bs-toggle="modal" data-bs-target="#referralModal">
+                      <p class="card-text mb-4">Share The Traveling Therapist with a friend and after their login
+                        receive 10 tickets!</p>
+                      <a href="#" role="button" class="btn btn-light text-primary fw-bold px-4 py-2"
+                        data-bs-toggle="modal" data-bs-target="#referralModal">
                         Share with a friend
                       </a>
 
@@ -302,9 +313,10 @@
                         <div class="card-body p-3 d-flex justify-content-between align-items-center">
                           <div>
                             <h6 class="mb-1">{{ entry.raffle.title }}</h6>
-                            <small class="text-muted d-block">Tickets Entered: {{ entry.tickets_added }}</small>
+                            <small class="text-muted d-block">Tickets Spent: {{ entry.tickets_added }} ({{ entry.entries_count }} Entries)</small>
                             {% if entry.raffle.active and entry.raffle.endDate %}
-                            <small class="text-danger fw-bold"><span class="material-icons fs-6 align-middle">timer</span> Ends: {{ entry.raffle.endDate|date:"M j, Y" }}</small>
+                            <small class="text-danger fw-bold"><span
+                                class="material-icons fs-6 align-middle">timer</span> Ends: {{ entry.raffle.endDate|date:"M j, Y" }}</small>
                             {% endif %}
                           </div>
                           {% if entry.raffle.active %}
@@ -334,7 +346,8 @@
                       <div class="position-relative bg-light d-flex align-items-center justify-content-center"
                         style="height: 120px; {% if forloop.counter|divisibleby:2 %}background: linear-gradient(45deg, #f3f3f3, #e9ecef) !important;{% endif %}">
                         {% if raffle.image %}
-                        <img src="{{ raffle.image.url }}" alt="{{ raffle.title }}" style="max-height: 100%; max-width: 100%; object-fit: contain;">
+                        <img src="{{ raffle.image.url }}" alt="{{ raffle.title }}"
+                          style="max-height: 100%; max-width: 100%; object-fit: contain;">
                         {% else %}
                         <span class="material-icons"
                           style="font-size: 3rem; color: {% if forloop.counter|divisibleby:2 %}#0AEAA9{% else %}#ccc{% endif %};">{{
@@ -344,14 +357,16 @@
                       <div class="card-body text-center p-3">
                         <h5 class="card-title">{{ raffle.title }}</h5>
                         {% if raffle.value_text %}<h6 class="text-muted mb-2">{{ raffle.value_text }}</h6>{% endif %}
-                        <p class="card-text mb-1">Tickets Required: {{ raffle.tickets_required }}</p>
+                        <p class="card-text mb-1">Minimum Tickets Required: {{ raffle.tickets_required }}</p>
                         {% if raffle.endDate %}
-                        <p class="card-text mb-2 small text-danger fw-bold"><span class="material-icons fs-6 align-middle">timer</span> Ends: {{ raffle.endDate|date:"M j, Y" }}</p>
+                        <p class="card-text mb-2 small text-danger fw-bold"><span
+                            class="material-icons fs-6 align-middle">timer</span> Ends: {{ raffle.endDate|date:"M j, Y" }}</p>
                         {% endif %}
                         <a href="#" class="btn btn-primary btn-sm w-100 raffle-details-btn" data-bs-toggle="modal"
                           data-bs-target="#raffleModal" data-title="{{ raffle.title }}"
                           data-description="{{ raffle.description }}"
-                          data-tickets="{{ raffle.tickets_required }}">Raffle Details</a>
+                          data-tickets="{{ raffle.tickets_required }}"
+                          data-end-date="{{ raffle.endDate|date:'M j, Y' }}">Raffle Details</a>
                       </div>
                     </div>
                     {% empty %}

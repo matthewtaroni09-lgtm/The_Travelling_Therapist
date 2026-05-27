@@ -11,7 +11,7 @@
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end shadow border-0">
                     <li><a class="dropdown-item d-flex align-items-center" href="#" 
-                           onclick="prepareEditModal('{{ raffle.id }}', '{{ raffle.title|escapejs }}', '{{ raffle.description|escapejs }}', '{{ raffle.startDate|date:'Y-m-d H:i' }}', '{{ raffle.endDate|date:'Y-m-d H:i' }}', '{{ raffle.tickets_required }}', '{{ raffle.target_audience }}')">
+                           onclick="prepareEditModal('{{ raffle.id }}', '{{ raffle.title|escapejs }}', '{{ raffle.description|escapejs }}', '{% if raffle.startDate %}{{ raffle.startDate|date:'Y-m-d' }}T{{ raffle.startDate|time:'H:i' }}{% endif %}', '{% if raffle.endDate %}{{ raffle.endDate|date:'Y-m-d' }}T{{ raffle.endDate|time:'H:i' }}{% endif %}', '{{ raffle.tickets_required }}', '{{ raffle.target_audience }}')">
                         <span class="material-icons fs-6 me-2">edit</span> Edit Details</a></li>
                     <li><a class="dropdown-item d-flex align-items-center" href="#" 
                            onclick="handleAction('toggle_status', '{{ raffle.id }}', 'Change the active status of this raffle?')">
@@ -64,19 +64,31 @@
                     <span class="badge bg-brand-green text-dark">{{ stats.total_tickets }}</span>
                 </div>
 
-                <!-- CLINICS PROGRESS -->
+                <!-- CLINICS PROGRESS & SUB-BREAKDOWN -->
                 <div class="mb-3">
                     <div class="d-flex justify-content-between mb-1 small">
                         <span>Clinics: {{ stats.clinics_count }}</span>
                         <span>{{ stats.clinics_perc|floatformat:1 }}%</span>
                     </div>
-                    <div class="progress progress-stacked">
+                    <div class="progress progress-stacked mb-2">
                         <div class="progress-bar bg-info" role="progressbar" style="width: {{ stats.clinics_perc }}%"></div>
+                    </div>
+
+                    <!-- Clinic Sub-Breakdown -->
+                    <div class="sub-breakdown ps-3 border-start border-2 ms-2 mb-3">
+                        {% for name, count in stats.clinic_breakdown.items %}
+                            <div class="d-flex justify-content-between py-1">
+                                <span>{{ name }}:</span>
+                                <span>{{ count }}</span>
+                            </div>
+                        {% empty %}
+                            <p class="italic small mb-0 text-muted">No clinic entries yet.</p>
+                        {% endfor %}
                     </div>
                 </div>
 
                 <!-- CLINICIANS PROGRESS & SUB-BREAKDOWN -->
-                <div class="mb-2">
+                <div class="mb-3">
                     <div class="d-flex justify-content-between mb-1 small">
                         <span>Clinicians: {{ stats.clinicians_total }}</span>
                         <span>{{ stats.clinicians_perc|floatformat:1 }}%</span>
@@ -85,17 +97,29 @@
                         <div class="progress-bar bg-success" role="progressbar" style="width: {{ stats.clinicians_perc }}%"></div>
                     </div>
 
-                    <!-- Nested Sub-Breakdown Area -->
-                    <div class="sub-breakdown ps-3 border-start border-2 ms-2">
+                    <!-- Clinician Sub-Breakdown -->
+                    <div class="sub-breakdown ps-3 border-start border-2 ms-2 mb-3">
                         {% for type, count in stats.sub_breakdown.items %}
                             <div class="d-flex justify-content-between py-1">
                                 <span>{{ type }}:</span>
                                 <span>{{ count }}</span>
                             </div>
                         {% empty %}
-                            <p class="italic small mb-0">No clinician entries yet.</p>
+                            <p class="italic small mb-0 text-muted">No clinician entries yet.</p>
                         {% endfor %}
                     </div>
+                </div>
+
+                <!-- ADMIN GHOST TICKETS (Tracking Only) -->
+                <div class="pt-2 border-top">
+                    <div class="d-flex justify-content-between mb-1 small text-muted italic">
+                        <span>Admin Ghost Tickets: {{ stats.admin_total }}</span>
+                        <span>{{ stats.admin_perc|floatformat:1 }}%</span>
+                    </div>
+                    <div class="progress" style="height: 0.5rem; opacity: 0.6;">
+                        <div class="progress-bar bg-secondary" role="progressbar" style="width: {{ stats.admin_perc }}%"></div>
+                    </div>
+                    <p class="small text-muted mt-1 italic mb-0" style="font-size: 0.75rem;">Note: Admin tickets have 0% weight and cannot win.</p>
                 </div>
             </div>
         </div>

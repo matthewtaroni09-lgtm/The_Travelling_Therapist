@@ -1271,14 +1271,26 @@ def admin_raffle_management(request):
             
             clinics_count = 0
             clinicians_total = 0
+            admin_total = 0
             sub_breakdown = {} # { 'Physiotherapist': 10, ... }
+            clinic_breakdown = {} # { 'Clinic Name A': 5, ... }
 
             for entry in entries:
+                if entry.user.is_superuser or entry.user.is_staff:
+                    admin_total += entry.tickets_added
+                    continue
+                    
                 u_type = entry.user.account.userType.name if entry.user.account.userType else "Unknown"
                 is_clinic = "Clinic" in u_type
                 
                 if is_clinic:
                     clinics_count += entry.tickets_added
+                    clinic_name = entry.user.account.clinicName
+                    if not clinic_name:
+                         clinic_name = f"{entry.user.first_name} {entry.user.last_name}".strip()
+                    if not clinic_name:
+                         clinic_name = entry.user.username
+                    clinic_breakdown[clinic_name] = clinic_breakdown.get(clinic_name, 0) + entry.tickets_added
                 else:
                     clinicians_total += entry.tickets_added
                     sub_breakdown[u_type] = sub_breakdown.get(u_type, 0) + entry.tickets_added
@@ -1288,9 +1300,12 @@ def admin_raffle_management(request):
                 'total_tickets': total_tickets,
                 'clinics_count': clinics_count,
                 'clinicians_total': clinicians_total,
+                'admin_total': admin_total,
                 'sub_breakdown': sub_breakdown,
+                'clinic_breakdown': clinic_breakdown,
                 'clinics_perc': (clinics_count / total_tickets * 100) if total_tickets > 0 else 0,
                 'clinicians_perc': (clinicians_total / total_tickets * 100) if total_tickets > 0 else 0,
+                'admin_perc': (admin_total / total_tickets * 100) if total_tickets > 0 else 0,
             })
         return processed
 
@@ -1420,6 +1435,13 @@ def join_raffle(request):
                 })
             
             raffle = Raffle.objects.get(title=raffle_title, active=True)
+
+            # MULTIPLIER VALIDATION
+            if tickets_to_add % raffle.tickets_required != 0:
+                return JsonResponse({
+                    'status': 'error', 
+                    'message': f'This raffle requires multiples of {raffle.tickets_required} tickets per entry.'
+                })
             
             # Deduct tickets via ledger
             account.add_tickets(-tickets_to_add, f"Raffle entry: {raffle.title}")
