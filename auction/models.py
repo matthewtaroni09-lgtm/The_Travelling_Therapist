@@ -500,7 +500,7 @@ class Raffle(models.Model):
     image_icon = models.CharField(max_length=50, default='confirmation_number', help_text='Material icon name')
     value_text = models.CharField(max_length=100, blank=True, null=True, help_text='e.g., $50 Value')
     target_audience = models.CharField(max_length=20, choices=AUDIENCE_CHOICES, default='Both', help_text='Who can see and enter this raffle?')
-    image = models.ImageField(upload_to='raffle_images/', null=True, blank=True, help_text='Upload an image for the raffle. Max size is 10MB. If not provided, the Material Icon will be used.')
+    image = models.ImageField(upload_to='raffle_images/', null=True, blank=True, help_text='Upload an image less than 1MB. If not provided, the Material Icon will be used.')
     active = models.BooleanField(default=True)
     startDate = models.DateTimeField(null=True, blank=True)
     endDate = models.DateTimeField(null=True, blank=True)
@@ -517,6 +517,12 @@ class RaffleEntry(models.Model):
     raffle = models.ForeignKey(Raffle, on_delete=models.CASCADE, related_name='entries')
     tickets_added = models.IntegerField(default=0)
     created = models.DateTimeField(auto_now_add=True)
+
+    @property
+    def entries_count(self):
+        if self.raffle.tickets_required > 0:
+            return self.tickets_added // self.raffle.tickets_required
+        return self.tickets_added
 
     def __str__(self):
         return f"{self.user.username} - {self.raffle.title}"

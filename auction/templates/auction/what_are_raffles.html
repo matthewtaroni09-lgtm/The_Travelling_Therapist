@@ -83,7 +83,8 @@
                     however raffles do, so make sure to spend your tickets on raffles you want before it’s too late!
                     Click on the raffle you want to spend your tickets on, find out more, and choose the amount you want
                     to spend!</p>
-                <a href="{% if user.is_authenticated %}{% url 'profile' %}#raffles{% else %}{% url 'login' %}?next={% url 'what-are-raffles' %}{% endif %}" class="btn btn-primary btn-lg px-5">Go to Raffles!</a>
+                <a href="{% if user.is_authenticated %}{% url 'profile' %}#raffles{% else %}{% url 'login' %}?next={% url 'profile' %}#raffles{% endif %}"
+                    class="btn btn-primary btn-lg px-5">Go to Raffles!</a>
             </div>
         </div>
     </div>
@@ -137,7 +138,8 @@
     <!-- START EARNING TICKETS BUTTON-->
     <div class="row mb-5">
         <div class="col-md-12 text-center">
-            <a href="{% if user.is_authenticated %}{% url 'profile' %}#raffles{% else %}{% url 'login' %}?next={% url 'what-are-raffles' %}{% endif %}" class="btn btn-lg btn-primary">Start Earning Tickets Now!</a>
+            <a href="{% if user.is_authenticated %}{% url 'profile' %}#raffles{% else %}{% url 'login' %}?next={% url 'what-are-raffles' %}{% endif %}"
+                class="btn btn-lg btn-primary">Start Earning Tickets Now!</a>
         </div>
     </div>
     <!-- TICKET EARNING CLARIFICATION -->
@@ -271,7 +273,8 @@
                         <div class="accordion-body text-weight-light">
                             Yes! Our referral links work no differently if a clinician or facility owner signs up - so
                             as long as you use your specific referral link found on your <a
-                                href="{% if user.is_authenticated %}{% url 'profile' %}#raffles{% else %}{% url 'login' %}?next={% url 'what-are-raffles' %}{% endif %}" class="text-dark">profile</a> tab, you will receive
+                                href="{% if user.is_authenticated %}{% url 'profile' %}#raffles{% else %}{% url 'login' %}?next={% url 'what-are-raffles' %}{% endif %}"
+                                class="text-dark">profile</a> tab, you will receive
                             your referral tickets.
                             <br><br>
                             We have a page coming soon with more details on our referral program - stay tuned!
@@ -311,7 +314,8 @@
                         aria-labelledby="raffleHeadingTransfer" data-bs-parent="#raffleFaqAccordion">
                         <div class="accordion-body text-weight-light">
                             No. If you've changed your email, you can update that on your <a
-                                href="{% if user.is_authenticated %}{% url 'profile' %}{% else %}{% url 'login' %}?next={% url 'what-are-raffles' %}{% endif %}">profile page</a>, but we
+                                href="{% if user.is_authenticated %}{% url 'profile' %}{% else %}{% url 'login' %}?next={% url 'what-are-raffles' %}{% endif %}">profile
+                                page</a>, but we
                             do not allow users to transfer their tickets or give them to another user.
                         </div>
                     </div>

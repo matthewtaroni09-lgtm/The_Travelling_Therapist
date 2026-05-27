@@ -34,7 +34,7 @@ $(document).ready(function () {
     $('.raffle-details-btn').on('click', function() {
         const title = $(this).data('title');
         const description = $(this).data('description');
-        const tickets = $(this).data('tickets');
+        const tickets = parseInt($(this).data('tickets')) || 1;
         const endDate = $(this).data('end-date');
         
         $('#modal-raffle-title').text(title);
@@ -45,24 +45,31 @@ $(document).ready(function () {
         } else {
             $('#modal-raffle-end-date').hide();
         }
-        $('#ticket-count').val(1);
+        
+        // Save tickets required as the 'step' for this raffle
+        $('#ticket-count').attr('data-step', tickets);
+        $('#ticket-count').attr('min', tickets);
+        $('#ticket-count').attr('step', tickets);
+        $('#ticket-count').val(tickets);
     });
 
     $('#increment-tickets').on('click', function() {
+        let step = parseInt($('#ticket-count').attr('data-step')) || 1;
         let currentVal = parseInt($('#ticket-count').val());
         if (!isNaN(currentVal)) {
-            $('#ticket-count').val(currentVal + 1);
+            $('#ticket-count').val(currentVal + step);
         } else {
-            $('#ticket-count').val(1);
+            $('#ticket-count').val(step);
         }
     });
 
     $('#decrement-tickets').on('click', function() {
+        let step = parseInt($('#ticket-count').attr('data-step')) || 1;
         let currentVal = parseInt($('#ticket-count').val());
-        if (!isNaN(currentVal) && currentVal > 1) {
-            $('#ticket-count').val(currentVal - 1);
+        if (!isNaN(currentVal) && currentVal > step) {
+            $('#ticket-count').val(currentVal - step);
         } else {
-            $('#ticket-count').val(1);
+            $('#ticket-count').val(step);
         }
     });
 
@@ -84,9 +91,36 @@ $(document).ready(function () {
     });
 
     $('#confirm-purchase').on('click', function() {
-        const ticketCount = $('#ticket-count').val();
+        let ticketCount = parseInt($('#ticket-count').val());
+        const step = parseInt($('#ticket-count').attr('data-step')) || 1;
         const raffleTitle = $('#modal-raffle-title').text();
         const csrfToken = $('[name=csrfmiddlewaretoken]').val();
+
+        // Rounding Logic: Ensure multiples of 'step' (tickets_required)
+        if (ticketCount % step !== 0) {
+            const recommended = Math.floor(ticketCount / step) * step;
+            if (recommended === 0) {
+                Swal.fire('Invalid Amount', 'This raffle requires at least ' + step + ' tickets for one entry.', 'error');
+                $('#ticket-count').val(step);
+                return;
+            }
+
+            Swal.fire({
+                title: 'Adjust Ticket Amount?',
+                text: 'This raffle requires ' + step + ' tickets per entry. Would you like to use ' + recommended + ' tickets instead to get ' + (recommended/step) + ' entries?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#0f9972',
+                confirmButtonText: 'Yes, use ' + recommended + ' tickets',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $('#ticket-count').val(recommended);
+                    $('#confirm-purchase').click(); // Re-trigger with rounded value
+                }
+            });
+            return;
+        }
         
         $.ajax({
             type: "POST",

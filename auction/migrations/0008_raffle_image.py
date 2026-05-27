@@ -13,6 +13,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='raffle',
             name='image',
-            field=models.ImageField(blank=True, help_text='Upload an image for the raffle. If not provided, the Material Icon will be used.', null=True, upload_to='raffle_images/'),
+            field=models.ImageField(blank=True, help_text='Upload an image less than 1MB. If not provided, the Material Icon will be used.', null=True, upload_to='raffle_images/'),
         ),
     ]
