@@ -1,4 +1,5 @@
 from pytz import timezone
+from django.utils import timezone as django_timezone
 import datetime
 import math
 import os
@@ -128,7 +129,7 @@ class Account(models.Model):
             # Meaningful action: profile completion (e.g., licenseNumber and about are filled)
             if self.licenseNumber and self.about:
                 referral.status = 'verified'
-                referral.verified_at = timezone.now()
+                referral.verified_at = django_timezone.now()
                 referral.save()
                 
                 # Award 10 tickets to the referrer
