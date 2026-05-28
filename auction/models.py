@@ -92,9 +92,11 @@ class Account(models.Model):
 
     def add_tickets(self, amount, reason):
         """Utility to add tickets via the ledger and sync numTickets."""
+        from django.db.models import F
         RaffleTicket.objects.create(user=self.user, amount=amount, reason=reason)
-        self.numTickets = self.total_tickets
-        self.save()
+        # Atomically update the current numTickets value to preserve manual admin edits
+        Account.objects.filter(pk=self.pk).update(numTickets=F('numTickets') + amount)
+        self.refresh_from_db(fields=['numTickets'])
 
     @receiver(post_save, sender=User)
     def update_profile_signal(sender, instance, created, **kwargs):

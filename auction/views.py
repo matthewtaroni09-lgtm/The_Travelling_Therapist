@@ -1269,9 +1269,11 @@ def admin_raffle_management(request):
             entries = RaffleEntry.objects.filter(raffle=raffle).select_related('user__account__userType')
             total_tickets = entries.aggregate(Sum('tickets_added'))['tickets_added__sum'] or 0
             
-            clinics_count = 0
-            clinicians_total = 0
+            clinics_tickets = 0
+            clinicians_tickets = 0
             admin_total = 0
+            clinics_seen = set()
+            clinicians_seen = set()
             sub_breakdown = {} # { 'Physiotherapist': 10, ... }
             clinic_breakdown = {} # { 'Clinic Name A': 5, ... }
 
@@ -1284,7 +1286,8 @@ def admin_raffle_management(request):
                 is_clinic = "Clinic" in u_type
                 
                 if is_clinic:
-                    clinics_count += entry.tickets_added
+                    clinics_tickets += entry.tickets_added
+                    clinics_seen.add(entry.user.id)
                     clinic_name = entry.user.account.clinicName
                     if not clinic_name:
                          clinic_name = f"{entry.user.first_name} {entry.user.last_name}".strip()
@@ -1292,19 +1295,22 @@ def admin_raffle_management(request):
                          clinic_name = entry.user.username
                     clinic_breakdown[clinic_name] = clinic_breakdown.get(clinic_name, 0) + entry.tickets_added
                 else:
-                    clinicians_total += entry.tickets_added
+                    clinicians_tickets += entry.tickets_added
+                    clinicians_seen.add(entry.user.id)
                     sub_breakdown[u_type] = sub_breakdown.get(u_type, 0) + entry.tickets_added
 
             processed.append({
                 'obj': raffle,
                 'total_tickets': total_tickets,
-                'clinics_count': clinics_count,
-                'clinicians_total': clinicians_total,
+                'clinics_count': len(clinics_seen),
+                'clinics_tickets': clinics_tickets,
+                'clinicians_count': len(clinicians_seen),
+                'clinicians_total': clinicians_tickets,
                 'admin_total': admin_total,
                 'sub_breakdown': sub_breakdown,
                 'clinic_breakdown': clinic_breakdown,
-                'clinics_perc': (clinics_count / total_tickets * 100) if total_tickets > 0 else 0,
-                'clinicians_perc': (clinicians_total / total_tickets * 100) if total_tickets > 0 else 0,
+                'clinics_perc': (clinics_tickets / total_tickets * 100) if total_tickets > 0 else 0,
+                'clinicians_perc': (clinicians_tickets / total_tickets * 100) if total_tickets > 0 else 0,
                 'admin_perc': (admin_total / total_tickets * 100) if total_tickets > 0 else 0,
             })
         return processed
@@ -1367,6 +1373,7 @@ def admin_raffle_api(request):
             end_date_str = data.get('endDate')
             tickets_required = data.get('tickets_required', 1)
             target_audience = data.get('target_audience', 'Both')
+            value_text = data.get('value_text', '')
 
             # Parse dates (expecting ISO format from JS)
             from django.utils.dateparse import parse_datetime
@@ -1384,6 +1391,7 @@ def admin_raffle_api(request):
             raffle.endDate = end_date
             raffle.tickets_required = tickets_required
             raffle.target_audience = target_audience
+            raffle.value_text = value_text
 
             # Handle Image Upload if present in request.FILES
             if 'image' in request.FILES:

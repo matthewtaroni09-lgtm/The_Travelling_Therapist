@@ -149,6 +149,10 @@
                             </select>
                         </div>
                         <div class="col-12">
+                            <label class="form-label fw-bold">Value Text (Optional Display)</label>
+                            <input type="text" class="form-control" id="raffle_value_text" placeholder="e.g., $100 Gift Card Value">
+                        </div>
+                        <div class="col-12">
                             <label class="form-label fw-bold">Custom Banner Image (Optional)</label>
                             <input type="file" class="form-control" id="raffle_image"
                                 accept="image/png, image/jpeg, image/jpg" onchange="validateImageSize(this)">
@@ -249,7 +253,7 @@
         document.getElementById('imagePreviewContainer').classList.add('d-none');
     }
 
-    function prepareEditModal(id, title, desc, start, end, tickets, audience) {
+    function prepareEditModal(id, title, desc, start, end, tickets, audience, valueText) {
         document.getElementById('raffle_id').value = id;
         document.getElementById('raffle_title').value = title;
         document.getElementById('raffle_description').value = desc;
@@ -257,6 +261,7 @@
         document.getElementById('raffle_endDate').value = end;
         document.getElementById('raffle_tickets_required').value = tickets;
         document.getElementById('raffle_target_audience').value = audience;
+        document.getElementById('raffle_value_text').value = valueText && valueText !== 'None' ? valueText : '';
         document.getElementById('modalTitle').innerText = 'Edit Raffle';
         document.getElementById('imagePreviewContainer').classList.add('d-none');
         document.getElementById('raffle_image').value = '';
@@ -285,6 +290,7 @@
         formData.append('endDate', endDate);
         formData.append('tickets_required', document.getElementById('raffle_tickets_required').value);
         formData.append('target_audience', document.getElementById('raffle_target_audience').value);
+        formData.append('value_text', document.getElementById('raffle_value_text').value);
 
         const imageInput = document.getElementById('raffle_image');
         if (imageInput.files[0]) {
