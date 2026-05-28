@@ -11,7 +11,7 @@
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end shadow border-0">
                     <li><a class="dropdown-item d-flex align-items-center" href="#" 
-                           onclick="prepareEditModal('{{ raffle.id }}', '{{ raffle.title|escapejs }}', '{{ raffle.description|escapejs }}', '{% if raffle.startDate %}{{ raffle.startDate|date:'Y-m-d' }}T{{ raffle.startDate|time:'H:i' }}{% endif %}', '{% if raffle.endDate %}{{ raffle.endDate|date:'Y-m-d' }}T{{ raffle.endDate|time:'H:i' }}{% endif %}', '{{ raffle.tickets_required }}', '{{ raffle.target_audience }}')">
+                           onclick="prepareEditModal('{{ raffle.id }}', '{{ raffle.title|escapejs }}', '{{ raffle.description|escapejs }}', '{% if raffle.startDate %}{{ raffle.startDate|date:'Y-m-d' }}T{{ raffle.startDate|time:'H:i' }}{% endif %}', '{% if raffle.endDate %}{{ raffle.endDate|date:'Y-m-d' }}T{{ raffle.endDate|time:'H:i' }}{% endif %}', '{{ raffle.tickets_required }}', '{{ raffle.target_audience }}', '{{ raffle.value_text|escapejs }}')">
                         <span class="material-icons fs-6 me-2">edit</span> Edit Details</a></li>
                     <li><a class="dropdown-item d-flex align-items-center" href="#" 
                            onclick="handleAction('toggle_status', '{{ raffle.id }}', 'Change the active status of this raffle?')">
@@ -67,7 +67,7 @@
                 <!-- CLINICS PROGRESS & SUB-BREAKDOWN -->
                 <div class="mb-3">
                     <div class="d-flex justify-content-between mb-1 small">
-                        <span>Clinics: {{ stats.clinics_count }}</span>
+                        <span>Clinics: {{ stats.clinics_count }} &nbsp;&nbsp; Clinics tickets: {{ stats.clinics_tickets }}</span>
                         <span>{{ stats.clinics_perc|floatformat:1 }}%</span>
                     </div>
                     <div class="progress progress-stacked mb-2">
@@ -90,7 +90,7 @@
                 <!-- CLINICIANS PROGRESS & SUB-BREAKDOWN -->
                 <div class="mb-3">
                     <div class="d-flex justify-content-between mb-1 small">
-                        <span>Clinicians: {{ stats.clinicians_total }}</span>
+                        <span>Clinicians: {{ stats.clinicians_count }} &nbsp;&nbsp; Clinicians tickets: {{ stats.clinicians_total }}</span>
                         <span>{{ stats.clinicians_perc|floatformat:1 }}%</span>
                     </div>
                     <div class="progress progress-stacked mb-2">
