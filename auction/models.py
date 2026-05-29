@@ -126,13 +126,13 @@ class Account(models.Model):
         try:
             referral = Referral.objects.get(referred_user=self.user, status='pending')
             
-            # Meaningful action: profile completion (e.g., licenseNumber and about are filled)
+            # Meaningful action: profile completion or initial signup
             # Verification logic: 
-            # - For Clinics: 'about' is enough (they don't have licenseNumber in the form)
-            # - For others: 'licenseNumber' and 'about' are required
+            # - For Clinics: 'clinicName' is enough (provided at registration)
+            # - For others: 'first_name' is enough (provided at registration)
             is_clinic = str(self.userType).split(' ')[-1] == "Clinic"
             
-            if (is_clinic and self.about) or (self.licenseNumber and self.about):
+            if (is_clinic and self.clinicName) or (not is_clinic and self.user.first_name):
                 referral.status = 'verified'
                 referral.verified_at = django_timezone.now()
                 referral.save()

@@ -19,6 +19,7 @@ from django.urls import reverse_lazy
 import datetime
 from datetime import timedelta
 from . import scheduled_tasks
+from . import emails
 from .models import PROVINCES, Account, AdminSetting, Auction, Bid, Demographic, DemographicType, PracticeArea, PracticeAreaType, User, Account, UserType, PopupMessage, MessageAcknowledgement, Page, PaymentType, Number, Raffle, RaffleEntry, Referral
 from django.contrib.auth.forms import PasswordResetForm
 from django.utils.http import urlsafe_base64_encode
@@ -991,42 +992,53 @@ def register(request):
         if form.is_valid():
             user = form.save()
             user.refresh_from_db()  # load the profile instance created by the signal
+            
+            # Set user fields
             user.email = form.cleaned_data.get('username')
-            user.account.userType = form.cleaned_data.get('user_type')
-            user.account.city = form.cleaned_data.get('city')
-            user.account.province = form.cleaned_data.get('province')
-            user.account.country = 'Canada'
-            user.account.about = form.cleaned_data.get('about')
-            user.account.clinicName = form.cleaned_data.get('clinicName')
-            user.account.imageOne = form.cleaned_data.get('imageOne')
-            user.account.imageTwo = form.cleaned_data.get('imageTwo')
-            user.account.imageThree = form.cleaned_data.get('imageThree')
-            user.account.imageFour = form.cleaned_data.get('imageFour')
+            user.first_name = form.cleaned_data.get('first_name')
+            user.last_name = form.cleaned_data.get('last_name')
+            user.save()
+
+            # Set account fields
+            account = user.account
+            account.userType = form.cleaned_data.get('user_type')
+            account.city = form.cleaned_data.get('city')
+            account.province = form.cleaned_data.get('province')
+            account.country = 'Canada'
+            account.about = form.cleaned_data.get('about')
+            account.clinicName = form.cleaned_data.get('clinicName')
+            account.imageOne = form.cleaned_data.get('imageOne')
+            account.imageTwo = form.cleaned_data.get('imageTwo')
+            account.imageThree = form.cleaned_data.get('imageThree')
+            account.imageFour = form.cleaned_data.get('imageFour')
             
             # Referral logic
             referral_code = request.session.get('referral_code')
             if referral_code:
+                print(f"Registration: Found referral code {referral_code} in session")
                 try:
                     referrer_account = Account.objects.get(referral_code=referral_code)
                     referrer = referrer_account.user
                     
                     # Self-referral block
                     if referrer.email != user.email:
-                        user.account.referred_by = referrer
+                        account.referred_by = referrer
                         Referral.objects.create(referrer=referrer, referred_user=user)
-                        print(f"Referral: {user.username} was referred by {referrer.username}")
+                        print(f"Registration: Created Referral record for {user.username} (referred by {referrer.username})")
                     else:
-                        print(f"Referral: Self-referral attempt blocked for {user.username}")
+                        print(f"Registration: Self-referral attempt blocked for {user.username}")
                 except Account.DoesNotExist:
-                    print(f"Referral: Invalid referral code {referral_code}")
+                    print(f"Registration: Invalid referral code {referral_code}")
                 # Clean up session
                 del request.session['referral_code']
 
-            user.save()
-            user.account.save()
+            account.save()
+            print(f"Registration: Account saved for {user.username}")
 
             # Trigger referral verification check immediately after registration
-            user.account.check_and_award_referral()
+            # This awards tickets and sends the referral success email to the referrer
+            awarded = account.check_and_award_referral()
+            print(f"Registration: check_and_award_referral returned {awarded}")
             
             recaptcha_response = request.POST.get('g-recaptcha-response')
             data = {
@@ -1035,39 +1047,39 @@ def register(request):
             }
             r = requests.post('https://www.google.com/recaptcha/api/siteverify', data=data)
             result = r.json()
+            print(f"Registration: Recaptcha result: {result}")
 
-            print(result)
             if admin.sendEmails:
-                if str(user.account.userType).split(' ')[-1] == "Clinic":
+                print(f"Registration: Attempting to send welcome email to {user.email}")
+                if str(account.userType).split(' ')[-1] == "Clinic":
                     # Clinic email
                     try:
                         send_mail(
                                 subject = "Welcome to the Traveling Therapist",
                                 message = "",
-                                html_message = emails.clinic_welcome(user.account.clinicName),
+                                html_message = emails.clinic_welcome(account.clinicName),
                                 from_email = settings.EMAIL_HOST_USER,
                                 recipient_list = [user.email],
                             )
-                    except:
-                        print('Healthcare facility email failed to send for registration.')
-                        logger.warning('Healthcare facility email failed to send for registration.')
+                        print(f"Registration: Welcome email sent to clinic {user.email}")
+                    except Exception as e:
+                        print(f'Registration Error: Healthcare facility email failed: {e}')
+                        logger.warning(f'Registration Error: Healthcare facility email failed: {e}')
 
                     try:
-                        subject_content = ""
-                        if result['success'] and result['score'] > .5:
-                            subject_content = "Welcome to the Traveling Therapist"
-                        else:
+                        subject_content = "Welcome to the Traveling Therapist"
+                        if not result.get('success') or result.get('score', 1.0) <= .5:
                             subject_content = "!!!!Welcome to the Traveling Therapist - POTENTIAL BOT!!!!!"
+                        
                         send_mail(
                                 subject = subject_content,
                                 message = "",
-                                html_message = "**ADMIN COPY** POTENTIAL BOT!!!!!" + emails.clinic_welcome(user.account.clinicName),
+                                html_message = "**ADMIN COPY** " + ("POTENTIAL BOT!!!!!" if "BOT" in subject_content else "") + emails.clinic_welcome(account.clinicName),
                                 from_email = settings.EMAIL_HOST_USER,
                                 recipient_list = ["info@travelingtherapist.ca"],
                             )
-                    except:
-                        print('Admin copy of healthcare facility email failed to send for registration.')
-                        logger.warning('Admin copy of healthcare facility email failed to send for registration.')
+                    except Exception as e:
+                        print(f'Registration Error: Admin copy (clinic) failed: {e}')
                 else:
                     # Therapist email
                     try:
@@ -1078,26 +1090,25 @@ def register(request):
                                 from_email = settings.EMAIL_HOST_USER,
                                 recipient_list = [user.email]
                             )
-                    except:
-                        print('Therapist email failed to send for registration.')
-                        logger.warning('Therapist email failed to send for registration.')
+                        print(f"Registration: Welcome email sent to therapist {user.email}")
+                    except Exception as e:
+                        print(f'Registration Error: Therapist email failed: {e}')
+                        logger.warning(f'Registration Error: Therapist email failed: {e}')
 
                     try:
-                        subject_content = ""
-                        if result['success'] and result['score'] > .5:
-                            subject_content = "Welcome to the Traveling Therapist"
-                        else:
+                        subject_content = "Welcome to the Traveling Therapist"
+                        if not result.get('success') or result.get('score', 1.0) <= .5:
                             subject_content = "!!!!Welcome to the Traveling Therapist - POTENTIAL BOT!!!!!"
+                        
                         send_mail(
                                 subject = subject_content,
                                 message = "",
-                                html_message = "**ADMIN COPY** POTENTIAL BOT!!!!!" + emails.therapist_welcome(user.first_name, user.last_name),
+                                html_message = "**ADMIN COPY** " + ("POTENTIAL BOT!!!!!" if "BOT" in subject_content else "") + emails.therapist_welcome(user.first_name, user.last_name),
                                 from_email = settings.EMAIL_HOST_USER,
                                 recipient_list = ["info@travelingtherapist.ca"]
                             )
-                    except:
-                        print('Admin copy of therapist email failed to send for registration.')
-                        logger.warning('Admin copy of therapist email failed to send for registration.')
+                    except Exception as e:
+                        print(f'Registration Error: Admin copy (therapist) failed: {e}')
                     
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=user.username, password=raw_password)
