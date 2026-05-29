@@ -5,11 +5,12 @@
 
 <section style="font-size: 16px; margin-bottom: 4rem;">
   <p>Hello <span class="text-weight-bold">{{ auction.clinic.first_name }}</span>,</p>
-  
-  <p>You were bidding on an auction using The Traveling Therapist.</p>
-  <p>This auction had a reserve price which wasn't met. This means that there was no therapist willing to do this temporary job for a price low enough for the clinic.</p>
-   
-  <p>This auction may be reposted in the near future - stay tuned!</p>
+
+  <p>You placed an offer on an auction using The Traveling Therapist.</p>
+  <p>This listing ended with a reserve price which wasn't met. This means that there was no therapist willing to do this
+    temporary job for a price low enough for the clinic.</p>
+
+  <p>This listing may be reposted in the near future - stay tuned!</p>
   <p style="font-weight: 700; padding-top: 0rem; margin-top: 0; line-height: 0;">The Traveling Therapist Team</p>
 
 </section>

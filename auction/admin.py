@@ -41,7 +41,7 @@ class AuctionAdmin(admin.ModelAdmin):
         if obj.active and admin.sendEmails and not auction.active:
             try:
                 send_mail(
-                    subject = str(obj.clinic.clinicName) + " Your Auction is Live!",
+                    subject = str(obj.clinic.clinicName) + " Your Listing is Live!",
                     message = "",
                     html_message = emails.clinic_auction_live(str(obj.clinic.clinicName)),
                     from_email = settings.EMAIL_HOST_USER,
@@ -52,7 +52,7 @@ class AuctionAdmin(admin.ModelAdmin):
             
             try:
                 send_mail(
-                    subject = str(obj.clinic.clinicName) + " Your Auction is Live!",
+                    subject = str(obj.clinic.clinicName) + " Your Listing is Live!",
                     message = "",
                     html_message = "**ADMIN COPY**" + emails.clinic_auction_live(str(obj.clinic.clinicName)),
                     from_email = settings.EMAIL_HOST_USER,
@@ -77,7 +77,7 @@ class AuctionAdmin(admin.ModelAdmin):
                 if email_count < batch_size:
                     try:
                         send_mail(
-                            subject = "NEW AUCTION - The Traveling Therapist",
+                            subject = "NEW LISTING - The Traveling Therapist",
                             message = "",
                             html_message = emails.new_auction_email_to_all(account.user.first_name, account.user.last_name, link, str(auction.placementStart), str(auction.placementEnd), str(auction.paymentType), auction.clinic.clinicName, auction.clinic.city + ", " + auction.clinic.province, time_diff_from_now(auction.auctionEnd)),
                             from_email = settings.EMAIL_HOST_USER,

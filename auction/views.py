@@ -458,7 +458,7 @@ def view_auction(request, auction_id):
             if admin.sendEmails:
                 try:
                     send_mail(
-                        subject = "Thank You for Your Bid - The Traveling Therapist",
+                        subject = "Thank You for Your Offer - The Traveling Therapist",
                         message = "",
                         html_message = emails.therapist_auction_thank_you_bid(request.user.first_name, request.user.last_name, auction.clinic.clinicName, auction.auctionStart, auction.auctionID),
                         from_email = settings.EMAIL_HOST_USER,
@@ -516,7 +516,7 @@ def check_out_bid(auction_id, bid, request, current_lowest_bid_user, new_bid_use
             try:
                 print("Outbid user")
                 send_mail(
-                    subject = "You've been outbid! Place Your Next Bid Now - The Traveling Therapist",
+                    subject = "You've been outbid! Place Your Next Offer Now - The Traveling Therapist",
                     message = "",
                     html_message = emails.therapist_auction_outbid_lowest(current_lowest_bid_user.first_name, current_lowest_bid_user.last_name, auction.clinic.clinicName, auction.auctionStart, auction.auctionID),
                     from_email = settings.EMAIL_HOST_USER,
@@ -543,7 +543,7 @@ def check_out_bid(auction_id, bid, request, current_lowest_bid_user, new_bid_use
                 # print("Not in email list" + str(single_bid.user.email))
                 try:
                     send_mail(
-                        subject = "The Traveling Therapist -  A New Lowest Bid Has Been Placed",
+                        subject = "The Traveling Therapist -  A New Lowest Offer Has Been Placed",
                         message = "",
                         html_message = emails.therapist_auction_outbid_all_users(single_bid.user.first_name, single_bid.user.last_name, auction.clinic.clinicName, auction.auctionStart, auction.auctionID),
                         from_email = settings.EMAIL_HOST_USER,
