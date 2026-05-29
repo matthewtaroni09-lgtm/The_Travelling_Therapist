@@ -986,68 +986,82 @@ def check_user_payment_type(request):
 # @login_required(login_url='login')
 # @transaction.atomic
 def register(request):
+    from django.db import transaction
     admin = AdminSetting.objects.first()
     if request.method == 'POST':
         form = RegisterAcount(request.POST, request.FILES)
         if form.is_valid():
-            user = form.save()
-            user.refresh_from_db()  # load the profile instance created by the signal
-            
-            # Set user fields
-            user.email = form.cleaned_data.get('username')
-            user.first_name = form.cleaned_data.get('first_name')
-            user.last_name = form.cleaned_data.get('last_name')
-            user.save()
-
-            # Set account fields
-            account = user.account
-            account.userType = form.cleaned_data.get('user_type')
-            account.city = form.cleaned_data.get('city')
-            account.province = form.cleaned_data.get('province')
-            account.country = 'Canada'
-            account.about = form.cleaned_data.get('about')
-            account.clinicName = form.cleaned_data.get('clinicName')
-            account.imageOne = form.cleaned_data.get('imageOne')
-            account.imageTwo = form.cleaned_data.get('imageTwo')
-            account.imageThree = form.cleaned_data.get('imageThree')
-            account.imageFour = form.cleaned_data.get('imageFour')
-            
-            # Referral logic
-            referral_code = request.session.get('referral_code')
-            if referral_code:
-                print(f"Registration: Found referral code {referral_code} in session")
-                try:
-                    referrer_account = Account.objects.get(referral_code=referral_code)
-                    referrer = referrer_account.user
+            try:
+                with transaction.atomic():
+                    user = form.save()
+                    user.refresh_from_db()  # load the profile instance created by the signal
                     
-                    # Self-referral block
-                    if referrer.email != user.email:
-                        account.referred_by = referrer
-                        Referral.objects.create(referrer=referrer, referred_user=user)
-                        print(f"Registration: Created Referral record for {user.username} (referred by {referrer.username})")
-                    else:
-                        print(f"Registration: Self-referral attempt blocked for {user.username}")
-                except Account.DoesNotExist:
-                    print(f"Registration: Invalid referral code {referral_code}")
-                # Clean up session
-                del request.session['referral_code']
+                    # Set user fields
+                    user.email = form.cleaned_data.get('username')
+                    user.first_name = form.cleaned_data.get('first_name')
+                    user.last_name = form.cleaned_data.get('last_name')
+                    user.save()
 
-            account.save()
-            print(f"Registration: Account saved for {user.username}")
+                    # Set account fields
+                    account = user.account
+                    account.userType = form.cleaned_data.get('user_type')
+                    account.city = form.cleaned_data.get('city')
+                    account.province = form.cleaned_data.get('province')
+                    account.country = 'Canada'
+                    account.about = form.cleaned_data.get('about')
+                    account.clinicName = form.cleaned_data.get('clinicName')
+                    account.imageOne = form.cleaned_data.get('imageOne')
+                    account.imageTwo = form.cleaned_data.get('imageTwo')
+                    account.imageThree = form.cleaned_data.get('imageThree')
+                    account.imageFour = form.cleaned_data.get('imageFour')
+                    
+                    # Referral logic
+                    referral_code = request.session.get('referral_code')
+                    if referral_code:
+                        print(f"Registration: Found referral code {referral_code} in session")
+                        try:
+                            referrer_account = Account.objects.get(referral_code=referral_code)
+                            referrer = referrer_account.user
+                            
+                            # Self-referral block
+                            if referrer.email != user.email:
+                                account.referred_by = referrer
+                                # Use get_or_create to prevent IntegrityError on double-submit
+                                Referral.objects.get_or_create(referrer=referrer, referred_user=user)
+                                print(f"Registration: Referral linked for {user.username} (referred by {referrer.username})")
+                            else:
+                                print(f"Registration: Self-referral attempt blocked for {user.username}")
+                        except Account.DoesNotExist:
+                            print(f"Registration: Invalid referral code {referral_code}")
+                        # Clean up session
+                        del request.session['referral_code']
 
-            # Trigger referral verification check immediately after registration
-            # This awards tickets and sends the referral success email to the referrer
-            awarded = account.check_and_award_referral()
-            print(f"Registration: check_and_award_referral returned {awarded}")
+                    account.save()
+                    print(f"Registration: Account saved for {user.username}")
+
+                    # Trigger referral verification check immediately after registration
+                    # This awards tickets and sends the referral success email to the referrer
+                    awarded = account.check_and_award_referral()
+                    print(f"Registration: check_and_award_referral returned {awarded}")
+            except Exception as e:
+                print(f"Registration Error: Transaction failed: {e}")
+                logger.error(f"Registration Error: Transaction failed: {e}")
+                # Re-render with form errors if possible, or just re-raise
+                return render(request, 'auction/register.html', {'form': form, 'error': 'An internal error occurred. Please try again.'})
             
+            # Recaptcha and Emails move OUTSIDE the transaction to prevent rollbacks on network issues
             recaptcha_response = request.POST.get('g-recaptcha-response')
             data = {
             'secret': settings.GOOGLE_RECAPTCHA_SECRET_KEY,
             'response': recaptcha_response
             }
-            r = requests.post('https://www.google.com/recaptcha/api/siteverify', data=data)
-            result = r.json()
-            print(f"Registration: Recaptcha result: {result}")
+            try:
+                r = requests.post('https://www.google.com/recaptcha/api/siteverify', data=data)
+                result = r.json()
+                print(f"Registration: Recaptcha result: {result}")
+            except Exception as e:
+                print(f"Registration: Recaptcha request failed: {e}")
+                result = {'success': True} # Fail open if recaptcha service is down
 
             if admin.sendEmails:
                 print(f"Registration: Attempting to send welcome email to {user.email}")

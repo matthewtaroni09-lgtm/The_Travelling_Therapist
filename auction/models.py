@@ -147,10 +147,18 @@ class Account(models.Model):
                 from django.conf import settings
                 from . import emails
                 
-                new_facility_name = self.clinicName if self.clinicName else f"{self.user.first_name} {self.user.last_name}"
-                if not new_facility_name.strip():
+                # Fallback for referred facility name
+                new_facility_name = self.clinicName if self.clinicName else f"{self.user.first_name} {self.user.last_name}".strip()
+                if not new_facility_name:
                     new_facility_name = self.user.username
                 
+                # Fallback for referrer name in the greeting
+                referrer_name = referral.referrer.first_name if referral.referrer.first_name else ""
+                if not referrer_name and hasattr(referral.referrer, 'account'):
+                    referrer_name = referral.referrer.account.clinicName
+                if not referrer_name:
+                    referrer_name = referral.referrer.username
+
                 account_url = f"{settings.ACTIVE_LINK}/profile#raffles"
                 
                 try:
@@ -158,7 +166,7 @@ class Account(models.Model):
                         subject=f"You earned 10 tickets! a new facility signed up with your referral",
                         message="",
                         html_message=emails.referral_success_email(
-                            referral.referrer.first_name, 
+                            referrer_name, 
                             new_facility_name, 
                             10, 
                             account_url
