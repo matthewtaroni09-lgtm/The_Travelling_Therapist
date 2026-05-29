@@ -1024,6 +1024,9 @@ def register(request):
 
             user.save()
             user.account.save()
+
+            # Trigger referral verification check immediately after registration
+            user.account.check_and_award_referral()
             
             recaptcha_response = request.POST.get('g-recaptcha-response')
             data = {
