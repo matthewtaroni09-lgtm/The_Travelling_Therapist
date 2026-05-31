@@ -1,4 +1,4 @@
-from pytz import timezone
+import pytz
 from django.utils import timezone as django_timezone
 import datetime
 import math
@@ -372,7 +372,7 @@ class Auction(models.Model):
             return ""
 
     def get_time_diff(self):
-        distance = ((self.auctionEnd.astimezone(timezone('Canada/Eastern')) - datetime.datetime.now(timezone('utc'))).total_seconds()) * 1000
+        distance = ((self.auctionEnd.astimezone(pytz.timezone('Canada/Eastern')) - datetime.datetime.now(pytz.timezone('utc'))).total_seconds()) * 1000
         days = math.floor(distance / (1000 * 60 * 60 * 24))
         hours = math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
         minutes = math.floor((distance % (1000 * 60 * 60)) / (1000 * 60))
