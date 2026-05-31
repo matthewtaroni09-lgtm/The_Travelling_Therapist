@@ -15,6 +15,7 @@ from The_Travelling_Therapist.settings import ACTIVE_LINK
 
 from django.forms import inlineformset_factory
 from .forms import RegisterAcount, AuctionForm, BidForm, UserFormClinic, UserFormTherapist, ProfileUpdateClinic, CreateUserForm, PasswordChangingForm, ContactForm, DemographicForm, PracticeAreaForm, AuctionAccountForm, MessageAcknowledgementForm
+import pytz
 from django.urls import reverse_lazy
 import datetime
 from datetime import timedelta
@@ -422,10 +423,10 @@ def view_auction(request, auction_id):
                 auction.currentLowBid = bid.amount
                 auction_change = True
             # A timezone must be specified in order to make the subtraction
-            diff = auction.auctionEnd - datetime.datetime.now(timezone('America/Toronto'))
+            diff = auction.auctionEnd - datetime.datetime.now(pytz.timezone('America/Toronto'))
             if diff.total_seconds() < 60 and (bid.amount <= prev_low_bid or prev_low_bid == 0):
                 new_id = str(uuid.uuid4())
-                auction.auctionEnd = auction.auctionEnd.astimezone(timezone('America/Toronto')) + datetime.timedelta(minutes=1)
+                auction.auctionEnd = auction.auctionEnd.astimezone(pytz.timezone('America/Toronto')) + datetime.timedelta(minutes=1)
                 scheduled_tasks.print_job()
                 try:
                     scheduled_tasks.remove_cron_job(auction.cronID)
@@ -836,8 +837,8 @@ def create_auction(request):
                     auction.reservePrice = request.POST.get("reservePriceSlider", "")
                 elif request.POST.get("paymentType", "") == '1' and request.POST.get('sliderCheckBox') != 'on':
                     auction.reservePrice = None
-                auction.auctionStart = datetime.datetime.now(timezone('America/Toronto'))
-                auction.auctionEnd = datetime.datetime.now(timezone('America/Toronto')) + datetime.timedelta(seconds=admin.defaultAuctionLength)
+                auction.auctionStart = datetime.datetime.now(pytz.timezone('America/Toronto'))
+                auction.auctionEnd = datetime.datetime.now(pytz.timezone('America/Toronto')) + datetime.timedelta(seconds=admin.defaultAuctionLength)
                 auction.closed = False
                 auction.active = settings.DEFAULT_AUCTION_ACTIVE
                 auction.deleted = False
