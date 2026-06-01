@@ -171,7 +171,7 @@
     </div>
 
     <!-- Navigation for Staffing Solutions Section -->
-    <nav class="navbar navbar-expand-xl navbar-light sub-nav">
+    <nav class="navbar navbar-expand-xl navbar-light sub-nav shadow-sm rounded-4 mb-5 border-0" style="background-color: #f8f9fa;">
         <div class="container-fluid">
             <button class="navbar-toggler m-1" type="button" data-bs-toggle="collapse"
                 data-bs-target="#subNavbarToggler" aria-controls="subNavbarToggler" aria-expanded="false"
@@ -179,32 +179,36 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="subNavbarToggler">
-                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                    <li class="nav-item staffingSolutionSubItem">
-                        <a class="navbar-brand staffSolutionsNavLink" href="#JobBoard"><img class="AccordionIcon"
-                                src="/media/images/job-board.png" alt="Hands shaking">Job Board</a>
+                <ul class="navbar-nav w-100 justify-content-between mb-0 py-2">
+                    <li class="nav-item">
+                        <a class="nav-link text-weight-bold d-flex align-items-center staffSolutionsNavLink" href="#JobBoard" style="color: #198754;">
+                            <img src="/media/images/job-board.png" alt="Hands shaking" class="me-2" style="height: 28px; width: auto;">
+                            Job Board
+                        </a>
                     </li>
-                    <li class="nav-item staffingSolutionSubItem">
-                        <a class="navbar-brand staffSolutionsNavLink" href="#DirectEmployerRecruitment"><img
-                                class="AccordionIcon" src="/media/images/recruitment.png"
-                                alt="People icons with magnfiying glass">Direct Employer
-                            Recruitment</a>
+                    <li class="nav-item">
+                        <a class="nav-link text-weight-bold d-flex align-items-center staffSolutionsNavLink" href="#DirectEmployerRecruitment" style="color: #198754;">
+                            <img src="/media/images/recruitment.png" alt="People icons" class="me-2" style="height: 28px; width: auto;">
+                            Direct Recruitment
+                        </a>
                     </li>
-                    <li class="nav-item staffingSolutionSubItem">
-                        <a class="navbar-brand staffSolutionsNavLink" href="#HeadhunterRecruiter"><img
-                                class="AccordionIcon" src="/media/images/headhunting.png"
-                                alt="Person icon with target">Headhunter/Recruiter</a>
+                    <li class="nav-item">
+                        <a class="nav-link text-weight-bold d-flex align-items-center staffSolutionsNavLink" href="#HeadhunterRecruiter" style="color: #198754;">
+                            <img src="/media/images/headhunting.png" alt="Headhunter" class="me-2" style="height: 28px; width: auto;">
+                            Headhunter/Recruiter
+                        </a>
                     </li>
-                    <li class="nav-item staffingSolutionSubItem">
-                        <a class="navbar-brand staffSolutionsNavLink" href="#StaffingAgency"><img class="AccordionIcon"
-                                src="/media/images/staffingagency.png"
-                                alt="People icons with breifcase and gear">Staffing
-                            Agency</a>
+                    <li class="nav-item">
+                        <a class="nav-link text-weight-bold d-flex align-items-center staffSolutionsNavLink" href="#StaffingAgency" style="color: #198754;">
+                            <img src="/media/images/staffingagency.png" alt="Staffing Agency" class="me-2" style="height: 28px; width: auto;">
+                            Staffing Agency
+                        </a>
                     </li>
-                    <li class="nav-item staffingSolutionSubItem">
-                        <a class="navbar-brand staffSolutionsNavLink" href="#TheTravelingTherapist"><img
-                                class="AccordionIcon" src="/media/images/T_Logo_Final.png"
-                                alt="The Traveling Therapist Logo">The Traveling Therapist</a>
+                    <li class="nav-item">
+                        <a class="nav-link text-weight-bold d-flex align-items-center staffSolutionsNavLink" href="#TheTravelingTherapist" style="color: #198754;">
+                            <img src="/media/images/T_Logo_Final.png" alt="TTT Logo" class="me-2" style="height: 28px; width: auto;">
+                            The Traveling Therapist
+                        </a>
                     </li>
                 </ul>
             </div>
@@ -212,10 +216,10 @@
     </nav>
 
     <!-- Job Board -->
-    <div class="row staffingSolutionRow">
+    <div class="row mb-5">
         <div>
-            <h2 class="staffSolutionsTitle" id="JobBoard">
-                <img class="AccordionIcon" src="/media/images/job-board.png" alt="Hands shaking">
+            <h2 class="text-weight-bold mb-4 d-flex align-items-center" id="JobBoard" style="color: #198754; scroll-margin-top: 170px;">
+                <img class="AccordionIcon me-3" src="/media/images/job-board.png" alt="Hands shaking" style="height: 48px; width: auto;">
                 Job Board
             </h2>
             <div>
@@ -231,34 +235,40 @@
                         often
                         than they needed"
                     </i></p>
-                <div class="row">
+                <div class="row g-4 mt-2">
                     <div class="col-lg-4 col-md-12 staffingSolutionsSection">
-                        <h4 class="ps-2">
-                            <span class="text-danger">☒</span> What Goes Wrong
-                        </h4>
-                        <ul class="accordionList">
-                            <li>High volume of unqualified resumes; screening steals healthcare facility admin time.
-                            </li>
-                            <li>Passive candidates rarely respond to generic postings.</li>
-                            <li>No built-in verification or credential gating; false positives are common.</li>
-                        </ul>
+                        <div class="bg-white rounded-4 shadow-sm p-4 h-100 border">
+                            <h4 class="ps-2">
+                                <span class="text-danger">☒</span> What Goes Wrong
+                            </h4>
+                            <ul class="accordionList mt-3">
+                                <li>High volume of unqualified resumes; screening steals healthcare facility admin time.
+                                </li>
+                                <li>Passive candidates rarely respond to generic postings.</li>
+                                <li>No built-in verification or credential gating; false positives are common.</li>
+                            </ul>
+                        </div>
                     </div>
                     <div class="col-lg-4 col-md-12 staffingSolutionsSection">
-                        <h4><span class="text-success">☑</span> How The Traveling Therapist Can Help</h4>
-                        <ul class="accordionList">
-                            <li>Post once on the The Traveling Therapist platform and receive clinician focused offers
-                                during a 14-day listing window.</li>
-                            <li>The Traveling Therapist reduces noise by attracting clinicians who actively place offers
-                                on roles, not passive applicants.</li>
-                            <li>Built-in match workflow cuts preliminary screening time and surfaces qualified
-                                clinicians faster.</li>
-                        </ul>
+                        <div class="bg-white rounded-4 shadow-sm p-4 h-100 border" style="background-color: #fcfcfc !important;">
+                            <h4><span class="impactThumbsDown">🖓</span> Impact</h4>
+                            <ul class="accordionList mt-3">
+                                <li>Lost hours for staff, delayed fill times, and patient cancellations</li>
+                            </ul>
+                        </div>
                     </div>
                     <div class="col-lg-4 col-md-12 staffingSolutionsSection">
-                        <h4><span class="impactThumbsDown">🖓</span> Impact</h4>
-                        <ul class="accordionList">
-                            <li>Lost hours for staff, delayed fill times, and patient cancellations</li>
-                        </ul>
+                        <div class="bg-white rounded-4 shadow-sm p-4 h-100 border" style="border-top: 4px solid #198754 !important;">
+                            <h4><span class="text-success">☑</span> How The Traveling Therapist Can Help</h4>
+                            <ul class="accordionList mt-3">
+                                <li>Post once on the The Traveling Therapist platform and receive clinician focused offers
+                                    during a 14-day listing window.</li>
+                                <li>The Traveling Therapist reduces noise by attracting clinicians who actively place offers
+                                    on roles, not passive applicants.</li>
+                                <li>Built-in match workflow cuts preliminary screening time and surfaces qualified
+                                    clinicians faster.</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -286,10 +296,10 @@
         </div>
     </div>
     <!-- Direct Employer Recruitment -->
-    <div class="row staffingSolutionRow">
+    <div class="row mb-5">
         <div>
-            <h2 class="staffSolutionsTitle" id="DirectEmployerRecruitment">
-                <img class="AccordionIcon" src="/media/images/recruitment.png" alt="People icons with magnfiying glass">
+            <h2 class="text-weight-bold mb-4 d-flex align-items-center" id="DirectEmployerRecruitment" style="color: #198754; scroll-margin-top: 170px;">
+                <img class="AccordionIcon me-3" src="/media/images/recruitment.png" alt="People icons with magnfiying glass" style="height: 48px; width: auto;">
                 Direct Employer Recruitment
             </h2>
             <div>
@@ -298,39 +308,45 @@
                         groups in your network; three people replied and none were available in your needed
                         timeframe."
                     </i></p>
-                <div class="row">
+                <div class="row g-4 mt-2">
                     <div class="col-lg-4 col-md-12 staffingSolutionsSection">
-                        <h4 class="ps-2">
-                            <span class="text-danger">☒</span> What Goes Wrong
-                        </h4>
-                        <ul class="accordionList">
-                            <li>Reliant on personal network reach;</li>
-                            <li>SLOW and reliant on your network to get back to you with potential options!</li>
-                            <li>Follow-up burden can falls on healthcare facility staff and rely on you seeing the
-                                messages
-                                trying to
-                                get you a clinician.</li>
-                            <li>Negotiation on splits or rates often stalls without a neutral marketplace.</li>
-                        </ul>
+                        <div class="bg-white rounded-4 shadow-sm p-4 h-100 border">
+                            <h4 class="ps-2">
+                                <span class="text-danger">☒</span> What Goes Wrong
+                            </h4>
+                            <ul class="accordionList mt-3">
+                                <li>Reliant on personal network reach;</li>
+                                <li>SLOW and reliant on your network to get back to you with potential options!</li>
+                                <li>Follow-up burden can falls on healthcare facility staff and rely on you seeing the
+                                    messages
+                                    trying to
+                                    get you a clinician.</li>
+                                <li>Negotiation on splits or rates often stalls without a neutral marketplace.</li>
+                            </ul>
+                        </div>
                     </div>
                     <div class="col-lg-4 col-md-12 staffingSolutionsSection">
-                        <h4><span class="text-success">☑</span> How The Traveling Therapist Can Help</h4>
-                        <ul class="accordionList">
-                            <li>Convert outreach effort into a single listing: set your schedule, budget ceiling,
-                                and
-                                whether you’ll offer a fee-split or full contract price.</li>
-                            <li>Clinicians place an offer directly, bringing negotiation into a transparent marketplace
-                                rather
-                                than
-                                one-on-one outreach.</li>
-                            <li>You only pay if a match is made, eliminating wasted outreach spend.</li>
-                        </ul>
+                        <div class="bg-white rounded-4 shadow-sm p-4 h-100 border" style="background-color: #fcfcfc !important;">
+                            <h4><span class="impactThumbsDown">🖓</span> Impact</h4>
+                            <ul class="accordionList mt-3">
+                                <li>Extended vacancy windows and continuous internal distraction from patient care. </li>
+                            </ul>
+                        </div>
                     </div>
                     <div class="col-lg-4 col-md-12 staffingSolutionsSection">
-                        <h4><span class="impactThumbsDown">🖓</span> Impact</h4>
-                        <ul class="accordionList">
-                            <li>Extended vacancy windows and continuous internal distraction from patient care. </li>
-                        </ul>
+                        <div class="bg-white rounded-4 shadow-sm p-4 h-100 border" style="border-top: 4px solid #198754 !important;">
+                            <h4><span class="text-success">☑</span> How The Traveling Therapist Can Help</h4>
+                            <ul class="accordionList mt-3">
+                                <li>Convert outreach effort into a single listing: set your schedule, budget ceiling,
+                                    and
+                                    whether you’ll offer a fee-split or full contract price.</li>
+                                <li>Clinicians place an offer directly, bringing negotiation into a transparent marketplace
+                                    rather
+                                    than
+                                    one-on-one outreach.</li>
+                                <li>You only pay if a match is made, eliminating wasted outreach spend.</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
                 <!-- If the user is authenticated and a clinic link them to the create an auctuion. If they are not a clinic don't show the link because they won't be able to create an auction. -->
@@ -353,10 +369,10 @@
     </div>
 
     <!-- Headhunter/Recruiter -->
-    <div class="row staffingSolutionRow">
+    <div class="row mb-5">
         <div>
-            <h2 class="staffSolutionsTitle" id="HeadhunterRecruiter">
-                <img class="AccordionIcon" src="/media/images/headhunting.png" alt="Person icon with target">
+            <h2 class="text-weight-bold mb-4 d-flex align-items-center" id="HeadhunterRecruiter" style="color: #198754; scroll-margin-top: 170px;">
+                <img class="AccordionIcon me-3" src="/media/images/headhunting.png" alt="Person icon with target" style="height: 48px; width: auto;">
                 Headhunter/Recruiter
             </h2>
             <div>
@@ -365,36 +381,42 @@
                         groups in your network; three people replied and none were available in your needed
                         timeframe."
                     </i></p>
-                <div class="row">
+                <div class="row g-4 mt-2">
                     <div class="col-lg-4 col-md-12 staffingSolutionsSection">
-                        <h4 class="ps-2">
-                            <span class="text-danger">☒</span> What Goes Wrong
-                        </h4>
-                        <ul class="accordionList">
-                            <li>Employer-paid placement models can be opaque and costly.</li>
-                            <li>Recruiters may prioritize employer relationships over long-term fit or retention.
-                            </li>
-                            <li>Fees are typically a percentage of salary and reduce hiring transparency.</li>
-                            <li>Back and forth with a headhunter middleman via phone/email to get a candidate </li>
-                        </ul>
+                        <div class="bg-white rounded-4 shadow-sm p-4 h-100 border">
+                            <h4 class="ps-2">
+                                <span class="text-danger">☒</span> What Goes Wrong
+                            </h4>
+                            <ul class="accordionList mt-3">
+                                <li>Employer-paid placement models can be opaque and costly.</li>
+                                <li>Recruiters may prioritize employer relationships over long-term fit or retention.
+                                </li>
+                                <li>Fees are typically a percentage of salary and reduce hiring transparency.</li>
+                                <li>Back and forth with a headhunter middleman via phone/email to get a candidate </li>
+                            </ul>
+                        </div>
                     </div>
                     <div class="col-lg-4 col-md-12 staffingSolutionsSection">
-                        <h4><span class="text-success">☑</span> How The Traveling Therapist Can Help</h4>
-                        <ul class="accordionList">
-                            <li>Transparent pricing model: listings let you control ceiling price and hiring terms;
-                                TTT’s flat match fee starts at $300 and is only invoiced on a successful match.</li>
-                            <li>Marketplace-driven offers surfaces clinicians who accept your terms without a human
-                                middleman to slow the process.</li>
-                            <li>Faster turnaround (14-day matching cadence) reduces time-to-hire and the need for
-                                expensive contingency placements.</li>
-                        </ul>
+                        <div class="bg-white rounded-4 shadow-sm p-4 h-100 border" style="background-color: #fcfcfc !important;">
+                            <h4><span class="impactThumbsDown">🖓</span> Impact</h4>
+                            <ul class="accordionList mt-3">
+                                <li>High placement costs with a slow human middleman that can often leave you questioning
+                                    whether it was better to not get the coverage at all.</li>
+                            </ul>
+                        </div>
                     </div>
                     <div class="col-lg-4 col-md-12 staffingSolutionsSection">
-                        <h4><span class="impactThumbsDown">🖓</span> Impact</h4>
-                        <ul class="accordionList">
-                            <li>High placement costs with a slow human middleman that can often leave you questioning
-                                whether it was better to not get the coverage at all.</li>
-                        </ul>
+                        <div class="bg-white rounded-4 shadow-sm p-4 h-100 border" style="border-top: 4px solid #198754 !important;">
+                            <h4><span class="text-success">☑</span> How The Traveling Therapist Can Help</h4>
+                            <ul class="accordionList mt-3">
+                                <li>Transparent pricing model: listings let you control ceiling price and hiring terms;
+                                    TTT’s flat match fee starts at $300 and is only invoiced on a successful match.</li>
+                                <li>Marketplace-driven offers surfaces clinicians who accept your terms without a human
+                                    middleman to slow the process.</li>
+                                <li>Faster turnaround (14-day matching cadence) reduces time-to-hire and the need for
+                                    expensive contingency placements.</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
                 <!-- If the user is authenticated and a clinic link them to the create an auctuion. If they are not a clinic don't show the link because they won't be able to create an auction. -->
@@ -417,11 +439,10 @@
     </div>
 
     <!-- Staffing Agency -->
-    <div class="row staffingSolutionRow">
+    <div class="row mb-5">
         <div>
-            <h2 class="staffSolutionsTitle" id="StaffingAgency">
-                <img class="AccordionIcon" src="/media/images/staffingagency.png"
-                    alt="People icons with breifcase and gear">
+            <h2 class="text-weight-bold mb-4 d-flex align-items-center" id="StaffingAgency" style="color: #198754; scroll-margin-top: 170px;">
+                <img class="AccordionIcon me-3" src="/media/images/staffingagency.png" alt="People icons with breifcase and gear" style="height: 48px; width: auto;">
                 Staffing Agency
             </h2>
             <div>
@@ -431,39 +452,45 @@
                         up
                         posting on a Job board anyways as a last resort."
                     </i></p>
-                <div class="row">
+                <div class="row g-4 mt-2">
                     <div class="col-lg-4 col-md-12 staffingSolutionsSection">
-                        <h4 class="ps-2">
-                            <span class="text-danger">☒</span> What Goes Wrong
-                        </h4>
-                        <ul class="accordionList">
-                            <li>Agencies bundle payroll, insurance, and credentialing/background checks, but often
-                                at
-                                high markups and opaque margins.</li>
-                            <li>Administrative friction: constant back-and-forth with agency ops.</li>
-                            <li>Fee structures and clinician take-home pay are difficult to audit, especially in
-                                fee-split scenarios. </li>
-                        </ul>
+                        <div class="bg-white rounded-4 shadow-sm p-4 h-100 border">
+                            <h4 class="ps-2">
+                                <span class="text-danger">☒</span> What Goes Wrong
+                            </h4>
+                            <ul class="accordionList mt-3">
+                                <li>Agencies bundle payroll, insurance, and credentialing/background checks, but often
+                                    at
+                                    high markups and opaque margins.</li>
+                                <li>Administrative friction: constant back-and-forth with agency ops.</li>
+                                <li>Fee structures and clinician take-home pay are difficult to audit, especially in
+                                    fee-split scenarios. </li>
+                            </ul>
+                        </div>
                     </div>
                     <div class="col-lg-4 col-md-12 staffingSolutionsSection">
-                        <h4><span class="text-success">☑</span> How The Traveling Therapist Can Help</h4>
-                        <ul class="accordionList">
-                            <li>Eliminate the agency middleman: TTT's listing model lets healthcare facilities set clear
-                                terms and see clinician offers, reducing hidden margins and administrative overhead.
-                            </li>
-                            <li>Choose between full contract price or fee-split posting options so you control the
-                                commercial model and budget.</li>
-                            <li>TTT handles matchmaking and lets you onboard clinicians faster, with less
-                                back-and-forth
-                                than traditional agency workflows.
-                        </ul>
+                        <div class="bg-white rounded-4 shadow-sm p-4 h-100 border" style="background-color: #fcfcfc !important;">
+                            <h4><span class="impactThumbsDown">🖓</span> Impact</h4>
+                            <ul class="accordionList mt-3">
+                                <li>Higher per-hour staffing costs, compliance risk, and the clinic owner has to cover for
+                                    agency's bricks and mortar business structure</li>
+                            </ul>
+                        </div>
                     </div>
                     <div class="col-lg-4 col-md-12 staffingSolutionsSection">
-                        <h4><span class="impactThumbsDown">🖓</span> Impact</h4>
-                        <ul class="accordionList">
-                            <li>Higher per-hour staffing costs, compliance risk, and the clinic owner has to cover for
-                                agency's bricks and mortar business structure</li>
-                        </ul>
+                        <div class="bg-white rounded-4 shadow-sm p-4 h-100 border" style="border-top: 4px solid #198754 !important;">
+                            <h4><span class="text-success">☑</span> How The Traveling Therapist Can Help</h4>
+                            <ul class="accordionList mt-3">
+                                <li>Eliminate the agency middleman: TTT's listing model lets healthcare facilities set clear
+                                    terms and see clinician offers, reducing hidden margins and administrative overhead.
+                                </li>
+                                <li>Choose between full contract price or fee-split posting options so you control the
+                                    commercial model and budget.</li>
+                                <li>TTT handles matchmaking and lets you onboard clinicians faster, with less
+                                    back-and-forth
+                                    than traditional agency workflows.</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
                 <!-- If the user is authenticated and a clinic link them to the create an auctuion. If they are not a clinic don't show the link because they won't be able to create an auction. -->
@@ -486,10 +513,10 @@
     </div>
 
     <!-- The Traveling Therapist -->
-    <div class="row staffingSolutionRow">
+    <div class="row mb-5">
         <div>
-            <h2 class="staffSolutionsTitle" id="TheTravelingTherapist">
-                <img class="AccordionIcon" src="/media/images/T_Logo_Final.png" alt="The Traveling Therapist Logo">
+            <h2 class="text-weight-bold mb-4 d-flex align-items-center" id="TheTravelingTherapist" style="color: #198754; scroll-margin-top: 170px;">
+                <img class="AccordionIcon me-3" src="/media/images/T_Logo_Final.png" alt="The Traveling Therapist Logo" style="height: 48px; width: auto;">
                 The Traveling Therapist
             </h2>
             <div>
@@ -499,31 +526,35 @@
                         clinician at
                         a better rate than their last temp agency."
                     </i></p>
-                <div class="row">
+                <div class="row g-4 mt-2">
                     <div class="col-lg-6 col-md-12 staffingSolutionsSection">
-                        <h4 class="ps-2">
-                            <span class="text-success">☑</span> What Goes Right
-                        </h4>
-                        <ul class="accordionList">
-                            <li>Fast: listings run for 14 days so you get a match quickly.</li>
-                            <li>Transparent: no hidden fees; prices start at $300 per match and you only pay on
-                                successful matches.</li>
-                            <li>Customizable: post for full contract price or fee split and set ceiling prices to
-                                stay
-                                on budget.</li>
-                        </ul>
+                        <div class="bg-white rounded-4 shadow-sm p-4 h-100 border" style="border-top: 4px solid #198754 !important;">
+                            <h4 class="ps-2">
+                                <span class="text-success">☑</span> What Goes Right
+                            </h4>
+                            <ul class="accordionList mt-3">
+                                <li>Fast: listings run for 14 days so you get a match quickly.</li>
+                                <li>Transparent: no hidden fees; prices start at $300 per match and you only pay on
+                                    successful matches.</li>
+                                <li>Customizable: post for full contract price or fee split and set ceiling prices to
+                                    stay
+                                    on budget.</li>
+                            </ul>
+                        </div>
                     </div>
                     <div class="col-lg-6 col-md-12 staffingSolutionsSection">
-                        <h4><span class="text-success">☑</span>Hassle-free Admin</h4>
-                        <ul class="accordionList">
-                            <li>Eliminates resume sifting</li>
-                            <li>Reduces back-and-forth with
-                                potential
-                                clinicians</li>
-                            <li>removes agency operational layers so your staff spends less time on
-                                hiring
-                                logistics</li>
-                        </ul>
+                        <div class="bg-white rounded-4 shadow-sm p-4 h-100 border" style="border-top: 4px solid #198754 !important;">
+                            <h4><span class="text-success">☑</span> Hassle-free Admin</h4>
+                            <ul class="accordionList mt-3">
+                                <li>Eliminates resume sifting</li>
+                                <li>Reduces back-and-forth with
+                                    potential
+                                    clinicians</li>
+                                <li>removes agency operational layers so your staff spends less time on
+                                    hiring
+                                    logistics</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
                 <!-- If the user is authenticated and a clinic link them to the create an auctuion. If they are not a clinic don't show the link because they won't be able to create an auction. -->
