@@ -21,7 +21,7 @@ import datetime
 from datetime import timedelta
 from . import scheduled_tasks
 from . import emails
-from .models import PROVINCES, Account, AdminSetting, Auction, Bid, Demographic, DemographicType, PracticeArea, PracticeAreaType, User, Account, UserType, PopupMessage, MessageAcknowledgement, Page, PaymentType, Number, Raffle, RaffleEntry, Referral
+from .models import PROVINCES, Account, AdminSetting, Auction, Bid, Demographic, DemographicType, PracticeArea, PracticeAreaType, User, Account, UserType, PopupMessage, MessageAcknowledgement, Page, PaymentType, Number, Raffle, RaffleEntry, Referral, RaffleTicket
 from django.contrib.auth.forms import PasswordResetForm
 from django.utils.http import urlsafe_base64_encode
 from django.contrib.auth.tokens import default_token_generator
@@ -253,6 +253,21 @@ def profile(request):
     
     referral_link = account.get_referral_link()
     successful_referrals = account.get_successful_referrals_count()
+    ticket_history = RaffleTicket.objects.filter(user=user).order_by('-created_at')
+
+    # Next weekly award date (7-day rolling cooldown)
+    now = timezone.now()
+    last_award = account.last_ticket_award_date
+    if not last_award or (now.date() - last_award).days >= 7:
+        parameter['next_award_date'] = now.isoformat() # Available now
+    else:
+        next_award = last_award + datetime.timedelta(days=7)
+        # Combine with start of day for a consistent countdown
+        next_award_dt = datetime.datetime.combine(next_award, datetime.time.min)
+        # Use pytz to ensure the datetime is aware of the project's local timezone
+        local_tz = pytz.timezone(settings.TIME_ZONE)
+        next_award_dt = local_tz.localize(next_award_dt)
+        parameter['next_award_date'] = next_award_dt.isoformat()
     
     # Clinic Profile
     if str(request.user.account.userType).split(' ')[-1] == "Clinic":
@@ -295,7 +310,9 @@ def profile(request):
                     'joined_raffles': joined_raffles,
                     'active_raffles': active_raffles,
                     'referral_link': referral_link,
-                    'successful_referrals': successful_referrals
+                    'successful_referrals': successful_referrals,
+                    'ticket_history': ticket_history,
+                    'next_award_date': parameter.get('next_award_date')
                 })
                 return render(request, 'auction/profile.html', parameter)
         else:
@@ -318,7 +335,9 @@ def profile(request):
                     'joined_raffles': joined_raffles,
                     'active_raffles': active_raffles,
                     'referral_link': referral_link,
-                    'successful_referrals': successful_referrals
+                    'successful_referrals': successful_referrals,
+                    'ticket_history': ticket_history,
+                    'next_award_date': parameter.get('next_award_date')
                 })
             return render(request, 'auction/profile.html', parameter)
     # Therapist Profile
@@ -346,7 +365,9 @@ def profile(request):
                     'joined_raffles': joined_raffles,
                     'active_raffles': active_raffles,
                     'referral_link': referral_link,
-                    'successful_referrals': successful_referrals
+                    'successful_referrals': successful_referrals,
+                    'ticket_history': ticket_history,
+                    'next_award_date': parameter.get('next_award_date')
                 })
                 return render(request, 'auction/profile.html', parameter)
         else:
@@ -362,7 +383,9 @@ def profile(request):
                 'joined_raffles': joined_raffles,
                 'active_raffles': active_raffles,
                 'referral_link': referral_link,
-                'successful_referrals': successful_referrals
+                'successful_referrals': successful_referrals,
+                'ticket_history': ticket_history,
+                'next_award_date': parameter.get('next_award_date')
             })
             return render(request, 'auction/profile.html', parameter)
 
@@ -1504,3 +1527,18 @@ def join_raffle(request):
             return JsonResponse({'status': 'error', 'message': str(e)})
             
     return JsonResponse({'status': 'error', 'message': 'Invalid request method.'})
+
+
+# Platform Updates Views
+def platform_updates_hub(request):
+    return render(request, 'auction/platform_updates_hub.html')
+
+def update_v8_0(request):
+    return render(request, 'auction/updates/v8_0.html')
+
+def update_v6_1(request):
+    return render(request, 'auction/updates/v6_1.html')
+
+def update_v6_0(request):
+    return render(request, 'auction/updates/v6_0.html')
+

@@ -18,10 +18,9 @@ class WeeklyTicketRewardMiddleware:
                 account = request.user.account
                 today = timezone.now().date()
                 
-                # Check if we need to award a ticket (new week or never awarded)
+                # Check if we need to award a ticket (7-day rolling cooldown)
                 if not account.last_ticket_award_date or \
-                   account.last_ticket_award_date.isocalendar()[1] != today.isocalendar()[1] or \
-                   account.last_ticket_award_date.year != today.year:
+                   (today - account.last_ticket_award_date).days >= 7:
                     
                     # Update account via ledger
                     account.add_tickets(1, "Weekly visit reward")

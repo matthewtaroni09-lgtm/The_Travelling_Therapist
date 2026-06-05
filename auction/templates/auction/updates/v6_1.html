@@ -1,0 +1,28 @@
+{% extends 'auction/base.html' %}
+{% load static %}
+{% block content %}
+<div class="container py-5">
+    <div class="mb-4">
+        <a href="{% url 'platform-updates' %}" class="text-decoration-none fw-bold" style="color: #0f9972;">
+            <span class="material-icons align-middle">arrow_back</span> Back to Updates
+        </a>
+    </div>
+
+    <h1 class="display-4 fw-bold mb-5" style="color: #2b4d55;">6.1 features</h1>
+
+    <div class="bg-white rounded-4 shadow-sm p-4 p-md-5 border-start border-5"
+        style="border-color: #0f9972 !important;">
+        <ul class="fs-4" style="line-height: 2;">
+            <li>Auto email list</li>
+            <li>new auction</li>
+            <li>Thank you for your bid</li>
+            <li>You have been outbid</li>
+            <li>Master page list</li>
+            <li>FAQ page reorganization</li>
+            <li>What is The Traveling Therapist</li>
+            <li>Mission/vision</li>
+            <li>Why The Traveling Therapist</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

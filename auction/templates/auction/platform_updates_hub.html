@@ -1,0 +1,127 @@
+{% extends 'auction/base.html' %}
+{% load static %}
+{% block content %}
+<style>
+    .update-hero {
+        background-color: #2b4d55;
+        color: white;
+        padding: 5rem 0 3rem 0;
+        margin-bottom: 4rem;
+        border-radius: 0 0 50px 50px;
+    }
+    .update-hero .container {
+        background-color: transparent !important;
+    }
+    .update-card {
+        border-radius: 20px;
+        overflow: hidden;
+        height: 350px;
+        position: relative;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border: 1px solid #eee;
+        background-color: #ffffff;
+    }
+    .update-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    }
+    .update-card-img-wrapper {
+        height: 100%;
+        width: 100%;
+        padding: 4rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .update-card-img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        opacity: 0.8;
+    }
+    .update-card-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 2rem;
+        background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%);
+        color: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+    }
+    .update-card-title {
+        font-family: 'Futura-Bold', sans-serif;
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+    }
+    .update-card-link {
+        color: #0aeaa9;
+        text-decoration: none;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-size: 0.9rem;
+    }
+    .update-card-link:hover {
+        color: #fff;
+    }
+</style>
+
+<div class="update-hero text-center">
+    <div class="container bg-transparent">
+        <h1 class="display-3 fw-bold text-white">Platform Updates</h1>
+        <p class="lead text-white">Stay up to date with the latest features and fixes from The Traveling Therapist.</p>
+    </div>
+</div>
+
+<div class="container mb-5">
+    <div class="row g-4">
+        <!-- V8.0 Update -->
+        <div class="col-lg-4 col-md-6">
+            <a href="{% url 'update-v8-0' %}" class="text-decoration-none">
+                <div class="card update-card shadow-sm">
+                    <div class="update-card-img-wrapper">
+                        <img src="/media/images/TTT_LOGO.png" class="update-card-img" alt="V8.0 Update">
+                    </div>
+                    <div class="update-card-overlay">
+                        <h2 class="update-card-title">V8.0</h2>
+                        <span class="update-card-link">Click to read full patch notes →</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <!-- V6.1 Update -->
+        <div class="col-lg-4 col-md-6">
+            <a href="{% url 'update-v6-1' %}" class="text-decoration-none">
+                <div class="card update-card shadow-sm">
+                    <div class="update-card-img-wrapper">
+                        <img src="/media/images/TTT_LOGO.png" class="update-card-img" alt="V6.1 Update">
+                    </div>
+                    <div class="update-card-overlay">
+                        <h2 class="update-card-title">V6.1</h2>
+                        <span class="update-card-link">Click to read full patch notes →</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <!-- V6.0 Update -->
+        <div class="col-lg-4 col-md-6">
+            <a href="{% url 'update-v6-0' %}" class="text-decoration-none">
+                <div class="card update-card shadow-sm">
+                    <div class="update-card-img-wrapper">
+                        <img src="/media/images/TTT_LOGO.png" class="update-card-img" alt="V6.0 Update">
+                    </div>
+                    <div class="update-card-overlay">
+                        <h2 class="update-card-title">V6.0</h2>
+                        <span class="update-card-link">Click to read full patch notes →</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

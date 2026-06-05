@@ -1,0 +1,45 @@
+{% extends 'auction/base.html' %}
+{% load static %}
+{% block content %}
+<div class="container py-5">
+    <div class="mb-4">
+        <a href="{% url 'platform-updates' %}" class="text-decoration-none fw-bold" style="color: #0f9972;">
+            <span class="material-icons align-middle">arrow_back</span> Back to Updates
+        </a>
+    </div>
+
+    <h1 class="display-4 fw-bold mb-5" style="color: #2b4d55;">V8.0 Release Notes</h1>
+
+    <div class="bg-white rounded-4 shadow-sm p-4 p-md-5 border-start border-5"
+        style="border-color: #0f9972 !important;">
+        <ul class="list-unstyled">
+            <!-- Feature 1 -->
+            <li class="mb-5">
+                <h4 class="fw-bold" style="color: #198754;">Hiring Guides Pages Added (Healthcare Facilities)</h4>
+                <p class="fs-5 text-muted">Healthcare Facility Hiring Guide page explaining the staffing problems that
+                    healthcare facilities face and the solution that The Traveling Therapist presents.</p>
+                <a href="{% url 'healthcare-facility-guide' %}" class="btn btn-outline-primary rounded-pill px-4">View
+                    Facility Guide</a>
+            </li>
+
+            <!-- Feature 2 -->
+            <li class="mb-5">
+                <h4 class="fw-bold" style="color: #198754;">Hiring Guides pages added (Clinician)</h4>
+                <p class="fs-5 text-muted">Clinician Hiring Guide page explaining the staffing problems that clinicians
+                    face and the solution that The Traveling Therapist presents.</p>
+                <a href="{% url 'clinician-guide' %}" class="btn btn-outline-primary rounded-pill px-4">View Clinician
+                    Guide</a>
+            </li>
+
+            <!-- Feature 3 -->
+            <li class="mb-5">
+                <h4 class="fw-bold" style="color: #198754;">Role-Specific Surveys Added</h4>
+                <p class="fs-5 text-muted">We've added dedicated surveys to identify the pain points clinicians and
+                    healthcare facilities face with modern staffing solutions. Your feedback helps us build a better The
+                    Traveling Therapist.</p>
+                <a href="{% url 'surveys' %}" class="btn btn-outline-primary rounded-pill px-4">View All Surveys</a>
+            </li>
+        </ul>
+    </div>
+</div>
+{% endblock %}
