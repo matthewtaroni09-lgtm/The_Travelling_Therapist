@@ -168,6 +168,60 @@ $(document).ready(function () {
             }
         });
     });
+
+    // --- Challenges Section Logic ---
+
+    // 1. Weekly Reward Countdown
+    const updateWeeklyTimer = () => {
+        const nextDateStr = $('#next-award-date').val() || $('#next-award-date-t').val();
+        if (!nextDateStr) return;
+
+        const nextDate = new Date(nextDateStr).getTime();
+        const timerEls = $('#weekly-timer, #weekly-timer-t');
+
+        const interval = setInterval(() => {
+            const now = new Date().getTime();
+            const distance = nextDate - now;
+
+            if (distance < 0) {
+                clearInterval(interval);
+                timerEls.text("Available Now!");
+                return;
+            }
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            timerEls.text(`${days}d ${hours}h ${minutes}m ${seconds}s`);
+        }, 1000);
+    };
+    updateWeeklyTimer();
+
+    // 2. Challenge Referral Link Copy (Clinic)
+    $('#copyChallengeLink').on('click', function() {
+        const copyText = document.getElementById("challengeReferralLink");
+        copyText.select();
+        copyText.setSelectionRange(0, 99999);
+        navigator.clipboard.writeText(copyText.value).then(() => {
+            const feedback = $('#copyChallengeFeedback');
+            feedback.fadeIn();
+            setTimeout(() => feedback.fadeOut(), 2000);
+        });
+    });
+
+    // 3. Challenge Referral Link Copy (Therapist)
+    $('#copyChallengeLinkT').on('click', function() {
+        const copyText = document.getElementById("challengeReferralLinkT");
+        copyText.select();
+        copyText.setSelectionRange(0, 99999);
+        navigator.clipboard.writeText(copyText.value).then(() => {
+            const feedback = $('#copyChallengeFeedbackT');
+            feedback.fadeIn();
+            setTimeout(() => feedback.fadeOut(), 2000);
+        });
+    });
 });
 
 const getActiveAuctionsClinic = () => {

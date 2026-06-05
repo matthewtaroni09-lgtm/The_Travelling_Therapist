@@ -51,6 +51,10 @@ urlpatterns = [
     path("facility-referral", views.referral_program, name="referral-program"),
     path("what_are_raffles", views.what_are_raffles, name="what-are-raffles"),
     path("surveys", views.surveys, name="surveys"),
+    path("platform-updates", views.platform_updates_hub, name="platform-updates"),
+    path("platform-updates/v8-0", views.update_v8_0, name="update-v8-0"),
+    path("platform-updates/v6-1", views.update_v6_1, name="update-v6-1"),
+    path("platform-updates/v6-0", views.update_v6_0, name="update-v6-0"),
 
     # AJAX Calls
     path('auction/data/auction/<auction_id>', views.get_auction_end, name="get-auction-end"),
