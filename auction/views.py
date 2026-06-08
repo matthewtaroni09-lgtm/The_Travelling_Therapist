@@ -261,7 +261,7 @@ def profile(request):
     if not last_award or (now.date() - last_award).days >= 7:
         parameter['next_award_date'] = now.isoformat() # Available now
     else:
-        next_award = last_award + datetime.timedelta(days=7)
+        next_award = last_award + timedelta(days=7)
         # Combine with start of day for a consistent countdown
         next_award_dt = datetime.datetime.combine(next_award, datetime.time.min)
         # Use pytz to ensure the datetime is aware of the project's local timezone

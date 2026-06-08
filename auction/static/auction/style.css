@@ -1095,6 +1095,23 @@ input[type=number] {
     background-color: #246e56;
 }
 
+.btn-ttt-pill {
+    background-color: #2d8a6b !important;
+    color: white !important;
+    border-radius: 50px !important;
+    border: none !important;
+    padding: 10px 25px !important;
+    transition: background-color 0.2s ease-in-out !important;
+    font-weight: 500 !important;
+    text-decoration: none !important;
+    display: inline-block;
+}
+
+.btn-ttt-pill:hover {
+    background-color: #246e56 !important;
+    color: white !important;
+}
+
 .survey-cta-button-sm {
     padding: 10px 20px;
     font-size: 1.1rem;
