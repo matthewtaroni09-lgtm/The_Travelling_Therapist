@@ -1,6 +1,7 @@
 from django.utils import timezone
 from django.contrib import messages
 from .models import Account
+from datetime import timedelta
 
 class WeeklyTicketRewardMiddleware:
     """
@@ -17,11 +18,11 @@ class WeeklyTicketRewardMiddleware:
                 # We check for the account and the last award date
                 account = request.user.account
                 today = timezone.now().date()
-                
+
                 # Check if we need to award a ticket (7-day rolling cooldown)
                 if not account.last_ticket_award_date or \
                    (today - account.last_ticket_award_date).days >= 7:
-                    
+
                     # Update account via ledger
                     account.add_tickets(1, "Weekly visit reward")
                     account.last_ticket_award_date = today

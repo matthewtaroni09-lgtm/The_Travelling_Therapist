@@ -124,8 +124,8 @@
                     error: function () {
                         $btn.prop('disabled', false).text('Subscribe');
                         Swal.fire({
-                            title: 'Error',
-                            text: 'Could not connect to the server. Please try again later.',
+                            title: 'Connection Error',
+                            text: "Could not connect to the server. This is often caused by adblockers or strict privacy settings (like Edge's 'Strict' mode) blocking Mailchimp. Please try disabling them or use a different browser like Chrome for better compatibility.",
                             icon: 'error',
                             confirmButtonColor: '#0f9972'
                         });
