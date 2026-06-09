@@ -1,0 +1,474 @@
+{% extends 'auction/base.html' %}
+{% load static %}
+{% block content %}
+<style>
+    /* REUSING STYLES FROM RECENT PAGES */
+    :root {
+        --dark-teal: #2b4d55;
+        --soft-green: #C9FFE5;
+        --off-white: #f8f9fa;
+        --slate-grey: #6c757d;
+        --ttt-blue: #007bff;
+        --ttt-success: #198754;
+        --ttt-orange: #fd7e14;
+    }
+
+    .data-card,
+    .comparison-container {
+        transition: all 0.3s ease !important;
+        border-radius: 20px !important;
+        border: 1px solid #E2E8F0 !important;
+        background: #fff;
+    }
+
+    .data-card:hover,
+    .comparison-container:hover {
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15) !important;
+        transform: translateY(-10px) scale(1.01) !important;
+    }
+
+    .btn {
+        border-radius: 50px !important;
+        transition: all 0.3s ease !important;
+    }
+
+    .btn:hover {
+        transform: translateY(-3px) !important;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1) !important;
+    }
+
+    .hero-section {
+        padding: 4rem 0;
+        text-align: center;
+    }
+
+    .hero-title {
+        font-family: Futura-Bold, sans-serif;
+        font-weight: 700;
+        font-size: 2.5rem;
+        color: var(--dark-colour);
+        margin-bottom: 20px;
+    }
+
+    .cta-box {
+        background-color: var(--dark-teal);
+        color: white;
+        padding: 3.5rem;
+        text-align: center;
+        margin: 4rem 0;
+        border-radius: 20px !important;
+    }
+
+    .cta-box h2,
+    .cta-box h3,
+    .cta-box p {
+        color: white;
+    }
+
+    .comparison-table {
+        border-radius: 20px;
+        overflow: hidden;
+        border-collapse: separate;
+        border-spacing: 0;
+        border: 1px solid #E2E8F0;
+    }
+
+    .comparison-table th {
+        background-color: var(--off-white);
+        padding: 20px;
+        border-right: 1px solid #E2E8F0;
+    }
+
+    .comparison-table th:last-child {
+        border-right: none;
+    }
+
+    .comparison-table td {
+        padding: 15px 20px;
+        vertical-align: middle;
+        border-right: 1px solid #E2E8F0;
+    }
+
+    .comparison-table td:last-child {
+        border-right: none;
+    }
+
+    .ttt-col-highlight {
+        background-color: rgba(0, 123, 255, 0.03);
+    }
+
+    .meaning-box {
+        background-color: rgba(43, 77, 85, 0.05);
+        border-left: 4px solid var(--dark-teal);
+        padding: 15px;
+        border-radius: 0 10px 10px 0;
+        margin-top: 15px;
+        font-size: 0.95rem;
+    }
+
+    .testimonial-card {
+        background-color: rgba(43, 77, 85, 0.05);
+        border-left: 4px solid var(--dark-teal);
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        font-style: italic;
+    }
+
+    /* Placeholders */
+    .image-placeholder-stressed {
+        background-color: #e9ecef;
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 300px;
+        color: #6c757d;
+        border: 2px dashed #ced4da;
+        text-align: center;
+        padding: 20px;
+    }
+
+    .image-placeholder-icon {
+        background-color: #e9ecef;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100px;
+        height: 100px;
+        color: var(--ttt-blue);
+        border: 2px dashed #ced4da;
+        font-size: 3rem;
+        margin: 0 auto 20px auto;
+    }
+</style>
+
+<div class="container mt-4">
+
+    <!-- SECTION 1 — HERO & AGENCY COST TABLE (Tab 1) -->
+    <section class="hero-section text-start pb-2">
+        <h1 class="hero-title text-center mb-5">The Reality Behind the Fees</h1>
+        <p class="lead text-center text-muted mb-5">You call → They “find you help” → Costs quietly escalate</p>
+
+        <div class="row align-items-center">
+            <div class="col-lg-7">
+                <div class="comparison-container p-4 shadow-sm mb-4">
+                    <h3 class="mb-4 text-center fw-bold">Typical Agency Model</h3>
+                    <div class="table-responsive">
+                        <table class="table table-hover comparison-table m-0">
+                            <thead>
+                                <tr>
+                                    <th style="width: 40%; border-top: none;">Cost Area</th>
+                                    <th style="width: 60%; border-top: none;">What Clinics Typically See</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="fw-bold">Permanent Hires</td>
+                                    <td>15–25% of first-year salary paid as a placement fee</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold">Contract & Temporary Staffing</td>
+                                    <td>25–50%+ hourly markup added to clinician pay</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold">Per-Shift Cost</td>
+                                    <td>Varies by clinician rate × agency markup</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold">Annual Impact</td>
+                                    <td>Costs compound due to repeat placements, turnover, and ongoing markups</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5 text-center mt-4 mt-lg-0">
+                <img src="/media/images/worried_man.png" alt="Illustration of a stressed man"
+                    class="img-fluid rounded-3 shadow-sm">
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 2 — COST PER HIRE & SUPPORTING DATA -->
+    <section class="py-5 text-center">
+        <div class="row justify-content-center align-items-center">
+            <div class="col-lg-8">
+                <h2 class="fw-bold mb-4">Cost Per Hire, Retention & Turnover</h2>
+                <p class="fs-5 mb-4">When turnover increases and clinics rely more heavily on temporary staffing, cost
+                    per hire rises sharply . Markups compound over time, while continuity of care and team stability
+                    decline.</p>
+                <div class="meaning-box mb-4 text-start">
+                    <p class="mb-2"><strong>Supporting Data</strong></p>
+                    <p class="mb-2">Turnover costs ≈ 33% of annual salary : nursa.com</p>
+                    <p class="mb-2"><em>Research on healthcare staffing “churn” highlights how frequent changes in staff
+                            or use of agency workers create challenges for scheduling, leadership, and continuity of
+                            care—issues facilities need to manage actively.</em></p>
+                    <p class="mb-2">Allied health turnover trends : NCBI research study ( Josh to provide link for post
+                        v8 hotfix)</p>
+                    <p class="mb-0">Reliance on agency staff affects turnover and workforce stability Facilities with
+                        higher utilization of agency nursing staff have been found to experience higher turnover among
+                        permanent clinicians.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 3 — REAL VOICES (TESTIMONIALS) -->
+    <section class="py-5" style="background-color: var(--off-white); border-radius: 20px; padding: 3rem;">
+        <h2 class="text-center mb-5 fw-bold">Real Voices: What Clinics Don’t Get Told</h2>
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <div class="testimonial-card">
+                    <p class="mb-0 fs-5">“After accounting for agency fees, and the back and forth just to get our
+                        position covered, we paid more for a fill-in than a full-time hire.”</p>
+                </div>
+                <div class="testimonial-card">
+                    <p class="mb-0 fs-5">“We liked that we could see offers directly and choose who we wanted, but we
+                        needed a stronger way to re-book clinicians we knew rather than posting fresh every time.”</p>
+                </div>
+                <div class="testimonial-card">
+                    <p class="mb-0 fs-5">“Posting works differently here than with an agency — with The Traveling
+                        Therapist, we finally had a clear pricing and offer process, and it was faster to review bids
+                        and confirm coverage across multiple days compared to how we managed hiring historically.”</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 4 — CANADIAN AGENCY CASE STUDIES & BUSINESS IMPACT -->
+    <section class="py-5 mt-4">
+        <h2 class="text-center fw-bold mb-3">Case Studies</h2>
+        <h4 class="text-center text-muted mb-5">Agency-Based Staffing Models in Canada</h4>
+
+        <div class="row justify-content-center mb-5">
+            <div class="col-lg-10">
+                <h5 class="fw-bold mb-3 text-center">Digital Platforms + Brick-and-Mortar Recruiters</h5>
+                <div class="data-card p-4">
+                    <h5 class="fw-bold mb-3">Model Overview</h5>
+                    <p>When clinics and care homes need coverage quickly, staffing agencies are often the first call. In
+                        Canada, these agencies now appear in two formats: traditional recruiter-led firms and modern
+                        app-based platforms. While they look different on the surface, both operate on the same agency
+                        model. Clinicians are supplied through a centralized system where the agency controls pricing,
+                        contracts, and placement terms. Technology may speed up matching, and recruiters may manage
+                        relationships, but ownership and decision-making remain with the agency. The result is variable
+                        access to short-term and contract clinicians — with higher costs, limited transparency, and
+                        reduced control for healthcare owners over time.</p>
+
+                    <p class="fw-bold mt-4 mb-2">Common Canadian agency-style providers include:</p>
+                    <div class="d-flex flex-wrap gap-2">
+                        <span class="badge bg-light text-dark border p-2">SE Health</span>
+                        <span class="badge bg-light text-dark border p-2">Bayshore HealthCare</span>
+                        <span class="badge bg-light text-dark border p-2">Carecor Health Services</span>
+                        <span class="badge bg-light text-dark border p-2">Plan A Long-Term Care Staffing</span>
+                        <span class="badge bg-light text-dark border p-2">Staffy</span>
+                        <span class="badge bg-light text-dark border p-2">Helping Hands Healthcare Staffing</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h3 class="fw-bold text-center mb-5">What This Means for Your Business</h3>
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="data-card p-4 h-100">
+                    <div class="d-flex align-items-center mb-3">
+                        <span class="fw-bold fs-2 me-3" style="color: #0f9972;">1</span>
+                        <h5 class="fw-bold mb-0">Higher Costs That Add Up Quickly</h5>
+                    </div>
+                    <p class="mb-0">Agency rates include built-in margins. Even when hourly rates look manageable,
+                        repeated use quietly inflates your total staffing spend — without improving retention or
+                        continuity.</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="data-card p-4 h-100">
+                    <div class="d-flex align-items-center mb-3">
+                        <span class="fw-bold fs-2 me-3" style="color: #0f9972;">2</span>
+                        <h5 class="fw-bold mb-0">Speed Over Stability</h5>
+                    </div>
+                    <p>Agencies are optimized to fill shifts and their pocketbooks, not to build long-term clinician
+                        relationships. That often means:</p>
+                    <ul>
+                        <li>Constantly onboarding new clinicians</li>
+                        <li>Less familiarity with your residents or patients</li>
+                        <li>More time spent managing transitions</li>
+                    </ul>
+                    <div class="p-3 mt-3 bg-light border-start border-4 border-success">
+                        <strong>At The Traveling Therapist</strong>, we encourage you to onboard your clinician onto
+                        your team after using our service - it’s the best “Thank you” we could ever receive!
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="data-card p-4 h-100">
+                    <div class="d-flex align-items-center mb-3">
+                        <span class="fw-bold fs-2 me-3" style="color: #0f9972;">3</span>
+                        <h5 class="fw-bold mb-0">Limited Control Over Who You Hire</h5>
+                    </div>
+                    <p>With agencies, clinician selection is typically managed for you — not by you. You may not know:
+                    </p>
+                    <ul>
+                        <li>Who else that clinician is working for</li>
+                        <li>How often they rotate through different sites</li>
+                        <li>Whether they’ll be available again</li>
+                    </ul>
+                    <div class="p-3 mt-3 bg-light border-start border-4 border-success">
+                        <strong>At The Traveling Therapist</strong>, we give you clinician contact details after you
+                        match, you can contact the clinician directly and ask all these questions yourself!
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="data-card p-4 h-100">
+                    <div class="d-flex align-items-center mb-3">
+                        <span class="fw-bold fs-2 me-3" style="color: #0f9972;">4</span>
+                        <h5 class="fw-bold mb-0">The Extra Problem with Brick-and-Mortar Agencies</h5>
+                    </div>
+                    <p>Traditional bricks & mortar agencies add another layer of friction:</p>
+                    <ul>
+                        <li>Placement speed now depends on recruiter availability in the office to answer calls/emails
+                        </li>
+                        <li>Pricing and margins are harder to see or compare</li>
+                        <li>Physical agencies have overhead, rent, electricity, etc. to pay for, which trickles down to
+                            their clients via their spreads/rates</li>
+                    </ul>
+                    <p class="mt-3 mb-0">Over time, this often results in higher cumulative costs and less consistency,
+                        even when the service feels “hands-on.”</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 5 — CASE STUDY: TEMPSTARS (CANADA) -->
+    <section class="py-5">
+        <div class="comparison-container p-5 shadow-sm" style="border-top: 5px solid #0f9972 !important;">
+            <h2 class="fw-bold mb-4">Case Study: TempStars (Canada)</h2>
+            <div class="row">
+                <div class="col-md-12 mb-4">
+                    <h5 class="fw-bold">Model Overview:</h5>
+                    <p>TempStars is a digital platform commonly used by Canadian dental clinics to fill last-minute
+                        dental temping shifts. For single, short-notice gaps, the platform can provide access to
+                        available clinicians through individual shift postings and standardized rules. However, clinics
+                        with frequent, recurring, or multi-day staffing needs often experience growing operational
+                        friction.</p>
+                </div>
+            </div>
+
+            <h5 class="fw-bold mb-4">Where Clinics Start to Feel the Friction:</h5>
+            <div class="row g-4 mb-4">
+                <div class="col-md-4">
+                    <div class="p-3 bg-light rounded h-100">
+                        <h6 class="fw-bold">Manual clinic owner workflows</h6>
+                        <p class="small mb-0">Because each shift must be posted, filled, and managed independently,
+                            staffing quickly becomes a manual, high-touch process. Clinics cannot bundle days, pre-book
+                            clinicians across multiple shifts, or easily build repeat working relationships.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-3 bg-light rounded h-100">
+                        <h6 class="fw-bold">Rigid cancellation process & Subjective Rating System</h6>
+                        <p class="small mb-0">Ratings and cancellation outcomes—while consistent—can feel rigid,
+                            sometimes reducing future clinician availability after one-off issues without meaningful
+                            context. Clinicians with higher ratings or “elite” status get priority access to shifts -
+                            leaving clinic owners with an incomplete pool of potential candidates. Some clinicians have
+                            expressed frustration with the ratings system, limiting their ability to get shifts.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-3 bg-light rounded h-100">
+                        <h6 class="fw-bold">Cognitive load caused by distributed policies</h6>
+                        <p class="small mb-0">Key details around cancellations, payments, and fees are documented, but
+                            spread across multiple support pages, meaning full cost and risk clarity often appears after
+                            an issue occurs or an invoice is received. For operators managing multiple locations or
+                            provinces, inconsistent geographic coverage throughout Canada, including Quebec further
+                            limits scalability and usability of the platform.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-4 rounded"
+                style="background-color: rgba(15, 153, 114, 0.1); border-left: 4px solid #0f9972;">
+                <h5 class="fw-bold text-dark">Why this matters:</h5>
+                <p class="mb-0 text-dark">TempStars works best for isolated, one-off shifts. Clinics looking to reduce
+                    administrative effort, improve continuity, and gain clearer upfront visibility into costs and
+                    policies often find the model adds complexity over time — gaps The Traveling Therapist is built
+                    specifically to eliminate.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 6 — HOW THE TRAVELING THERAPIST IS DIFFERENT (COMPARISON & CTA) -->
+    <section class="py-5">
+        <h2 class="text-center fw-bold mb-5">How The Traveling Therapist Is Different</h2>
+
+        <div class="row align-items-center mb-5">
+            <div class="col-lg-6 mb-4 mb-lg-0">
+                <p class="fs-5">The Traveling Therapist is not a staffing agency like the examples above.</p>
+                <p class="fw-bold mb-2">It does not :</p>
+                <ul class="mb-4">
+                    <li>Employ clinicians</li>
+                    <li>Mark up hourly rates</li>
+                    <li>Control pricing or contracts</li>
+                    <li>Rotate clinicians through agency-managed assignments</li>
+                </ul>
+                <p class="fw-bold mb-2">Instead, it operates as a direct-connection marketplace , combining:</p>
+                <ul class="mb-4">
+                    <li>The reach of a job board</li>
+                    <li>The efficiency of digital matching</li>
+                    <li>The transparency of direct hiring</li>
+                </ul>
+                <div class="p-3 bg-light border-start border-4 border-success fw-bold">
+                    The result: the speed and visibility of digital platforms, without agency margins or loss of control
+                    — the best of both worlds.
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="comparison-container p-4 shadow-sm">
+                    <h3 class="mb-4 text-center fw-bold">Where TTT Stands Apart</h3>
+                    <div class="table-responsive">
+                        <table class="table table-hover comparison-table m-0">
+                            <thead>
+                                <tr>
+                                    <th class="text-center" style="width: 50%; border-top: none;">Agency Experience</th>
+                                    <th class="ttt-col-highlight text-center" style="width: 50%; border-top: none;">
+                                        The Traveling Therapist Experience
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <ul class="list-unstyled mb-0">
+                                            <li class="mb-2">• Slow communication = slow placements</li>
+                                            <li class="mb-2">• Established networks</li>
+                                            <li>• Agency control</li>
+                                        </ul>
+                                    </td>
+                                    <td class="ttt-col-highlight">
+                                        <ul class="list-unstyled mb-0">
+                                            <li class="mb-2">• Transparent pricing</li>
+                                            <li class="mb-2">• Clinicians across Canada</li>
+                                            <li>• Direct clinic-clinician control</li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-box shadow mt-2">
+        <h2 class="text-weight-bold mb-3">See How Direct Hiring Works in Practice</h2>
+        <p class="fs-5 mb-4">Post a role and view real clinician availability — with no upfront cost or commitment.</p>
+        <a href="{% url 'register' %}" class="btn btn-light text-primary btn-lg px-5 py-3 fw-bold">Post a Role</a>
+    </section>
+
+</div>
+{% endblock %}
