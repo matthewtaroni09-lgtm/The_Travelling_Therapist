@@ -48,6 +48,7 @@ urlpatterns = [
     path("job_boards", views.job_boards, name="job-boards"),
     path("private_clinic_hiring_guide", views.private_clinic_hiring_guide, name="private-clinic-hiring-guide"),
     path("referrals_and_networks", views.referrals_and_networks, name="referrals-and-networks"),
+    path("agency_comparison", views.agency_comparison, name="agency-comparison"),
     path("facility-referral", views.referral_program, name="referral-program"),
     path("what_are_raffles", views.what_are_raffles, name="what-are-raffles"),
     path("surveys", views.surveys, name="surveys"),

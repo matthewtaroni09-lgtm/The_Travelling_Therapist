@@ -45,6 +45,8 @@
                         <li class="dropdown-submenu">
                             <a class="dropdown-item dropdown-toggle text-weight-normal" href="#">Hire Clinicians Now</a>
                             <ul class="dropdown-menu">
+                                <li><a class="dropdown-item text-weight-light {% if path == 'agency-comparison' %}active{% endif %}"
+                                        href="{% url 'agency-comparison' %}">Agency Comparison</a></li>
                                 <li><a class="dropdown-item text-weight-light {% if path == 'healthcare-facility-guide' %}active{% endif %}"
                                         href="{% url 'healthcare-facility-guide' %}">Healthcare Facility Hiring
                                         Guide</a></li>
