@@ -218,29 +218,46 @@
     }
 </style>
 
-<div class="container-fluid bg-transparent py-4">
+<div class="container-fluid bg-transparent p-0">
 
-    <!-- 1. HERO SECTION -->
-    <section class="container py-5 mt-4">
+    <!-- FULL WIDTH BLENDED HERO IMAGE -->
+    <div class="w-100 position-relative" style="height: 55vh; min-height: 400px; max-height: 550px;">
+        <img src="/media/images/TTT_referrals_and_networks.png"
+            alt="Illustration of interconnected people nodes representing a network" class="w-100 h-100"
+            style="object-fit: cover; object-position: center 25%; mix-blend-mode: multiply; opacity: 0.85; filter: contrast(1.05); -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 100%); mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 100%);">
+    </div>
+
+    <!-- 1. HERO SECTION TEXT -->
+    <section class="container position-relative" style="margin-top: -60px; z-index: 2; padding-bottom: 2rem;">
         <div class="row align-items-center">
             <!-- Text on the Left -->
             <div class="col-lg-6 mb-5 mb-lg-0">
-                <h1 class="hero-title mb-4 text-dark-teal">The Familiar Path</h1>
-                <p class="hero-subhead mb-4 text-primary-colour">It Usually Starts With a Referral Conversation.</p>
-                <div class="fs-5 text-text-dark">
+                <h1 class="hero-title mb-3 text-dark-teal"
+                    style="text-shadow: 0 4px 15px rgba(255, 255, 255, 0.9), 0 -4px 15px rgba(255, 255, 255, 0.9);">The
+                    Familiar Path</h1>
+                <p class="hero-subhead mb-4 text-primary-colour"
+                    style="text-shadow: 0 2px 10px rgba(255, 255, 255, 0.9);">It Usually Starts With a Referral
+                    Conversation.</p>
+                <div class="fs-5 text-text-dark p-4 rounded-4 shadow-sm border border-light"
+                    style="background-color: rgba(255, 255, 255, 0.85); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);">
                     <p> Referrals and personal networks are often the first place clinic owners turn when
                         they need help.</p>
                     <p>A colleague mentions a therapist they worked with years ago.</p>
                     <p>A former staff member knows someone “looking for hours.”</p>
                     <p>A quick message, a hopeful intro — and maybe a solution.</p>
-                    <p>It feels safe. Familiar. And fast.</p>
+                    <p class="mb-0 fw-bold" style="color: var(--dark-teal);">It feels safe. Familiar. And fast.</p>
                 </div>
             </div>
-            <!-- Image on the Right -->
-            <div class="col-lg-6 text-center">
-                <img src="/media/images/TTT_referrals_and_networks.png"
-                    alt="Illustration of interconnected people nodes representing a network"
-                    class="img-fluid rounded-4 shadow-lg" style="max-height: 600px; width: auto; object-fit: contain;">
+            <!-- Video on the Right -->
+            <div class="col-lg-6 mt-5 mt-lg-0 pt-lg-5">
+                <!-- Spacer to push video down to align with the text box on desktop -->
+                <div class="d-none d-lg-block" style="height: 5rem;"></div>
+                <div class="ratio ratio-16x9 shadow rounded-4 overflow-hidden">
+                    <iframe class="howItWorksiFrame" src="https://www.youtube.com/embed/93QdeqottZY?si=SKTGb1aDEasZD1hG"
+                        title="YouTube video player" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                </div>
             </div>
         </div>
     </section>

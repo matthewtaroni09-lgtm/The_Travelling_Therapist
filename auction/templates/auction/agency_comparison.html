@@ -142,13 +142,59 @@
         font-size: 3rem;
         margin: 0 auto 20px auto;
     }
+
+    /* Carousel Specific Styles */
+    #supportingDataCarousel {
+        padding: 0 60px;
+    }
+
+    #supportingDataCarousel .carousel-control-prev,
+    #supportingDataCarousel .carousel-control-next {
+        width: 50px;
+        height: 50px;
+        background-color: var(--dark-teal);
+        border-radius: 50%;
+        top: 50%;
+        transform: translateY(-50%);
+        opacity: 0.8;
+    }
+
+    #supportingDataCarousel .carousel-control-prev {
+        left: 0;
+    }
+
+    #supportingDataCarousel .carousel-control-next {
+        right: 0;
+    }
+
+    #supportingDataCarousel .carousel-indicators {
+        bottom: -50px;
+    }
+
+    #supportingDataCarousel .carousel-indicators [data-bs-target] {
+        background-color: var(--dark-teal);
+    }
+
+    .source-text-link {
+        color: inherit !important;
+        text-decoration: none !important;
+        border-bottom: 1px dotted #6c757d;
+        transition: all 0.2s ease;
+        cursor: pointer;
+    }
+
+    .source-text-link:hover {
+        border-bottom: 1px solid var(--dark-teal);
+        background-color: rgba(0, 0, 0, 0.03);
+    }
 </style>
 
 <div class="container mt-4">
 
     <!-- SECTION 1 — HERO & AGENCY COST TABLE (Tab 1) -->
     <section class="hero-section text-start pb-2">
-        <h1 class="hero-title text-center mb-5">The Reality Behind the Fees</h1>
+        <h1 class="hero-title text-center mb-5">The Agency Hiring Process</h1>
+        <h2 class="fw-bold text-center mb-4">The Reality Behind the Fees</h2>
         <p class="lead text-center text-muted mb-5">You call → They “find you help” → Costs quietly escalate</p>
 
         <div class="row align-items-center">
@@ -200,17 +246,74 @@
                 <p class="fs-5 mb-4">When turnover increases and clinics rely more heavily on temporary staffing, cost
                     per hire rises sharply . Markups compound over time, while continuity of care and team stability
                     decline.</p>
-                <div class="meaning-box mb-4 text-start">
-                    <p class="mb-2"><strong>Supporting Data</strong></p>
-                    <p class="mb-2">Turnover costs ≈ 33% of annual salary : nursa.com</p>
-                    <p class="mb-2"><em>Research on healthcare staffing “churn” highlights how frequent changes in staff
-                            or use of agency workers create challenges for scheduling, leadership, and continuity of
-                            care—issues facilities need to manage actively.</em></p>
-                    <p class="mb-2">Allied health turnover trends : NCBI research study ( Josh to provide link for post
-                        v8 hotfix)</p>
-                    <p class="mb-0">Reliance on agency staff affects turnover and workforce stability Facilities with
-                        higher utilization of agency nursing staff have been found to experience higher turnover among
-                        permanent clinicians.</p>
+                <div class="mt-5">
+                    <h3 class="fw-bold mb-4">Supporting Data</h3>
+                    <div id="supportingDataCarousel" class="carousel slide" data-bs-ride="carousel">
+                        <!-- Indicators -->
+                        <div class="carousel-indicators">
+                            <button type="button" data-bs-target="#supportingDataCarousel" data-bs-slide-to="0"
+                                class="active" aria-current="true" aria-label="Slide 1"></button>
+                            <button type="button" data-bs-target="#supportingDataCarousel" data-bs-slide-to="1"
+                                aria-label="Slide 2"></button>
+                        </div>
+
+                        <div class="carousel-inner">
+                            <!-- Slide 1 -->
+                            <div class="carousel-item active" data-bs-interval="20000">
+                                <div class="row justify-content-center">
+                                    <div class="col-md-10">
+                                        <div class="data-card shadow-sm p-5 d-flex flex-column align-items-center justify-content-center text-center"
+                                            style="min-height: 200px;">
+                                            <h5 class="fw-bold mb-3"><a
+                                                    href="https://nursa.com/facility/articles/nurse-turnover"
+                                                    target="_blank" class="source-text-link">Turnover costs ≈ 33% of
+                                                    annual salary:</a></h5>
+                                            <p class="fs-5 mb-0 text-dark"><em><a
+                                                        href="https://pubmed.ncbi.nlm.nih.gov/19492774/" target="_blank"
+                                                        class="source-text-link">Research on healthcare staffing
+                                                        “churn”</a> highlights how frequent changes in staff or use of
+                                                    agency workers create challenges for scheduling, leadership, and
+                                                    continuity of care—issues facilities need to manage actively.</em>
+                                            </p>
+                                            <div class="text-muted small mt-4 text-center"><em>Click on the text to
+                                                    learn more!</em></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Slide 2 -->
+                            <div class="carousel-item" data-bs-interval="20000">
+                                <div class="row justify-content-center">
+                                    <div class="col-md-10">
+                                        <div class="data-card shadow-sm p-5 d-flex flex-column align-items-center justify-content-center text-center"
+                                            style="min-height: 200px;">
+                                            <h5 class="fw-bold mb-3"><a href="https://pubmed.ncbi.nlm.nih.gov/39997254/"
+                                                    target="_blank" class="source-text-link">Reliance on agency staff
+                                                    affects turnover and workforce stability</a></h5>
+                                            <p class="fs-5 mb-0 text-dark">Facilities with higher utilization of agency
+                                                nursing staff have been found to experience higher turnover among
+                                                permanent clinicians.</p>
+                                            <div class="text-muted small mt-4 text-center"><em>Click on the text to
+                                                    learn more!</em></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Controls -->
+                        <button class="carousel-control-prev" type="button" data-bs-target="#supportingDataCarousel"
+                            data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#supportingDataCarousel"
+                            data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -218,21 +321,22 @@
 
     <!-- SECTION 3 — REAL VOICES (TESTIMONIALS) -->
     <section class="py-5" style="background-color: var(--off-white); border-radius: 20px; padding: 3rem;">
-        <h2 class="text-center mb-5 fw-bold">Real Voices: What Clinics Don’t Get Told</h2>
+        <h2 class="text-center mb-5 fw-bold">Real Voices: What Clinics and Healthcare Facilities Don’t Get Told</h2>
         <div class="row justify-content-center">
             <div class="col-md-10">
                 <div class="testimonial-card">
-                    <p class="mb-0 fs-5">“After accounting for agency fees, and the back and forth just to get our
-                        position covered, we paid more for a fill-in than a full-time hire.”</p>
+                    <p class="mb-0 fs-5">After accounting for agency fees, and the back and forth just to get our
+                        position covered, we paid more for a fill-in than a full-time hire.</p>
                 </div>
                 <div class="testimonial-card">
-                    <p class="mb-0 fs-5">“We liked that we could see offers directly and choose who we wanted, but we
-                        needed a stronger way to re-book clinicians we knew rather than posting fresh every time.”</p>
+                    <p class="mb-0 fs-5">We liked that we could see offers directly and choose who we wanted, but we
+                        needed a stronger way to re-book clinicians we knew rather than posting fresh every time.</p>
                 </div>
                 <div class="testimonial-card">
-                    <p class="mb-0 fs-5">“Posting works differently here than with an agency — with The Traveling
+                    <p class="mb-0 fs-5">Posting works differently with The Traveling Therapist than with an agency —
+                        with The Traveling
                         Therapist, we finally had a clear pricing and offer process, and it was faster to review bids
-                        and confirm coverage across multiple days compared to how we managed hiring historically.”</p>
+                        and confirm coverage across multiple days compared to how we managed hiring historically.</p>
                 </div>
             </div>
         </div>
@@ -266,6 +370,8 @@
                         <span class="badge bg-light text-dark border p-2">Staffy</span>
                         <span class="badge bg-light text-dark border p-2">Helping Hands Healthcare Staffing</span>
                     </div>
+                    <p class="mt-4 mb-0 fw-bold">More <span class="badge bg-secondary text-dark">Coming Soon</span>
+                        about the Common Canadian agency-style providers, stay tunned!</p>
                 </div>
             </div>
         </div>
@@ -297,7 +403,8 @@
                         <li>More time spent managing transitions</li>
                     </ul>
                     <div class="p-3 mt-3 bg-light border-start border-4 border-success">
-                        <strong>At The Traveling Therapist</strong>, we encourage you to onboard your clinician onto
+                        <strong>At The Traveling Therapist</strong>, we encourage you to onboard your clinician
+                        long-term or full time onto
                         your team after using our service - it’s the best “Thank you” we could ever receive!
                     </div>
                 </div>
@@ -389,8 +496,7 @@
                 </div>
             </div>
 
-            <div class="p-4 rounded"
-                style="background-color: rgba(15, 153, 114, 0.1); border-left: 4px solid #0f9972;">
+            <div class="p-4 rounded" style="background-color: rgba(15, 153, 114, 0.1); border-left: 4px solid #0f9972;">
                 <h5 class="fw-bold text-dark">Why this matters:</h5>
                 <p class="mb-0 text-dark">TempStars works best for isolated, one-off shifts. Clinics looking to reduce
                     administrative effort, improve continuity, and gain clearer upfront visibility into costs and
@@ -420,55 +526,58 @@
                     <li>The efficiency of digital matching</li>
                     <li>The transparency of direct hiring</li>
                 </ul>
-                <div class="p-3 bg-light border-start border-4 border-success fw-bold">
-                    The result: the speed and visibility of digital platforms, without agency margins or loss of control
-                    — the best of both worlds.
-                </div>
-            </div>
-
-            <div class="col-lg-6">
-                <div class="comparison-container p-4 shadow-sm">
-                    <h3 class="mb-4 text-center fw-bold">Where TTT Stands Apart</h3>
-                    <div class="table-responsive">
-                        <table class="table table-hover comparison-table m-0">
-                            <thead>
-                                <tr>
-                                    <th class="text-center" style="width: 50%; border-top: none;">Agency Experience</th>
-                                    <th class="ttt-col-highlight text-center" style="width: 50%; border-top: none;">
-                                        The Traveling Therapist Experience
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <ul class="list-unstyled mb-0">
-                                            <li class="mb-2">• Slow communication = slow placements</li>
-                                            <li class="mb-2">• Established networks</li>
-                                            <li>• Agency control</li>
-                                        </ul>
-                                    </td>
-                                    <td class="ttt-col-highlight">
-                                        <ul class="list-unstyled mb-0">
-                                            <li class="mb-2">• Transparent pricing</li>
-                                            <li class="mb-2">• Clinicians across Canada</li>
-                                            <li>• Direct clinic-clinician control</li>
-                                        </ul>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                <div class="p-4 rounded"
+                    style="background-color: rgba(15, 153, 114, 0.1); border-left: 4px solid #0f9972;">
+                    <p class="mb-0 text-dark">The result: the speed and visibility of digital platforms, without agency
+                        margins or loss of control
+                        — the best of both worlds.</p>
                 </div>
             </div>
         </div>
-    </section>
 
-    <section class="cta-box shadow mt-2">
-        <h2 class="text-weight-bold mb-3">See How Direct Hiring Works in Practice</h2>
-        <p class="fs-5 mb-4">Post a role and view real clinician availability — with no upfront cost or commitment.</p>
-        <a href="{% url 'register' %}" class="btn btn-light text-primary btn-lg px-5 py-3 fw-bold">Post a Role</a>
-    </section>
+        <div class="col-lg-6">
+            <div class="comparison-container p-4 shadow-sm">
+                <h3 class="mb-4 text-center fw-bold">Where The Traveling Therapist Stands Apart</h3>
+                <div class="table-responsive">
+                    <table class="table table-hover comparison-table m-0">
+                        <thead>
+                            <tr>
+                                <th class="text-center" style="width: 50%; border-top: none;">Agency Experience</th>
+                                <th class="ttt-col-highlight text-center" style="width: 50%; border-top: none;">
+                                    The Traveling Therapist Experience
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <ul class="list-unstyled mb-0">
+                                        <li class="mb-2">• Slow communication = slow placements</li>
+                                        <li class="mb-2">• Established networks</li>
+                                        <li>• Agency control</li>
+                                    </ul>
+                                </td>
+                                <td class="ttt-col-highlight">
+                                    <ul class="list-unstyled mb-0">
+                                        <li class="mb-2">• Transparent pricing</li>
+                                        <li class="mb-2">• Clinicians across Canada</li>
+                                        <li>• Direct clinic-clinician control</li>
+                                    </ul>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+</div>
+</section>
+
+<section class="cta-box shadow mt-2">
+    <h2 class="text-weight-bold mb-3">See How Direct Hiring Works in Practice</h2>
+    <p class="fs-5 mb-4">Post a role and view real clinician availability — with no upfront cost or commitment.</p>
+    <a href="{% url 'register' %}" class="btn btn-light text-primary btn-lg px-5 py-3 fw-bold">Post a Role</a>
+</section>
 
 </div>
 {% endblock %}
