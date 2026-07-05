@@ -5,7 +5,7 @@ from operator import mod
 from pyexpat import model
 from tkinter import Widget
 from django import forms
-from .models import PROVINCES, Auction, Bid, Account, Demographic, DemographicType, PracticeArea, PracticeAreaType, User, UserType, MessageAcknowledgement
+from .models import PROVINCES, Auction, Bid, Account, Demographic, DemographicType, PracticeArea, PracticeAreaType, User, UserType, MessageAcknowledgement, PaymentType
 from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
 import random
 from django.core.exceptions import ValidationError
@@ -72,14 +72,27 @@ def validate_file_extension(value, image_name):
 
 
 class AuctionForm(forms.ModelForm):
+    paymentTypesSelection = forms.MultipleChoiceField(
+        label='I would like to receive offers for',
+        choices=(('Fee Split', 'Fee Split'), ('Flat Fee', 'Flat Fee')),
+        widget=forms.CheckboxSelectMultiple,
+        required=True,
+    )
+
+    flatFeeType = forms.ChoiceField(
+        label='I would like Flat Fee offers to be:',
+        choices=(('hourly', 'Hourly'), ('total_contract', 'Total Contract Price')),
+        required=False,
+        widget=forms.RadioSelect,
+    )
+
     class Meta:
         model = Auction
         fields = ( 
             'type',
             'placementStart', 
             'placementEnd', 
-            'reservePrice',
-            'paymentType',
+            'flatFeeType',
             'treatmentCost',
             'treatmentMin',
             'assessmentCost',
@@ -121,10 +134,18 @@ class AuctionForm(forms.ModelForm):
             'comments': forms.Textarea(attrs={'placeholder': 'Tell us about your clinic...', 'rows': '4'})
         }
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance and self.instance.pk:
+            self.initial.setdefault('paymentTypesSelection', self.instance.get_payment_types_list())
+            self.initial.setdefault('flatFeeType', self.instance.flatFeeType)
+
     def clean(self):
-        placementStart = self.cleaned_data.get('placementStart')
-        placementEnd = self.cleaned_data.get('placementEnd')
-        reservePrice = self.cleaned_data.get('reservePrice')
+        cleaned_data = super().clean()
+        placementStart = cleaned_data.get('placementStart')
+        placementEnd = cleaned_data.get('placementEnd')
+        payment_types = cleaned_data.get('paymentTypesSelection') or []
+        flat_fee_type = cleaned_data.get('flatFeeType')
 
         mondayStart = self.cleaned_data.get('mondayStart')
         mondayEnd = self.cleaned_data.get('mondayEnd')
@@ -154,14 +175,6 @@ class AuctionForm(forms.ModelForm):
 
         if placementStart > datetime.now().date() + timedelta(days=365):
             error_list.append(ValidationError("Placements must start within the next 12 months."))
-
-        if reservePrice is not None:
-            if reservePrice <= 0:
-                error_list.append(ValidationError("Reserve price cannot be 0 or less. If no reserve price is desired leave the field blank."))
-
-        if reservePrice is not None:
-            if reservePrice > 99999:
-                error_list.append(ValidationError("Reserve price must be less than $99,999."))
 
         if placementEnd <= placementStart:
             error_list.append(ValidationError("The end of placement date must be after the start date of placement"))
@@ -207,8 +220,57 @@ class AuctionForm(forms.ModelForm):
         if none_count == 7:
             error_list.append(ValidationError('At least one start and end time must be entered.'))
 
+        if len(payment_types) == 0:
+            error_list.append(ValidationError('Please select at least one payment type.'))
+
+        if 'Flat Fee' in payment_types and not flat_fee_type:
+            error_list.append(ValidationError('Please select how flat fee offers should be priced.'))
+
         if len(error_list) > 0:
             raise forms.ValidationError(error_list)
+
+        return cleaned_data
+
+    def save(self, commit=True):
+        auction = super().save(commit=False)
+        payment_types = self.cleaned_data.get('paymentTypesSelection') or []
+        auction.paymentTypes = ','.join(payment_types)
+        auction.flatFeeType = self.cleaned_data.get('flatFeeType') if 'Flat Fee' in payment_types else None
+
+        primary_payment_type = payment_types[0] if payment_types else ''
+        if primary_payment_type:
+            payment_type = PaymentType.objects.filter(name=primary_payment_type).first()
+            if payment_type is not None:
+                auction.paymentType = payment_type
+
+        if commit:
+            auction.save()
+            self.save_m2m()
+
+        return auction
+
+
+class AuctionAdminForm(AuctionForm):
+    field_order = [
+        'paymentTypes',
+        'paymentTypesSelection',
+        'flatFeeType',
+    ]
+
+    active = forms.BooleanField(required=False, label='Active Listing')
+    closed = forms.BooleanField(required=False, label='Closed Listing')
+    deleted = forms.BooleanField(required=False, label='Deleted Listing')
+
+    class Meta(AuctionForm.Meta):
+        fields = '__all__'
+        exclude = ('reservePrice', 'paymentType')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance and self.instance.pk:
+            self.initial.setdefault('active', self.instance.active)
+            self.initial.setdefault('closed', self.instance.closed)
+            self.initial.setdefault('deleted', self.instance.deleted)
 
 class BidForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):

@@ -154,12 +154,12 @@
   {% if payment_type == "Fee Split" %}
   <div class="row w-100 mx-auto">
     <p class="col-md-4 col-sm-6 text-weight-bold border mb-0 py-2 bg-light">Payment Type</p>
-    <p class="col-md-8 col-sm-6 text-weight-light border mb-0 py-2">{{ payment_type }} (HCP/Clinic)</p>
+    <p class="col-md-8 col-sm-6 text-weight-light border mb-0 py-2">{{ auction.get_payment_type_label }}</p>
   </div>
   {% else %}
   <div class="row w-100 mx-auto">
     <p class="col-md-4 col-sm-6 text-weight-bold border mb-0 py-2 bg-light">Payment Type</p>
-    <p class="col-md-8 col-sm-6 text-weight-light border mb-0 py-2">{{ payment_type }}</p>
+    <p class="col-md-8 col-sm-6 text-weight-light border mb-0 py-2">{{ auction.get_payment_type_label }}</p>
   </div>
   {% endif %}
   {% if payment_type == "Fee Split" %}

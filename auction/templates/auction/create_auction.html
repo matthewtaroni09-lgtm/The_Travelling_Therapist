@@ -33,7 +33,7 @@
         <ul id="errorList"></ul>
       </div>
       <div class="row">
-        <div class="mb-12 col-md-12">
+        <div class="mb-4 col-md-12">
           <label>What Type of Clinician are you looking for?</label>
           <select name="type" class="select form-control" required="" id="id_type">
             <option value="0">---------</option>
@@ -48,67 +48,24 @@
         </div>
       </div>
       <div class="row">
-        <div class="mb-12 col-md-12">
-          {{ form.paymentType|as_crispy_field }}
+        <div class="mb-4 col-md-12">
+          {{ form.paymentTypesSelection|as_crispy_field }}
+          <div id="flatFeeTypeContainer" class="d-none mt-3">
+            {{ form.flatFeeType|as_crispy_field }}
+          </div>
         </div>
       </div>
       <div class="row">
-        <div class="mb-3 col-md-6">
+        <div class="mb-4 col-md-6">
           {{ form.placementStart|as_crispy_field }}
         </div>
-        <div class="mb-3 col-md-6">
+        <div class="mb-4 col-md-6">
           {{ form.placementEnd|as_crispy_field }}
         </div>
       </div>
-      <!-- Slider Checkbox -->
-      <div class="row">
-        <div id="reservePriceCheckBoxDiv" class="d-none">
-          <input id="reservePriceCheckBox" name="reservePriceCheckBox" type="checkbox">
-          <label class="form-label">Include a reserve price</label>
-        </div>
-      </div>
-      <div class="row">
-        <div class="mb-3 col-md-6 col-sm-12">
-          <div id="reserveInputDiv" class="d-none">
-            {{ form.reservePrice|as_crispy_field }}
-            <p>{{forms.non_field_errors}}</p>
-            {% for error in forms.non_field_errors %}
-            <p>{{error}}</p>
-            {% endfor %}
-            <img id="reservePriceInfoIcon" src="/media/images/info.svg" alt="Traveling Therapist Logo">
-            <p id="reservePriceInfoP" class="infoMessage">Reserve price is the maximum the healthcare facility is
-              willing to offer.</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Slider Checkbox -->
-      <div class="row">
-        <div id="sliderCheckBoxDiv" class="d-none">
-          <input id="sliderCheckBox" name="sliderCheckBox" type="checkbox">
-          <label class="form-label">Include a reserve split %</label>
-        </div>
-      </div>
-
-      <!-- Slider -->
-      <div class="row">
-        <div id="sliderDiv" class="mb-3 d-none">
-          <label>Reserve Split (HCP/Clinic)</label>
-          <div class="slidecontainer col-md-6 col-sm-12">
-            <input type="range" min="0" max="100" value="0" class="slider" id="reservePriceSlider"
-              name="reservePriceSlider">
-            <p>Value: <span id="demo">0</span>%</p>
-          </div>
-          <img id="reservePercentageInfoIcon" src="/media/images/info.svg" alt="Traveling Therapist Logo">
-          <p id="reservePercentageInfoP" class="infoMessage">Reserve split is the maximum percentage the healthcare
-            facility is
-            willing to offer to the healthcare worker for each session they perform/complete.</p>
-        </div>
-      </div>
-
       <!-- Assessment Checkbox -->
       <div class="row">
-        <div id="assessmentCheckBoxDiv" class="d-none">
+        <div id="assessmentCheckBoxDiv" class="d-none mb-3">
           <input id="assessmentCheckBox" name="sliderCheckBox" type="checkbox">
           <label class="form-label">Include a minimum number of daily assessments?</label>
         </div>
@@ -125,7 +82,7 @@
 
       <!-- Treatment Checkbox -->
       <div class="row">
-        <div id="treatmentCheckBoxDiv" class="d-none">
+        <div id="treatmentCheckBoxDiv" class="d-none mb-3">
           <input id="treatmentCheckBox" name="sliderCheckBox" type="checkbox">
           <label class="form-label">Include a minimum number of daily treatments?</label>
         </div>

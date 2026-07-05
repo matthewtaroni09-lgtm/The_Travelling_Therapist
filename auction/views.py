@@ -115,7 +115,7 @@ def auction_search(request):
     if payment_type_select == '0':
         payment_type_fitler = Q()
     else:
-        payment_type_fitler = Q(paymentType__name=payment_type_select)
+        payment_type_fitler = Q(paymentTypes__icontains=payment_type_select) | Q(paymentType__name=payment_type_select)
 
     # Filter statues
     if status_select == '0':
@@ -157,8 +157,9 @@ def index(request):
     for auction in auctions:
         if auction.clinic.city not in cities:
             cities.append(auction.clinic.city)
-        if auction.paymentType not in payment_types:
-            payment_types.append(auction.paymentType)
+        for payment_type in auction.get_payment_types_list():
+            if payment_type not in payment_types:
+                payment_types.append(payment_type)
         
         status = ''
         if auction.active:
@@ -397,7 +398,7 @@ def view_auction(request, auction_id):
     num_bids = Bid.objects.filter(auction=auction_id).count()
     num_biders = Bid.objects.values('user').filter(auction=auction_id).distinct().count()
     bids = Bid.objects.filter(auction=auction_id, active=True).annotate(Min('amount')).order_by('amount')
-    payment_type = str(auction.paymentType)
+    payment_type = auction.get_primary_payment_type()
     daily_minimum = 0
     if payment_type == 'Fee Split' and auction.assessmentCost != None and auction.assessmentMin != None and auction.treatmentCost != None and auction.treatmentMin != None:
         daily_minimum = (auction.assessmentCost * auction.assessmentMin) + (auction.treatmentCost * auction.treatmentMin)
@@ -779,7 +780,7 @@ def get_view_auction_data(request):
         'minimumBidIncrement': auction.minimumBidIncrement,
         'auctionEnd': auction.auctionEnd,
         'reservePrice': auction.reservePrice,
-        'paymentType': str(auction.paymentType),
+        'paymentType': payment_type,
         'active': auction.active,
         'matchtingTypes': matchting_types
     })
@@ -855,11 +856,6 @@ def create_auction(request):
                 print('valid form')
                 auction = form.save(commit=False)
                 auction.clinic = request.user.account
-                # Check if it is a flat fee or fee split
-                if request.POST.get("paymentType", "") == '1' and request.POST.get('sliderCheckBox') == 'on':
-                    auction.reservePrice = request.POST.get("reservePriceSlider", "")
-                elif request.POST.get("paymentType", "") == '1' and request.POST.get('sliderCheckBox') != 'on':
-                    auction.reservePrice = None
                 auction.auctionStart = datetime.datetime.now(pytz.timezone('America/Toronto'))
                 auction.auctionEnd = datetime.datetime.now(pytz.timezone('America/Toronto')) + datetime.timedelta(seconds=admin.defaultAuctionLength)
                 auction.closed = False
@@ -913,7 +909,7 @@ def create_auction(request):
                         send_mail(
                             subject = "Auction Created - Admin Details",
                             message = "",
-                            html_message = emails.auction_created_admin(str(auction.clinic.clinicName), str(auction.clinic.city), str(auction.clinic.province), str(auction.clinic.user.email), str(auction.reservePrice), str(auction.auctionStart), str(auction.auctionEnd), str(auction.placementStart), str(auction.placementEnd), str(auction.auctionID)),
+                            html_message = emails.auction_created_admin(str(auction.clinic.clinicName), str(auction.clinic.city), str(auction.clinic.province), str(auction.clinic.user.email), str(auction.get_payment_type_label()), str(auction.flatFeeType), str(auction.auctionStart), str(auction.auctionEnd), str(auction.placementStart), str(auction.placementEnd), str(auction.auctionID)),
                             from_email = settings.EMAIL_HOST_USER,
                             recipient_list = ('loribine@gmail.com', 'info@travelingtherapist.ca')
                         )

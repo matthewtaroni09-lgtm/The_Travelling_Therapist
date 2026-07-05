@@ -1,11 +1,11 @@
 <div class="col-sm-6 col-lg-4">
   <a class="card mt-4 text-decoration-none text-dark" href="{% url 'auction' auction.auctionID %}">
-    {% if auction.paymentType|stringformat:"s" == "Flat Fee" %}
+    {% if auction.is_flat_fee %}
     <div class="triangle" style="border-color: transparent var(--primary-colour) transparent;"><span
-        class="triangleText"><b>{{ auction.paymentType }}</b></span></div>
+      class="triangleText"><b>{{ auction.get_payment_type_label }}</b></span></div>
     {% else %}
     <div class="triangle" style="border-color: transparent var(--secondary-colour) transparent;"><span
-        class="triangleText"><b>{{ auction.paymentType }}</b></span></div>
+      class="triangleText"><b>{{ auction.get_payment_type_label }}</b></span></div>
     {% endif %}
     <div class="position-relative">
       {% if auction.clinic.imageOne %}

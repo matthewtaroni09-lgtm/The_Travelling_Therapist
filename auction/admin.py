@@ -9,6 +9,7 @@ from django.contrib.auth.admin import UserAdmin
 from django.core.mail import send_mail
 from django.conf import settings
 from . import emails
+from .forms import AuctionForm, AuctionAdminForm
 from The_Travelling_Therapist.settings import ENVIRONMENT, DEV_LINK, PROD_LINK
 from datetime import datetime, timedelta
 import time
@@ -19,26 +20,54 @@ class BidInline(admin.TabularInline):
 
 @admin.register(Auction)
 class AuctionAdmin(admin.ModelAdmin):
+    form = AuctionAdminForm
     readonly_fields = ('cronID',)
-    list_display = ('auctionID', 'auctionNumber', 'clinic', 'paymentType', 'auctionStart', 'auctionEnd', 'active', 'closed', 'placementStart', 'placementEnd', 'winner', 'winningPrice')
+    list_display = ('auctionID', 'auctionNumber', 'clinic', 'payment_type_label', 'auctionStart', 'auctionEnd', 'active', 'closed', 'placementStart', 'placementEnd', 'winner', 'winningPrice')
     # Reverse alpahbetical order -name
     ordering = ('-auctionNumber', )
     search_fields = ('auctionID',)
     inlines = [BidInline]
-    exclude = ['startingBid', 'underEightteen', 'eightteenToSixtyFive', 'overSixtyFive', 'MSK', 'neuro', 'cardioResp', 'payFrequency']
+    exclude = ['startingBid', 'underEightteen', 'eightteenToSixtyFive', 'overSixtyFive', 'MSK', 'neuro', 'cardioResp', 'payFrequency', 'paymentType']
+    fieldsets = (
+        ('Listing Basics', {
+            'fields': ('clinic', 'type', 'auctionNumber', 'auctionStart', 'auctionEnd', 'placementStart', 'placementEnd'),
+        }),
+        ('Offer Settings', {
+            'fields': ('paymentTypes', 'paymentTypesSelection', 'flatFeeType', 'minimumBidIncrement', 'currentLowBid', 'winner', 'winningPrice'),
+        }),
+        ('Treatment Pricing', {
+            'fields': ('treatmentCost', 'treatmentMin', 'assessmentCost', 'assessmentMin'),
+        }),
+        ('Working Hours', {
+            'fields': ('mondayStart', 'mondayEnd', 'tuesdayStart', 'tuesdayEnd', 'wednesdayStart', 'wednesdayEnd', 'thursdayStart', 'thursdayEnd', 'fridayStart', 'fridayEnd', 'saturdayStart', 'saturdayEnd', 'sundayStart', 'sundayEnd'),
+        }),
+        ('Listing Status', {
+            'fields': ('active', 'closed', 'deleted', 'comments', 'cronID'),
+        }),
+        ('Audit', {
+            'fields': ('createdBy', 'modified', 'modifiedBy'),
+        }),
+    )
+
+    def payment_type_label(self, obj):
+        return obj.get_payment_type_label()
+
+    payment_type_label.short_description = 'Payment Type'
 
     def save_model(self, request, obj, form, change):
         admin = AdminSetting.objects.first()
-        auction = Auction.objects.get(pk=obj.auctionID)
-        print("auction = " + str(auction.active))
+        auction = Auction.objects.filter(pk=obj.auctionID).first()
+        previous_active = auction.active if auction is not None else False
+        print("auction = " + str(previous_active))
         print("obj = " + str(obj.active))
 
         # Query the user list for users that are the same type as the auction
-        print(auction.type)
-        accounts = Account.objects.filter(userType=auction.type)
+        current_auction = auction or obj
+        print(current_auction.type)
+        accounts = Account.objects.filter(userType=current_auction.type)
         print(accounts)
 
-        if obj.active and admin.sendEmails and not auction.active:
+        if obj.active and admin.sendEmails and not previous_active:
             try:
                 send_mail(
                     subject = str(obj.clinic.clinicName) + " Your Listing is Live!",
@@ -64,22 +93,28 @@ class AuctionAdmin(admin.ModelAdmin):
             # Email users of the auction type that there is a new auction available for bidding
             link  = ""
             if ENVIRONMENT == "DEV":
-                link = DEV_LINK + "/auction/" + str(auction.auctionID)
+                link = DEV_LINK + "/auction/" + str(current_auction.auctionID)
             else:
-                link = PROD_LINK + "/auction/" + str(auction.auctionID)
+                link = PROD_LINK + "/auction/" + str(current_auction.auctionID)
+
+            clinic_city = current_auction.clinic.city or ""
+            clinic_province = current_auction.clinic.province or ""
+            clinic_location = clinic_city
+            if clinic_province:
+                clinic_location = clinic_city + ", " + clinic_province
 
             email_count = 0
             admin_setting = AdminSetting.objects.first()
             batch_size = admin_setting.endAuctionEmailBatchSize
 
             for account in accounts:
-                print(str(auction.paymentType))
+                print(current_auction.get_payment_type_label())
                 if email_count < batch_size:
                     try:
                         send_mail(
                             subject = "NEW LISTING - The Traveling Therapist",
                             message = "",
-                            html_message = emails.new_auction_email_to_all(account.user.first_name, account.user.last_name, link, str(auction.placementStart), str(auction.placementEnd), str(auction.paymentType), auction.clinic.clinicName, auction.clinic.city + ", " + auction.clinic.province, time_diff_from_now(auction.auctionEnd)),
+                            html_message = emails.new_auction_email_to_all(account.user.first_name, account.user.last_name, link, str(current_auction.placementStart), str(current_auction.placementEnd), current_auction.get_payment_type_label(), current_auction.clinic.clinicName, clinic_location, time_diff_from_now(current_auction.auctionEnd)),
                             from_email = settings.EMAIL_HOST_USER,
                             recipient_list = (account.user.email, "loribine@gmail.com")
                         )

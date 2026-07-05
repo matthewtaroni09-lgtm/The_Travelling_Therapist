@@ -214,6 +214,27 @@ body {
 }
 
 /* Create Auction Page */
+.create-auction-section {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(27, 27, 27, 0.12);
+}
+
+.create-auction-section:first-of-type {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: none;
+}
+
+.create-auction-section .form-group,
+.create-auction-section .mb-3 {
+    margin-bottom: 1rem;
+}
+
+.create-auction-section .form-check {
+    margin-bottom: 0.5rem;
+}
+
 .errorlist.nonfield {
     display: none;
 }

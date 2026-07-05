@@ -234,14 +234,14 @@ def auction_closed(id):
                         send_mail(
                                 subject = "Listing Ended - Reserve Not Met",
                                 message = "",
-                                html_message = emails.therapist_auction_not_met(bid.user.first_name, bid.user.last_name, auction.clinic.clinicName, auction.placementStart, auction.placementEnd, auction.paymentType),
+                                html_message = emails.therapist_auction_not_met(bid.user.first_name, bid.user.last_name, auction.clinic.clinicName, auction.placementStart, auction.placementEnd, auction.get_payment_type_label()),
                                 from_email = settings.EMAIL_HOST_USER,
                                 recipient_list = [bid.user.email]
                             )
                         send_mail(
                                 subject = "Listing Ended - Reserve Not Met",
                                 message = "",
-                                html_message = "**ADMIN COPY**" + emails.therapist_auction_not_met(bid.user.first_name, bid.user.last_name, auction.clinic.clinicName, auction.placementStart, auction.placementEnd, auction.paymentType),
+                                html_message = "**ADMIN COPY**" + emails.therapist_auction_not_met(bid.user.first_name, bid.user.last_name, auction.clinic.clinicName, auction.placementStart, auction.placementEnd, auction.get_payment_type_label()),
                                 from_email = settings.EMAIL_HOST_USER,
                                 recipient_list = ['info@travelingtherapist.ca']
                             )
@@ -249,14 +249,14 @@ def auction_closed(id):
                     send_mail(
                             subject = "Listing Ended - Reserve Not Met",
                             message = "",
-                            html_message = emails.clinic_reserve_not_met(auction.clinic.clinicName, auction.placementStart, auction.placementEnd, auction.paymentType),
+                            html_message = emails.clinic_reserve_not_met(auction.clinic.clinicName, auction.placementStart, auction.placementEnd, auction.get_payment_type_label()),
                             from_email = settings.EMAIL_HOST_USER,
                             recipient_list = [auction.clinic.user.email]
                         )
                     send_mail(
                             subject = "Listing Ended - Reserve Not Met",
                             message = "",
-                            html_message = "**ADMIN COPY**" + emails.clinic_reserve_not_met(auction.clinic.clinicName, auction.placementStart, auction.placementEnd, auction.paymentType),
+                            html_message = "**ADMIN COPY**" + emails.clinic_reserve_not_met(auction.clinic.clinicName, auction.placementStart, auction.placementEnd, auction.get_payment_type_label()),
                             from_email = settings.EMAIL_HOST_USER,
                             recipient_list = ['info@travelingtherapist.ca']
                         )
