@@ -958,8 +958,129 @@ input[type="number"] {
 }
 
 .card-image {
-    height: 260px;
+    display: block;
+    height: 220px;
     object-fit: contain;
+    background-color: #f8fafb;
+    gap: 0px;
+}
+
+.card-image-fallback {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: #5f6d77;
+    background: linear-gradient(160deg, #eef3f5 0%, #e3eaee 100%);
+    border-bottom: 1px solid #d8e0e5;
+}
+
+.card-image-fallback .material-icons {
+    font-size: 42px;
+    color: #ffffff;
+}
+
+.ttt-fallback-text {
+    font-size: 0.92rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+}
+
+.ttt-auction-card {
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.ttt-card-media {
+    position: relative;
+    min-height: 220px;
+    overflow: hidden;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+}
+
+a.ttt-auction-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.ttt-card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+
+.ttt-card-body .card-title {
+    margin-top: -14px;
+    margin-bottom: 8px !important;
+}
+
+.ttt-card-meta {
+    font-size: 0.95rem;
+}
+
+.ttt-card-body-no-media {
+    padding-top: 0;
+}
+
+.ttt-card-stats {
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    max-width: 100%;
+    flex-wrap: wrap;
+    row-gap: 4px;
+}
+
+.ttt-card-stats-seam {
+    position: relative;
+    z-index: 2;
+    margin-top: 0px;
+    margin-bottom: 3px;
+    width: max-content;
+    max-width: calc(100% - 24px);
+}
+
+.ttt-card-stats-seam-no-media {
+    margin-top: 0;
+    margin-bottom: 8px !important;
+}
+
+.ttt-offer-checklist {
+    border: 1px solid #e3e7ea;
+    border-radius: 10px;
+    background-color: #f7faf8;
+    padding: 10px 12px;
+}
+
+.ttt-offer-title {
+    font-size: 0.82rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #4f5d68;
+    font-weight: 700;
+}
+
+.ttt-offer-row {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    color: #1d2b36;
+    line-height: 1.25;
+    margin-bottom: 2px;
+}
+
+.ttt-offer-icon {
+    font-size: 1.05rem;
+    line-height: 1;
+}
+
+.ttt-offer-icon.is-enabled {
+    color: #2d8a6b;
+}
+
+.ttt-offer-icon.is-disabled {
+    color: #96a0a7;
 }
 
 img.status-bar {
@@ -1013,6 +1134,7 @@ input[type=number] {
     top: 0;
     right: 0;
     z-index: 1;
+    display: none;
 }
 
 .triangleText {
@@ -1025,6 +1147,7 @@ input[type=number] {
     -o-transform: rotate(45deg);
     transform: rotate(45deg);
     z-index: 1;
+    display: none;
 }
 
 /* Slider */
@@ -1080,6 +1203,57 @@ input[type=number] {
     /* Prevents interaction */
     opacity: 0.85;
     /* Faded look */
+}
+
+.ttt-offer-modal-dialog {
+    max-width: 920px;
+}
+
+.ttt-offer-modal {
+    min-height: 640px;
+}
+
+.ttt-offer-modal .modal-body {
+    min-height: 560px;
+}
+
+.ttt-offer-tabs .nav-link {
+    min-width: 160px;
+}
+
+.ttt-offer-tab-content {
+    min-height: 360px;
+}
+
+.ttt-offer-pane {
+    min-height: 360px;
+}
+
+.ttt-offer-card {
+    border: 1px solid #d9e1e7;
+    border-radius: 14px;
+    background: #f8fbfc;
+    padding: 1.25rem;
+}
+
+.ttt-offer-panel-header {
+    max-width: 680px;
+}
+
+.ttt-fee-split-value {
+    min-width: 96px;
+    text-align: center;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--primary-colour);
+}
+
+.ttt-compact-slider {
+    height: 10px;
+}
+
+#offerGuidanceContainer .form-control {
+    max-width: 260px;
 }
 
 /* Match paragraph text style */

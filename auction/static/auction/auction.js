@@ -92,6 +92,14 @@ function countDown(date, auctionID) {
     // Update the count down every 1 second
     timer = setInterval(function () {
 
+        const timerElement = document.getElementById("auctionTimer-" + auctionID);
+        const bidsElement = document.getElementById("auctionBids-" + auctionID);
+
+        // Some pages/cards do not render timer nodes. Avoid throwing repeatedly.
+        if (!timerElement) {
+            return;
+        }
+
         let distance = getTimeDistance(date);
 
         // Time calculations for days, hours, minutes and seconds
@@ -116,25 +124,25 @@ function countDown(date, auctionID) {
             }
 
             // Output the result in an element with id="demo"
-            document.getElementById("auctionTimer-" + auctionID).innerHTML = timeLeft;
+            timerElement.innerHTML = timeLeft;
 
             // If the count down is over, write some text 
             if (distance < 0) {
-                clearInterval(x);
-                document.getElementById("auctionTimer-" + auctionID).innerHTML = "Completed";
-                let numBids = document.getElementById("auctionBids-" + auctionID).innerHTML;
-                if (numBids === "0 bids") {
-                    document.getElementById("auctionBids-" + auctionID).innerHTML = "";
+                clearInterval(timer);
+                timerElement.innerHTML = "Completed";
+                let numBids = bidsElement ? bidsElement.innerHTML : "";
+                if (numBids === "0 bids" && bidsElement) {
+                    bidsElement.innerHTML = "";
                 }
             }
         }
         else {
             // If the length is 0 then that auction card has been filtered out
-            if ($('#auctionTimer-' + auctionID).length > 0) {
-                document.getElementById("auctionTimer-" + auctionID).innerHTML = "Completed";
-                let numBids = document.getElementById("auctionBids-" + auctionID).innerHTML;
-                if (numBids === "0 bids") {
-                    document.getElementById("auctionBids-" + auctionID).innerHTML = "";
+            if ($('#auctionTimer-' + auctionID).length > 0 && timerElement) {
+                timerElement.innerHTML = "Completed";
+                let numBids = bidsElement ? bidsElement.innerHTML : "";
+                if (numBids === "0 bids" && bidsElement) {
+                    bidsElement.innerHTML = "";
                 }
             }
         }

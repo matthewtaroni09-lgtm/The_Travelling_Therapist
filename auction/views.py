@@ -114,8 +114,14 @@ def auction_search(request):
     # Filter payment types    
     if payment_type_select == '0':
         payment_type_fitler = Q()
+    elif payment_type_select == 'Fee Split':
+        payment_type_fitler = Q(paymentTypes__icontains='Fee Split') | Q(paymentType__name='Fee Split')
+    elif payment_type_select == 'Flat Fee (Hourly)':
+        payment_type_fitler = (Q(paymentTypes__icontains='Flat Fee') | Q(paymentType__name='Flat Fee')) & Q(flatFeeType='hourly')
+    elif payment_type_select == 'Flat Fee (Total Contract Price)':
+        payment_type_fitler = (Q(paymentTypes__icontains='Flat Fee') | Q(paymentType__name='Flat Fee')) & Q(flatFeeType='total_contract')
     else:
-        payment_type_fitler = Q(paymentTypes__icontains=payment_type_select) | Q(paymentType__name=payment_type_select)
+        payment_type_fitler = Q()
 
     # Filter statues
     if status_select == '0':
@@ -152,14 +158,14 @@ def index(request):
     elif request.user.is_authenticated == True and request.user.account.userType != 'Clinic':
         auctions = Auction.objects.filter(((Q(active=True)) | (Q(closed=True))) & Q(type=request.user.account.userType)).order_by('-active', 'auctionEnd')
     cities = []
-    payment_types = []
+    payment_type_options = []
     statuses = []
     for auction in auctions:
         if auction.clinic.city not in cities:
             cities.append(auction.clinic.city)
-        for payment_type in auction.get_payment_types_list():
-            if payment_type not in payment_types:
-                payment_types.append(payment_type)
+        for payment_type in auction.get_payment_type_filter_labels():
+            if payment_type not in payment_type_options:
+                payment_type_options.append(payment_type)
         
         status = ''
         if auction.active:
@@ -169,10 +175,15 @@ def index(request):
         if status not in statuses:
             statuses.append(status)
 
+    ordered_payment_type_options = []
+    for payment_type in ['Fee Split', 'Flat Fee (hourly)', 'Flat Fee (Total Contract Price)']:
+        if payment_type in payment_type_options:
+            ordered_payment_type_options.append(payment_type)
+
     context = {
         'auctions': auctions,
         'cities': cities,
-        'payment_types': payment_types,
+        'payment_types': ordered_payment_type_options,
         'statuses': statuses,
         'auction_search': False,
         'path': 'home'
@@ -291,7 +302,10 @@ def profile(request):
                 user_form = user_clinic_form.save(commit=False)
                 user_form.username = user_clinic_form.cleaned_data.get('email')
                 user_form.save()
-                profile_clinic_form.save()
+                profile_instance = profile_clinic_form.save(commit=False)
+                if request.POST.get('imageOne-clear') == 'on':
+                    profile_instance.imageOne = 'default.jpg'
+                profile_instance.save()
                 # messages.success(request, f'Your profile has been updated!')
                 return HttpResponseRedirect('profile')
             else:
@@ -345,9 +359,19 @@ def profile(request):
     else:
         active_raffles = Raffle.objects.filter(active=True, target_audience__in=['Both', 'Clinician'])
         print(request.method)
-        user_id = str(request.user.id)
-        active_auctions_list = Bid.objects.raw('SELECT DISTINCT AA.auctionID, AB.bidID, AA.placementStart, AA.placementEnd, AA.clinic_id, AA.currentLowBid, AA.winningPrice, AC.user_id , AC.clinicName, AC.city, AC.province, AC.about, AC.imageOne, AC.imageTwo, UTA.name "type", AA.type_id, count(*) "get_num_bids", CASE WHEN AA.currentLowBid IS NULL THEN "No Bids Yet" WHEN AA.closed = 1 AND AA.active = 0 and AA.winningPrice IS NOT NULL THEN CONCAT("Winning Bid: $", AA.winningPrice) WHEN AA.closed = 1 AND AA.active = 0 and AA.winningPrice IS NULL THEN "No winner" ELSE CONCAT("Current Low Bid: $", AA.currentLowBid) END "get_bid", CASE WHEN UT.name = "Physiotherapy Clinic" THEN "Temporary Physiotherapist" ELSE "" END "get_position_type", PT.name "paymentType" FROM auction_auction AA LEFT JOIN auction_bid AB ON AA.auctionID = AB.auction_id LEFT JOIN auction_account AC ON AA.clinic_id = AC.id LEFT JOIN auction_usertype UT ON AC.userType_id = UT.id JOIN auction_usertype UTA on AA.type_id = UTA.id JOIN auction_paymenttype PT ON AA.paymenttype_id = PT.id WHERE AB.user_id = ' + user_id + ' AND AA.active = 1 AND AA.closed = 0 AND AA.deleted = 0 GROUP BY auctionID, AA.placementStart, AB.amount, AA.placementEnd, AA.clinic_id, AC.user_id , AC.clinicName, AC.city, AC.about, AC.imageOne, AC.imageTwo, UT.name, AA.type_id, PT.name;')
-        past_auctions_list = Bid.objects.raw('SELECT DISTINCT AA.auctionID, AB.bidID, AA.placementStart, AA.placementEnd, AA.clinic_id, AA.winningPrice, AC.user_id , AC.clinicName, AC.city, AC.province, AC.about, AC.imageOne, AC.imageTwo, UTA.name "type", AA.type_id, count(*) "get_num_bids", CASE WHEN UT.name = "Physiotherapy Clinic" THEN "Temporary Physiotherapist" ELSE "" END "get_position_type", PT.name "paymentType" FROM auction_auction AA LEFT JOIN auction_bid AB ON AA.auctionID = AB.auction_id LEFT JOIN auction_account AC ON AA.clinic_id = AC.id LEFT JOIN auction_usertype UT ON AC.userType_id = UT.id  JOIN auction_usertype UTA on AA.type_id = UTA.id JOIN auction_paymenttype PT ON AA.paymenttype_id = PT.id WHERE AB.user_id = ' + user_id + ' AND AA.active = 0 AND AA.closed = 1 AND AA.deleted = 0 GROUP BY auctionID, AA.placementStart, AA.placementEnd, AA.clinic_id, AC.user_id , AC.clinicName, AC.city, AC.about, AC.imageOne, AC.imageTwo, UT.name, AA.type_id, PT.name;')
+        therapist_type = request.user.account.userType
+        therapist_bids = Bid.objects.filter(
+            user=request.user,
+            active=True,
+            auction__type=therapist_type,
+            auction__deleted=False,
+        )
+        active_auctions_list = Auction.objects.filter(
+            auctionID__in=therapist_bids.filter(auction__active=True, auction__closed=False).values_list('auction_id', flat=True)
+        ).order_by('-auctionEnd').distinct()
+        past_auctions_list = Auction.objects.filter(
+            auctionID__in=therapist_bids.filter(auction__active=False, auction__closed=True).values_list('auction_id', flat=True)
+        ).order_by('-auctionEnd').distinct()
         if request.method == 'POST':
             user_therapist_form = UserFormTherapist(request.POST, instance=request.user)
             if user_therapist_form.is_valid():
@@ -395,25 +419,18 @@ def view_auction(request, auction_id):
     admin = AdminSetting.objects.first()
     auction = Auction.objects.get(pk=auction_id)
     print(auction.comments)
-    num_bids = Bid.objects.filter(auction=auction_id).count()
-    num_biders = Bid.objects.values('user').filter(auction=auction_id).distinct().count()
+    num_bids = Bid.objects.filter(auction=auction_id, active=True).count()
+    num_biders = Bid.objects.values('user').filter(auction=auction_id, active=True).distinct().count()
     bids = Bid.objects.filter(auction=auction_id, active=True).annotate(Min('amount')).order_by('amount')
+    payment_types = auction.get_payment_types_list()
     payment_type = auction.get_primary_payment_type()
-    daily_minimum = 0
-    if payment_type == 'Fee Split' and auction.assessmentCost != None and auction.assessmentMin != None and auction.treatmentCost != None and auction.treatmentMin != None:
-        daily_minimum = (auction.assessmentCost * auction.assessmentMin) + (auction.treatmentCost * auction.treatmentMin)
-    else:
-        daily_minimum = 0
+    allow_fee_split = 'Fee Split' in payment_types
+    allow_flat_fee = 'Flat Fee' in payment_types
     auction_change = False
     submitted = False
     max_bid = 0
-    assessments = False
-    treatments = False
-
-    if auction.assessmentCost is not None and auction.assessmentMin is not None:
-        assessments = True
-    if auction.treatmentCost is not None and auction.treatmentMin is not None:
-        treatments = True
+    assessments = auction.assessmentCost is not None
+    treatments = auction.treatmentCost is not None
 
     if num_bids > 0 and auction.currentLowBid is not None and auction.minimumBidIncrement is not None:
         diff = auction.currentLowBid - auction.minimumBidIncrement
@@ -426,68 +443,101 @@ def view_auction(request, auction_id):
 
     if request.method == 'POST':
         print('post')
-        form = BidForm(request.POST, max_bid=max_bid, min_bid_increment=auction.minimumBidIncrement, payment_type=payment_type)
-        print(form.errors)
-        if form.is_valid():
-            bid = form.save(commit=False)
-            bid.auction = auction
-            bid.user = request.user
-            bid.active = True
-            bid.createdBy = request.user
-            if auction.currentLowBid is None:
-                prev_low_bid = 0
-            else:
-                prev_low_bid = auction.currentLowBid
-            if auction.currentLowBid is not None and bid.amount < auction.currentLowBid:
-                auction.currentLowBid = bid.amount
-                auction.minimumBidIncrement = set_bid_increment(bid.amount)
+        flat_fee_raw = (request.POST.get('flatFeeAmount') or '').strip()
+        fee_split_raw = (request.POST.get('feeSplitAmount') or '').strip()
+        form = BidForm(payment_type=payment_type)
+        errors = []
+        bids_to_create = []
+        submission_group = uuid.uuid4()
+        previous_bid_count = Bid.objects.filter(user=request.user, auction=auction).count()
+        primary_previous_low_bid = auction.get_low_offer_amount(payment_type) or 0
+        current_lowest_bid_user = bids[0].user if len(bids) > 0 else None
+
+        if allow_flat_fee and flat_fee_raw:
+            try:
+                flat_fee_amount = int(flat_fee_raw)
+                if flat_fee_amount <= 0:
+                    errors.append('Flat fee offers must be greater than $0.')
+                else:
+                    bids_to_create.append(Bid(
+                        auction=auction,
+                        user=request.user,
+                        amount=flat_fee_amount,
+                        offerType='Flat Fee',
+                        submissionGroup=submission_group,
+                        active=True,
+                        createdBy=request.user,
+                    ))
+            except ValueError:
+                errors.append('Flat fee offers must be whole numbers.')
+
+        if allow_fee_split and fee_split_raw:
+            try:
+                fee_split_amount = int(fee_split_raw)
+                if fee_split_amount <= 0:
+                    errors.append('Fee split offers must be greater than 0%.')
+                elif fee_split_amount > 100:
+                    errors.append('Fee split offers must be less than or equal to 100%.')
+                else:
+                    bids_to_create.append(Bid(
+                        auction=auction,
+                        user=request.user,
+                        amount=fee_split_amount,
+                        offerType='Fee Split',
+                        submissionGroup=submission_group,
+                        active=True,
+                        createdBy=request.user,
+                    ))
+            except ValueError:
+                errors.append('Fee split offers must be whole numbers.')
+
+        if len(bids_to_create) == 0:
+            errors.append('Please enter at least one offer before confirming.')
+
+        if len(errors) == 0:
+            for bid in bids_to_create:
+                bid.save()
+
+            primary_low_bid = auction.get_low_offer_amount(payment_type)
+            if primary_low_bid is not None:
+                auction.currentLowBid = primary_low_bid
+                auction.minimumBidIncrement = set_bid_increment(primary_low_bid)
                 auction_change = True
-            if num_bids == 0:
-                auction.minimumBidIncrement = set_bid_increment(bid.amount)
-                auction.currentLowBid = bid.amount
-                auction_change = True
-            # A timezone must be specified in order to make the subtraction
+
             diff = auction.auctionEnd - datetime.datetime.now(pytz.timezone('America/Toronto'))
-            if diff.total_seconds() < 60 and (bid.amount <= prev_low_bid or prev_low_bid == 0):
+            primary_bid_submitted = next((bid for bid in bids_to_create if bid.offerType == payment_type), None)
+            if primary_bid_submitted is not None and diff.total_seconds() < 60 and (primary_previous_low_bid == 0 or primary_bid_submitted.amount <= primary_previous_low_bid):
                 new_id = str(uuid.uuid4())
                 auction.auctionEnd = auction.auctionEnd.astimezone(pytz.timezone('America/Toronto')) + datetime.timedelta(minutes=1)
                 scheduled_tasks.print_job()
                 try:
                     scheduled_tasks.remove_cron_job(auction.cronID)
                 except:
-                    print("fail")
+                    print('fail')
                 scheduled_tasks.restart(auction.auctionEnd.year, auction.auctionEnd.month, auction.auctionEnd.day, auction.auctionEnd.hour, auction.auctionEnd.minute, auction.auctionEnd.second, new_id, str(auction.auctionID))
                 auction.cronID = new_id
                 auction_change = True
+
             if auction_change:
                 auction.save()
 
-            # Before saving the new bid get the current lowest bidder from the sorted list of bids if there are existing bids
-            if len(bids) > 0:
-                current_lowest_bid_user = bids[0].user
-            bid.save()
-
-            # Reward the clinician with 5 tickets for placing a bid (only once per listing)
             if hasattr(request.user, 'account'):
-                if Bid.objects.filter(user=request.user, auction=auction).count() == 1:
+                if previous_bid_count == 0:
                     request.user.account.add_tickets(5, f"Placed bid on listing {auction.auctionID}")
                     messages.success(request, 'You have earned 5 raffle tickets for placing an offer!', extra_tags='ticket_earned')
                 else:
-                    messages.success(request, 'Your offer has been successfully placed!')
+                    messages.success(request, 'Your offers have been successfully placed!')
 
-            # If there are existing bids and the current bid is lower than the current best bid, check if the emails that need to be sent out
-            # If the current bid if higher than the current minimum then there is no need to send this email
-            if len(bids) > 0 and bid.amount <= auction.currentLowBid:
-                check_out_bid(auction.auctionID, bid, request, current_lowest_bid_user, bid.user)
-            # Send email to user to thank them for the bid
+            if len(payment_types) == 1 and current_lowest_bid_user is not None and primary_bid_submitted is not None and (primary_previous_low_bid == 0 or primary_bid_submitted.amount <= primary_previous_low_bid):
+                check_out_bid(auction.auctionID, primary_bid_submitted, request, current_lowest_bid_user, primary_bid_submitted.user)
+
             if admin.sendEmails:
                 try:
                     send_mail(
-                        subject = "Thank You for Your Offer - The Traveling Therapist",
-                        message = "",
+                        subject = 'Thank You for Your Offer - The Traveling Therapist',
+                        message = '',
                         html_message = emails.therapist_auction_thank_you_bid(request.user.first_name, request.user.last_name, auction.clinic.clinicName, auction.auctionStart, auction.auctionID),
                         from_email = settings.EMAIL_HOST_USER,
-                        # recipient_list = (request.user.email, 'loribine@gmail.com')
                         recipient_list = (request.user.email,)
                     )
                 except:
@@ -495,8 +545,13 @@ def view_auction(request, auction_id):
                     logger.warning('Thank your for bidding email failed.')
 
             return HttpResponseRedirect('/auction/' + str(auction.auctionID))
-        else:
-            print('else')
+
+        for error in errors:
+            if not hasattr(form, 'cleaned_data'):
+                form.cleaned_data = {}
+            form.add_error(None, error)
+
+        if form.errors:
             context = {
                 'auction': auction,
                 'form': form,
@@ -504,7 +559,9 @@ def view_auction(request, auction_id):
                 'num_bids': num_bids,
                 'num_biders': num_biders,
                 'payment_type': payment_type,
-                'daily_minimum': daily_minimum,
+                'payment_types': payment_types,
+                'allow_fee_split': allow_fee_split,
+                'allow_flat_fee': allow_flat_fee,
                 'assessments': assessments,
                 'treatments': treatments
             }
@@ -518,7 +575,9 @@ def view_auction(request, auction_id):
                 'num_bids': num_bids,
                 'num_biders': num_biders,
                 'payment_type': payment_type,
-                'daily_minimum': daily_minimum,
+                'payment_types': payment_types,
+                'allow_fee_split': allow_fee_split,
+                'allow_flat_fee': allow_flat_fee,
                 'assessments': assessments,
                 'treatments': treatments
             }
@@ -761,26 +820,29 @@ def get_active_auctions_theraipist(request):
 
 def get_view_auction_data(request):
     auction = Auction.objects.get(auctionID=request.GET['auctionID'])
-    num_bids = Bid.objects.filter(auction=request.GET['auctionID']).count()
+    num_bids = Bid.objects.filter(auction=request.GET['auctionID'], active=True).count()
+    payment_type = auction.get_primary_payment_type()
+    payment_types = auction.get_payment_types_list()
     max_bid = 0
     matchting_types = False
     if num_bids > 0:
-        diff = auction.currentLowBid - auction.minimumBidIncrement
-        if diff > 0:
-            max_bid = diff
-        else:
-            max_bid = 0
-    else:
-        max_bid = 0
+        next_offer_amount = auction.get_next_available_offer_amount(payment_type)
+        max_bid = next_offer_amount if next_offer_amount is not None else 0
     if auction.type == request.user.account.userType:
         matchting_types = True
     return JsonResponse({
         'max_bid': max_bid,
-        'currentLowBid': auction.currentLowBid,
+        'currentLowBid': auction.get_low_offer_amount(payment_type),
+        'flatFeeCurrentLowBid': auction.get_low_offer_amount('Flat Fee'),
+        'feeSplitCurrentLowBid': auction.get_low_offer_amount('Fee Split'),
+        'flatFeeMaxBid': auction.get_next_available_offer_amount('Flat Fee'),
+        'feeSplitMaxBid': auction.get_next_available_offer_amount('Fee Split'),
         'minimumBidIncrement': auction.minimumBidIncrement,
         'auctionEnd': auction.auctionEnd,
         'reservePrice': auction.reservePrice,
         'paymentType': payment_type,
+        'paymentTypes': payment_types,
+        'flatFeeType': auction.flatFeeType,
         'active': auction.active,
         'matchtingTypes': matchting_types
     })
@@ -851,6 +913,12 @@ def create_auction(request):
             account_form = AuctionAccountForm(request.POST, request.FILES, instance=account)
             formset_demographic = demographic_form_set(queryset=Demographic.objects.none())
             formset_practice = practice_area_form_set(queryset=PracticeArea.objects.none())
+
+            # Listings must always have a clinic image source.
+            if not account.imageOne:
+                account.imageOne = 'default.jpg'
+                account.save(update_fields=['imageOne'])
+
             print(form.errors)
             if form.is_valid():
                 print('valid form')
@@ -956,6 +1024,7 @@ def create_auction(request):
                 parameter.update({
                     'active_auctions_list': active_auctions_list,
                     'form': form,
+                    'account_form': account_form,
                     'formset_demographic': formset_demographic,
                     'formset_practice': formset_practice,
                     'submitted_auction': submitted_auction,

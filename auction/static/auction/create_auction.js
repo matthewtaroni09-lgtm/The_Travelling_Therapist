@@ -18,6 +18,32 @@ function getSelectedPaymentTypes() {
     }).get();
 }
 
+function getSelectedFlatFeeType() {
+    return $('input[name="flatFeeType"]:checked').val() || '';
+}
+
+function syncOfferGuidanceUI(selectedPaymentTypes) {
+    const flatFeeType = getSelectedFlatFeeType();
+    const showFeeSplitGuidance = selectedPaymentTypes.includes('Fee Split');
+    const showHourlyGuidance = selectedPaymentTypes.includes('Flat Fee') && flatFeeType === 'hourly';
+    const showTotalGuidance = selectedPaymentTypes.includes('Flat Fee') && flatFeeType === 'total_contract';
+
+    $('#desiredFeeSplitContainer').toggleClass('d-none', !showFeeSplitGuidance);
+    $('#flatFeeGuidanceContainer').toggleClass('d-none', !(showHourlyGuidance || showTotalGuidance));
+    $('#desiredFlatFeeHourlyContainer').toggleClass('d-none', !showHourlyGuidance);
+    $('#desiredFlatFeeTotalContainer').toggleClass('d-none', !showTotalGuidance);
+
+    if (!showFeeSplitGuidance) {
+        $('#id_desiredFeeSplitPercentage').val('');
+    }
+    if (!showHourlyGuidance) {
+        $('#id_desiredFlatFeeHourly').val('');
+    }
+    if (!showTotalGuidance) {
+        $('#id_desiredFlatFeeTotalContract').val('');
+    }
+}
+
 function syncPaymentTypeUI() {
     const selectedPaymentTypes = getSelectedPaymentTypes();
     const feeSplitEnabled = selectedPaymentTypes.includes('Fee Split');
@@ -31,8 +57,10 @@ function syncPaymentTypeUI() {
     }
     else {
         $('#flatFeeTypeContainer').addClass('d-none');
-        $('#id_flatFeeType').val('');
+        $('input[name="flatFeeType"]').prop('checked', false);
     }
+
+    syncOfferGuidanceUI(selectedPaymentTypes);
 
     if (feeSplitEnabled) {
         $('#assessmentCheckBoxDiv').removeClass('d-none');
@@ -91,13 +119,7 @@ $(document).ready(function () {
                 },
                 success: function (response) {
                     console.log(response);
-                    if (!response.feeSplit) {
-                        $('#id_paymentTypesSelection_0').prop('checked', false).prop('disabled', true);
-                    }
-                    else {
-                        $('#id_paymentTypesSelection_0').prop('disabled', false);
-                    }
-
+                    $('#id_paymentTypesSelection_0').prop('disabled', false);
                     syncPaymentTypeUI();
 
                 },
@@ -115,6 +137,10 @@ $(document).ready(function () {
 
     $('input[name="paymentTypesSelection"]').change(function () {
         syncPaymentTypeUI();
+    });
+
+    $('input[name="flatFeeType"]').change(function () {
+        syncOfferGuidanceUI(getSelectedPaymentTypes());
     });
 
     //Show assessment fields checkbox
@@ -251,7 +277,7 @@ $("#submitButton").click(function () {
         errorList += "<li>Please select a payment type.</li>";
     }
 
-    if (getSelectedPaymentTypes().includes('Flat Fee') && $("#id_flatFeeType").val() === "") {
+    if (getSelectedPaymentTypes().includes('Flat Fee') && getSelectedFlatFeeType() === "") {
         errorList += "<li>Please select how flat fee offers should be priced.</li>";
     }
 

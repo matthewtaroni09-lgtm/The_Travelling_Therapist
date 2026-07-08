@@ -1,95 +1,217 @@
-const URL = window.location.href;
-const auctionID = URL.substring(URL.lastIndexOf('/') + 1);
+(() => {
+const pageUrl = window.location.href;
+const auctionID = pageUrl.substring(pageUrl.lastIndexOf('/') + 1);
 let currentLowBid = 0;
 let paymentType = '';
 let minBidIncrement = 0;
+let reservePrice = null;
+let paymentTypes = [];
+let currentOfferTabIndex = 0;
 
 $(document).ready(function () {
     $("#warningMessage").hide();
-    // $("#submitBidButton").prop("disabled", true);
-    let max_bid = 0;
-    let url = $(location).attr('href').split("/");
-    let auctionID = url[url.length - 1];
     let auctionEnd = "";
 
+    $(document).keypress(function (event) {
+        if (event.which === 13) {
+            event.preventDefault();
+        }
+    });
 
-    $(document).keypress(
-        function (event) {
-            if (event.which == '13') {
-                event.preventDefault();
+    function enabledOfferTabs() {
+        return $('#offerTabs .nav-link').map(function () {
+            return $(this).data('offer-tab');
+        }).get();
+    }
+
+    function activeTabKey() {
+        return $('#offerTabs .nav-link.active').data('offer-tab') || enabledOfferTabs()[0];
+    }
+
+    function showWarning(level, message) {
+        $('#warningMessage')
+            .removeClass('alert-danger alert-warning')
+            .addClass(level === 'danger' ? 'alert-danger' : 'alert-warning')
+            .text(message)
+            .show();
+    }
+
+    function clearWarning() {
+        $('#warningMessage').hide().text('').removeClass('alert-danger alert-warning');
+    }
+
+    function isValidFlatFeeOffer() {
+        if ($('#flatFeeAmount').length === 0) {
+            return false;
+        }
+        const value = parseInt($('#flatFeeAmount').val() || '0', 10);
+        return value > 0;
+    }
+
+    function isValidFeeSplitOffer() {
+        if ($('#feeSplitAmountInput').length === 0) {
+            return false;
+        }
+        const value = parseInt($('#feeSplitAmountInput').val() || '0', 10);
+        return value > 0 && value <= 100;
+    }
+
+    function normalizeFeeSplitValue(rawValue) {
+        const parsed = parseInt(rawValue, 10);
+        if (Number.isNaN(parsed)) {
+            return null;
+        }
+        if (parsed < 0) {
+            return 0;
+        }
+        if (parsed > 100) {
+            return 100;
+        }
+        return parsed;
+    }
+
+    function setFeeSplitValue(rawValue) {
+        const normalizedValue = normalizeFeeSplitValue(rawValue);
+        if (normalizedValue === null) {
+            return;
+        }
+        $('#feeSplitSlider').val(normalizedValue);
+        $('#feeSplitValue').text(normalizedValue);
+        $('#feeSplitAmountInput').val(normalizedValue);
+        if ($('#feeSplitAmountTyped').length) {
+            $('#feeSplitAmountTyped').val(normalizedValue);
+        }
+    }
+
+    function updateSummary() {
+        if ($('#summaryFlatFee').length) {
+            if (isValidFlatFeeOffer()) {
+                const suffix = $('#flatFeeAmount').siblings('.input-group-text').last().text() === '/hr' ? ' /hr' : '';
+                $('#summaryFlatFee').text('$' + Number($('#flatFeeAmount').val()).toLocaleString() + suffix);
             }
-        });
-
-    $('#splitCompSlider').slider({
-        formatter: function (value) {
-            return 'Current value: ' + value;
+            else {
+                $('#summaryFlatFee').text('Not entered');
+            }
         }
-    });
 
-    $("#submitBidButton").click(function () {
-        if ($("#id_amount").val() !== '') {
-            $("#bidModalSubFooter").show();
-            $("#closeButton").prop('disabled', true);
-            $("#submitBidButton").prop('disabled', true);
+        if ($('#summaryFeeSplit').length) {
+            if (isValidFeeSplitOffer()) {
+                $('#summaryFeeSplit').text($('#feeSplitAmountInput').val() + '%');
+            }
+            else {
+                $('#summaryFeeSplit').text('Not entered');
+            }
         }
-    });
 
-    $("#closeButtonSubFooter").click(function () {
-        $("#id_amount").val('');
-        $("#closeButton").prop('disabled', false);
-        $("#submitBidButton").prop('disabled', false);
-        $("#bidModalSubFooter").hide();
-    });
-
-    if ($('#error_1_id_amount').css("display") === "block") {
-        $("#exampleModal").modal("show");
+        $('#confirmBidButton').prop('disabled', !(isValidFlatFeeOffer() || isValidFeeSplitOffer()));
     }
 
-    // Update slider current value
-    $('#splitCompSlider').slider({
-        formatter: function (value) {
-            return value;
-        }
-    }).on('change', change); // Change the 'change' to any other event slide, slideStart, etc.
+    function setFooterState() {
+        const tabs = enabledOfferTabs();
+        const current = activeTabKey();
+        const index = tabs.indexOf(current);
+        const isFinalize = current === 'offer-finalize';
 
-
-    function change(e) {
-        $('#currentBidPercentage').html($(this).val() + "%");
+        $('#backTabButton').toggle(index > 0);
+        $('#nextTabButton').toggle(!isFinalize);
+        $('#skipTabButton').toggle(!isFinalize);
+        $('#confirmBidButton').toggle(isFinalize);
     }
+
+    function activateOfferTab(tabKey) {
+        $('#offerTabs .nav-link').removeClass('active').attr('aria-selected', 'false');
+        $('#offerTabs .nav-link[data-offer-tab="' + tabKey + '"]').addClass('active').attr('aria-selected', 'true');
+        $('.ttt-offer-pane').removeClass('show active');
+        $('#' + tabKey).addClass('show active');
+        setFooterState();
+        updateSummary();
+        clearWarning();
+    }
+
+    function moveTab(direction) {
+        const tabs = enabledOfferTabs();
+        const currentIndex = tabs.indexOf(activeTabKey());
+        const targetIndex = currentIndex + direction;
+        if (targetIndex >= 0 && targetIndex < tabs.length) {
+            activateOfferTab(tabs[targetIndex]);
+        }
+    }
+
+    $('#offerTabs .nav-link').on('click', function () {
+        activateOfferTab($(this).data('offer-tab'));
+    });
+
+    $('#nextTabButton').on('click', function () {
+        moveTab(1);
+    });
+
+    $('#skipTabButton').on('click', function () {
+        const currentTab = activeTabKey();
+        if (currentTab === 'offer-flat-fee' && $('#flatFeeAmount').length) {
+            $('#flatFeeAmount').val('0');
+        }
+        if (currentTab === 'offer-fee-split' && $('#feeSplitAmountInput').length) {
+            setFeeSplitValue(0);
+        }
+        updateSummary();
+        moveTab(1);
+    });
+
+    $('#backTabButton').on('click', function () {
+        moveTab(-1);
+    });
+
+    $('#feeSplitSlider').on('input change', function () {
+        setFeeSplitValue($(this).val());
+        updateSummary();
+        clearWarning();
+    });
+
+    $('#feeSplitAmountTyped').on('input change', function () {
+        setFeeSplitValue($(this).val());
+        updateSummary();
+        clearWarning();
+    });
+
+    $('#flatFeeAmount').on('input change', function () {
+        updateSummary();
+        clearWarning();
+    });
+
+    $('#confirmBidButton').on('click', function (event) {
+        clearWarning();
+        if (!isValidFlatFeeOffer() && !isValidFeeSplitOffer()) {
+            event.preventDefault();
+            showWarning('danger', 'Please enter at least one valid offer before confirming.');
+        }
+    });
 
     $.ajax({
-        type: "GET",
-        url: "/auction/data/view_auction_data",
+        type: 'GET',
+        url: '/auction/data/view_auction_data',
         data: {
-            'auctionID': auctionID
+            auctionID: auctionID
         },
         success: function (response) {
-            console.log(response);
-            max_bid = response.max_bid;
             currentLowBid = response.currentLowBid;
             auctionEnd = new Date(response.auctionEnd);
             reservePrice = response.reservePrice;
             paymentType = response.paymentType;
+            paymentTypes = response.paymentTypes || [];
             minBidIncrement = response.minimumBidIncrement;
 
-            let currentTime = new Date().getTime()
-            let subtractMilliSecondsValue = auctionEnd.getTime() - currentTime;
-            console.log(subtractMilliSecondsValue);
+            const currentTime = new Date().getTime();
+            const subtractMilliSecondsValue = auctionEnd.getTime() - currentTime;
             setTimeout(auctionEnded, subtractMilliSecondsValue);
 
-            if (currentLowBid == 1) {
-                $("#submitBidButton").prop("disabled", true);
-                // Flat Fee
-                if (paymentType === "Flat Fee") {
-                    $("#id_amount").prop("disabled", true);
-                    $("#id_amount").attr('placeholder', 'Lowest Bid Reached');
-                }
-                // Fee Split
-                else {
-                    $("#bidSlider").prop("disabled", true);
-                    // Make the slider look greyed out
-                    $("#bidSlider").css("opacity", .4);
-                }
+            if ($('#feeSplitSlider').length) {
+                const feeSplitStart = 0;
+                setFeeSplitValue(feeSplitStart);
+            }
+
+            const tabs = enabledOfferTabs();
+            if (tabs.length > 0) {
+                activateOfferTab(tabs[0]);
             }
         },
         error: function (error) {
@@ -97,84 +219,20 @@ $(document).ready(function () {
         }
     });
 
-    $("#id_amount").change(function () {
-        $("#warningMessage").hide();
-        $("#warningMessage").removeClass("alert-warning");
-        $("#warningMessage").removeClass("alert-danger");
-        if ($("#id_amount").val().includes(".")) {
-            bidError("Danger", "Please enter only whole numbers.");
-        }
-        else if (parseInt($("#id_amount").val()) >= currentLowBid && currentLowBid !== 0 && currentLowBid !== null) {
-            bidError("Warning", "Your bid is equal to or over the current minimum bid and will not be considered for determining the winner of the listing. Click Submit if you would like to proceed anyway.");
-        }
-        else if (parseInt($("#id_amount").val()) <= 0) {
-            if (paymentType === "Fee Split") {
-                bidError("Danger", "Bids must be above 0%.");
-            }
-            else {
-                bidError("Danger", "Bids must be above $0.");
-            }
-        }
-        else if (parseInt($("#id_amount").val()) > 100 && paymentType === "Fee Split") {
-            bidError("Danger", "Bids must be less than 100%.");
-        }
-        else if (((parseInt($("#id_amount").val()) < currentLowBid) && (parseInt($("#id_amount").val()) > max_bid)) && max_bid > 0) {
-            bidError("Danger", "Bids must be less than the Next Available Bid, $" + max_bid.toLocaleString() + ".");
-        }
-        else {
-            $("#submitBidButton").prop("disabled", false);
-        }
-    });
-
-    $("#bidSlider").change(function () {
-        $("#warningMessage").hide();
-        $("#warningMessage").removeClass("alert-warning");
-        $("#warningMessage").removeClass("alert-danger");
-        $('#demo').text($("#bidSlider").val());
-        if (parseInt($("#bidSlider").val()) >= currentLowBid && currentLowBid !== 0 && currentLowBid !== null) {
-            bidError("Warning", "Your bid is equal to or over the current minimum bid and will not be considered for determining the winner of the listing. Click Submit if you would like to proceed anyway.");
-        }
-        else if (parseInt($("#bidSlider").val()) === 0) {
-            bidError("Danger", "Bids must be above 0%.");
-        }
-        else {
-            $("#submitBidButton").prop("disabled", false);
-        }
-    });
-
-    function bidError(alert, message) {
-        let alertType = "";
-        if (alert == "Danger") {
-            alertType = "alert-danger";
-            $("#submitBidButton").prop("disabled", true);
-        }
-        else {
-            alertType = "alert-warning";
-            $("#submitBidButton").prop("disabled", false);
-        }
-        $("#warningMessage").addClass(alertType);
-        $("#warningMessage").text(message)
-        $("#warningMessage").show();
-    }
-
     function auctionEnded() {
-        $("#bidButton").hide();
-        $("#exampleModal").modal("hide");
-        console.log(currentLowBid);
-        console.log(reservePrice);
+        $('#bidButton').hide();
+        $('#exampleModal').modal('hide');
         if (currentLowBid > reservePrice && reservePrice !== null && currentLowBid != null) {
-            $("#bidText").text("Reserve price not met");
+            $('#bidText').text('Reserve price not met');
         }
         else if (currentLowBid == null) {
-            $("#bidText").text("No bids placed");
+            $('#bidText').text('No bids placed');
+        }
+        else if (paymentType === 'Flat Fee') {
+            $('#bidText').text('Winning Bid: $' + currentLowBid.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','));
         }
         else {
-            if (paymentType === 'Flat Fee') {
-                $("#bidText").text("Winning Bid: $" + currentLowBid.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
-            }
-            else {
-                $("#bidText").text("Winning Bid: " + currentLowBid.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "%");
-            }
+            $('#bidText').text('Winning Bid: ' + currentLowBid.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '%');
         }
     }
 });
@@ -349,3 +407,5 @@ const getAuction = () => {
 }
 
 getAuction();
+
+})();

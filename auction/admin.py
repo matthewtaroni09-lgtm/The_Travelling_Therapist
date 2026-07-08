@@ -22,18 +22,18 @@ class BidInline(admin.TabularInline):
 class AuctionAdmin(admin.ModelAdmin):
     form = AuctionAdminForm
     readonly_fields = ('cronID',)
-    list_display = ('auctionID', 'auctionNumber', 'clinic', 'payment_type_label', 'auctionStart', 'auctionEnd', 'active', 'closed', 'placementStart', 'placementEnd', 'winner', 'winningPrice')
+    list_display = ('auctionID', 'auctionNumber', 'clinic', 'payment_type_label', 'desired_offer_guidance', 'auctionStart', 'auctionEnd', 'active', 'closed', 'placementStart', 'placementEnd', 'winner', 'winningPrice')
     # Reverse alpahbetical order -name
     ordering = ('-auctionNumber', )
     search_fields = ('auctionID',)
     inlines = [BidInline]
     exclude = ['startingBid', 'underEightteen', 'eightteenToSixtyFive', 'overSixtyFive', 'MSK', 'neuro', 'cardioResp', 'payFrequency', 'paymentType']
     fieldsets = (
-        ('Listing Basics', {
+        ('Listing Details', {
             'fields': ('clinic', 'type', 'auctionNumber', 'auctionStart', 'auctionEnd', 'placementStart', 'placementEnd'),
         }),
         ('Offer Settings', {
-            'fields': ('paymentTypes', 'paymentTypesSelection', 'flatFeeType', 'minimumBidIncrement', 'currentLowBid', 'winner', 'winningPrice'),
+            'fields': ('paymentTypes', 'paymentTypesSelection', 'flatFeeType', 'desiredFeeSplitPercentage', 'desiredFlatFeeHourly', 'desiredFlatFeeTotalContract', 'minimumBidIncrement', 'currentLowBid', 'winner', 'winningPrice'),
         }),
         ('Treatment Pricing', {
             'fields': ('treatmentCost', 'treatmentMin', 'assessmentCost', 'assessmentMin'),
@@ -53,6 +53,18 @@ class AuctionAdmin(admin.ModelAdmin):
         return obj.get_payment_type_label()
 
     payment_type_label.short_description = 'Payment Type'
+
+    def desired_offer_guidance(self, obj):
+        guidance = []
+        if obj.desiredFeeSplitPercentage is not None:
+            guidance.append(f"Fee Split: {obj.desiredFeeSplitPercentage}%")
+        if obj.desiredFlatFeeHourly is not None:
+            guidance.append(f"Hourly: ${obj.desiredFlatFeeHourly}/hr")
+        if obj.desiredFlatFeeTotalContract is not None:
+            guidance.append(f"TCP: ${obj.desiredFlatFeeTotalContract}")
+        return ' | '.join(guidance) if guidance else 'None'
+
+    desired_offer_guidance.short_description = 'Desired Offer'
 
     def save_model(self, request, obj, form, change):
         admin = AdminSetting.objects.first()
@@ -143,7 +155,7 @@ class AuctionAdmin(admin.ModelAdmin):
 
 @admin.register(Bid)
 class BidAdmin(admin.ModelAdmin):
-    list_display = ('bidID', 'auction', 'user', 'amount')
+    list_display = ('bidID', 'auction', 'user', 'offerType', 'amount', 'submissionGroup')
     ordering = ('bidID', )
     search_fields = ('bidID', 'auction')
 

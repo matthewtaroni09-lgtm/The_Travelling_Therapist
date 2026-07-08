@@ -266,6 +266,9 @@ class Auction(models.Model):
     reservePrice = models.IntegerField(verbose_name='Reserve Price', null=True, blank=True)
     paymentTypes = models.TextField(verbose_name='Payment Types', null=True, blank=True, help_text='Comma-separated list of payment types the clinic offers.')
     flatFeeType = models.CharField(verbose_name='Flat Fee Offer Type', max_length=50, null=True, blank=True, choices=FLAT_FEE_TYPE_CHOICES, help_text='Choose how flat-fee offers should be priced.')
+    desiredFeeSplitPercentage = models.IntegerField(verbose_name='Desired Fee Split Percentage', null=True, blank=True)
+    desiredFlatFeeHourly = models.IntegerField(verbose_name='Desired Flat Fee Hourly', null=True, blank=True)
+    desiredFlatFeeTotalContract = models.IntegerField(verbose_name='Desired Flat Fee Total Contract', null=True, blank=True)
     startingBid = models.IntegerField(verbose_name='Starting Bid', null=True, blank=True, help_text='The initial bid amount.')
     minimumBidIncrement = models.IntegerField(verbose_name='Minimum Bid Increment', null=True, blank=True, help_text='All bids must decrease by the minimum bid increment.')
     currentLowBid = models.IntegerField(verbose_name='Current Low Bid', blank=True, null=True)
@@ -337,49 +340,104 @@ class Auction(models.Model):
         if payment_type_labels:
             return ' / '.join(payment_type_labels)
 
-        return self.get_primary_payment_type()
+        return ''
+
+    def get_payment_type_filter_labels(self):
+        payment_type_labels = []
+        if self.is_fee_split():
+            payment_type_labels.append('Fee Split')
+        if self.is_flat_fee():
+            if self.flatFeeType == 'hourly':
+                payment_type_labels.append('Flat Fee (hourly)')
+            elif self.flatFeeType == 'total_contract':
+                payment_type_labels.append('Flat Fee (Total Contract Price)')
+
+        return payment_type_labels
+
+    def get_payment_type_badge_lines(self):
+        payment_type_lines = []
+        if self.is_fee_split():
+            payment_type_lines.append('Fee Split')
+        if self.is_flat_fee():
+            payment_type_lines.append('Flat Fee')
+            if self.flatFeeType == 'hourly':
+                payment_type_lines.append('(Hourly)')
+            elif self.flatFeeType == 'total_contract':
+                payment_type_lines.append('(Total Contract Price)')
+
+        if payment_type_lines:
+            return payment_type_lines
+
+        return ['']
+
+    def get_bids_for_offer_type(self, offer_type):
+        return Bid.objects.filter(auction=self.auctionID, active=True, offerType=offer_type).order_by('amount')
+
+    def get_low_offer_amount(self, offer_type):
+        low_bid = self.get_bids_for_offer_type(offer_type).first()
+        if low_bid is not None:
+            return low_bid.amount
+
+        if offer_type == 'Flat Fee' and self.get_primary_payment_type() == 'Flat Fee':
+            return self.currentLowBid
+        if offer_type == 'Fee Split' and self.get_primary_payment_type() == 'Fee Split':
+            return self.currentLowBid
+        return None
+
+    def get_offer_increment(self, amount):
+        if amount <= 100:
+            return 1
+        if amount <= 10000:
+            return 100
+        if amount <= 25000:
+            return 250
+        return 500
+
+    def get_next_available_offer_amount(self, offer_type):
+        current_low = self.get_low_offer_amount(offer_type)
+        if current_low is None:
+            return None
+
+        increment = self.get_offer_increment(current_low)
+        diff = current_low - increment
+        if diff > 0 and diff % increment == 0 and current_low > 2:
+            return diff
+        if diff > 0 and diff % increment != 0 and current_low > 2:
+            return current_low - (diff % increment)
+        if current_low == 2:
+            return 1
+        return 0
+
+    def get_bid_number(self):
+        if self.is_fee_split() and not self.is_flat_fee():
+            return self.get_low_offer_amount('Fee Split') or 100
+        if self.is_flat_fee() and not self.is_fee_split():
+            return self.get_low_offer_amount('Flat Fee') or 0
+        return self.currentLowBid or 0
 
     def get_bid(self):
-        is_flat_fee = self.is_flat_fee()
-        is_fee_split = self.is_fee_split()
-        # If the auction is open and there are no bids
-        if self.currentLowBid is None and self.closed == False and self.active == True:
-            return str('0 Offers')
-        # If the auction is closed and there are no bids
-        if self.currentLowBid is None and self.closed == True and self.active == False:
-            return str('')
-        elif self.closed == True and self.active == False and self.winningPrice is not None:
-            if is_flat_fee:
-                return 'Winning Offer: $' + str("{:,}".format(self.winningPrice))
-            elif is_fee_split:
+        if self.closed == True and self.active == False:
+            if self.winningPrice is None:
+                return 'No winner'
+            if self.is_fee_split() and not self.is_flat_fee():
                 return 'Winning Offer: ' + str("{:,}".format(self.winningPrice)) + '%'
-        elif self.closed == True and self.active == False and self.winningPrice is None:
-            return 'No winner'
-        else:
-            if is_flat_fee:
-                return 'Low Offer: $' + str("{:,}".format(self.currentLowBid))
-            elif is_fee_split:
-                return 'Low Offer (HCP/Clinic): ' + str("{:,}".format(self.currentLowBid)) + '%'
-            
-    def get_bid_number(self):
-        is_flat_fee = self.is_flat_fee()
-        is_fee_split = self.is_fee_split()
-        if self.currentLowBid is None and is_flat_fee:
-            return 0
-        elif self.currentLowBid is None and is_fee_split:
-            return 100
-        elif self.closed == True and self.active == False and self.winningPrice is not None:
-            if is_flat_fee:
-                return self.winningPrice
-            elif is_fee_split:
-                return self.winningPrice
-        elif self.closed == True and self.active == False and self.winningPrice is None:
-            return 0
-        else:
-            if is_flat_fee:
-                return self.currentLowBid
-            elif is_fee_split:
-                return self.currentLowBid
+            return 'Winning Offer: $' + str("{:,}".format(self.winningPrice))
+
+        flat_fee_low = self.get_low_offer_amount('Flat Fee') if self.is_flat_fee() else None
+        fee_split_low = self.get_low_offer_amount('Fee Split') if self.is_fee_split() else None
+
+        if flat_fee_low is None and fee_split_low is None:
+            return '0 Offers'
+
+        offer_labels = []
+        if flat_fee_low is not None:
+            offer_labels.append('$' + str("{:,}".format(flat_fee_low)))
+        if fee_split_low is not None:
+            offer_labels.append(str("{:,}".format(fee_split_low)) + '%')
+
+        if len(offer_labels) == 1:
+            return 'Low Offer: ' + offer_labels[0]
+        return 'Low Offers: ' + ' / '.join(offer_labels)
 
     def get_num_bids(self):
         num_bids = Bid.objects.filter(auction=self.auctionID, active=True).count()
@@ -398,34 +456,21 @@ class Auction(models.Model):
             return ''
 
     def get_max_bid(self):
-        is_flat_fee = self.is_flat_fee()
-        is_fee_split = self.is_fee_split()
-        num_bids = Bid.objects.filter(auction=self.auctionID).count()
-        if num_bids > 0 and self.currentLowBid is not None and self.minimumBidIncrement is not None:
-            diff = self.currentLowBid - self.minimumBidIncrement
-            if diff > 0 and diff % self.minimumBidIncrement == 0 and self.currentLowBid > 2:
-                if is_flat_fee:
-                    return 'Next Available Offer: ≤ $' + str("{:,}".format(diff))
-                elif is_fee_split:
-                    return 'Next Available Offer: ≤ ' + str("{:,}".format(diff)) + "%"
-            elif diff > 0 and diff % self.minimumBidIncrement != 0 and self.currentLowBid > 2:
-                result = self.currentLowBid - (diff % self.minimumBidIncrement)
-                if is_flat_fee:
-                    return 'Next Available Offer: ≤ $' + str("{:,}".format(result))
-                elif is_fee_split:
-                    return 'Next Available Offer: ≤ ' + str("{:,}".format(result)) + "%"
-            elif self.currentLowBid == 2:
-                if is_flat_fee:
-                    return 'Last Offer available: $1'
-                elif is_fee_split:
-                    return 'Last Offer available: 1%'
-            else:
-                if is_flat_fee:
-                    return 'Lowest possible offer has been reached: $1'
-                elif is_fee_split:
-                    return 'Lowest possible offer has been reached: 1%'
-        else:
-            return ""
+        primary_offer_type = self.get_primary_payment_type()
+        next_offer_amount = self.get_next_available_offer_amount(primary_offer_type)
+        if next_offer_amount is None:
+            return ''
+        if next_offer_amount == 1:
+            if primary_offer_type == 'Fee Split':
+                return 'Last Offer available: 1%'
+            return 'Last Offer available: $1'
+        if next_offer_amount == 0:
+            if primary_offer_type == 'Fee Split':
+                return 'Lowest possible offer has been reached: 1%'
+            return 'Lowest possible offer has been reached: $1'
+        if primary_offer_type == 'Fee Split':
+            return 'Next Available Offer: ≤ ' + str("{:,}".format(next_offer_amount)) + '%'
+        return 'Next Available Offer: ≤ $' + str("{:,}".format(next_offer_amount))
 
     def get_time_diff(self):
         distance = ((self.auctionEnd.astimezone(pytz.timezone('Canada/Eastern')) - datetime.datetime.now(pytz.timezone('utc'))).total_seconds()) * 1000
@@ -450,10 +495,17 @@ class Auction(models.Model):
         return timeLeft
 
 class Bid(models.Model):
+    OFFER_TYPE_CHOICES = (
+        ('Flat Fee', 'Flat Fee'),
+        ('Fee Split', 'Fee Split'),
+    )
+
     bidID = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     auction = models.ForeignKey(Auction, related_name='auction', on_delete=models.CASCADE) 
     user = models.ForeignKey(User, related_name='user', blank=True, null=True, on_delete=models.CASCADE) 
     amount = models.IntegerField(verbose_name='Amount1', blank=True, null=True, help_text='Enter the amount you would like to bid.')
+    offerType = models.CharField(verbose_name='Offer Type', max_length=20, choices=OFFER_TYPE_CHOICES, blank=True, null=True)
+    submissionGroup = models.UUIDField(verbose_name='Submission Group', blank=True, null=True)
     active = models.BooleanField(verbose_name='Active Bid')
     created = models.DateTimeField(verbose_name='Created Time', auto_now_add=True)
     createdBy = models.ForeignKey(User, related_name='bid_created_by', blank=True, null=True, on_delete=models.CASCADE)

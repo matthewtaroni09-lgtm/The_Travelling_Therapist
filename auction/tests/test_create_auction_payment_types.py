@@ -1,11 +1,12 @@
 from datetime import timedelta
 
 from django.contrib.auth.models import User
+from django.urls import reverse
 from django.test import TestCase
 from django.utils import timezone
 
 from auction.forms import AuctionForm
-from auction.models import Account, Auction, PaymentType, UserType
+from auction.models import Account, AdminSetting, Auction, Bid, PaymentType, UserType
 
 
 class AuctionPaymentTypeFormTests(TestCase):
@@ -78,6 +79,20 @@ class AuctionPaymentTypeFormTests(TestCase):
 		self.assertEqual(auction.flatFeeType, 'hourly')
 		self.assertEqual(auction.paymentType.name, 'Fee Split')
 
+	def test_desired_guidance_fields_save_for_matching_payment_types(self):
+		data = self._base_form_data()
+		data['paymentTypesSelection'] = ['Fee Split', 'Flat Fee']
+		data['flatFeeType'] = 'hourly'
+		data['desiredFeeSplitPercentage'] = 65
+		data['desiredFlatFeeHourly'] = 90
+		form = AuctionForm(data=data)
+
+		self.assertTrue(form.is_valid(), form.errors)
+		auction = form.save(commit=False)
+		self.assertEqual(auction.desiredFeeSplitPercentage, 65)
+		self.assertEqual(auction.desiredFlatFeeHourly, 90)
+		self.assertIsNone(auction.desiredFlatFeeTotalContract)
+
 
 class AuctionPaymentTypeHelperTests(TestCase):
 	def setUp(self):
@@ -116,3 +131,115 @@ class AuctionPaymentTypeHelperTests(TestCase):
 		self.assertEqual(auction.get_payment_type_label(), 'Fee Split / Flat Fee (Hourly)')
 		self.assertTrue(auction.is_fee_split())
 		self.assertTrue(auction.is_flat_fee())
+
+	def test_filter_and_badge_helpers_use_hourly_and_tcp_labels(self):
+		hourly_auction = Auction(
+			clinic=self.account,
+			auctionStart=timezone.now(),
+			auctionEnd=timezone.now() + timedelta(days=1),
+			placementStart=timezone.localdate(),
+			placementEnd=timezone.localdate() + timedelta(days=10),
+			active=True,
+			closed=False,
+			deleted=False,
+			cronID='cron-hourly',
+			type=self.clinician_user_type,
+			paymentType=self.fee_split,
+			paymentTypes='Fee Split,Flat Fee',
+			flatFeeType='hourly',
+		)
+
+		tcp_auction = Auction(
+			clinic=self.account,
+			auctionStart=timezone.now(),
+			auctionEnd=timezone.now() + timedelta(days=1),
+			placementStart=timezone.localdate(),
+			placementEnd=timezone.localdate() + timedelta(days=10),
+			active=True,
+			closed=False,
+			deleted=False,
+			cronID='cron-tcp',
+			type=self.clinician_user_type,
+			paymentType=self.flat_fee,
+			paymentTypes='Flat Fee',
+			flatFeeType='total_contract',
+		)
+
+		self.assertEqual(hourly_auction.get_payment_type_filter_labels(), ['Fee Split', 'Flat Fee (hourly)'])
+		self.assertEqual(hourly_auction.get_payment_type_badge_lines(), ['Fee Split', 'Flat Fee', '(Hourly)'])
+		self.assertEqual(tcp_auction.get_payment_type_filter_labels(), ['Flat Fee (Total Contract Price)'])
+		self.assertEqual(tcp_auction.get_payment_type_badge_lines(), ['Flat Fee', '(Total Contract Price)'])
+
+
+class DualOfferSubmissionTests(TestCase):
+	def setUp(self):
+		self.clinic_user_type = UserType.objects.create(name='Physiotherapy Clinic')
+		self.clinician_user_type = UserType.objects.create(name='Physiotherapist')
+		self.fee_split = PaymentType.objects.create(name='Fee Split')
+		self.flat_fee = PaymentType.objects.create(name='Flat Fee')
+		AdminSetting.objects.create(sendEmails=False, numAllowedAuctions=5, defaultAuctionLength=1209600, endAuctionEmailBatchSize=50)
+
+		self.clinic_user = User.objects.create_user(
+			username='clinic-submit@example.com',
+			email='clinic-submit@example.com',
+			password='password123',
+		)
+		self.clinic_account = Account.objects.get(user=self.clinic_user)
+		self.clinic_account.clinicName = 'Dual Offer Clinic'
+		self.clinic_account.userType = self.clinic_user_type
+		self.clinic_account.save()
+
+		self.therapist_user = User.objects.create_user(
+			username='therapist-submit@example.com',
+			email='therapist-submit@example.com',
+			password='password123',
+		)
+		self.therapist_account = Account.objects.get(user=self.therapist_user)
+		self.therapist_account.userType = self.clinician_user_type
+		self.therapist_account.save()
+
+		self.auction = Auction.objects.create(
+			clinic=self.clinic_account,
+			auctionStart=timezone.now(),
+			auctionEnd=timezone.now() + timedelta(days=2),
+			placementStart=timezone.localdate(),
+			placementEnd=timezone.localdate() + timedelta(days=10),
+			active=True,
+			closed=False,
+			deleted=False,
+			cronID='dual-offer-cron',
+			type=self.clinician_user_type,
+			paymentType=self.fee_split,
+			paymentTypes='Fee Split,Flat Fee',
+			flatFeeType='hourly',
+		)
+
+	def test_dual_offer_submission_creates_two_typed_bids(self):
+		self.client.force_login(self.therapist_user)
+
+		response = self.client.post(reverse('auction', args=[self.auction.auctionID]), {
+			'flatFeeAmount': '120',
+			'feeSplitAmount': '55',
+		})
+
+		self.assertEqual(response.status_code, 302)
+		bids = Bid.objects.filter(auction=self.auction, user=self.therapist_user).order_by('offerType')
+		self.assertEqual(bids.count(), 2)
+		self.assertEqual(list(bids.values_list('offerType', flat=True)), ['Fee Split', 'Flat Fee'])
+		self.assertEqual(list(bids.values_list('amount', flat=True)), [55, 120])
+
+	def test_practitioner_page_shows_clinic_desired_offer_guidance(self):
+		self.auction.desiredFeeSplitPercentage = 60
+		self.auction.desiredFlatFeeTotalContract = 12000
+		self.auction.save(update_fields=['desiredFeeSplitPercentage', 'desiredFlatFeeTotalContract'])
+
+		self.client.force_login(self.therapist_user)
+		response = self.client.get(reverse('auction', args=[self.auction.auctionID]))
+
+		self.assertEqual(response.status_code, 200)
+		content = response.content.decode('utf-8')
+		self.assertTrue(
+			('Clinic desired offer (optional guidance)' in content) or ('Offer Guidance (Optional)' in content)
+		)
+		self.assertIn('Fee Split: 60%', content)
+		self.assertIn('Flat Fee (Total Contract Price): $12000', content)
