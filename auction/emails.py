@@ -103,15 +103,16 @@ email_footer = """
 # -----------------------------
 
 def clinic_reserve_not_met(clinic_name, start_date, end_date, payment_type):
-    message = email_header
-    reserve_type = ''
-    if str(payment_type) == 'Flat Fee':
-        reserve_type = 'reserve price'
-    elif str(payment_type) == 'Fee Split':
-        reserve_type = 'reserve split'
-    else:
-        reserve_type = 'reserve price'
-    message = message + """<section style="font-size: 16px; margin-bottom: 1rem; padding: 10px;">
+  message = email_header
+  reserve_type = ''
+  if 'Flat Fee' in str(payment_type):
+    reserve_type = 'reserve price'
+  elif 'Fee Split' in str(payment_type):
+    reserve_type = 'reserve split'
+  else:
+    reserve_type = 'reserve price'
+
+  message = message + """<section style="font-size: 16px; margin-bottom: 1rem; padding: 10px;">
   <p>Hello <span class="text-weight-bold">""" + clinic_name + """</span>,</p>
   
   <p>Your listing has reached an end, and no therapist bid low enough to reach your reserve value. As such there will be no match made at this time.</p>
@@ -127,8 +128,8 @@ def clinic_reserve_not_met(clinic_name, start_date, end_date, payment_type):
   <p>Thanks for using our service - we hope to see you again soon,</p>
   <p style="font-weight: 700; padding-top: 0rem; margin-top: 0; line-height: 0;">The Traveling Therapist Team</p>
 </section>"""
-    message = message + email_footer
-    return message
+  message = message + email_footer
+  return message
 
 def clinic_no_bids(clinic_name, start_date, end_date):
     message = email_header
@@ -271,15 +272,16 @@ def therapist_auction_end_win(first_name, last_name, clinic_name, start_date, en
     return message
 
 def therapist_auction_not_met(first_name, last_name, clinic_name, start_date, end_date, payment_type):
-    message = email_header
-    reserve_type = ''
-    if str(payment_type) == 'Flat Fee':
-        reserve_type = 'reserve price'
-    elif str(payment_type) == 'Fee Split':
-        reserve_type = 'reserve split'
-    else:
-        reserve_type = 'reserve price'
-    message = message + """<section style="font-size: 16px; margin-bottom: 1rem; padding: 10px;">
+  message = email_header
+  reserve_type = ''
+  if 'Flat Fee' in str(payment_type):
+    reserve_type = 'reserve price'
+  elif 'Fee Split' in str(payment_type):
+    reserve_type = 'reserve split'
+  else:
+    reserve_type = 'reserve price'
+
+  message = message + """<section style="font-size: 16px; margin-bottom: 1rem; padding: 10px;">
   <p>Hello <span class="text-weight-bold">""" + first_name + """ """ + last_name + """</span>,</p>
   
   <p>You placed an offer on a listing using The Traveling Therapist.</p>
@@ -296,8 +298,8 @@ def therapist_auction_not_met(first_name, last_name, clinic_name, start_date, en
 
 </section>
 """
-    message = message + email_footer
-    return message
+  message = message + email_footer
+  return message
 
 def therapist_auction_thank_you_bid(first_name, last_name, clinic_name, start_date, auctionID):
     message = email_header
@@ -367,14 +369,15 @@ def therapist_welcome(first_name, last_name):
     message = message + email_footer
     return message
 
-def auction_created_admin(clinicName, city, province, email, reservePrice, auctionStart, auctionEnd, placementStart, placementEnd, auctionID):
+def auction_created_admin(clinicName, city, province, email, paymentTypes, flatFeeType, auctionStart, auctionEnd, placementStart, placementEnd, auctionID):
     message = email_header
     message = message + """<section style="font-size: 16px; margin-bottom: 1rem; padding: 10px;">
         <h1>A New Listing has been created</h1>
         Healthcare Facilities Name: """ + clinicName + """<br>
         Healthcare Facilities Location: """ + city + """, """ + province + """<br>
         Healthcare Facilities email: """ + email + """<br>
-        Reserve Bid: """ + reservePrice + """<br>
+    Payment Types: """ + paymentTypes + """<br>
+    Flat Fee Type: """ + str(flatFeeType) + """<br>
         Listing Start: """ + auctionStart + """<br>
         Listing End: """ + auctionEnd + """<br>
         Placement Start: """ + placementStart + """<br>
@@ -388,7 +391,16 @@ def new_auction_email_to_all(first_name, last_name, link, start_date, end_date, 
     payment_type_message = ""
     print("in email")
     print(payment_type)
-    if payment_type == "Flat Fee":
+    first_name = first_name or ""
+    last_name = last_name or ""
+    clinic_name = clinic_name or ""
+    clinic_location = clinic_location or ""
+    link = link or ""
+    start_date = start_date or ""
+    end_date = end_date or ""
+    time_remaining = time_remaining or ""
+    payment_type = payment_type or ""
+    if "Flat Fee" in str(payment_type):
       payment_type_message = "<b>the price you're offering is for the entire as posted, not your desired hourly rate!</b>"
     else:
       payment_type_message = "the fee split you're offering is the percentage YOU want as a clinician for each patient you see."

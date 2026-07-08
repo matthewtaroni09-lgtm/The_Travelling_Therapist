@@ -59,57 +59,168 @@
 
     {%if user.is_authenticated and user.account.userType == auction.type and auction.active%}
     <button id="bidButton" type="button" class="btn-lg btn-primary" data-bs-toggle="modal"
-      data-bs-target="#exampleModal" data-bs-whatever="@mdo">Bid</button>
+      data-bs-target="#exampleModal" data-bs-whatever="@mdo">Place Offer</button>
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
+      <div class="modal-dialog modal-xl modal-dialog-centered ttt-offer-modal-dialog">
+        <div class="modal-content ttt-offer-modal">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Place Bid</h5>
+            <h5 class="modal-title" id="exampleModalLabel">Place Offer</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <form method="post">
-              <p>{{ auction.get_bid }}</p>
+            <form method="post" id="placeOfferForm" class="d-flex flex-column h-100">
               {% csrf_token %}
-              <div class="mb-3">
-                {% if payment_type == "Flat Fee" %}
-                {{ form.amount|as_crispy_field }}
-                {% else %}
-                <div class="slidecontainer">
-                  <input type="range" min="0" max="100" value={{ auction.get_bid_number }} class="slider" id="bidSlider"
-                    name="amount">
-                  <p>Value: <span id="demo">{{ auction.get_bid_number }}</span>%</p>
+              <input type="hidden" name="amount" id="id_amount">
+              <input type="hidden" name="offerType" id="id_offerType">
+              <input type="hidden" name="feeSplitAmount" id="feeSplitAmountInput" value="0">
+
+              <div class="d-flex justify-content-between align-items-start gap-3 mb-3 flex-wrap">
+                <div>
+                  <p class="mb-1">{{ auction.clinic.clinicName }}</p>
+                  <p class="mb-0 text-muted">{{ auction.type }}</p>
                 </div>
+                <div class="text-end">
+                  <p class="mb-1">{{ auction.get_bid }}</p>
+                  <p class="mb-0"># Offers: {{ num_bids }}</p>
+                </div>
+              </div>
+
+              {% if auction.desiredFeeSplitPercentage or auction.desiredFlatFeeHourly or auction.desiredFlatFeeTotalContract %}
+              <div class="alert alert-light py-2 px-3 mb-3" role="alert">
+                <p class="mb-0 fw-semibold">{{ auction.clinic.clinicName }} is looking for offers around:</p>
+                {% if auction.desiredFeeSplitPercentage %}
+                <p class="mb-0 small">Fee Split: {{ auction.desiredFeeSplitPercentage }}%</p>
+                {% endif %}
+                {% if auction.desiredFlatFeeHourly %}
+                <p class="mb-0 small">Flat Fee (Hourly): ${{ auction.desiredFlatFeeHourly }}/hr</p>
+                {% endif %}
+                {% if auction.desiredFlatFeeTotalContract %}
+                <p class="mb-0 small">Flat Fee (Total Contract Price): ${{ auction.desiredFlatFeeTotalContract }}</p>
                 {% endif %}
               </div>
-              {% if num_bids > 0 and payment_type == "Flat Fee" %}
-              <p>{{ auction.get_max_bid }}</p>
               {% endif %}
-              <div id="warningMessage" class="alert" role="alert"></div>
-              {% if payment_type == "Fee Split" %}
-              <p>{{ auction.get_max_bid }}</p>
-              <div class="alert alert-light" role="alert">
-                <p><i>The % you are bidding is the % YOU wish to receive as a healthcare professional. Example: if you
-                    bid 60%, you would like 60% of the fee for each patient/client you see in a day. The healthcare
-                    facility would receive the remaining 40%.</i></p>
+
+              <ul class="nav nav-tabs mb-3 ttt-offer-tabs" id="offerTabs" role="tablist">
+                {% if allow_flat_fee %}
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link active" id="offer-flat-fee-tab" data-offer-tab="offer-flat-fee"
+                    type="button" role="tab" aria-controls="offer-flat-fee" aria-selected="true">Flat Fee Offer</button>
+                </li>
+                {% endif %}
+                {% if allow_fee_split %}
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link {% if not allow_flat_fee %}active{% endif %}" id="offer-fee-split-tab" data-offer-tab="offer-fee-split"
+                    type="button" role="tab" aria-controls="offer-fee-split" aria-selected="{% if not allow_flat_fee %}true{% else %}false{% endif %}">Fee Split Offer</button>
+                </li>
+                {% endif %}
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link" id="offer-finalize-tab" data-offer-tab="offer-finalize"
+                    type="button" role="tab" aria-controls="offer-finalize" aria-selected="false">Finalize</button>
+                </li>
+              </ul>
+
+              <div class="tab-content ttt-offer-tab-content flex-grow-1">
+                {% if allow_flat_fee %}
+                <div class="tab-pane fade show active ttt-offer-pane" id="offer-flat-fee" role="tabpanel" aria-labelledby="offer-flat-fee-tab">
+                  <div class="ttt-offer-panel-header mb-4">
+                    <p class="mb-1 fw-semibold">Flat Fee Offer</p>
+                    <p class="mb-0 text-muted">
+                      This listing is accepting
+                      {% if auction.flatFeeType == 'hourly' %}hourly flat fee offers{% elif auction.flatFeeType == 'total_contract' %}total contract price flat fee offers{% else %}flat fee offers{% endif %}.
+                    </p>
+                  </div>
+
+                  <div class="ttt-offer-card">
+                    <label for="flatFeeAmount" class="form-label">Enter your flat fee offer</label>
+                    <div class="input-group input-group-lg mb-3">
+                      <span class="input-group-text">$</span>
+                      <input id="flatFeeAmount" name="flatFeeAmount" type="number" min="1" class="form-control" placeholder="Enter your offer amount">
+                      {% if auction.flatFeeType == 'hourly' %}
+                      <span class="input-group-text">/hr</span>
+                      {% endif %}
+                    </div>
+                    {% if auction.flatFeeType == 'hourly' and auction.desiredFlatFeeHourly %}
+                    <div class="alert alert-light py-2 mb-3" role="alert">
+                      <p class="mb-0 small"><strong>Clinic guidance:</strong> Suggested hourly flat fee is ${{ auction.desiredFlatFeeHourly }}/hr.</p>
+                    </div>
+                    {% elif auction.flatFeeType == 'total_contract' and auction.desiredFlatFeeTotalContract %}
+                    <div class="alert alert-light py-2 mb-3" role="alert">
+                      <p class="mb-0 small"><strong>Clinic guidance:</strong> Suggested total contract flat fee is ${{ auction.desiredFlatFeeTotalContract }}.</p>
+                    </div>
+                    {% endif %}
+                    {% if auction.flatFeeType == 'hourly' %}
+                    <p class="mb-0 text-muted small">Submit the hourly rate you would like to receive.</p>
+                    {% elif auction.flatFeeType == 'total_contract' %}
+                    <p class="mb-0 text-muted small">Submit the total contract price you would like to receive for the full placement.</p>
+                    {% endif %}
+                  </div>
+                </div>
+                {% endif %}
+
+                {% if allow_fee_split %}
+                <div class="tab-pane fade {% if not allow_flat_fee %}show active{% endif %} ttt-offer-pane" id="offer-fee-split" role="tabpanel" aria-labelledby="offer-fee-split-tab">
+                  <div class="ttt-offer-panel-header mb-4">
+                    <p class="mb-1 fw-semibold">Fee Split Offer</p>
+                    <p class="mb-0 text-muted">Enter the percentage you want to receive as the practitioner.</p>
+                  </div>
+
+                  <div class="ttt-offer-card">
+                    <div class="mb-3 d-flex align-items-center gap-3 flex-wrap">
+                      <div class="slidecontainer flex-grow-1" style="min-width: 220px;">
+                        <input type="range" min="0" max="100" value="0" class="slider ttt-compact-slider" id="feeSplitSlider" name="feeSplitAmount" style="width: 90%;">
+                        <div class="d-flex justify-content-between mt-1" style="width: 90%;">
+                          <span class="text-muted small">0%</span>
+                          <span class="text-muted small">100%</span>
+                        </div>
+                      </div>
+                      <div style="min-width: 160px;">
+                        <label for="feeSplitAmountTyped" class="form-label mb-1">Type your fee split</label>
+                        <div class="input-group">
+                          <input id="feeSplitAmountTyped" type="number" min="0" max="100" class="form-control" placeholder="e.g. 60" value="0">
+                          <span class="input-group-text">%</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <p class="mb-2">Current selected: <strong><span id="feeSplitValue">0</span>%</strong></p>
+                    {% if auction.desiredFeeSplitPercentage %}
+                    <div class="alert alert-light py-2 mb-3" role="alert">
+                      <p class="mb-0 small"><strong>Clinic guidance:</strong> Suggested fee split is {{ auction.desiredFeeSplitPercentage }}%.</p>
+                    </div>
+                    {% endif %}
+                    <div class="alert alert-light mb-0" role="alert">
+                      <p class="mb-0"><i>If you offer 60%, you are asking to receive 60% of the patient/client fee. The clinic would receive the remaining 40%.</i></p>
+                    </div>
+                  </div>
+                </div>
+                {% endif %}
+
+                <div class="tab-pane fade ttt-offer-pane" id="offer-finalize" role="tabpanel" aria-labelledby="offer-finalize-tab">
+                  <div class="border border-dark rounded p-3" id="offerSummaryBox">
+                    <p class="mb-2 fw-semibold">Review your offer details before confirming.</p>
+                    <p class="mb-1"><strong>Clinic:</strong> {{ auction.clinic.clinicName }}</p>
+                    <p class="mb-3"><strong>Role:</strong> {{ auction.type }}</p>
+                    {% if allow_fee_split %}
+                    <p class="mb-2">Fee Split Offer: <strong id="summaryFeeSplit">Not entered</strong></p>
+                    {% endif %}
+                    {% if allow_flat_fee %}
+                    <p class="mb-2">Flat Fee Offer: <strong id="summaryFlatFee">Not entered</strong></p>
+                    {% endif %}
+                    <p class="mb-0 text-muted small">You must enter at least one offer before confirming.</p>
+                  </div>
+                </div>
               </div>
-              {% endif %}
+
+              <div id="warningMessage" class="alert mt-3" role="alert"></div>
+
               <small>For more information on the bidding process see our <a href="{% url 'faq' %}"
                   target="_blank">FAQ</a></small>
               <div class="modal-footer">
                 <button id="closeButton" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button id="submitBidButton" type="button" class="btn btn-primary">Submit Bid</button>
-                <hr>
-                <div id="bidModalSubFooter" class="border border-dark rounded p-3">
-                  <p>Please double check your bid value entered. You will only have 24h to contact us by email if you
-                    have a typo you'd like
-                    to correct.</p>
-                  <div id="modalSubFooterButtonDiv">
-                    <button id="closeButtonSubFooter" type="button" class="btn btn-secondary"
-                      data-bs-dismiss="modal">Close</button>
-                    <button id="confirmBidButton" type="submit" class="btn btn-primary">Confirm Bid</button>
-                  </div>
-                </div>
+                <button id="backTabButton" type="button" class="btn btn-outline-secondary">Back</button>
+                <button id="nextTabButton" type="button" class="btn btn-primary">Next</button>
+                <button id="skipTabButton" type="button" class="btn btn-outline-primary">Skip</button>
+                <button id="confirmBidButton" type="submit" class="btn btn-primary" disabled>Confirm Offer</button>
               </div>
             </form>
           </div>
@@ -154,39 +265,29 @@
   {% if payment_type == "Fee Split" %}
   <div class="row w-100 mx-auto">
     <p class="col-md-4 col-sm-6 text-weight-bold border mb-0 py-2 bg-light">Payment Type</p>
-    <p class="col-md-8 col-sm-6 text-weight-light border mb-0 py-2">{{ payment_type }} (HCP/Clinic)</p>
+    <p class="col-md-8 col-sm-6 text-weight-light border mb-0 py-2">{{ auction.get_payment_type_label }}</p>
   </div>
   {% else %}
   <div class="row w-100 mx-auto">
     <p class="col-md-4 col-sm-6 text-weight-bold border mb-0 py-2 bg-light">Payment Type</p>
-    <p class="col-md-8 col-sm-6 text-weight-light border mb-0 py-2">{{ payment_type }}</p>
+    <p class="col-md-8 col-sm-6 text-weight-light border mb-0 py-2">{{ auction.get_payment_type_label }}</p>
   </div>
   {% endif %}
-  {% if payment_type == "Fee Split" %}
-  {% if assessments %}
+  {% if auction.desiredFeeSplitPercentage or auction.desiredFlatFeeHourly or auction.desiredFlatFeeTotalContract %}
   <div class="row w-100 mx-auto">
-    <p class="col-md-4 col-sm-6 text-weight-bold border mb-0 py-2 bg-light">Minimum # of Assessments</p>
-    <p class="col-md-3 col-sm-6 text-weight-light border mb-0 py-2">{{ auction.assessmentMin }}</p>
-    <p class="col-md-3 col-sm-6 text-weight-bold border mb-0 py-2 bg-light">Rate for Assessments</p>
-    <p class="col-md-2 col-sm-6 text-weight-light border mb-0 py-2">${{ auction.assessmentCost|floatformat:2|intcomma }}
-    </p>
+    <p class="col-md-4 col-sm-6 text-weight-bold border mb-0 py-2 bg-light">Desired Offer Range</p>
+    <div class="col-md-8 col-sm-6 text-weight-light border mb-0 py-2">
+      {% if auction.desiredFeeSplitPercentage %}
+      <p class="mb-1">Fee Split: {{ auction.desiredFeeSplitPercentage }}%</p>
+      {% endif %}
+      {% if auction.desiredFlatFeeHourly %}
+      <p class="mb-1">Flat Fee (Hourly): ${{ auction.desiredFlatFeeHourly }}/hr</p>
+      {% endif %}
+      {% if auction.desiredFlatFeeTotalContract %}
+      <p class="mb-0">Flat Fee (Total Contract Price): ${{ auction.desiredFlatFeeTotalContract }}</p>
+      {% endif %}
+    </div>
   </div>
-  {% endif %}
-  {% if treatments %}
-  <div class="row w-100 mx-auto">
-    <p class="col-md-4 col-sm-6 text-weight-bold border mb-0 py-2 bg-light">Minimum # of Treatments</p>
-    <p class="col-md-3 col-sm-6 text-weight-light border mb-0 py-2">{{ auction.treatmentMin }}</p>
-    <p class="col-md-3 col-sm-6 text-weight-bold border mb-0 py-2 bg-light">Rate for Treatments</p>
-    <p class="col-md-2 col-sm-6 text-weight-light border mb-0 py-2">${{ auction.treatmentCost|floatformat:2|intcomma }}
-    </p>
-  </div>
-  {% endif %}
-  {% if assessments or treatments %}
-  <div class="row w-100 mx-auto">
-    <p class="col-md-4 col-sm-6 text-weight-bold border mb-0 py-2 bg-light">Daily Minimum Paid to HCP</p>
-    <p class="col-md-8 col-sm-6 text-weight-light border mb-0 py-2">${{ daily_minimum|floatformat:2|intcomma }}</p>
-  </div>
-  {% endif %}
   {% endif %}
   <div class="row w-100 mx-auto">
     <p class="col-md-4 col-sm-6 text-weight-bold border mb-0 py-2 bg-light">Dates of Coverage</p>
@@ -259,6 +360,6 @@
   <p class="text-weight-light">{{ auction.comments|linebreaksbr }}</p>
 </div>
 
-<script src="{% static 'auction/bid-page.js' %}"></script>
+<script src="{% static 'auction/bid-page.js' %}?v=20260708-offer-skip-layout-fix"></script>
 <!-- Content End -->
 {% endblock %}

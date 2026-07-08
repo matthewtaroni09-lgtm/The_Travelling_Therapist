@@ -5,7 +5,7 @@ from operator import mod
 from pyexpat import model
 from tkinter import Widget
 from django import forms
-from .models import PROVINCES, Auction, Bid, Account, Demographic, DemographicType, PracticeArea, PracticeAreaType, User, UserType, MessageAcknowledgement
+from .models import PROVINCES, Auction, Bid, Account, Demographic, DemographicType, PracticeArea, PracticeAreaType, User, UserType, MessageAcknowledgement, PaymentType
 from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
 import random
 from django.core.exceptions import ValidationError
@@ -37,8 +37,8 @@ def validate_clinic_fields(clinicName, city, province, username):
         error_list.append(ValidationError("Please enter a province."))
 
     pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
-    if not re.match(pattern, username):
-         error_list.append(ValidationError("Email is not in the correct format."))
+    if username and not re.match(pattern, username):
+        error_list.append(ValidationError("Email is not in the correct format."))
 
     # if underEighteen is None or eighteenToSixtyFive is None or overSixtyFive is None:
     #     error_list.append(ValidationError("Please enter a value for all Clinic Demographics. If one of the age groups does not apply put in a 0."))
@@ -59,27 +59,66 @@ def validate_clinic_fields(clinicName, city, province, username):
 
 def validate_file_extension(value, image_name): 
     error_list = []
-    if isinstance(value, bool) != True and value is not None:
+    if value is not None and isinstance(value, bool) is not True:
         ext = os.path.splitext(value.name)[1]
-        valid_extensions = ['.jpeg', '.jpg', '.png', '.hecif']
+        valid_extensions = ['.jpeg', '.jpg', '.png', '.heic']
         if not ext.lower() in valid_extensions:
             error_list.append(ValidationError(u'Unsupported file extension for ' + str(image_name) + '. Valid file types are' + ', '.join(valid_extensions) + '.'))
-        
-        if value.size > 10485760:
-            error_list.append(ValidationError(u'Max file size exceeded for ' + str(image_name) + ', images must be less than 10 MB.'))
+
+        try:
+            if value.size > 10485760:
+                error_list.append(ValidationError(u'Max file size exceeded for ' + str(image_name) + ', images must be less than 10 MB.'))
+        except (FileNotFoundError, OSError, ValueError):
+            # Existing file references can be missing on disk; do not block unrelated updates.
+            pass
 
     return error_list
 
 
 class AuctionForm(forms.ModelForm):
+    paymentTypesSelection = forms.MultipleChoiceField(
+        label='I would like to receive offers for',
+        choices=(('Fee Split', 'Fee Split'), ('Flat Fee', 'Flat Fee')),
+        widget=forms.CheckboxSelectMultiple,
+        required=True,
+    )
+
+    flatFeeType = forms.ChoiceField(
+        label='I would like Flat Fee offers to be:',
+        choices=(('hourly', 'Hourly'), ('total_contract', 'Total Contract Price')),
+        required=False,
+        widget=forms.RadioSelect,
+    )
+
+    desiredFeeSplitPercentage = forms.IntegerField(
+        label='Desired fee split percentage (optional)',
+        required=False,
+        min_value=1,
+        max_value=100,
+    )
+
+    desiredFlatFeeHourly = forms.IntegerField(
+        label='Desired hourly flat fee (optional)',
+        required=False,
+        min_value=1,
+    )
+
+    desiredFlatFeeTotalContract = forms.IntegerField(
+        label='Desired total contract flat fee (optional)',
+        required=False,
+        min_value=1,
+    )
+
     class Meta:
         model = Auction
         fields = ( 
             'type',
             'placementStart', 
             'placementEnd', 
-            'reservePrice',
-            'paymentType',
+            'flatFeeType',
+            'desiredFeeSplitPercentage',
+            'desiredFlatFeeHourly',
+            'desiredFlatFeeTotalContract',
             'treatmentCost',
             'treatmentMin',
             'assessmentCost',
@@ -118,13 +157,27 @@ class AuctionForm(forms.ModelForm):
             'saturdayEnd': forms.TimeInput(attrs={'class': 'form-control', 'placeholder': 'Select a date', 'type': 'time'}),
             'sundayStart': forms.TimeInput(attrs={'class': 'form-control', 'placeholder': 'Select a date', 'type': 'time'}),
             'sundayEnd': forms.TimeInput(attrs={'class': 'form-control', 'placeholder': 'Select a date', 'type': 'time'}),
+            'desiredFeeSplitPercentage': forms.NumberInput(attrs={'class': 'form-control', 'min': '1', 'max': '100', 'placeholder': 'e.g. 65'}),
+            'desiredFlatFeeHourly': forms.NumberInput(attrs={'class': 'form-control', 'min': '1', 'placeholder': 'e.g. 80'}),
+            'desiredFlatFeeTotalContract': forms.NumberInput(attrs={'class': 'form-control', 'min': '1', 'placeholder': 'e.g. 5000'}),
             'comments': forms.Textarea(attrs={'placeholder': 'Tell us about your clinic...', 'rows': '4'})
         }
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance and self.instance.pk:
+            self.initial.setdefault('paymentTypesSelection', self.instance.get_payment_types_list())
+            self.initial.setdefault('flatFeeType', self.instance.flatFeeType)
+
     def clean(self):
-        placementStart = self.cleaned_data.get('placementStart')
-        placementEnd = self.cleaned_data.get('placementEnd')
-        reservePrice = self.cleaned_data.get('reservePrice')
+        cleaned_data = super().clean()
+        placementStart = cleaned_data.get('placementStart')
+        placementEnd = cleaned_data.get('placementEnd')
+        payment_types = cleaned_data.get('paymentTypesSelection') or []
+        flat_fee_type = cleaned_data.get('flatFeeType')
+        desired_fee_split_percentage = cleaned_data.get('desiredFeeSplitPercentage')
+        desired_flat_fee_hourly = cleaned_data.get('desiredFlatFeeHourly')
+        desired_flat_fee_total_contract = cleaned_data.get('desiredFlatFeeTotalContract')
 
         mondayStart = self.cleaned_data.get('mondayStart')
         mondayEnd = self.cleaned_data.get('mondayEnd')
@@ -154,14 +207,6 @@ class AuctionForm(forms.ModelForm):
 
         if placementStart > datetime.now().date() + timedelta(days=365):
             error_list.append(ValidationError("Placements must start within the next 12 months."))
-
-        if reservePrice is not None:
-            if reservePrice <= 0:
-                error_list.append(ValidationError("Reserve price cannot be 0 or less. If no reserve price is desired leave the field blank."))
-
-        if reservePrice is not None:
-            if reservePrice > 99999:
-                error_list.append(ValidationError("Reserve price must be less than $99,999."))
 
         if placementEnd <= placementStart:
             error_list.append(ValidationError("The end of placement date must be after the start date of placement"))
@@ -207,8 +252,77 @@ class AuctionForm(forms.ModelForm):
         if none_count == 7:
             error_list.append(ValidationError('At least one start and end time must be entered.'))
 
+        if len(payment_types) == 0:
+            error_list.append(ValidationError('Please select at least one payment type.'))
+
+        if 'Flat Fee' in payment_types and not flat_fee_type:
+            error_list.append(ValidationError('Please select how flat fee offers should be priced.'))
+
+        if desired_fee_split_percentage is not None and 'Fee Split' not in payment_types:
+            error_list.append(ValidationError('Desired fee split guidance can only be set when Fee Split is selected.'))
+
+        if desired_flat_fee_hourly is not None and ('Flat Fee' not in payment_types or flat_fee_type != 'hourly'):
+            error_list.append(ValidationError('Desired hourly flat fee guidance can only be set when Flat Fee (Hourly) is selected.'))
+
+        if desired_flat_fee_total_contract is not None and ('Flat Fee' not in payment_types or flat_fee_type != 'total_contract'):
+            error_list.append(ValidationError('Desired total contract flat fee guidance can only be set when Flat Fee (Total Contract Price) is selected.'))
+
         if len(error_list) > 0:
             raise forms.ValidationError(error_list)
+
+        return cleaned_data
+
+    def save(self, commit=True):
+        auction = super().save(commit=False)
+        payment_types = self.cleaned_data.get('paymentTypesSelection') or []
+        auction.paymentTypes = ','.join(payment_types)
+        auction.flatFeeType = self.cleaned_data.get('flatFeeType') if 'Flat Fee' in payment_types else None
+
+        auction.desiredFeeSplitPercentage = self.cleaned_data.get('desiredFeeSplitPercentage') if 'Fee Split' in payment_types else None
+        if 'Flat Fee' in payment_types and auction.flatFeeType == 'hourly':
+            auction.desiredFlatFeeHourly = self.cleaned_data.get('desiredFlatFeeHourly')
+            auction.desiredFlatFeeTotalContract = None
+        elif 'Flat Fee' in payment_types and auction.flatFeeType == 'total_contract':
+            auction.desiredFlatFeeHourly = None
+            auction.desiredFlatFeeTotalContract = self.cleaned_data.get('desiredFlatFeeTotalContract')
+        else:
+            auction.desiredFlatFeeHourly = None
+            auction.desiredFlatFeeTotalContract = None
+
+        primary_payment_type = payment_types[0] if payment_types else ''
+        if primary_payment_type:
+            payment_type = PaymentType.objects.filter(name=primary_payment_type).first()
+            if payment_type is not None:
+                auction.paymentType = payment_type
+
+        if commit:
+            auction.save()
+            self.save_m2m()
+
+        return auction
+
+
+class AuctionAdminForm(AuctionForm):
+    field_order = [
+        'paymentTypes',
+        'paymentTypesSelection',
+        'flatFeeType',
+    ]
+
+    active = forms.BooleanField(required=False, label='Active Listing')
+    closed = forms.BooleanField(required=False, label='Closed Listing')
+    deleted = forms.BooleanField(required=False, label='Deleted Listing')
+
+    class Meta(AuctionForm.Meta):
+        fields = '__all__'
+        exclude = ('reservePrice', 'paymentType')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance and self.instance.pk:
+            self.initial.setdefault('active', self.instance.active)
+            self.initial.setdefault('closed', self.instance.closed)
+            self.initial.setdefault('deleted', self.instance.deleted)
 
 class BidForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -224,9 +338,13 @@ class BidForm(forms.ModelForm):
     # This should be caught in JS validations but keep this here in case the user tries to get around front-end validations 
     def clean_amount(self):
         amount = self.cleaned_data.get("amount")
-        print(str(amount) + "  " + str(self.max_bid) + "  " + str(self.min_bid_increment) + "  " + str(amount - self.max_bid))
+        if amount is None:
+            raise forms.ValidationError("Please enter an offer amount.")
+
+        amount_delta = amount - self.max_bid if self.max_bid is not None else 'N/A'
+        print(str(amount) + "  " + str(self.max_bid) + "  " + str(self.min_bid_increment) + "  " + str(amount_delta))
         print("less than: " + str(self.max_bid) + " || " + "greater than " + str(self.max_bid) + str(self.min_bid_increment) + " ")
-        if self.payment_type == 'Flat Fee' and amount < self.max_bid and amount > self.max_bid + self.min_bid_increment:
+        if self.payment_type == 'Flat Fee' and self.max_bid is not None and self.min_bid_increment is not None and amount < self.max_bid and amount > self.max_bid + self.min_bid_increment:
             raise forms.ValidationError("Bids must be less than the next bid increment  $" + str(self.min_bid_increment) + ".")
         if amount == 0:
             if self.payment_type == 'Fee Split':
@@ -403,10 +521,9 @@ class ProfileUpdateClinic(forms.ModelForm):
     def clean(self):
         clinicName = self.cleaned_data.get('clinicName')
         city = self.cleaned_data.get('city')
-        user_email = self.cleaned_data.get('email')
         about = self.cleaned_data.get('about')
         province = self.cleaned_data.get('province')
-        username = self.cleaned_data.get('username')
+        username = self.instance.user.username if getattr(self.instance, 'user', None) else None
         imageOne = self.cleaned_data.get('imageOne')
         imageTwo = self.cleaned_data.get('imageTwo')
         imageThree = self.cleaned_data.get('imageThree')
@@ -433,9 +550,6 @@ class ProfileUpdateClinic(forms.ModelForm):
             error_list.extend(image_errors_three)
         if image_errors_four is not None:
             error_list.extend(image_errors_four)
-
-        if User.objects.exclude(pk=self.instance.pk).filter(username=username).exists():
-            error_list.append(f'Username "{username}" is already in use.')
 
         errors = validate_clinic_fields(clinicName, city, province, username)
         if errors is not None:

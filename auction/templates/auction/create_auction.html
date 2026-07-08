@@ -23,6 +23,60 @@
       </div>
     </div>
     {% endfor %}
+    <style>
+      .ttt-section-divider {
+        border-top: 1px solid #d7dce2;
+        margin: 1.25rem 0 1rem;
+      }
+
+      input[name="paymentTypesSelection"] {
+        width: 1.15rem;
+        height: 1.15rem;
+        margin-right: 0;
+      }
+
+      .ttt-payment-option {
+        margin-bottom: 0.45rem;
+      }
+
+      .ttt-payment-label {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 1.06rem;
+        font-weight: 500;
+        line-height: 1.2;
+      }
+
+      .ttt-guidance-wrap {
+        margin-left: 1.5rem;
+        padding: 0.65rem 0.75rem;
+        border: 1px solid #e5e7eb;
+        border-radius: 0.4rem;
+        background: #f9fafb;
+      }
+
+      .ttt-info-dot {
+        width: 16px;
+        height: 16px;
+        border-radius: 999px;
+        border: 1px solid #6c757d;
+        color: #6c757d;
+        background: transparent;
+        font-size: 12px;
+        line-height: 1;
+        padding: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .ttt-optional-note {
+        color: #6c757d;
+        font-size: 0.82rem;
+        font-weight: 400;
+      }
+    </style>
     <form method="post" class="p-2">
       <!-- <form method="post" class="p-md-5"> -->
       <input id="AOPPopulated" name="AOPPopulated" class="d-none" value="No">
@@ -32,9 +86,10 @@
       <div class="alert alert-block alert-danger">
         <ul id="errorList"></ul>
       </div>
+      <div class="ttt-section-divider"></div>
+      <h3 class="fs-5 my-3 text-weight-normal">What Type of Clinician are you looking for?</h3>
       <div class="row">
-        <div class="mb-12 col-md-12">
-          <label>What Type of Clinician are you looking for?</label>
+        <div class="mb-4 col-md-12">
           <select name="type" class="select form-control" required="" id="id_type">
             <option value="0">---------</option>
             {% for user in user_types %}
@@ -47,121 +102,122 @@
           </select>
         </div>
       </div>
+
+      <div class="ttt-section-divider"></div>
+      <h3 class="fs-5 my-3 text-weight-normal">I would like to receive offers for</h3>
       <div class="row">
-        <div class="mb-12 col-md-12">
-          {{ form.paymentType|as_crispy_field }}
+        <div class="mb-4 col-md-12">
+          {% for payment_option in form.paymentTypesSelection %}
+          <div class="form-check ttt-payment-option">
+            <label class="form-check-label ttt-payment-label">
+              {{ payment_option.tag }} {{ payment_option.choice_label }}
+            </label>
+          </div>
+
+          {% if forloop.first %}
+          <div id="desiredFeeSplitContainer" class="ttt-guidance-wrap d-none mt-2 mb-3">
+            <div class="d-flex align-items-center gap-2 mb-2">
+              <label for="id_desiredFeeSplitPercentage" class="form-label mb-0">Enter a suggested fee split percentage: <span class="ttt-optional-note">(optional)</span></label>
+              <button type="button" class="ttt-info-dot" data-bs-toggle="tooltip" data-bs-placement="top" title="This is a suggestion of an approximate value to guide clinicians. Clinicians are not bound by this value and may submit ANY offer.">i</button>
+            </div>
+            <div class="input-group input-group-sm" style="max-width: 280px;">
+              {{ form.desiredFeeSplitPercentage }}
+              <span class="input-group-text">%</span>
+            </div>
+          </div>
+
+          <div id="assessmentCheckBoxDiv" class="d-none mb-2 ms-4">
+            <input id="assessmentCheckBox" name="sliderCheckBox" type="checkbox">
+            <label class="form-label small mb-0">Include a minimum number of daily assessments?</label>
+          </div>
+          <div class="row ms-2">
+            <div class="mb-2 col-md-6 col-sm-12 assessmentField d-none">
+              {{ form.assessmentMin|as_crispy_field }}
+            </div>
+            <div class="mb-2 col-md-6 col-sm-12 assessmentField d-none">
+              {{ form.assessmentCost|as_crispy_field }}
+            </div>
+          </div>
+
+          <div id="treatmentCheckBoxDiv" class="d-none mb-2 ms-4">
+            <input id="treatmentCheckBox" name="sliderCheckBox" type="checkbox">
+            <label class="form-label small mb-0">Include a minimum number of daily treatments?</label>
+          </div>
+          <div class="row ms-2">
+            <div class="mb-2 col-md-6 col-sm-12 treatmentField d-none">
+              {{ form.treatmentMin|as_crispy_field }}
+            </div>
+            <div class="mb-2 col-md-6 col-sm-12 treatmentField d-none">
+              {{ form.treatmentCost|as_crispy_field }}
+            </div>
+          </div>
+
+          <div class="row ms-2">
+            <div id="assessmentTreatmentInfoDiv" class="mb-2 col-md-7 d-none">
+              <img id="assessmentTreatmentInfoIcon" src="/media/images/info.svg" alt="Traveling Therapist Logo">
+              <p id="assessmentTreatmentInfo" class="infoMessage">These fields are optional. Fill out these fields if you're
+                guaranteeing a minimum number of daily assessments or treatments that you will compensate them for. <a
+                  href="{% url 'about' %}#headingL" target="_blank"><b><i>Learn more</i></b></a></p>
+            </div>
+          </div>
+
+          <div class="row ms-2">
+            <div class="mb-2 col-md-6 feeSplitCalcFields d-none">
+              <p id="dailyMinimum">Daily Minimum paid to your temporary position: $-</p>
+            </div>
+            <div class="mb-2 col-md-6 feeSplitCalcFields d-none">
+              <img id="priceInfoIcon" src="/media/images/info.svg" alt="Traveling Therapist Logo">
+              <p id="contractCost" class="infoMessage">Contract price if matched: $-</p>
+            </div>
+          </div>
+          {% endif %}
+
+          {% if forloop.last %}
+          <div id="flatFeeTypeContainer" class="d-none mt-2 ms-4">
+            {{ form.flatFeeType|as_crispy_field }}
+          </div>
+          <div id="flatFeeGuidanceContainer" class="ttt-guidance-wrap d-none mt-2 mb-3">
+            <div id="desiredFlatFeeHourlyContainer" class="d-none mb-2">
+              <div class="d-flex align-items-center gap-2 mb-2">
+                <label for="id_desiredFlatFeeHourly" class="form-label mb-0">Enter a suggested hourly rate: <span class="ttt-optional-note">(optional)</span></label>
+                <button type="button" class="ttt-info-dot" data-bs-toggle="tooltip" data-bs-placement="top" title="This is a suggestion of an approximate value to guide clinicians. Clinicians are not bound by this value and may submit ANY offer.">i</button>
+              </div>
+              <div class="input-group input-group-sm" style="max-width: 320px;">
+                <span class="input-group-text">$</span>
+                {{ form.desiredFlatFeeHourly }}
+                <span class="input-group-text">/hr</span>
+              </div>
+            </div>
+            <div id="desiredFlatFeeTotalContainer" class="d-none">
+              <div class="d-flex align-items-center gap-2 mb-2">
+                <label for="id_desiredFlatFeeTotalContract" class="form-label mb-0">Enter a suggested total contract price: <span class="ttt-optional-note">(optional)</span></label>
+                <button type="button" class="ttt-info-dot" data-bs-toggle="tooltip" data-bs-placement="top" title="This is a suggestion of an approximate value to guide clinicians. Clinicians are not bound by this value and may submit ANY offer.">i</button>
+              </div>
+              <div class="input-group input-group-sm" style="max-width: 320px;">
+                <span class="input-group-text">$</span>
+                {{ form.desiredFlatFeeTotalContract }}
+              </div>
+            </div>
+          </div>
+          {% endif %}
+          {% endfor %}
         </div>
       </div>
+
+      <div class="ttt-section-divider"></div>
       <div class="row">
-        <div class="mb-3 col-md-6">
+        <div class="mb-4 col-md-6">
           {{ form.placementStart|as_crispy_field }}
         </div>
-        <div class="mb-3 col-md-6">
+        <div class="mb-4 col-md-6">
           {{ form.placementEnd|as_crispy_field }}
-        </div>
-      </div>
-      <!-- Slider Checkbox -->
-      <div class="row">
-        <div id="reservePriceCheckBoxDiv" class="d-none">
-          <input id="reservePriceCheckBox" name="reservePriceCheckBox" type="checkbox">
-          <label class="form-label">Include a reserve price</label>
-        </div>
-      </div>
-      <div class="row">
-        <div class="mb-3 col-md-6 col-sm-12">
-          <div id="reserveInputDiv" class="d-none">
-            {{ form.reservePrice|as_crispy_field }}
-            <p>{{forms.non_field_errors}}</p>
-            {% for error in forms.non_field_errors %}
-            <p>{{error}}</p>
-            {% endfor %}
-            <img id="reservePriceInfoIcon" src="/media/images/info.svg" alt="Traveling Therapist Logo">
-            <p id="reservePriceInfoP" class="infoMessage">Reserve price is the maximum the healthcare facility is
-              willing to offer.</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Slider Checkbox -->
-      <div class="row">
-        <div id="sliderCheckBoxDiv" class="d-none">
-          <input id="sliderCheckBox" name="sliderCheckBox" type="checkbox">
-          <label class="form-label">Include a reserve split %</label>
-        </div>
-      </div>
-
-      <!-- Slider -->
-      <div class="row">
-        <div id="sliderDiv" class="mb-3 d-none">
-          <label>Reserve Split (HCP/Clinic)</label>
-          <div class="slidecontainer col-md-6 col-sm-12">
-            <input type="range" min="0" max="100" value="0" class="slider" id="reservePriceSlider"
-              name="reservePriceSlider">
-            <p>Value: <span id="demo">0</span>%</p>
-          </div>
-          <img id="reservePercentageInfoIcon" src="/media/images/info.svg" alt="Traveling Therapist Logo">
-          <p id="reservePercentageInfoP" class="infoMessage">Reserve split is the maximum percentage the healthcare
-            facility is
-            willing to offer to the healthcare worker for each session they perform/complete.</p>
-        </div>
-      </div>
-
-      <!-- Assessment Checkbox -->
-      <div class="row">
-        <div id="assessmentCheckBoxDiv" class="d-none">
-          <input id="assessmentCheckBox" name="sliderCheckBox" type="checkbox">
-          <label class="form-label">Include a minimum number of daily assessments?</label>
-        </div>
-      </div>
-      <!-- Assessment Fields -->
-      <div class="row">
-        <div class="mb-3 col-md-6 col-sm-12 assessmentField d-none">
-          {{ form.assessmentMin|as_crispy_field }}
-        </div>
-        <div class="mb-3 col-md-6 col-sm-12 assessmentField d-none">
-          {{ form.assessmentCost|as_crispy_field }}
-        </div>
-      </div>
-
-      <!-- Treatment Checkbox -->
-      <div class="row">
-        <div id="treatmentCheckBoxDiv" class="d-none">
-          <input id="treatmentCheckBox" name="sliderCheckBox" type="checkbox">
-          <label class="form-label">Include a minimum number of daily treatments?</label>
-        </div>
-      </div>
-      <div class="row">
-        <div class="mb-3 col-md-6 col-sm-12 treatmentField d-none">
-          {{ form.treatmentMin|as_crispy_field }}
-        </div>
-        <div class="mb-3 col-md-6 col-sm-12 treatmentField d-none">
-          {{ form.treatmentCost|as_crispy_field }}
-        </div>
-      </div>
-
-      <div class="row">
-        <div id="assessmentTreatmentInfoDiv" class="mb-3 col-md-6 d-none">
-          <img id="assessmentTreatmentInfoIcon" src="/media/images/info.svg" alt="Traveling Therapist Logo">
-          <p id="assessmentTreatmentInfo" class="infoMessage">These fields are optional. Fill out these fields if you're
-            guaranteeing a minimum number of daily assessments or treatments that you will compensate them for. <a
-              href="{% url 'about' %}#headingL" target="_blank"><b><i>Learn more</i></b></a></p>
-        </div>
-      </div>
-
-      <!-- Fee Split Calculated Fields -->
-      <div class="row">
-        <div class="mb-3 col-md-6 feeSplitCalcFields d-none">
-          <p id="dailyMinimum">Daily Minimum paid to your temporary position: $-</p>
-        </div>
-        <div class="mb-3 col-md-6 feeSplitCalcFields d-none">
-          <img id="priceInfoIcon" src="/media/images/info.svg" alt="Traveling Therapist Logo">
-          <p id="contractCost" class="infoMessage">Contract price if matched: $-</p>
         </div>
       </div>
 
       <!-- Schedule -->
       <div id="scheduleTableDiv" class="mb-3">
-        <h3 class="fs-5 my-3 text-weight-normal">Clinician Schedule <span class="text-weight-thin fs-6">*Leave day
+        <div class="ttt-section-divider"></div>
+        <h3 class="fs-5 my-3 text-weight-normal">Schedule <span class="text-weight-thin fs-6">*Leave day
             blank to indicate days the clinician will not be working</span>
         </h3>
 
@@ -223,6 +279,7 @@
         </div>
       </div>
       <div class="mb-3">
+        <div class="ttt-section-divider"></div>
         <h3 class="fs-5 my-3 text-weight-normal">Demographics</h3>
         {{ formset_demographic.management_form}}
         {% for formset in formset_demographic %}
@@ -233,6 +290,7 @@
         </div>
         {% endfor %}
       </div>
+      <div class="ttt-section-divider"></div>
       <h3 class="fs-5 my-3 text-weight-normal">Areas of Practice</h3>
       <div id="practiceAreaCheckBoxDiv" class="mb-3 d-none">
         <input type="checkbox" id="practiceAreaCheckBox" hx-post="{% url 'get-practice-types' %}"
@@ -244,6 +302,8 @@
       <div id="practiceAreaDiv" class="mb-3 row">
         {% include 'auction/partials/practice_areas.html' %}
       </div>
+      <div class="ttt-section-divider"></div>
+      <h3 class="fs-5 my-3 text-weight-normal">Information</h3>
       <div class="mb-3">
         {{ form.comments|as_crispy_field }}
       </div>
@@ -280,7 +340,7 @@
   </div>
 </div>
 <!-- </div> -->
-<script src="{% static 'auction/create_auction.js' %}"></script>
+<script src="{% static 'auction/create_auction.js' %}?v=20260708-create-layout-cleanup"></script>
 <script src="{% static 'auction/textarea.js' %}"></script>
 {% else %}
 <p>You must be logged in to access this page. Please <a href="{% url 'login' %}">login here</a>

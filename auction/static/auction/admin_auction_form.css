@@ -1,0 +1,21 @@
+/* Keep the two offer-type controls visually side-by-side in Django admin. */
+.form-row.field-paymentTypesSelection,
+.form-row.field-flatFeeType {
+  display: inline-block;
+  vertical-align: top;
+  width: 49%;
+  box-sizing: border-box;
+}
+
+.form-row.field-paymentTypesSelection {
+  margin-right: 1%;
+}
+
+@media (max-width: 1024px) {
+  .form-row.field-paymentTypesSelection,
+  .form-row.field-flatFeeType {
+    display: block;
+    width: 100%;
+    margin-right: 0;
+  }
+}

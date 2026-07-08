@@ -12,9 +12,80 @@ let feeSplitCalcShown = false;
 let assessmentChecked = false;
 let treatmentChecked = false;
 
-$("#reservePriceSlider").change(function () {
-    $('#demo').text($("#reservePriceSlider").val());
-});
+function getSelectedPaymentTypes() {
+    return $('input[name="paymentTypesSelection"]:checked').map(function () {
+        return $(this).val();
+    }).get();
+}
+
+function getSelectedFlatFeeType() {
+    return $('input[name="flatFeeType"]:checked').val() || '';
+}
+
+function syncOfferGuidanceUI(selectedPaymentTypes) {
+    const flatFeeType = getSelectedFlatFeeType();
+    const showFeeSplitGuidance = selectedPaymentTypes.includes('Fee Split');
+    const showHourlyGuidance = selectedPaymentTypes.includes('Flat Fee') && flatFeeType === 'hourly';
+    const showTotalGuidance = selectedPaymentTypes.includes('Flat Fee') && flatFeeType === 'total_contract';
+
+    $('#desiredFeeSplitContainer').toggleClass('d-none', !showFeeSplitGuidance);
+    $('#flatFeeGuidanceContainer').toggleClass('d-none', !(showHourlyGuidance || showTotalGuidance));
+    $('#desiredFlatFeeHourlyContainer').toggleClass('d-none', !showHourlyGuidance);
+    $('#desiredFlatFeeTotalContainer').toggleClass('d-none', !showTotalGuidance);
+
+    if (!showFeeSplitGuidance) {
+        $('#id_desiredFeeSplitPercentage').val('');
+    }
+    if (!showHourlyGuidance) {
+        $('#id_desiredFlatFeeHourly').val('');
+    }
+    if (!showTotalGuidance) {
+        $('#id_desiredFlatFeeTotalContract').val('');
+    }
+}
+
+function syncPaymentTypeUI() {
+    const selectedPaymentTypes = getSelectedPaymentTypes();
+    const feeSplitEnabled = selectedPaymentTypes.includes('Fee Split');
+    const flatFeeEnabled = selectedPaymentTypes.includes('Flat Fee');
+    const paymentTypeSelected = selectedPaymentTypes.length > 0;
+
+    greyOutFields(!paymentTypeSelected);
+
+    if (flatFeeEnabled) {
+        $('#flatFeeTypeContainer').removeClass('d-none');
+    }
+    else {
+        $('#flatFeeTypeContainer').addClass('d-none');
+        $('input[name="flatFeeType"]').prop('checked', false);
+    }
+
+    syncOfferGuidanceUI(selectedPaymentTypes);
+
+    if (feeSplitEnabled) {
+        $('#assessmentCheckBoxDiv').removeClass('d-none');
+        $('#treatmentCheckBoxDiv').removeClass('d-none');
+        $('#assessmentTreatmentInfoDiv').removeClass('d-none');
+        greyOutFields(false);
+    }
+    else {
+        $('#assessmentCheckBoxDiv').addClass('d-none');
+        $('#treatmentCheckBoxDiv').addClass('d-none');
+        $('#assessmentTreatmentInfoDiv').addClass('d-none');
+        $('.assessmentField').addClass('d-none');
+        $('.treatmentField').addClass('d-none');
+        $('.feeSplitCalcFields').addClass('d-none');
+        $('#assessmentCheckBox').prop('checked', false);
+        $('#treatmentCheckBox').prop('checked', false);
+        assessmentChecked = false;
+        treatmentChecked = false;
+        $('#id_assessmentCost').val('');
+        $('#id_assessmentMin').val('');
+        $('#id_treatmentMin').val('');
+        $('#id_treatmentCost').val('');
+        calculateDailyMin();
+    }
+}
 
 $(document).ready(function () {
     $('.alert.alert-block.alert-danger').hide();
@@ -38,12 +109,7 @@ $(document).ready(function () {
                 $('#practiceAreaCheckBox').prop('checked', false);
             }
 
-            if ($('#id_paymentType').find(":selected").text() != '---------') {
-                greyOutFields(false);
-            }
-            else {
-                greyOutFields(true);
-            }
+            syncPaymentTypeUI();
 
             $.ajax({
                 type: "GET",
@@ -53,25 +119,8 @@ $(document).ready(function () {
                 },
                 success: function (response) {
                     console.log(response);
-                    if (!response.feeSplit) {
-                        $("#id_paymentType").val("2");
-                        $('#id_paymentType').attr('disabled', 'disabled');
-                        $('#sliderDiv').addClass('d-none');
-                        $("#reserveInputDiv").removeClass('d-none');
-                        greyOutFields(false);
-                    }
-                    else if ($('#id_paymentType').prop('disabled')) {
-                        $('#id_paymentType').val('');
-                        $('#id_paymentType').removeAttr('disabled');
-                        $('#sliderDiv').addClass('d-none');
-                        $("#reserveInputDiv").addClass('d-none');
-                        let feeSplitPresent = false;
-                        $("#id_paymentType > option").each(function () {
-                            if (this.text == "Fee Split") {
-                                feeSplitPresent = true;
-                            }
-                        });
-                    }
+                    $('#id_paymentTypesSelection_0').prop('disabled', false);
+                    syncPaymentTypeUI();
 
                 },
                 error: function (error) {
@@ -81,72 +130,17 @@ $(document).ready(function () {
         }
         else {
             $("#optionsMessage").hide();
-            $('.feeSplitFields').hide();
-            $('#sliderDiv').addClass('d-none');
-            $("#reserveInputDiv").addClass('d-none');
-            $('#id_paymentType').val('');
+            $('input[name="paymentTypesSelection"]').prop('checked', false).prop('disabled', false);
+            syncPaymentTypeUI();
         }
     });
 
-    $('#id_paymentType').change(function () {
-        if ($('#id_paymentType').find(":selected").text() == '---------') {
-            $('#sliderDiv').addClass('d-none');
-            $("#reserveInputDiv").addClass('d-none');
-            $('.feeSplitFields').hide();
-            greyOutFields(true);
-        }
-        else if ($('#id_paymentType').find(":selected").text() === 'Fee Split') {
-            $('#sliderCheckBox').prop('checked', false);
-            $('#sliderCheckBoxDiv').removeClass('d-none');
-            $('#assessmentCheckBoxDiv').removeClass('d-none');
-            $('#treatmentCheckBoxDiv').removeClass('d-none');
-            $('#assessmentTreatmentInfoDiv').removeClass('d-none');
-            $("#reserveInputDiv").addClass('d-none');
-            $("#reservePriceCheckBoxDiv").addClass('d-none');
-            $("#id_reservePrice").val('');
-            greyOutFields(false);
-        }
-        else {
-            $('#sliderDiv').addClass('d-none');
-            $('#sliderCheckBoxDiv').addClass('d-none');
-            $("#assessmentCheckBoxDiv").addClass('d-none');
-            $("#treatmentCheckBoxDiv").addClass('d-none');
-            $("#assessmentTreatmentInfoDiv").addClass('d-none');
-            $(".assessmentField").addClass('d-none');
-            $(".treatmentField").addClass('d-none');
-            $(".feeSplitCalcFields").addClass('d-none');
-            $('#id_assessmentCost').val('');
-            $('#id_assessmentMin').val('');
-            $('#id_treatmentMin').val('');
-            $('#id_treatmentCost').val('');
-            calculateDailyMin();
-            $("#reservePriceCheckBoxDiv").removeClass('d-none');
-            $("#assessmentCheckBox").prop('checked', false);
-            $("#treatmentCheckBox").prop('checked', false);
-            greyOutFields(false);
-        }
+    $('input[name="paymentTypesSelection"]').change(function () {
+        syncPaymentTypeUI();
     });
 
-    //Reserve price checkbox
-    $('#reservePriceCheckBox').change(function () {
-        if (this.checked) {
-            $('#reserveInputDiv').removeClass('d-none');
-        }
-        else {
-            $('#reserveInputDiv').addClass('d-none');
-            $('#id_reservePrice').val("");
-        }
-    });
-
-    //Reserve split checkbox
-    $('#sliderCheckBox').change(function () {
-        if (this.checked) {
-            $('#sliderDiv').removeClass('d-none');
-        }
-        else {
-            $('#sliderDiv').addClass('d-none');
-            $('#reservePriceSlider').val(0);
-        }
+    $('input[name="flatFeeType"]').change(function () {
+        syncOfferGuidanceUI(getSelectedPaymentTypes());
     });
 
     //Show assessment fields checkbox
@@ -199,20 +193,13 @@ $(document).ready(function () {
     });
 
     // Prevent decimal numbers from being added to the number of treatments/assessments
-    $('#id_treatmentMin, #id_assessmentMin, #id_reservePrice').on('keyup', function (e) {
+    $('#id_treatmentMin, #id_assessmentMin').on('keyup', function (e) {
         if (e.which === 46) return false;
     }).on('input', function () {
         var self = this;
         setTimeout(function () {
             if (self.value.indexOf('.') != -1) self.value = parseInt(self.value, 10);
         }, 0);
-    });
-
-    // Prevent negative numbers in reserve price
-    $('#id_reservePrice').change(function () {
-        if ($(this).val() < 0) {
-            $(this).val('');
-        }
     });
 
     $('[id^=id_demogrpahic_auction-]').each(function (i, el) {
@@ -252,6 +239,8 @@ $(document).ready(function () {
         }
     });
     $("#id_type option[value='" + clinicVal + "']").remove();
+
+    syncPaymentTypeUI();
 });
 
 $('#id_placementStart').change(function () {
@@ -273,9 +262,6 @@ $('#reservePriceInfoIcon').click(function () {
     popUps('reservePriceInfoIcon');
 });
 
-$('#reservePercentageInfoIcon').click(function () {
-    popUps('reservePercentageInfoIcon');
-});
 $('#assessmentTreatmentInfoIcon').click(function () {
     popUps('assessmentTreatmentInfoIcon');
 });
@@ -287,17 +273,16 @@ $("#submitButton").click(function () {
         errorList += "<li>Please select an clinician type.</li>";
     }
 
-    if ($("#id_paymentType").val() === "") {
+    if (getSelectedPaymentTypes().length === 0) {
         errorList += "<li>Please select a payment type.</li>";
+    }
+
+    if (getSelectedPaymentTypes().includes('Flat Fee') && getSelectedFlatFeeType() === "") {
+        errorList += "<li>Please select how flat fee offers should be priced.</li>";
     }
 
     let placementStart = new Date($("#id_placementStart").val());
     let placementEnd = new Date($("#id_placementEnd").val());
-
-    let reservePrice = '';
-    if ($("#id_reservePrice").val() !== '') {
-        reservePrice = parseFloat($("#id_reservePrice").val());
-    }
 
     let mondayStart = '';
     let mondayEnd = '';
@@ -413,46 +398,8 @@ $("#submitButton").click(function () {
         errorList += '<li>Looks like you are trying to create an ad for an opening longer than 18 months! Please contact us to help you set this up.</li>';
     }
 
-    //Validate Reserve price
-    let reserve = '';
-    let reserveCapital = '';
-    if ($('#id_paymentType').find(":selected").text() === 'Fee Split') {
-        reserve = 'reserve split';
-        reserveCapital = 'Reserve split';
-    }
-    else {
-        reserve = 'reserve price';
-        reserveCapital = 'Reserve price';
-    }
-    if (reservePrice === "" && $("#reservePriceCheckBox").prop("checked")) {
-        errorList += "<li>Please enter a Reserve Price.</li>";
-    }
-    if (reservePrice !== "") {
-        if (reservePrice <= 0) {
-            errorList += "<li>" + reserveCapital + " cannot be 0 or less.</li>";
-        }
-    }
-    if (reservePrice !== "" && $('#id_paymentType').find(":selected").text() === 'Flat Fee') {
-        if (reservePrice > 99999) {
-            errorList += "<li>" + reserveCapital + " must be less than $99,999.</li>";
-        }
-    }
-
-    if ($('#id_paymentType').find(":selected").text() === 'Fee Split' && $('#reservePriceSlider').val() == 0 && $('#sliderCheckBox').prop('checked')) {
-        errorList += "<li>Fee split values must be greater than 0%.</li>";
-    }
-
-    if ($('#id_paymentType').find(":selected").text() === 'Fee Split' && $('#reservePriceSlider').val() == 100 && $('#sliderCheckBox').prop('checked')) {
-        errorList += "<li>Fee split values must be less than 100%.</li>";
-    }
-    // if (reservePrice !== "" && $('#id_paymentType').find(":selected").text() === 'Fee Split') {
-    //     if (reservePrice > 100) {
-    //         errorList += "<li>" + reserveCapital + " cannot be greater than 100%.</li>";
-    //     }
-    // }
-
     //Validate treatment and assessment costs if the payment type is fee split
-    if ($('#id_paymentType').find(":selected").text() === 'Fee Split') {
+    if (getSelectedPaymentTypes().includes('Fee Split')) {
         //Minimum # of Assessments
         if (assessmentMin === "" && assessmentCost !== "") {
             errorList += "<li>Please enter a Minimum Number of Assessments.</li>";
@@ -627,7 +574,7 @@ $("#submitButton").click(function () {
 });
 
 function greyOutFields(val) {
-    $("#id_placementStart, #id_placementEnd, #id_reservePrice, #id_demogrpahic_auction-0-percentage, #id_demogrpahic_auction-1-percentage, #id_demogrpahic_auction-2-percentage").attr("disabled", val);
+    $("#id_placementStart, #id_placementEnd, #id_demogrpahic_auction-0-percentage, #id_demogrpahic_auction-1-percentage, #id_demogrpahic_auction-2-percentage").attr("disabled", val);
 }
 
 function calculateDailyMin() {

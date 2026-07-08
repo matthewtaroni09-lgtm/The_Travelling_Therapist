@@ -1,4 +1,4 @@
-__pycache__/
+﻿__pycache__/
 .pyc
 The_Travelling_Therapist/The_Travelling_Therapist/settings.py
 db.sqlite3
@@ -6,4 +6,5 @@ settings.py
 ignore.html
 warning.log
 venv
+Create Database.sql
 .vscode

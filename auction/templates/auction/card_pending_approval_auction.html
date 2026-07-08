@@ -1,27 +1,42 @@
 <div class="col-sm-6 col-lg-4">
-  <a class="card mt-4 text-decoration-none text-dark" href="{% url 'auction' auction.auctionID %}">
-    {% if auction.paymentType|stringformat:"s" == "Flat Fee" %}
-    <div class="triangle" style="border-color: transparent var(--primary-colour) transparent;"><span class="triangleText"><b>{{ auction.paymentType }}</b></span></div>
-    {% else %}
-    <div class="triangle" style="border-color: transparent var(--secondary-colour) transparent;"><span class="triangleText"><b>{{ auction.paymentType }}</b></span></div>
-    {% endif %}
-    <div class="position-relative">
-      {% if auction.clinic.imageOne %}
-      <img src="/media/{{ auction.clinic.imageOne }}" class="card-img-top card-image" alt="Image of Clinic">
+  <a class="card mt-4 text-decoration-none text-dark ttt-auction-card" href="{% url 'auction' auction.auctionID %}">
+    {% if auction.clinic.imageOne %}
+    <div class="position-relative ttt-card-media">
+      {% if auction.clinic.imageOne.name == 'default.jpg' %}
+      <img src="/media/images/default.jpg" class="card-img-top card-image" alt="Image of Clinic" onerror="this.parentElement.classList.add('d-none');">
       {% else %}
-      <img src="/media/images/no-image.jpg" class="card-img-top card-image" alt="Image of Clinic">
+      <img src="/media/{{ auction.clinic.imageOne }}" class="card-img-top card-image" alt="Image of Clinic" onerror="this.parentElement.classList.add('d-none');">
       {% endif %}
-      <div class="d-inline-flex text-align-center text-white bg-dark p-2 rounded position-absolute bottom-0 start-0 text-x-small">
-        <span class="material-icons small text-white">schedule</span>
-        <p class="m-0 text-white align-self-center">Pending Approval</p>
-      </div>
     </div>
-    <div class="card-body">
-      <h2 class="card-title">{{ auction.clinic.clinicName }}</h2>
-      <p class="text-weight-thin mb-0">{{ auction.placementStart }} - {{ auction.placementEnd }}</p>
-      <p class="text-weight-thin mb-0">{{ auction.type }}</p>
-      <p class="text-weight-thin">{{ auction.clinic.city }}, ON</p>
-      <p class="card-text">{{ auction.clinic.about }}</p>
+    <div class="d-inline-flex text-align-center align-items-center bg-dark p-2 rounded text-x-small ttt-card-stats ttt-card-stats-seam mb-3">
+      <span class="material-icons small text-white">schedule</span>
+      <p class="m-0 text-white">Pending Approval</p>
+    </div>
+    {% endif %}
+    <div class="card-body ttt-card-body">
+      <h2 class="card-title mb-1">{{ auction.clinic.clinicName }}{{ auction.clinicName }}</h2>
+      <p class="text-weight-thin mb-0 ttt-card-meta">{{ auction.placementStart }} - {{ auction.placementEnd }}</p>
+      <p class="text-weight-thin mb-0 ttt-card-meta">{{ auction.type }}</p>
+      <p class="text-weight-thin mb-3 ttt-card-meta">{{ auction.clinic.city|default_if_none:"" }}{% if auction.clinic.city and auction.clinic.province %}, {% endif %}{{ auction.clinic.province|default_if_none:"" }}</p>
+
+      <div class="ttt-offer-checklist" aria-label="Allowed offer types">
+        <div class="ttt-offer-row">
+          <span class="material-icons ttt-offer-icon {% if auction.is_fee_split %}is-enabled{% else %}is-disabled{% endif %}">
+            {% if auction.is_fee_split %}check_box{% else %}check_box_outline_blank{% endif %}
+          </span>
+          <span>Fee Split</span>
+        </div>
+        <div class="ttt-offer-row">
+          <span class="material-icons ttt-offer-icon {% if auction.is_flat_fee %}is-enabled{% else %}is-disabled{% endif %}">
+            {% if auction.is_flat_fee %}check_box{% else %}check_box_outline_blank{% endif %}
+          </span>
+          <span>
+            Flat Fee{% if auction.is_flat_fee %}
+            {% if auction.flatFeeType == 'hourly' %} (Hourly){% elif auction.flatFeeType == 'total_contract' %} (Total Contract Price){% endif %}
+            {% endif %}
+          </span>
+        </div>
+      </div>
     </div>
   </a>
 </div>
