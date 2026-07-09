@@ -257,36 +257,35 @@
 
   <div class="row w-100 mx-auto">
     <p class="col-md-4 col-sm-6 text-weight-bold border mb-0 py-2 bg-light">Clinic Name</p>
-    <p class="col-md-3 col-sm-6 text-weight-light border mb-0 py-2">{{ auction.clinic.clinicName }}</p>
+    <p class="col-md-3 col-sm-6 text-weight-light border mb-0 py-2">
+      {% if auction.clinic.clinicWebsite %}
+      <a href="{{ auction.clinic.clinicWebsite }}" target="_blank" rel="noopener noreferrer">{{ auction.clinic.clinicName }}</a>
+      {% else %}
+      {{ auction.clinic.clinicName }}
+      {% endif %}
+    </p>
     <p class="col-md-3 col-sm-6 text-weight-bold border mb-0 py-2 bg-light">Clinic Location</p>
     <p class="col-md-2 col-sm-6 text-weight-light border mb-0 py-2">
       {{ auction.clinic.city }}, {{ auction.clinic.province }}</p>
   </div>
-  {% if payment_type == "Fee Split" %}
   <div class="row w-100 mx-auto">
-    <p class="col-md-4 col-sm-6 text-weight-bold border mb-0 py-2 bg-light">Payment Type</p>
-    <p class="col-md-8 col-sm-6 text-weight-light border mb-0 py-2">{{ auction.get_payment_type_label }}</p>
+    <p class="col-md-4 col-sm-6 text-weight-bold border mb-0 py-2 bg-light">Payment Type(s)</p>
+    <p class="col-md-8 col-sm-6 text-weight-light border mb-0 py-2">
+      {% if auction.is_fee_split %}<span>Fee Split</span>{% endif %}
+      {% if auction.is_fee_split and auction.is_flat_fee %}<span class="border-start ms-3 ps-3"></span>{% endif %}
+      {% if auction.is_flat_fee %}<span>Flat Fee{% if auction.flatFeeType == 'hourly' %} (Hourly){% elif auction.flatFeeType == 'total_contract' %} (Total Contract Price){% endif %}</span>{% endif %}
+    </p>
   </div>
-  {% else %}
-  <div class="row w-100 mx-auto">
-    <p class="col-md-4 col-sm-6 text-weight-bold border mb-0 py-2 bg-light">Payment Type</p>
-    <p class="col-md-8 col-sm-6 text-weight-light border mb-0 py-2">{{ auction.get_payment_type_label }}</p>
-  </div>
-  {% endif %}
   {% if auction.desiredFeeSplitPercentage or auction.desiredFlatFeeHourly or auction.desiredFlatFeeTotalContract %}
   <div class="row w-100 mx-auto">
-    <p class="col-md-4 col-sm-6 text-weight-bold border mb-0 py-2 bg-light">Desired Offer Range</p>
-    <div class="col-md-8 col-sm-6 text-weight-light border mb-0 py-2">
-      {% if auction.desiredFeeSplitPercentage %}
-      <p class="mb-1">Fee Split: {{ auction.desiredFeeSplitPercentage }}%</p>
-      {% endif %}
-      {% if auction.desiredFlatFeeHourly %}
-      <p class="mb-1">Flat Fee (Hourly): ${{ auction.desiredFlatFeeHourly }}/hr</p>
-      {% endif %}
-      {% if auction.desiredFlatFeeTotalContract %}
-      <p class="mb-0">Flat Fee (Total Contract Price): ${{ auction.desiredFlatFeeTotalContract }}</p>
-      {% endif %}
-    </div>
+    <p class="col-md-4 col-sm-6 text-weight-bold border mb-0 py-2 bg-light">Suggested Offer Range</p>
+    <p class="col-md-8 col-sm-6 text-weight-light border mb-0 py-2">
+      {% if auction.desiredFeeSplitPercentage %}<span>Fee Split: {{ auction.desiredFeeSplitPercentage }}%</span>{% endif %}
+      {% if auction.desiredFeeSplitPercentage and auction.desiredFlatFeeHourly %}<span class="border-start ms-3 ps-3"></span>{% endif %}
+      {% if auction.desiredFlatFeeHourly %}<span>Flat Fee (Hourly): ${{ auction.desiredFlatFeeHourly }}/hr</span>{% endif %}
+      {% if auction.desiredFeeSplitPercentage and auction.desiredFlatFeeTotalContract or auction.desiredFlatFeeHourly and auction.desiredFlatFeeTotalContract %}<span class="border-start ms-3 ps-3"></span>{% endif %}
+      {% if auction.desiredFlatFeeTotalContract %}<span>Flat Fee (Total Contract Price): ${{ auction.desiredFlatFeeTotalContract }}</span>{% endif %}
+    </p>
   </div>
   {% endif %}
   <div class="row w-100 mx-auto">

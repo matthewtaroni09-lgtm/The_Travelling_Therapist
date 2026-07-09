@@ -1,11 +1,11 @@
 <div class="col-sm-6 col-lg-4">
-  <a class="card mt-4 text-decoration-none text-dark ttt-auction-card" href="{% url 'auction' auction.auctionID %}">
-    {% if auction.clinic.imageOne %}
+  <div class="card mt-4 text-decoration-none text-dark ttt-auction-card position-relative">
+    <a class="stretched-link" href="{% url 'auction' auction.auctionID %}" aria-label="View listing"></a>
     <div class="position-relative ttt-card-media">
-      {% if auction.clinic.imageOne.name == 'default.jpg' %}
-      <img src="/media/images/default.jpg" class="card-img-top card-image" alt="Image of Clinic" onerror="this.parentElement.classList.add('d-none');">
+      {% if auction.clinic.imageOne and auction.clinic.imageOne.name != 'default.jpg' %}
+      <img src="/media/{{ auction.clinic.imageOne }}" class="card-img-top card-image" alt="Image of Clinic" onerror="this.src='/media/images/default.jpg';">
       {% else %}
-      <img src="/media/{{ auction.clinic.imageOne }}" class="card-img-top card-image" alt="Image of Clinic" onerror="this.parentElement.classList.add('d-none');">
+      <img src="/media/images/default.jpg" class="card-img-top card-image" alt="Image of Clinic" onerror="this.parentElement.classList.add('d-none');">
       {% endif %}
     </div>
     <div class="d-inline-flex text-align-center align-items-center bg-dark p-2 rounded text-x-small ttt-card-stats ttt-card-stats-seam mb-3">
@@ -13,7 +13,6 @@
         class="m-0 d-flex me-3 text-white">{{ auction.get_time_diff }}</time>
       <p id="auctionBids-{{ auction.auctionID }}" class="m-0 text-white">{{ auction.get_bid }}</p>
     </div>
-    {% endif %}
     <div class="card-body ttt-card-body">
       <h2 class="card-title mb-1">{{ auction.clinic.clinicName }}{{ auction.clinicName }}</h2>
       <p class="text-weight-thin mb-0 ttt-card-meta">{{ auction.placementStart }} - {{ auction.placementEnd }}</p>
@@ -39,6 +38,44 @@
           </span>
         </div>
       </div>
+
+      {% if auction.therapist_offer_history %}
+      <button type="button" class="btn btn-outline-primary btn-sm mt-3 w-100 position-relative" style="z-index: 2;" data-bs-toggle="modal" data-bs-target="#offerHistoryModal-{{ auction.auctionID }}">View Your Offer History</button>
+      {% endif %}
     </div>
-  </a>
+  </div>
 </div>
+{% if auction.therapist_offer_history %}
+<div class="modal fade" id="offerHistoryModal-{{ auction.auctionID }}" tabindex="-1" aria-labelledby="offerHistoryModalLabel-{{ auction.auctionID }}" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="offerHistoryModalLabel-{{ auction.auctionID }}">Your Offer History - {{ auction.clinic.clinicName }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="table-responsive">
+          <table class="table table-sm align-middle mb-0">
+            <thead>
+              <tr>
+                <th>Date / Time</th>
+                <th>Offer Type</th>
+                <th>Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for bid in auction.therapist_offer_history %}
+              <tr>
+                <td>{{ bid.created|date:"M j, Y g:i A" }}</td>
+                <td>{% if bid.offerType == 'Fee Split' %}Fee Split{% elif bid.auction.flatFeeType == 'hourly' %}Flat Fee (Hourly){% elif bid.auction.flatFeeType == 'total_contract' %}Flat Fee (Total Contract Price){% else %}Flat Fee{% endif %}</td>
+                <td>{% if bid.offerType == 'Fee Split' %}{{ bid.amount }}%{% elif bid.auction.flatFeeType == 'hourly' %}${{ bid.amount|floatformat:0 }}/hr{% else %}${{ bid.amount|floatformat:0 }}{% endif %}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}

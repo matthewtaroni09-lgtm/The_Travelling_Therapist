@@ -516,12 +516,13 @@ class ProfileUpdateClinic(forms.ModelForm):
     
     class Meta:
         model = Account
-        fields = ['clinicName', 'city', 'province', 'about', 'imageOne', 'imageTwo', 'imageThree', 'imageFour']
+        fields = ['clinicName', 'city', 'province', 'about', 'clinicWebsite', 'imageOne', 'imageTwo', 'imageThree', 'imageFour']
 
     def clean(self):
         clinicName = self.cleaned_data.get('clinicName')
         city = self.cleaned_data.get('city')
         about = self.cleaned_data.get('about')
+        clinicWebsite = self.cleaned_data.get('clinicWebsite')
         province = self.cleaned_data.get('province')
         username = self.instance.user.username if getattr(self.instance, 'user', None) else None
         imageOne = self.cleaned_data.get('imageOne')
