@@ -366,12 +366,21 @@ def profile(request):
             auction__type=therapist_type,
             auction__deleted=False,
         )
-        active_auctions_list = Auction.objects.filter(
+        active_auctions_list = list(Auction.objects.filter(
             auctionID__in=therapist_bids.filter(auction__active=True, auction__closed=False).values_list('auction_id', flat=True)
-        ).order_by('-auctionEnd').distinct()
-        past_auctions_list = Auction.objects.filter(
+        ).order_by('-auctionEnd').distinct())
+        past_auctions_list = list(Auction.objects.filter(
             auctionID__in=therapist_bids.filter(auction__active=False, auction__closed=True).values_list('auction_id', flat=True)
-        ).order_by('-auctionEnd').distinct()
+        ).order_by('-auctionEnd').distinct())
+        therapist_offer_history = list(
+            Bid.objects.filter(user=user).select_related('auction', 'auction__clinic').order_by('-created')
+        )
+        therapist_offer_history_by_auction = {}
+        for bid in therapist_offer_history:
+            therapist_offer_history_by_auction.setdefault(bid.auction_id, []).append(bid)
+
+        for auction in active_auctions_list + past_auctions_list:
+            auction.therapist_offer_history = therapist_offer_history_by_auction.get(auction.auctionID, [])
         if request.method == 'POST':
             user_therapist_form = UserFormTherapist(request.POST, instance=request.user)
             if user_therapist_form.is_valid():
@@ -392,7 +401,8 @@ def profile(request):
                     'referral_link': referral_link,
                     'successful_referrals': successful_referrals,
                     'ticket_history': ticket_history,
-                    'next_award_date': parameter.get('next_award_date')
+                    'next_award_date': parameter.get('next_award_date'),
+                    'therapist_offer_history': therapist_offer_history,
                 })
                 return render(request, 'auction/profile.html', parameter)
         else:
@@ -410,7 +420,8 @@ def profile(request):
                 'referral_link': referral_link,
                 'successful_referrals': successful_referrals,
                 'ticket_history': ticket_history,
-                'next_award_date': parameter.get('next_award_date')
+                'next_award_date': parameter.get('next_award_date'),
+                'therapist_offer_history': therapist_offer_history,
             })
             return render(request, 'auction/profile.html', parameter)
 
@@ -751,6 +762,10 @@ def get_popups(request):
             if acknowledged == False or click_id != None:
                 message = message + " " + popup.message
                 title = title + " " + popup.title
+
+    if message == '' and click_id is None and request_page == 'View_Auction':
+        title = 'Before You Bid'
+        message = 'Check out our <a href="/faq" target="_blank" rel="noopener noreferrer">FAQ</a> for more information on the bidding process.'
 
     return JsonResponse({'title': title, 'message': message})
 

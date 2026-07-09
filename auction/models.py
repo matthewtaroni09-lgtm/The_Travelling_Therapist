@@ -74,6 +74,12 @@ class Account(models.Model):
     country = models.CharField(verbose_name='Conutry', max_length=100, blank=True, null=True, help_text='Enter the country your healthcare facility is in.')
     province = models.CharField(verbose_name='Province', help_text='The province the healthcare facility resides in.', blank=True, null=True, max_length=30, choices=PROVINCES)
     about = models.TextField(verbose_name='About the healthcare facility', blank=True, null=True, help_text='Tell us about your healthcare facility.')
+    clinicWebsite = models.URLField(
+        verbose_name='Clinic Website',
+        blank=True,
+        null=True,
+        help_text='This field is optional. Adding a website may give more traction to your listing.'
+    )
     underEighteen = models.IntegerField(verbose_name='% Under 18', blank=True, null=True)
     eighteenToSixtyFive = models.IntegerField(verbose_name='% 18 - 65', blank=True, null=True)
     overSixtyFive = models.IntegerField(verbose_name='% Over 65', blank=True, null=True)

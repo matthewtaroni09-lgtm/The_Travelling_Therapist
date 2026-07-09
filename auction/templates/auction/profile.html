@@ -71,6 +71,7 @@
                 <div class="mb-3 col-md-4">{{ profile_clinic_form.city | as_crispy_field }}</div>
                 <div class="mb-3 col-md-4">{{ profile_clinic_form.province | as_crispy_field }}</div>
                 <div class="mb-3">{{ profile_clinic_form.about | as_crispy_field }}</div>
+                <div class="mb-3">{{ profile_clinic_form.clinicWebsite | as_crispy_field }}</div>
               </div>
               <div class="row">
                 <div class="mb-3">{{ profile_clinic_form.imageOne | as_crispy_field }}</div>
@@ -290,7 +291,7 @@
                       <div class="col-12">
                       <ul class="nav nav-tabs" id="therapistProfile" role="tablist">
                       <li class="nav-item" role="presentation"><button class="btn-lg nav-link active" id="auction-tab-t"
-                      data-bs-toggle="tab" data-bs-target="#auction-history-t" type="button" role="tab">Listing History</button>
+                      data-bs-toggle="tab" data-bs-target="#auction-history-t" type="button" role="tab">Offer History</button>
                       </li>
                       <li class="nav-item" role="presentation"><button class="btn-lg nav-link" id="profile-tab-t" data-bs-toggle="tab"
                       data-bs-target="#profile-t" type="button" role="tab">Update Profile</button></li>
@@ -299,10 +300,11 @@
                       </ul>
                       <div class="tab-content" id="therapistProfileContent">
                       <div class="tab-pane fade show active p-3" id="auction-history-t" role="tabpanel">
-                      <h2>Live Listings</h2>
+                      <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
+                      <h2 class="mb-0">Listings You've Offered On:</h2>
+                      <button type="button" class="btn btn-primary btn-lg" id="viewFullOfferHistoryBtn" data-bs-toggle="modal" data-bs-target="#fullOfferHistoryModal">View Full Offer History</button>
+                      </div>
                       <div class="row mb-5">{% for auction in active_auctions_list %}{% include 'auction/card_active_auction.html' with auction=auction %}{% endfor %}</div>
-                      <h2>Past Listings</h2>
-                      <div class="row mb-5">{% for auction in past_auctions_list %}{% include 'auction/card_past_auction.html' with auction=auction %}{% endfor %}</div>
                       </div>
                       <div class="tab-pane fade" id="profile-t" role="tabpanel">
                       <div class="p-3">
@@ -501,7 +503,6 @@
                       <!-- END THERAPIST SECTION -->
                       {% endif %}
 
-<!-- Common Modals & Scripts -->
 <div class="modal fade" id="allTicketsModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content border-0 rounded-4 shadow">
@@ -535,8 +536,49 @@
 
 {% include 'auction/modal_raffle_details.html' with id='raffleModal' %}
 {% include 'auction/modal_referral_link.html' %}
-<script src="{% static 'auction/profile.js' %}"></script>
-<script src="{% static 'auction/create_auction.js' %}"></script>
+<script src="{% static 'auction/profile.js' %}?v=20260709-profile-modal-fix"></script>
+<script src="{% static 'auction/create_auction.js' %}?v=20260708-create-ux-fix"></script>
+
+{% block extra_modals %}
+<div class="modal fade" id="fullOfferHistoryModal" tabindex="-1" aria-labelledby="fullOfferHistoryModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content border-0 rounded-4 shadow">
+      <div class="modal-header border-bottom-0">
+        <h5 class="modal-title fw-bold" id="fullOfferHistoryModalLabel">Full Offer History</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-4">
+        {% if therapist_offer_history %}
+        <div class="table-responsive">
+          <table class="table align-middle">
+            <thead>
+              <tr>
+                <th>Date / Time</th>
+                <th>Listing</th>
+                <th>Offer Type</th>
+                <th>Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for bid in therapist_offer_history %}
+              <tr>
+                <td>{{ bid.created|date:"M j, Y g:i A" }}</td>
+                <td><a href="{% url 'auction' bid.auction.auctionID %}">{{ bid.auction.clinic.clinicName }}</a></td>
+                <td>{% if bid.offerType == 'Fee Split' %}Fee Split{% elif bid.auction.flatFeeType == 'hourly' %}Flat Fee (Hourly){% elif bid.auction.flatFeeType == 'total_contract' %}Flat Fee (Total Contract Price){% else %}Flat Fee{% endif %}</td>
+                <td>{% if bid.offerType == 'Fee Split' %}{{ bid.amount }}%{% elif bid.auction.flatFeeType == 'hourly' %}${{ bid.amount|floatformat:0 }}/hr{% else %}${{ bid.amount|floatformat:0 }}{% endif %}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% else %}
+        <p class="text-muted mb-0">You have not placed any offers yet.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
 
 {% else %}
 <!-- Login Required message -->

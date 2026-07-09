@@ -13,7 +13,7 @@
         integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 
     <!-- Custom css -->
-    <link rel="stylesheet" href="{% static 'auction/style.css' %}">
+    <link rel="stylesheet" href="{% static 'auction/style.css' %}?v=20260709-card-shadow-fix">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <title>The Traveling Therapist</title>
 
@@ -110,6 +110,8 @@
         {% block content %}
         {% endblock %}
     </main>
+
+    {% block extra_modals %}{% endblock %}
 
     <!-- Footer -->
     {% include 'auction/footer.html' %}
