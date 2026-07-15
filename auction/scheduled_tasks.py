@@ -9,6 +9,7 @@ from .models import Account, Auction, Bid, User, Account, AdminSetting
 from django.db.models import Min
 from . import emails
 from django_apscheduler.jobstores import DjangoJobStore, register_events, register_job
+from django.db.utils import OperationalError
 import logging
 import pytz
 import random
@@ -20,6 +21,30 @@ logger = logging.getLogger(__name__)
 scheduler = BackgroundScheduler(timezone=pytz.timezone(settings.TIME_ZONE))
 scheduler.add_jobstore(DjangoJobStore(), "default")
 register_events(scheduler)
+_raffle_check_registered = False
+
+
+def _ensure_scheduler_started():
+    global _raffle_check_registered
+
+    if scheduler.running:
+        return True
+
+    try:
+        if not _raffle_check_registered:
+            scheduler.add_job(
+                raffle_check_job,
+                "interval",
+                minutes=1,
+                id="raffle_check_job",
+                replace_existing=True,
+            )
+            _raffle_check_registered = True
+        scheduler.start()
+        return True
+    except OperationalError as exc:
+        logger.warning("Scheduler start skipped because database is unavailable: %s", exc)
+        return False
 
 def execute_raffle_draw_task(raffle_id=None):
     """
@@ -128,6 +153,9 @@ def start_raffle(run_date, raffle_id):
     from auction.models import Raffle
     job_id = f"raffle_{raffle_id}"
 
+    if not _ensure_scheduler_started():
+        return
+
     # Ensure run_date is aware
     if timezone.is_naive(run_date):
         run_date = timezone.make_aware(run_date, pytz.timezone(settings.TIME_ZONE))
@@ -150,19 +178,11 @@ def raffle_check_job():
     logger.info("Executing periodic raffle check...")
     execute_raffle_draw_task()
 
-# Register the periodic check job directly
-scheduler.add_job(
-    raffle_check_job,
-    "interval",
-    minutes=1,
-    id="raffle_check_job",
-    replace_existing=True
-)
-
-scheduler.start()
-
 
 def start(year, month, day, hour, minute, second, id):
+    if not _ensure_scheduler_started():
+        return
+
     schedule_id = scheduler.add_job(auction_closed, 'cron', year=year, month=month, day=day, hour=hour, minute=minute, second=second, id=id, args=(id,))
     auction = Auction.objects.get(auctionID=id)
     auction.cronID = schedule_id.id
@@ -170,6 +190,9 @@ def start(year, month, day, hour, minute, second, id):
     scheduler.print_jobs()
 
 def restart(year, month, day, hour, minute, second, id, auction_id):
+    if not _ensure_scheduler_started():
+        return
+
     scheduler.add_job(auction_closed, 'cron', year=year, month=month, day=day, hour=hour, minute=minute, second=second, id=id, args=(auction_id,))
     auction = Auction.objects.get(auctionID=auction_id)
     auction.cronID = id
@@ -180,6 +203,8 @@ def print_job():
     scheduler.print_jobs()
 
 def remove_cron_job(id):
+    if not scheduler.running:
+        return
     scheduler.remove_job(id)
 
 def auction_closed(id):

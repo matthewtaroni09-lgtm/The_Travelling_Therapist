@@ -2,17 +2,34 @@
   <div class="card mt-4 text-decoration-none text-dark ttt-auction-card position-relative">
     <a class="stretched-link" href="{% url 'auction' auction.auctionID %}" aria-label="View listing"></a>
     <div class="position-relative ttt-card-media">
+      {% if auction.active %}
+      <span class="ttt-status-badge ttt-status-badge-live">Live</span>
+      {% elif auction.closed %}
+      <span class="ttt-status-badge ttt-status-badge-completed">Completed</span>
+      {% endif %}
       {% if auction.clinic.imageOne and auction.clinic.imageOne.name != 'default.jpg' %}
       <img src="/media/{{ auction.clinic.imageOne }}" class="card-img-top card-image" alt="Image of Clinic" onerror="this.src='/media/images/default.jpg';">
       {% else %}
       <img src="/media/images/default.jpg" class="card-img-top card-image" alt="Image of Clinic" onerror="this.parentElement.classList.add('d-none');">
       {% endif %}
     </div>
+    {% if auction.closed and not auction.active %}
+    <div class="d-inline-flex text-align-center align-items-center bg-dark p-2 rounded text-x-small ttt-card-stats ttt-card-stats-completed ttt-card-stats-seam mb-3" style="width: max-content; min-width: 0; max-width: calc(100% - 24px); min-height: 50px; padding-left: 10px !important; padding-right: 10px !important; column-gap: 8px; flex-wrap: nowrap;">
+      {% if '%' in auction.get_winning_offer_display %}
+      <span class="ttt-stat-coin ttt-stat-percent-circle" style="top: 1px;">%</span>
+      {% else %}
+      <span class="material-icons small text-white ttt-stat-coin">paid</span>
+      {% endif %}
+      <p class="m-0 d-flex me-3 text-white">Winning Offer:<span class="ms-2 text-white">{{ auction.get_winning_offer_display }}</span></p>
+      <p class="m-0 text-white"># Bids:<span class="ms-2 text-white">{{ auction.get_num_bids }}</span></p>
+    </div>
+    {% else %}
     <div class="d-inline-flex text-align-center align-items-center bg-dark p-2 rounded text-x-small ttt-card-stats ttt-card-stats-seam mb-3">
       <span class="material-icons small text-white">schedule</span><time id="auctionTimer-{{ auction.auctionID }}"
         class="m-0 d-flex me-3 text-white">{{ auction.get_time_diff }}</time>
-      <p id="auctionBids-{{ auction.auctionID }}" class="m-0 text-white">{{ auction.get_bid }}</p>
+      <p id="auctionBids-{{ auction.auctionID }}" class="m-0 text-white"># Bids:<span class="ms-2 text-white">{{ auction.get_num_bids }}</span></p>
     </div>
+    {% endif %}
     <div class="card-body ttt-card-body">
       <h2 class="card-title mb-1">{{ auction.clinic.clinicName }}{{ auction.clinicName }}</h2>
       <p class="text-weight-thin mb-0 ttt-card-meta">{{ auction.placementStart }} - {{ auction.placementEnd }}</p>

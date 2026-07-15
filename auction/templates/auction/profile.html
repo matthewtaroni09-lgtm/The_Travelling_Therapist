@@ -312,6 +312,36 @@
                       <h2 class="mb-4">Update Profile</h2>
                       <h5>User Type: {{user.account.userType}}</h5>
                       {% csrf_token %}{{ user_therapist_form | crispy }}
+                      <div class="card border-0 shadow-sm">
+                        <div class="card-body">
+                          <h6 class="mb-2">Skills and Qualifications</h6>
+                          <p class="text-muted small mb-3">These are used to help clinics compare your profile against listing requirements.</p>
+                          <div id="clinicianSkillsContainer" class="d-flex flex-column gap-2">
+                            {% for skill_name in skill_options %}
+                            <div class="ttt-clinician-skill-row form-check d-flex justify-content-between align-items-center" data-skill-name="{{ skill_name }}" data-custom="false">
+                              <label class="form-check-label">
+                                <input class="form-check-input me-2" type="checkbox" {% if skill_name in selected_profile_skill_names %}checked{% endif %}>
+                                {{ skill_name }}
+                              </label>
+                            </div>
+                            {% endfor %}
+                            {% for skill_name in custom_profile_skills %}
+                            <div class="ttt-clinician-skill-row form-check d-flex justify-content-between align-items-center" data-skill-name="{{ skill_name }}" data-custom="true">
+                              <label class="form-check-label">
+                                <input class="form-check-input me-2" type="checkbox" checked>
+                                {{ skill_name }}
+                              </label>
+                              <button type="button" class="btn btn-link btn-sm p-0 ttt-clinician-skill-remove">Remove</button>
+                            </div>
+                            {% endfor %}
+                          </div>
+                          <div class="input-group input-group-sm mt-2" style="max-width: 460px;">
+                            <input type="text" id="clinicianCustomSkillInput" class="form-control" placeholder="Add custom skill or qualification">
+                            <button type="button" id="addClinicianCustomSkill" class="btn btn-outline-secondary">Add</button>
+                          </div>
+                          <input type="hidden" name="clinicianSkillsPayload" id="id_clinicianSkillsPayload" value="{{ clinician_skills_payload_json|escapejs }}">
+                        </div>
+                      </div>
                       <button type="submit" class="btn btn-primary">Update</button>
                       </form>
                       <hr><a href="{% url 'change-password' %}" class="btn btn-primary">Change Password</a>
@@ -537,7 +567,107 @@
 {% include 'auction/modal_raffle_details.html' with id='raffleModal' %}
 {% include 'auction/modal_referral_link.html' %}
 <script src="{% static 'auction/profile.js' %}?v=20260709-profile-modal-fix"></script>
-<script src="{% static 'auction/create_auction.js' %}?v=20260708-create-ux-fix"></script>
+<script src="{% static 'auction/create_auction.js' %}?v=20260714-perk-details-v3"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const container = document.getElementById('clinicianSkillsContainer');
+    const payloadInput = document.getElementById('id_clinicianSkillsPayload');
+    const addButton = document.getElementById('addClinicianCustomSkill');
+    const customInput = document.getElementById('clinicianCustomSkillInput');
+
+    if (!container || !payloadInput) {
+      return;
+    }
+
+    let rows = [];
+    try {
+      rows = JSON.parse(payloadInput.value || '[]');
+    } catch (e) {
+      rows = [];
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function syncPayload() {
+      const items = Array.from(container.querySelectorAll('.ttt-clinician-skill-row')).map(function (row) {
+        return {
+          name: row.getAttribute('data-skill-name') || '',
+          selected: row.querySelector('input[type="checkbox"]').checked,
+          custom: row.getAttribute('data-custom') === 'true'
+        };
+      }).filter(function (item) {
+        return item.name.trim() !== '';
+      });
+      payloadInput.value = JSON.stringify(items);
+    }
+
+    function renderRow(item) {
+      const name = (item.name || '').trim();
+      if (!name) {
+        return;
+      }
+      const checked = item.selected ? 'checked' : '';
+      const custom = item.custom ? 'true' : 'false';
+      const removeButton = item.custom ? '<button type="button" class="btn btn-link btn-sm p-0 ttt-clinician-skill-remove">Remove</button>' : '';
+      const wrapper = document.createElement('div');
+      wrapper.className = 'ttt-clinician-skill-row form-check d-flex justify-content-between align-items-center';
+      wrapper.setAttribute('data-skill-name', name);
+      wrapper.setAttribute('data-custom', custom);
+      wrapper.innerHTML = '<label class="form-check-label"><input class="form-check-input me-2" type="checkbox" ' + checked + '> ' + escapeHtml(name) + '</label>' + removeButton;
+      container.appendChild(wrapper);
+    }
+
+    if (container.querySelectorAll('.ttt-clinician-skill-row').length === 0) {
+      rows.forEach(renderRow);
+    }
+    syncPayload();
+
+    container.addEventListener('change', function (event) {
+      if (event.target.matches('input[type="checkbox"]')) {
+        syncPayload();
+      }
+    });
+
+    container.addEventListener('click', function (event) {
+      if (event.target.matches('.ttt-clinician-skill-remove')) {
+        const row = event.target.closest('.ttt-clinician-skill-row');
+        if (row) {
+          row.remove();
+          syncPayload();
+        }
+      }
+    });
+
+    if (addButton && customInput) {
+      addButton.addEventListener('click', function () {
+        const value = (customInput.value || '').trim();
+        if (!value) {
+          return;
+        }
+
+        const exists = Array.from(container.querySelectorAll('.ttt-clinician-skill-row')).some(function (row) {
+          return (row.getAttribute('data-skill-name') || '').toLowerCase() === value.toLowerCase();
+        });
+
+        if (exists) {
+          customInput.value = '';
+          return;
+        }
+
+        renderRow({ name: value, selected: true, custom: true });
+        customInput.value = '';
+        syncPayload();
+      });
+    }
+  });
+</script>
 
 {% block extra_modals %}
 <div class="modal fade" id="fullOfferHistoryModal" tabindex="-1" aria-labelledby="fullOfferHistoryModalLabel" aria-hidden="true">

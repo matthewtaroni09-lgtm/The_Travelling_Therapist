@@ -21,8 +21,8 @@ class BidInline(admin.TabularInline):
 @admin.register(Auction)
 class AuctionAdmin(admin.ModelAdmin):
     form = AuctionAdminForm
-    readonly_fields = ('cronID',)
-    list_display = ('auctionID', 'auctionNumber', 'clinic', 'payment_type_label', 'desired_offer_guidance', 'auctionStart', 'auctionEnd', 'active', 'closed', 'placementStart', 'placementEnd', 'winner', 'winningPrice')
+    readonly_fields = ('cronID', 'required_skills_display', 'negotiable_perks_display')
+    list_display = ('auctionID', 'auctionNumber', 'clinic', 'payment_type_label', 'desired_offer_guidance', 'minimum_compensation_display', 'required_skills_count', 'negotiable_perks_count', 'auctionStart', 'auctionEnd', 'active', 'closed', 'placementStart', 'placementEnd', 'winner', 'winningPrice')
     # Reverse alpahbetical order -name
     ordering = ('-auctionNumber', )
     search_fields = ('auctionID',)
@@ -33,7 +33,10 @@ class AuctionAdmin(admin.ModelAdmin):
             'fields': ('clinic', 'type', 'auctionNumber', 'auctionStart', 'auctionEnd', 'placementStart', 'placementEnd'),
         }),
         ('Offer Settings', {
-            'fields': ('paymentTypes', 'paymentTypesSelection', 'flatFeeType', 'desiredFeeSplitPercentage', 'desiredFlatFeeHourly', 'desiredFlatFeeTotalContract', 'minimumBidIncrement', 'currentLowBid', 'winner', 'winningPrice'),
+            'fields': ('paymentTypes', 'paymentTypesSelection', 'flatFeeType', 'desiredFeeSplitPercentage', 'minimumCompensation', 'desiredFlatFeeHourly', 'desiredFlatFeeTotalContract', 'minimumBidIncrement', 'currentLowBid', 'winner', 'winningPrice'),
+        }),
+        ('Skills and Perks', {
+            'fields': ('required_skills_display', 'negotiable_perks_display', 'requiredSkills', 'negotiablePerks'),
         }),
         ('Treatment Pricing', {
             'fields': ('treatmentCost', 'treatmentMin', 'assessmentCost', 'assessmentMin'),
@@ -65,6 +68,40 @@ class AuctionAdmin(admin.ModelAdmin):
         return ' | '.join(guidance) if guidance else 'None'
 
     desired_offer_guidance.short_description = 'Desired Offer'
+
+    def minimum_compensation_display(self, obj):
+        return f"${obj.minimumCompensation}" if obj.minimumCompensation is not None else 'None'
+
+    minimum_compensation_display.short_description = 'Minimum Compensation'
+
+    def required_skills_count(self, obj):
+        return len(obj.get_required_skill_rows())
+
+    required_skills_count.short_description = 'Skills'
+
+    def negotiable_perks_count(self, obj):
+        return len(obj.get_public_perk_rows())
+
+    negotiable_perks_count.short_description = 'Perks'
+
+    def required_skills_display(self, obj):
+        rows = obj.get_required_skill_rows()
+        if len(rows) == 0:
+            return 'None'
+        return '\n'.join([f"{row['name']} ({row['requirement']})" for row in rows])
+
+    required_skills_display.short_description = 'Required Skills Summary'
+
+    def negotiable_perks_display(self, obj):
+        rows = obj.get_private_perk_rows()
+        if len(rows) == 0:
+            return 'None'
+        return '\n'.join([
+            f"{row['name']} | Amount: ${row['amount']} | Details: {row['details'] or '-'}"
+            for row in rows
+        ])
+
+    negotiable_perks_display.short_description = 'Negotiable Perks Summary'
 
     def save_model(self, request, obj, form, change):
         admin = AdminSetting.objects.first()

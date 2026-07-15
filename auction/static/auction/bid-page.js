@@ -11,6 +11,17 @@ let currentOfferTabIndex = 0;
 $(document).ready(function () {
     $("#warningMessage").hide();
     let auctionEnd = "";
+    const confirmButton = document.getElementById('confirmBidButton');
+    const confirmTooltipWrap = document.getElementById('confirmBidTooltipWrap');
+    let confirmDisabledTooltip = null;
+
+    if (confirmTooltipWrap && window.bootstrap) {
+        confirmTooltipWrap.setAttribute('data-bs-toggle', 'tooltip');
+        confirmTooltipWrap.setAttribute('data-bs-placement', 'top');
+        confirmTooltipWrap.setAttribute('title', 'You must enter at least one offer before confirming.');
+        confirmDisabledTooltip = bootstrap.Tooltip.getOrCreateInstance(confirmTooltipWrap);
+        confirmDisabledTooltip.disable();
+    }
 
     $(document).keypress(function (event) {
         if (event.which === 13) {
@@ -103,7 +114,20 @@ $(document).ready(function () {
             }
         }
 
-        $('#confirmBidButton').prop('disabled', !(isValidFlatFeeOffer() || isValidFeeSplitOffer()));
+        const hasValidOffer = isValidFlatFeeOffer() || isValidFeeSplitOffer();
+        $('#confirmBidButton').prop('disabled', !hasValidOffer);
+
+        if (confirmTooltipWrap && confirmDisabledTooltip && confirmButton) {
+            if (confirmButton.disabled) {
+                confirmTooltipWrap.setAttribute('tabindex', '0');
+                confirmDisabledTooltip.enable();
+            }
+            else {
+                confirmDisabledTooltip.hide();
+                confirmDisabledTooltip.disable();
+                confirmTooltipWrap.removeAttribute('tabindex');
+            }
+        }
     }
 
     function setFooterState() {
@@ -116,6 +140,7 @@ $(document).ready(function () {
         $('#nextTabButton').toggle(!isFinalize);
         $('#skipTabButton').toggle(!isFinalize);
         $('#confirmBidButton').toggle(isFinalize);
+        $('#offerFaqHelper').toggle(!isFinalize);
     }
 
     function activateOfferTab(tabKey) {
@@ -182,7 +207,7 @@ $(document).ready(function () {
         clearWarning();
         if (!isValidFlatFeeOffer() && !isValidFeeSplitOffer()) {
             event.preventDefault();
-            showWarning('danger', 'Please enter at least one valid offer before confirming.');
+            return;
         }
     });
 
@@ -222,18 +247,6 @@ $(document).ready(function () {
     function auctionEnded() {
         $('#bidButton').hide();
         $('#exampleModal').modal('hide');
-        if (currentLowBid > reservePrice && reservePrice !== null && currentLowBid != null) {
-            $('#bidText').text('Reserve price not met');
-        }
-        else if (currentLowBid == null) {
-            $('#bidText').text('No bids placed');
-        }
-        else if (paymentType === 'Flat Fee') {
-            $('#bidText').text('Winning Bid: $' + currentLowBid.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','));
-        }
-        else {
-            $('#bidText').text('Winning Bid: ' + currentLowBid.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '%');
-        }
     }
 });
 

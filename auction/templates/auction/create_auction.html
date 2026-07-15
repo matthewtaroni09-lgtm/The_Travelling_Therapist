@@ -76,6 +76,216 @@
         font-size: 0.82rem;
         font-weight: 400;
       }
+
+      .ttt-create-grid-card {
+        border: 1px solid #d9e2e6;
+        border-radius: 12px;
+        background: #fbfcfc;
+        padding: 12px;
+      }
+
+      .ttt-create-grid-card h4 {
+        font-size: 1rem;
+        margin-bottom: 0.25rem;
+      }
+
+      .ttt-card-header-row {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 0.75rem;
+      }
+
+      .ttt-create-grid-card .ttt-card-subtitle {
+        color: #5c6773;
+        font-size: 0.88rem;
+        margin-bottom: 0.7rem;
+      }
+
+      .ttt-grid-head,
+      .ttt-grid-row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 10px;
+        align-items: center;
+      }
+
+      .ttt-grid-head {
+        font-size: 0.78rem;
+        letter-spacing: 0.02em;
+        color: #6f7a86;
+        text-transform: uppercase;
+        margin: 0.25rem 0 0.35rem;
+      }
+
+      .ttt-grid-row {
+        border-top: 1px solid #e8edf1;
+        padding: 8px 0;
+      }
+
+      .ttt-grid-row label {
+        margin: 0;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .ttt-grid-toggle {
+        border: 1px solid #8cc9b9;
+        border-radius: 999px;
+        overflow: hidden;
+        display: inline-flex;
+      }
+
+      .ttt-grid-toggle .btn-check+label {
+        border: 0;
+        border-radius: 0;
+        font-size: 0.78rem;
+        padding: 0.2rem 0.75rem;
+        color: #4a5b67;
+        background: #fff;
+      }
+
+      .ttt-grid-toggle .btn-check:checked+label {
+        background: #e5f5ef;
+        color: #187b60;
+        font-family: Futura-Bold, sans-serif;
+      }
+
+      .ttt-grid-toggle.is-disabled {
+        opacity: 0.45;
+      }
+
+      .ttt-grid-toggle .btn-check:disabled+label {
+        pointer-events: none;
+        background: #f3f5f7;
+        color: #8d99a4;
+      }
+
+      .ttt-perk-switch-wrap {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+      }
+
+      .ttt-perk-switch-wrap .form-check {
+        min-height: auto;
+        margin: 0;
+      }
+
+      .ttt-perk-switch {
+        width: 2.2rem;
+        height: 1.2rem;
+        cursor: pointer;
+      }
+
+      .ttt-perk-switch:checked {
+        background-color: #61c9ad;
+        border-color: #61c9ad;
+      }
+
+      .ttt-perk-expand-toggle {
+        border: 0;
+        background: transparent;
+        color: #5f6d7a;
+        padding: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .ttt-perk-expand-toggle.is-disabled {
+        opacity: 0.45;
+      }
+
+      .ttt-perk-expand-icon {
+        font-size: 1.25rem;
+        transition: transform 0.18s ease;
+      }
+
+      .ttt-perk-expand-toggle[aria-expanded="true"] .ttt-perk-expand-icon {
+        transform: rotate(90deg);
+      }
+
+      .ttt-perk-detail-panel {
+        border-top: 0;
+        border-bottom: 1px solid #e8edf1;
+        padding: 0 0 0.6rem;
+        margin-bottom: 0.2rem;
+      }
+
+      .ttt-perk-detail-label-wrap {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+      }
+
+      .ttt-perk-detail-label {
+        font-size: 0.78rem;
+        color: #5f6d7a;
+      }
+
+      .ttt-perk-help {
+        font-size: 0.77rem;
+        color: #637180;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+      }
+
+      .ttt-info-dot-sm {
+        width: 16px;
+        height: 16px;
+        border-radius: 999px;
+        border: 1px solid #8896a5;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        line-height: 1;
+        padding: 0;
+        background: #fff;
+        color: #6d7986;
+      }
+
+      .ttt-add-row {
+        border: 1px dashed #9fd3c5;
+        border-radius: 10px;
+        background: #f6fbf9;
+        padding: 10px;
+        margin-top: 0.6rem;
+      }
+
+      .ttt-add-trigger {
+        border: 0;
+        background: none;
+        color: #167b5f;
+        font-family: Futura-Bold, sans-serif;
+        font-size: 0.9rem;
+        padding: 0;
+      }
+
+      .ttt-remove-item {
+        border: 0;
+        background: none;
+        color: #7a8793;
+        font-size: 0.85rem;
+        padding: 0 4px;
+      }
+
+      .ttt-custom-input {
+        min-width: 0;
+      }
+
+      .ttt-empty-state {
+        border: 1px dashed #cfd8df;
+        border-radius: 10px;
+        background: #f8fafb;
+        color: #5f6d7a;
+        padding: 0.7rem 0.75rem;
+        margin: 0.45rem 0;
+        font-size: 0.9rem;
+      }
     </style>
     <form method="post" class="p-2">
       <!-- <form method="post" class="p-md-5"> -->
@@ -116,16 +326,32 @@
 
           {% if forloop.first %}
           <div id="desiredFeeSplitContainer" class="ttt-guidance-wrap d-none mt-2 mb-3">
-            <div class="d-flex align-items-center gap-2 mb-2">
-              <label for="id_desiredFeeSplitPercentage" class="form-label mb-0">Enter a suggested fee split percentage: <span class="ttt-optional-note">(optional)</span></label>
-              <button type="button" class="ttt-info-dot" data-bs-toggle="tooltip" data-bs-placement="top" title="This is a suggestion of an approximate value to guide clinicians. Clinicians are not bound by this value and may submit ANY offer.">i</button>
-            </div>
-            <div class="input-group input-group-sm" style="max-width: 280px;">
-              {{ form.desiredFeeSplitPercentage }}
-              <span class="input-group-text">%</span>
+            <div class="row g-3 align-items-start">
+              <div class="col-lg-6">
+                <div class="d-flex align-items-center gap-2 mb-2">
+                  <label for="id_desiredFeeSplitPercentage" class="form-label mb-0">Enter a suggested fee split percentage: <span class="ttt-optional-note">(optional)</span></label>
+                  <button type="button" class="ttt-info-dot" data-bs-toggle="tooltip" data-bs-placement="top" title="This is a suggestion of an approximate value to guide clinicians. Clinicians are not bound by this value and may submit ANY offer.">i</button>
+                </div>
+                <div class="input-group input-group-sm" style="max-width: 280px;">
+                  {{ form.desiredFeeSplitPercentage }}
+                  <span class="input-group-text">%</span>
+                </div>
+              </div>
+              <div class="col-lg-6">
+                <div class="d-flex align-items-center gap-2 mb-2">
+                  <label for="id_minimumCompensation" class="form-label mb-0">Add a minimum hourly compensation: <span class="ttt-optional-note">(optional)</span></label>
+                  <button type="button" class="ttt-info-dot" data-bs-toggle="tooltip" data-bs-placement="top" title="Set a minimum hourly amount you are willing to guarantee on fee split offers.">i</button>
+                </div>
+                <div class="input-group input-group-sm" style="max-width: 280px;">
+                  <span class="input-group-text">$</span>
+                  {{ form.minimumCompensation }}
+                  <span class="input-group-text">/hr</span>
+                </div>
+              </div>
             </div>
           </div>
 
+          <!--
           <div id="assessmentCheckBoxDiv" class="d-none mb-2 ms-4">
             <input id="assessmentCheckBox" name="sliderCheckBox" type="checkbox">
             <label class="form-label small mb-0">Include a minimum number of daily assessments?</label>
@@ -160,6 +386,7 @@
                   href="{% url 'about' %}#headingL" target="_blank"><b><i>Learn more</i></b></a></p>
             </div>
           </div>
+          -->
 
           <div class="row ms-2">
             <div class="mb-2 col-md-6 feeSplitCalcFields d-none">
@@ -278,6 +505,200 @@
           </div>
         </div>
       </div>
+
+      <div class="ttt-section-divider"></div>
+      <h3 class="fs-5 my-3 text-weight-normal">Additional Information</h3>
+      <div class="row g-3 mb-2">
+        <div class="col-lg-6">
+          <div class="ttt-create-grid-card" id="requiredSkillsContainer">
+            <h4 class="text-weight-normal mb-1">Required Skills &amp; Qualifications</h4>
+            <p class="ttt-card-subtitle">Choose what matters most and mark each as Required or Preferred.</p>
+            <div class="ttt-grid-head d-none">
+              <div>Skill / Qualification</div>
+              <div>Requirement Type</div>
+            </div>
+            <div id="requiredSkillsTypePrompt" class="ttt-empty-state">Please select a clinician type to view skills and qualifications.</div>
+            <div class="ttt-grid-list d-none" data-grid-kind="skill">
+            </div>
+            <div class="ttt-add-row d-none">
+              <button type="button" class="ttt-add-trigger" data-grid-target="requiredSkillsContainer">+ Add Custom Requirement</button>
+              <div class="d-flex gap-2 mt-2">
+                <input type="text" class="form-control form-control-sm ttt-custom-input" placeholder="Input custom requirement" data-custom-input="requiredSkillsContainer">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-6">
+          <div class="ttt-create-grid-card" id="negotiablePerksContainer">
+            <div class="ttt-card-header-row mb-1">
+              <h4 class="text-weight-normal mb-0">Negotiable Job Perks</h4>
+              <button type="button" class="ttt-info-dot" data-bs-toggle="tooltip" data-bs-placement="top" title="You can give clinicians additional information about the kind of 'perks' they could receive if they are matched with you for your listing. These amounts are shown to clinicians as negotiable, so it is up to you to negotiate these amounts privately with your candidate after the match!">i</button>
+            </div>
+            <p class="ttt-card-subtitle">Add perks clinicians can ask to negotiate before final match.</p>
+            <div class="ttt-grid-head">
+              <div>Perk</div>
+              <div>Included / Details</div>
+            </div>
+            <div class="ttt-grid-list" data-grid-kind="perk">
+              <div class="ttt-grid-row" data-item-name="Relocation assistance">
+                <span class="ttt-grid-item-label">Relocation assistance</span>
+                <div class="ttt-perk-switch-wrap">
+                  <div class="form-check form-switch">
+                    <input type="checkbox" class="form-check-input ttt-perk-switch" role="switch" aria-label="Relocation assistance included" checked>
+                  </div>
+                  <button type="button" class="ttt-perk-expand-toggle" aria-expanded="true" aria-controls="perk_relocation_details" aria-label="Toggle relocation assistance details">
+                    <span class="material-icons ttt-perk-expand-icon">chevron_right</span>
+                  </button>
+                </div>
+              </div>
+              <div class="ttt-perk-detail-panel" id="perk_relocation_details">
+                <div class="row g-2 align-items-end">
+                  <div class="col-sm-4">
+                    <label class="form-label form-label-sm mb-1 ttt-perk-detail-label-wrap">
+                      <span class="ttt-perk-detail-label">Amount <span class="text-muted">(optional)</span></span>
+                      <button type="button" class="ttt-info-dot-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Amounts are hidden on public listings and shown only to clinicians in the offer finalization step." aria-label="Perk amount info">i</button>
+                    </label>
+                    <div class="input-group input-group-sm">
+                      <span class="input-group-text">$</span>
+                      <input type="number" min="0" class="form-control ttt-perk-amount" placeholder="0">
+                    </div>
+                  </div>
+                  <div class="col-sm-8">
+                    <label class="form-label form-label-sm mb-1 ttt-perk-detail-label">Additional details <span class="text-muted">(optional)</span></label>
+                    <input type="text" class="form-control form-control-sm ttt-perk-details" placeholder="Example: one-time reimbursement after onboarding">
+                  </div>
+                </div>
+              </div>
+              <div class="ttt-grid-row" data-item-name="Housing/accommodation">
+                <span class="ttt-grid-item-label">Housing/accommodation</span>
+                <div class="ttt-perk-switch-wrap">
+                  <div class="form-check form-switch">
+                    <input type="checkbox" class="form-check-input ttt-perk-switch" role="switch" aria-label="Housing or accommodation included">
+                  </div>
+                  <button type="button" class="ttt-perk-expand-toggle" aria-expanded="false" aria-controls="perk_housing_details" aria-label="Toggle housing details">
+                    <span class="material-icons ttt-perk-expand-icon">chevron_right</span>
+                  </button>
+                </div>
+              </div>
+              <div class="ttt-perk-detail-panel d-none" id="perk_housing_details">
+                <div class="row g-2 align-items-end">
+                  <div class="col-sm-4">
+                    <label class="form-label form-label-sm mb-1 ttt-perk-detail-label-wrap">
+                      <span class="ttt-perk-detail-label">Amount <span class="text-muted">(optional)</span></span>
+                      <button type="button" class="ttt-info-dot-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Amounts are hidden on public listings and shown only to clinicians in the offer finalization step." aria-label="Perk amount info">i</button>
+                    </label>
+                    <div class="input-group input-group-sm">
+                      <span class="input-group-text">$</span>
+                      <input type="number" min="0" class="form-control ttt-perk-amount" placeholder="0">
+                    </div>
+                  </div>
+                  <div class="col-sm-8">
+                    <label class="form-label form-label-sm mb-1 ttt-perk-detail-label">Additional details <span class="text-muted">(optional)</span></label>
+                    <input type="text" class="form-control form-control-sm ttt-perk-details" placeholder="Example: private room near clinic">
+                  </div>
+                </div>
+              </div>
+              <div class="ttt-grid-row" data-item-name="Travel reimbursement">
+                <span class="ttt-grid-item-label">Travel reimbursement</span>
+                <div class="ttt-perk-switch-wrap">
+                  <div class="form-check form-switch">
+                    <input type="checkbox" class="form-check-input ttt-perk-switch" role="switch" aria-label="Travel reimbursement included">
+                  </div>
+                  <button type="button" class="ttt-perk-expand-toggle" aria-expanded="false" aria-controls="perk_travel_details" aria-label="Toggle travel details">
+                    <span class="material-icons ttt-perk-expand-icon">chevron_right</span>
+                  </button>
+                </div>
+              </div>
+              <div class="ttt-perk-detail-panel d-none" id="perk_travel_details">
+                <div class="row g-2 align-items-end">
+                  <div class="col-sm-4">
+                    <label class="form-label form-label-sm mb-1 ttt-perk-detail-label-wrap">
+                      <span class="ttt-perk-detail-label">Amount <span class="text-muted">(optional)</span></span>
+                      <button type="button" class="ttt-info-dot-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Amounts are hidden on public listings and shown only to clinicians in the offer finalization step." aria-label="Perk amount info">i</button>
+                    </label>
+                    <div class="input-group input-group-sm">
+                      <span class="input-group-text">$</span>
+                      <input type="number" min="0" class="form-control ttt-perk-amount" placeholder="0">
+                    </div>
+                  </div>
+                  <div class="col-sm-8">
+                    <label class="form-label form-label-sm mb-1 ttt-perk-detail-label">Additional details <span class="text-muted">(optional)</span></label>
+                    <input type="text" class="form-control form-control-sm ttt-perk-details" placeholder="Example: mileage, flights, parking">
+                  </div>
+                </div>
+              </div>
+              <div class="ttt-grid-row" data-item-name="Signing bonus">
+                <span class="ttt-grid-item-label">Signing bonus</span>
+                <div class="ttt-perk-switch-wrap">
+                  <div class="form-check form-switch">
+                    <input type="checkbox" class="form-check-input ttt-perk-switch" role="switch" aria-label="Signing bonus included">
+                  </div>
+                  <button type="button" class="ttt-perk-expand-toggle" aria-expanded="false" aria-controls="perk_signing_details" aria-label="Toggle signing bonus details">
+                    <span class="material-icons ttt-perk-expand-icon">chevron_right</span>
+                  </button>
+                </div>
+              </div>
+              <div class="ttt-perk-detail-panel d-none" id="perk_signing_details">
+                <div class="row g-2 align-items-end">
+                  <div class="col-sm-4">
+                    <label class="form-label form-label-sm mb-1 ttt-perk-detail-label-wrap">
+                      <span class="ttt-perk-detail-label">Amount <span class="text-muted">(optional)</span></span>
+                      <button type="button" class="ttt-info-dot-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Amounts are hidden on public listings and shown only to clinicians in the offer finalization step." aria-label="Perk amount info">i</button>
+                    </label>
+                    <div class="input-group input-group-sm">
+                      <span class="input-group-text">$</span>
+                      <input type="number" min="0" class="form-control ttt-perk-amount" placeholder="0">
+                    </div>
+                  </div>
+                  <div class="col-sm-8">
+                    <label class="form-label form-label-sm mb-1 ttt-perk-detail-label">Additional details <span class="text-muted">(optional)</span></label>
+                    <input type="text" class="form-control form-control-sm ttt-perk-details" placeholder="Example: payable after probation">
+                  </div>
+                </div>
+              </div>
+              <div class="ttt-grid-row" data-item-name="Flexible schedule">
+                <span class="ttt-grid-item-label">Flexible schedule</span>
+                <div class="ttt-perk-switch-wrap">
+                  <div class="form-check form-switch">
+                    <input type="checkbox" class="form-check-input ttt-perk-switch" role="switch" aria-label="Flexible schedule included">
+                  </div>
+                  <button type="button" class="ttt-perk-expand-toggle" aria-expanded="false" aria-controls="perk_flexible_details" aria-label="Toggle flexible schedule details">
+                    <span class="material-icons ttt-perk-expand-icon">chevron_right</span>
+                  </button>
+                </div>
+              </div>
+              <div class="ttt-perk-detail-panel d-none" id="perk_flexible_details">
+                <div class="row g-2 align-items-end">
+                  <div class="col-sm-4">
+                    <label class="form-label form-label-sm mb-1 ttt-perk-detail-label-wrap">
+                      <span class="ttt-perk-detail-label">Amount <span class="text-muted">(optional)</span></span>
+                      <button type="button" class="ttt-info-dot-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Amounts are hidden on public listings and shown only to clinicians in the offer finalization step." aria-label="Perk amount info">i</button>
+                    </label>
+                    <div class="input-group input-group-sm">
+                      <span class="input-group-text">$</span>
+                      <input type="number" min="0" class="form-control ttt-perk-amount" placeholder="0">
+                    </div>
+                  </div>
+                  <div class="col-sm-8">
+                    <label class="form-label form-label-sm mb-1 ttt-perk-detail-label">Additional details <span class="text-muted">(optional)</span></label>
+                    <input type="text" class="form-control form-control-sm ttt-perk-details" placeholder="Example: condensed work week options">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="ttt-add-row">
+              <button type="button" class="ttt-add-trigger" data-grid-target="negotiablePerksContainer">+ Add Custom Perk</button>
+              <div class="d-flex gap-2 mt-2">
+                <input type="text" class="form-control form-control-sm ttt-custom-input" placeholder="Input custom perk" data-custom-input="negotiablePerksContainer">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <input type="hidden" id="id_requiredSkillsPayload" name="requiredSkillsPayload" value="[]">
+      <input type="hidden" id="id_negotiablePerksPayload" name="negotiablePerksPayload" value="[]">
+
       <div class="mb-3">
         <div class="ttt-section-divider"></div>
         <h3 class="fs-5 my-3 text-weight-normal">Demographics</h3>
@@ -340,7 +761,7 @@
   </div>
 </div>
 <!-- </div> -->
-<script src="{% static 'auction/create_auction.js' %}?v=20260708-create-layout-cleanup"></script>
+<script src="{% static 'auction/create_auction.js' %}?v=20260715-skills-by-clinician-v2"></script>
 <script src="{% static 'auction/textarea.js' %}"></script>
 {% else %}
 <p>You must be logged in to access this page. Please <a href="{% url 'login' %}">login here</a>

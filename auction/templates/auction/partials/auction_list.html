@@ -1,12 +1,20 @@
 {% csrf_token %}
 {% if auction_search == False %}
 {% for auction in auction %}
+{% if auction.closed and not auction.active %}
+{% include 'auction/card_past_auction.html' with auction=auction %}
+{% else %}
 {% include 'auction/card_active_auction.html' with auction=auction %}
+{% endif %}
 {% endfor %}
 {% else %}
 {% if length > 0 and auction_search %}
 {% for auction in auction %}
+{% if auction.closed and not auction.active %}
+{% include 'auction/card_past_auction.html' with auction=auction %}
+{% else %}
 {% include 'auction/card_active_auction.html' with auction=auction %}
+{% endif %}
 {% endfor %}
 {% else %}
 <p>There are no auctions that match your search criteria.</p>

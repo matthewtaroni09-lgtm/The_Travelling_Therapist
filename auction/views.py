@@ -21,7 +21,7 @@ import datetime
 from datetime import timedelta
 from . import scheduled_tasks
 from . import emails
-from .models import PROVINCES, Account, AdminSetting, Auction, Bid, Demographic, DemographicType, PracticeArea, PracticeAreaType, User, Account, UserType, PopupMessage, MessageAcknowledgement, Page, PaymentType, Number, Raffle, RaffleEntry, Referral, RaffleTicket
+from .models import PROVINCES, Account, AdminSetting, Auction, Bid, Demographic, DemographicType, PracticeArea, PracticeAreaType, User, Account, UserType, PopupMessage, MessageAcknowledgement, Page, PaymentType, Number, Raffle, RaffleEntry, Referral, RaffleTicket, LISTING_SKILL_OPTIONS
 from django.contrib.auth.forms import PasswordResetForm
 from django.utils.http import urlsafe_base64_encode
 from django.contrib.auth.tokens import default_token_generator
@@ -39,6 +39,311 @@ import json
 import requests
 import logging
 logger = logging.getLogger(__name__)
+
+DEFAULT_PERK_OPTIONS = [
+    'Relocation assistance',
+    'Housing/accommodation',
+    'Travel reimbursement',
+    'Signing bonus',
+    'Flexible schedule',
+]
+
+CLINICIAN_SKILL_OPTIONS_BY_TYPE = {
+    'physio': [
+        'Canadian Physiotherapy License',
+        'PT Resident',
+        'Physiotherapy Insurance',
+        'First Aid/CPR/AED',
+        'Digital/Software Based Charting',
+        'AI Charting',
+        'Working with a PTA/Rehab Assistant Experience',
+        'Outpatient & Community Experience',
+        'Hospital/Long Term Care/Retirement Home Experience',
+        'Home care Experience',
+        'Virtual Care Experience',
+        'Orthopedics Experience',
+        'Neurological Experience',
+        'Cardiorespiratory Experience',
+        'Sports Experience',
+        "Women's Health & Pelvic Health Experience",
+        'Acupuncture',
+        'Spinal Manipulation',
+        'Pelvic Internal Examination',
+        'Wound Care',
+        'Tracheal Suctioning',
+        'Administering a Substance by Inhalation',
+    ],
+    'pta': [
+        'Diploma/Degree in PTA/OTA/Rehab Assistant',
+        'Kinesiology Degree',
+        'Kinesiologist Certification',
+        'Personal Trainer Certification',
+        'Practice Insurance',
+        'First Aid/CPR/AED',
+        'Digital/Software Based Charting',
+        'AI Charting',
+        'Working with a PT Experience',
+        'Working with an OT Experience',
+        'Outpatient & Community Experience',
+        'Hospital/Long Term Care/Retirement Home Experience',
+        'Home care Experience',
+        'Virtual Care Experience',
+        'Orthopedics Experience',
+        'Neurological Experience',
+        'Cardiorespiratory Experience',
+        'Geriatrics Experience',
+        'Sports Experience',
+        "Women's Health & Pelvic Health Experience",
+    ],
+    'rmt': [
+        'Canadian Registered Massage Therapy License',
+        'Massage Therapy Insurance',
+        'First Aid/CPR/AED',
+        'Digital/Software Based Charting',
+        'AI Charting',
+        'Outpatient & Community Experience',
+        'Hospital/Long Term Care/Retirement Home',
+        'Home care Experience',
+        'Orthopedics Experience',
+        'Sports Experience',
+        "Women's Health & Pelvic Health Experience",
+        'Acupuncture',
+    ],
+}
+
+DEFAULT_OTHER_CLINICIAN_SKILL_OPTIONS = [
+    'Canadian License to Practice',
+    'Practice Insurance',
+    'First Aid/CPR/AED',
+    'Hospital/Long Term Care/Retirement Home',
+    'Home care Experience',
+    'Orthopedics Experience',
+    'Sports Experience',
+    "Women's Health & Pelvic Health Experience",
+]
+
+DEFAULT_OTHER_CLINICIAN_SKILL_OPTIONS_LOWER = {name.lower() for name in DEFAULT_OTHER_CLINICIAN_SKILL_OPTIONS}
+
+NON_REGULATED_CLINICIAN_KEYWORDS = [
+    'dietary aide',
+    'pta',
+    'ota',
+    'rehab assistant',
+    'psw',
+    'recreation therapist',
+    'dental assistant',
+]
+
+
+def _clean_text(value):
+    return str(value or '').strip()
+
+
+def resolve_clinician_skill_key(type_label):
+    normalized = _clean_text(type_label).lower()
+    if 'physio' in normalized or 'physiotherapist' in normalized or 'physiotherapy' in normalized:
+        return 'physio'
+    if (
+        'pta' in normalized
+        or 'ota' in normalized
+        or 'rehab assistant' in normalized
+        or 'rehab assis' in normalized
+        or 'rehab ass' in normalized
+    ):
+        return 'pta'
+    if (
+        'rmt' in normalized
+        or 'massage therapist' in normalized
+        or 'registered massage' in normalized
+        or 'massage therapy' in normalized
+    ):
+        return 'rmt'
+    return 'default'
+
+
+def include_license_skill_for_type(type_label):
+    normalized = _clean_text(type_label).lower()
+    return not any(keyword in normalized for keyword in NON_REGULATED_CLINICIAN_KEYWORDS)
+
+
+def get_clinician_skill_options_for_type(type_label):
+    skill_key = resolve_clinician_skill_key(type_label)
+    if skill_key in CLINICIAN_SKILL_OPTIONS_BY_TYPE:
+        return list(CLINICIAN_SKILL_OPTIONS_BY_TYPE[skill_key])
+
+    options = list(DEFAULT_OTHER_CLINICIAN_SKILL_OPTIONS)
+    if not include_license_skill_for_type(type_label):
+        options = [name for name in options if name != 'Canadian License to Practice']
+    return options
+
+
+def suppress_legacy_default_skill_for_type(type_label, skill_name):
+    skill_key = resolve_clinician_skill_key(type_label)
+    if skill_key not in ('physio', 'pta', 'rmt'):
+        return False
+    return _clean_text(skill_name).lower() in DEFAULT_OTHER_CLINICIAN_SKILL_OPTIONS_LOWER
+
+
+def parse_required_skills_payload(raw_payload):
+    try:
+        payload = json.loads(raw_payload) if raw_payload else []
+    except (TypeError, ValueError):
+        payload = []
+
+    rows = []
+    for item in payload:
+        if not isinstance(item, dict):
+            continue
+        name = _clean_text(item.get('name'))
+        if not name:
+            continue
+
+        requirement_raw = _clean_text(item.get('requirement')).lower()
+        requirement = 'Preferred' if requirement_raw == 'preferred' else 'Required'
+        selected = bool(item.get('selected', False))
+
+        rows.append({
+            'name': name,
+            'selected': selected,
+            'requirement': requirement,
+            'custom': bool(item.get('custom', False)),
+        })
+    return rows
+
+
+def parse_negotiable_perks_payload(raw_payload):
+    try:
+        payload = json.loads(raw_payload) if raw_payload else []
+    except (TypeError, ValueError):
+        payload = []
+
+    rows = []
+    for item in payload:
+        if not isinstance(item, dict):
+            continue
+        name = _clean_text(item.get('name'))
+        if not name:
+            continue
+
+        included = bool(item.get('selected', False) or item.get('included', False))
+        details = _clean_text(item.get('details'))
+
+        try:
+            amount = int(item.get('amount')) if item.get('amount') not in (None, '') else 0
+        except (TypeError, ValueError):
+            amount = 0
+
+        rows.append({
+            'name': name,
+            'selected': included,
+            'included': included,
+            'amount': max(amount, 0),
+            'details': details,
+            'custom': bool(item.get('custom', False)),
+        })
+    return rows
+
+
+def build_clinician_skills_payload(account, skill_options=None):
+    if skill_options is None:
+        skill_options = get_clinician_skill_options_for_type(str(getattr(account, 'userType', '')))
+
+    selected_names = {name.lower() for name in account.get_clinician_skill_names()}
+    payload = []
+
+    for option in skill_options:
+        payload.append({
+            'name': option,
+            'selected': option.lower() in selected_names,
+            'custom': False,
+        })
+
+    type_label = str(getattr(account, 'userType', '') or '')
+    known_lower = {option.lower() for option in skill_options}
+    for selected_name in account.get_clinician_skill_names():
+        if suppress_legacy_default_skill_for_type(type_label, selected_name):
+            continue
+        if selected_name.lower() not in known_lower:
+            payload.append({
+                'name': selected_name,
+                'selected': True,
+                'custom': True,
+            })
+
+    return payload
+
+
+def parse_clinician_skills_payload(raw_payload):
+    try:
+        payload = json.loads(raw_payload) if raw_payload else []
+    except (TypeError, ValueError):
+        payload = []
+
+    rows = []
+    for item in payload:
+        if not isinstance(item, dict):
+            continue
+        name = _clean_text(item.get('name'))
+        if not name:
+            continue
+
+        rows.append({
+            'name': name,
+            'selected': bool(item.get('selected', False)),
+            'custom': bool(item.get('custom', False)),
+        })
+
+    return rows
+
+
+def parse_offer_selected_skills_payload(raw_payload):
+    try:
+        payload = json.loads(raw_payload) if raw_payload else []
+    except (TypeError, ValueError):
+        payload = []
+
+    selected = []
+    for item in payload:
+        if isinstance(item, dict):
+            name = _clean_text(item.get('name'))
+            is_selected = bool(item.get('selected', False))
+            if name and is_selected:
+                selected.append(name)
+        elif isinstance(item, str):
+            name = _clean_text(item)
+            if name:
+                selected.append(name)
+
+    return list(dict.fromkeys(selected))
+
+
+def build_skill_match(required_skill_rows, clinician_skill_names):
+    clinician_map = {name.lower() for name in clinician_skill_names}
+    required_met = []
+    required_missing = []
+    preferred_met = []
+    preferred_missing = []
+
+    for row in required_skill_rows:
+        name = _clean_text(row.get('name'))
+        if not name:
+            continue
+
+        is_match = name.lower() in clinician_map
+        requirement = _clean_text(row.get('requirement')) or 'Required'
+        if requirement == 'Preferred':
+            (preferred_met if is_match else preferred_missing).append(name)
+        else:
+            (required_met if is_match else required_missing).append(name)
+
+    return {
+        'required_met': required_met,
+        'required_missing': required_missing,
+        'preferred_met': preferred_met,
+        'preferred_missing': preferred_missing,
+        'required_total': len(required_met) + len(required_missing),
+        'preferred_total': len(preferred_met) + len(preferred_missing),
+    }
 
 class PasswordsChangeView(PasswordChangeView):
     form_class = PasswordChangingForm
@@ -381,12 +686,26 @@ def profile(request):
 
         for auction in active_auctions_list + past_auctions_list:
             auction.therapist_offer_history = therapist_offer_history_by_auction.get(auction.auctionID, [])
+        therapist_type_label = str(request.user.account.userType or '')
+        therapist_skill_options = get_clinician_skill_options_for_type(therapist_type_label)
+        clinician_skills_payload = build_clinician_skills_payload(request.user.account, therapist_skill_options)
+        selected_profile_skill_names = request.user.account.get_clinician_skill_names()
+        skill_option_names = {name.lower() for name in therapist_skill_options}
+        custom_profile_skills = [
+            name for name in selected_profile_skill_names
+            if name.lower() not in skill_option_names and not suppress_legacy_default_skill_for_type(therapist_type_label, name)
+        ]
         if request.method == 'POST':
             user_therapist_form = UserFormTherapist(request.POST, instance=request.user)
             if user_therapist_form.is_valid():
                 user_form = user_therapist_form.save(commit=False)
                 user_form.username = user_therapist_form.cleaned_data.get('email')
                 user_form.save()
+
+                clinician_skills = parse_clinician_skills_payload(request.POST.get('clinicianSkillsPayload', '[]'))
+                request.user.account.clinicianSkills = clinician_skills
+                request.user.account.save(update_fields=['clinicianSkills'])
+
                 # messages.success(request, f'Your profile has been updated!')
                 return HttpResponseRedirect('profile')
             else:
@@ -403,6 +722,10 @@ def profile(request):
                     'ticket_history': ticket_history,
                     'next_award_date': parameter.get('next_award_date'),
                     'therapist_offer_history': therapist_offer_history,
+                    'skill_options': therapist_skill_options,
+                    'selected_profile_skill_names': selected_profile_skill_names,
+                    'custom_profile_skills': custom_profile_skills,
+                    'clinician_skills_payload_json': json.dumps(clinician_skills_payload),
                 })
                 return render(request, 'auction/profile.html', parameter)
         else:
@@ -422,6 +745,10 @@ def profile(request):
                 'ticket_history': ticket_history,
                 'next_award_date': parameter.get('next_award_date'),
                 'therapist_offer_history': therapist_offer_history,
+                'skill_options': therapist_skill_options,
+                'selected_profile_skill_names': selected_profile_skill_names,
+                'custom_profile_skills': custom_profile_skills,
+                'clinician_skills_payload_json': json.dumps(clinician_skills_payload),
             })
             return render(request, 'auction/profile.html', parameter)
 
@@ -437,11 +764,95 @@ def view_auction(request, auction_id):
     payment_type = auction.get_primary_payment_type()
     allow_fee_split = 'Fee Split' in payment_types
     allow_flat_fee = 'Flat Fee' in payment_types
+    can_place_offer = (
+        request.user.is_authenticated
+        and hasattr(request.user, 'account')
+        and request.user.account.userType == auction.type
+        and auction.active
+    )
     auction_change = False
     submitted = False
     max_bid = 0
     assessments = auction.assessmentCost is not None
     treatments = auction.treatmentCost is not None
+    can_review_offers = (
+        request.user.is_authenticated
+        and hasattr(request.user, 'account')
+        and request.user.account == auction.clinic
+        and auction.active
+    )
+    clinic_offer_rows = []
+    required_skill_rows = auction.get_required_skill_rows()
+    public_perk_rows = auction.get_public_perk_rows()
+    private_perk_rows = auction.get_private_perk_rows()
+    clinician_profile_skills = []
+    finalize_skill_rows = []
+
+    if can_place_offer and hasattr(request.user, 'account'):
+        clinician_profile_skills = request.user.account.get_clinician_skill_names()
+        profile_skill_set = {name.lower() for name in clinician_profile_skills}
+        for skill_row in required_skill_rows:
+            skill_name = _clean_text(skill_row.get('name'))
+            if skill_name:
+                finalize_skill_rows.append({
+                    'name': skill_name,
+                    'requirement': skill_row.get('requirement') or 'Required',
+                    'selected': skill_name.lower() in profile_skill_set,
+                })
+
+    if can_review_offers:
+        grouped_offers = {}
+        review_bids = Bid.objects.filter(auction=auction, active=True).select_related('user').order_by('-created')
+
+        for bid in review_bids:
+            submission_key = str(bid.submissionGroup) if bid.submissionGroup else f"legacy-{bid.user_id}-{bid.created.isoformat()}-{bid.pk}"
+            if submission_key not in grouped_offers:
+                first_initial = (bid.user.first_name or '').strip()[:1]
+                last_initial = (bid.user.last_name or '').strip()[:1]
+                if not first_initial and not last_initial:
+                    username_initials = (bid.user.username or 'U').strip()[:2].upper()
+                    initials = username_initials if username_initials else 'U'
+                else:
+                    initials = f"{first_initial}{last_initial}".upper()
+
+                grouped_offers[submission_key] = {
+                    'hcp_initials': initials,
+                    'submitted_at': bid.created,
+                    'fee_split_offer': None,
+                    'fee_split_bid_id': None,
+                    'flat_fee_offer': None,
+                    'flat_fee_bid_id': None,
+                    'clinician_skill_names': bid.user.account.get_clinician_skill_names() if hasattr(bid.user, 'account') else [],
+                    'selected_skill_names': bid.selectedSkills or [],
+                    'skill_match': build_skill_match(required_skill_rows, bid.selectedSkills or []),
+                    'additional_profile_skills': [],
+                    'custom_profile_skills': [],
+                }
+
+                if hasattr(bid.user, 'account'):
+                    profile_skills = bid.user.account.get_clinician_skill_names()
+                    selected_skills_lower = {s.lower() for s in (bid.selectedSkills or [])}
+                    bid_skill_options = get_clinician_skill_options_for_type(str(bid.user.account.userType or ''))
+                    default_profile_skills_lower = {skill.lower() for skill in bid_skill_options}
+                    grouped_offers[submission_key]['additional_profile_skills'] = [
+                        s for s in profile_skills if s.lower() not in selected_skills_lower
+                    ]
+                    grouped_offers[submission_key]['custom_profile_skills'] = [
+                        s for s in profile_skills
+                        if s.lower() not in default_profile_skills_lower and not suppress_legacy_default_skill_for_type(str(bid.user.account.userType or ''), s)
+                    ]
+
+            if bid.offerType == 'Fee Split':
+                grouped_offers[submission_key]['fee_split_offer'] = f"{int(bid.amount)}%"
+                grouped_offers[submission_key]['fee_split_bid_id'] = str(bid.bidID)
+            elif bid.offerType == 'Flat Fee':
+                flat_fee_amount = f"${int(bid.amount)}"
+                if auction.flatFeeType == 'hourly':
+                    flat_fee_amount += '/hr'
+                grouped_offers[submission_key]['flat_fee_offer'] = flat_fee_amount
+                grouped_offers[submission_key]['flat_fee_bid_id'] = str(bid.bidID)
+
+        clinic_offer_rows = list(grouped_offers.values())
 
     if num_bids > 0 and auction.currentLowBid is not None and auction.minimumBidIncrement is not None:
         diff = auction.currentLowBid - auction.minimumBidIncrement
@@ -454,6 +865,33 @@ def view_auction(request, auction_id):
 
     if request.method == 'POST':
         print('post')
+        if can_review_offers and request.POST.get('acceptOfferAction') == '1':
+            selected_bid_id = (request.POST.get('selectedOfferBidId') or '').strip()
+
+            if not selected_bid_id:
+                messages.error(request, 'Please select an offer before confirming.')
+                return HttpResponseRedirect('/auction/' + str(auction.auctionID))
+
+            selected_bid = Bid.objects.filter(bidID=selected_bid_id, auction=auction, active=True).select_related('user').first()
+            if selected_bid is None:
+                messages.error(request, 'The selected offer is no longer available.')
+                return HttpResponseRedirect('/auction/' + str(auction.auctionID))
+
+            auction.winner = selected_bid.user
+            auction.winningPrice = selected_bid.amount
+            auction.currentLowBid = selected_bid.amount
+            auction.active = False
+            auction.closed = True
+            auction.modified = timezone.now()
+            auction.modifiedBy = request.user
+            auction.save()
+
+            Bid.objects.filter(auction=auction, active=True).update(active=False)
+
+            offer_label = f"${int(selected_bid.amount)}" if selected_bid.offerType == 'Flat Fee' else f"{int(selected_bid.amount)}%"
+            messages.success(request, f"Offer accepted: {selected_bid.offerType} {offer_label}.")
+            return HttpResponseRedirect('/auction/' + str(auction.auctionID))
+
         flat_fee_raw = (request.POST.get('flatFeeAmount') or '').strip()
         fee_split_raw = (request.POST.get('feeSplitAmount') or '').strip()
         form = BidForm(payment_type=payment_type)
@@ -463,6 +901,7 @@ def view_auction(request, auction_id):
         previous_bid_count = Bid.objects.filter(user=request.user, auction=auction).count()
         primary_previous_low_bid = auction.get_low_offer_amount(payment_type) or 0
         current_lowest_bid_user = bids[0].user if len(bids) > 0 else None
+        selected_offer_skills = parse_offer_selected_skills_payload(request.POST.get('offerSelectedSkillsPayload', '[]'))
 
         if allow_flat_fee and flat_fee_raw:
             try:
@@ -476,6 +915,7 @@ def view_auction(request, auction_id):
                         amount=flat_fee_amount,
                         offerType='Flat Fee',
                         submissionGroup=submission_group,
+                        selectedSkills=selected_offer_skills,
                         active=True,
                         createdBy=request.user,
                     ))
@@ -496,6 +936,7 @@ def view_auction(request, auction_id):
                         amount=fee_split_amount,
                         offerType='Fee Split',
                         submissionGroup=submission_group,
+                        selectedSkills=selected_offer_skills,
                         active=True,
                         createdBy=request.user,
                     ))
@@ -533,11 +974,8 @@ def view_auction(request, auction_id):
                 auction.save()
 
             if hasattr(request.user, 'account'):
-                if previous_bid_count == 0:
-                    request.user.account.add_tickets(5, f"Placed bid on listing {auction.auctionID}")
-                    messages.success(request, 'You have earned 5 raffle tickets for placing an offer!', extra_tags='ticket_earned')
-                else:
-                    messages.success(request, 'Your offers have been successfully placed!')
+                request.user.account.add_tickets(5, f"Placed bid on listing {auction.auctionID}")
+                messages.success(request, 'You have earned 5 raffle tickets for placing an offer!', extra_tags='ticket_earned')
 
             if len(payment_types) == 1 and current_lowest_bid_user is not None and primary_bid_submitted is not None and (primary_previous_low_bid == 0 or primary_bid_submitted.amount <= primary_previous_low_bid):
                 check_out_bid(auction.auctionID, primary_bid_submitted, request, current_lowest_bid_user, primary_bid_submitted.user)
@@ -574,7 +1012,15 @@ def view_auction(request, auction_id):
                 'allow_fee_split': allow_fee_split,
                 'allow_flat_fee': allow_flat_fee,
                 'assessments': assessments,
-                'treatments': treatments
+                'treatments': treatments,
+                'can_place_offer': can_place_offer,
+                'can_review_offers': can_review_offers,
+                'clinic_offer_rows': clinic_offer_rows,
+                'required_skill_rows': required_skill_rows,
+                'public_perk_rows': public_perk_rows,
+                'private_perk_rows': private_perk_rows,
+                'finalize_skill_rows': finalize_skill_rows,
+                'clinician_profile_skills': clinician_profile_skills,
             }
             return render(request, 'auction/view_auction.html', context)
     else:
@@ -590,7 +1036,15 @@ def view_auction(request, auction_id):
                 'allow_fee_split': allow_fee_split,
                 'allow_flat_fee': allow_flat_fee,
                 'assessments': assessments,
-                'treatments': treatments
+                'treatments': treatments,
+                'can_place_offer': can_place_offer,
+                'can_review_offers': can_review_offers,
+                'clinic_offer_rows': clinic_offer_rows,
+                'required_skill_rows': required_skill_rows,
+                'public_perk_rows': public_perk_rows,
+                'private_perk_rows': private_perk_rows,
+                'finalize_skill_rows': finalize_skill_rows,
+                'clinician_profile_skills': clinician_profile_skills,
             }
         return render(request, 'auction/view_auction.html', context)
     
@@ -763,9 +1217,24 @@ def get_popups(request):
                 message = message + " " + popup.message
                 title = title + " " + popup.title
 
-    if message == '' and click_id is None and request_page == 'View_Auction':
-        title = 'Before You Bid'
-        message = 'Check out our <a href="/faq" target="_blank" rel="noopener noreferrer">FAQ</a> for more information on the bidding process.'
+    if (
+        message == ''
+        and click_id is None
+        and request_page == 'View_Auction'
+        and request.user.is_authenticated
+        and hasattr(request.user, 'account')
+    ):
+        account = request.user.account
+        try:
+            is_practitioner = account.get_split_user_type() != 'Clinic'
+        except Exception:
+            is_practitioner = False
+
+        if is_practitioner and not account.auction_message_displayed:
+            title = 'Before You Bid'
+            message = 'Check out our <a href="/faq" target="_blank" rel="noopener noreferrer">FAQ</a> for more information on the bidding process.'
+            account.auction_message_displayed = True
+            account.save(update_fields=['auction_message_displayed'])
 
     return JsonResponse({'title': title, 'message': message})
 
@@ -938,6 +1407,8 @@ def create_auction(request):
             if form.is_valid():
                 print('valid form')
                 auction = form.save(commit=False)
+                auction.requiredSkills = parse_required_skills_payload(request.POST.get('requiredSkillsPayload', '[]'))
+                auction.negotiablePerks = parse_negotiable_perks_payload(request.POST.get('negotiablePerksPayload', '[]'))
                 auction.clinic = request.user.account
                 auction.auctionStart = datetime.datetime.now(pytz.timezone('America/Toronto'))
                 auction.auctionEnd = datetime.datetime.now(pytz.timezone('America/Toronto')) + datetime.timedelta(seconds=admin.defaultAuctionLength)
@@ -982,7 +1453,8 @@ def create_auction(request):
                 'submitted_auction': submitted_auction,
                 'show_form': True,
                 'user_types': user_types,
-                'selected': selected
+                'selected': selected,
+                'listing_skill_options': LISTING_SKILL_OPTIONS,
                 })
                 # return render(request, 'auction/create_auction.html', parameter)
 
@@ -1045,7 +1517,8 @@ def create_auction(request):
                     'submitted_auction': submitted_auction,
                     'show_form': True,
                     'user_types': user_types,
-                    'selected': selected
+                    'selected': selected,
+                    'listing_skill_options': LISTING_SKILL_OPTIONS,
                 })
                 return render(request, 'auction/create_auction.html', parameter)
         else:
@@ -1069,7 +1542,8 @@ def create_auction(request):
                 'show_form': True,
                 'user_types': user_types,
                 'selected': selected,
-                'remember_last_auction': remember_last_auction
+                'remember_last_auction': remember_last_auction,
+                'listing_skill_options': LISTING_SKILL_OPTIONS,
             })
             return render(request, 'auction/create_auction.html', parameter)
     else:
@@ -1113,6 +1587,7 @@ def register(request):
                     account.province = form.cleaned_data.get('province')
                     account.country = 'Canada'
                     account.about = form.cleaned_data.get('about')
+                    account.clinicWebsite = form.cleaned_data.get('clinicWebsite')
                     account.clinicName = form.cleaned_data.get('clinicName')
                     account.imageOne = form.cleaned_data.get('imageOne')
                     account.imageTwo = form.cleaned_data.get('imageTwo')

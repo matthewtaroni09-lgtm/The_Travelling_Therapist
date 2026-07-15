@@ -97,6 +97,12 @@ class AuctionForm(forms.ModelForm):
         max_value=100,
     )
 
+    minimumCompensation = forms.IntegerField(
+        label='Minimum hourly compensation (optional)',
+        required=False,
+        min_value=1,
+    )
+
     desiredFlatFeeHourly = forms.IntegerField(
         label='Desired hourly flat fee (optional)',
         required=False,
@@ -117,6 +123,7 @@ class AuctionForm(forms.ModelForm):
             'placementEnd', 
             'flatFeeType',
             'desiredFeeSplitPercentage',
+            'minimumCompensation',
             'desiredFlatFeeHourly',
             'desiredFlatFeeTotalContract',
             'treatmentCost',
@@ -158,6 +165,7 @@ class AuctionForm(forms.ModelForm):
             'sundayStart': forms.TimeInput(attrs={'class': 'form-control', 'placeholder': 'Select a date', 'type': 'time'}),
             'sundayEnd': forms.TimeInput(attrs={'class': 'form-control', 'placeholder': 'Select a date', 'type': 'time'}),
             'desiredFeeSplitPercentage': forms.NumberInput(attrs={'class': 'form-control', 'min': '1', 'max': '100', 'placeholder': 'e.g. 65'}),
+            'minimumCompensation': forms.NumberInput(attrs={'class': 'form-control', 'min': '1', 'placeholder': 'e.g. 75'}),
             'desiredFlatFeeHourly': forms.NumberInput(attrs={'class': 'form-control', 'min': '1', 'placeholder': 'e.g. 80'}),
             'desiredFlatFeeTotalContract': forms.NumberInput(attrs={'class': 'form-control', 'min': '1', 'placeholder': 'e.g. 5000'}),
             'comments': forms.Textarea(attrs={'placeholder': 'Tell us about your clinic...', 'rows': '4'})
@@ -178,6 +186,8 @@ class AuctionForm(forms.ModelForm):
         desired_fee_split_percentage = cleaned_data.get('desiredFeeSplitPercentage')
         desired_flat_fee_hourly = cleaned_data.get('desiredFlatFeeHourly')
         desired_flat_fee_total_contract = cleaned_data.get('desiredFlatFeeTotalContract')
+
+        minimum_compensation = cleaned_data.get('minimumCompensation')
 
         mondayStart = self.cleaned_data.get('mondayStart')
         mondayEnd = self.cleaned_data.get('mondayEnd')
@@ -261,6 +271,9 @@ class AuctionForm(forms.ModelForm):
         if desired_fee_split_percentage is not None and 'Fee Split' not in payment_types:
             error_list.append(ValidationError('Desired fee split guidance can only be set when Fee Split is selected.'))
 
+        if minimum_compensation is not None and 'Fee Split' not in payment_types:
+            error_list.append(ValidationError('Minimum compensation can only be set when Fee Split is selected.'))
+
         if desired_flat_fee_hourly is not None and ('Flat Fee' not in payment_types or flat_fee_type != 'hourly'):
             error_list.append(ValidationError('Desired hourly flat fee guidance can only be set when Flat Fee (Hourly) is selected.'))
 
@@ -279,6 +292,7 @@ class AuctionForm(forms.ModelForm):
         auction.flatFeeType = self.cleaned_data.get('flatFeeType') if 'Flat Fee' in payment_types else None
 
         auction.desiredFeeSplitPercentage = self.cleaned_data.get('desiredFeeSplitPercentage') if 'Fee Split' in payment_types else None
+        auction.minimumCompensation = self.cleaned_data.get('minimumCompensation') if 'Fee Split' in payment_types else None
         if 'Flat Fee' in payment_types and auction.flatFeeType == 'hourly':
             auction.desiredFlatFeeHourly = self.cleaned_data.get('desiredFlatFeeHourly')
             auction.desiredFlatFeeTotalContract = None
@@ -361,6 +375,7 @@ class RegisterAcount(UserCreationForm):
     clinicName = forms.CharField(required=False, label='Healthcare facility Name')
     city = forms.CharField(required=False)
     about = forms.CharField(required=False, label='About the healthcare facility', widget=forms.Textarea)
+    clinicWebsite = forms.URLField(required=False, label='Website URL')
     province = forms.ChoiceField(choices=PROVINCES, required=False)
     username = forms.CharField(label='Email')
     user_type = forms.ModelChoiceField(queryset=UserType.objects.all())
@@ -371,7 +386,7 @@ class RegisterAcount(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ('user_type', 'clinicName', 'first_name', 'last_name', 'username', 'city', 'province', 'about', 'password1' ,'password2', 'imageOne', 'imageTwo', 'imageThree', 'imageFour')
+        fields = ('user_type', 'clinicName', 'first_name', 'last_name', 'username', 'city', 'province', 'about', 'clinicWebsite', 'password1' ,'password2', 'imageOne', 'imageTwo', 'imageThree', 'imageFour')
 
     def clean(self):
         userType = self.cleaned_data.get('user_type')
