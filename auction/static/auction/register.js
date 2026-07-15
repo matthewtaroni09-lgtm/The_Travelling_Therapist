@@ -66,6 +66,26 @@ function userTypeChange(userType) {
 }
 
 $(document).ready(function () {
+    const termsActionButton = $('#termsActionButton');
+    let submitFromTermsModal = false;
+        if (termsActionButton.length) {
+            termsActionButton.text('Create Account');
+            termsActionButton.prop('disabled', !$('#agreementCheckBox').prop('checked'));
+            termsActionButton.removeAttr('data-bs-dismiss');
+        }
+
+        $(document).on('click', '#termsActionButton', function (e) {
+            e.preventDefault();
+            if ($('#agreementCheckBox').prop('checked') === true) {
+                submitFromTermsModal = true;
+                const termsModalEl = document.getElementById('tandcModal');
+                if (termsModalEl) {
+                    const modalInstance = bootstrap.Modal.getOrCreateInstance(termsModalEl);
+                    modalInstance.hide();
+                }
+            }
+        });
+
     let userType = "";
     userType = $('#userTypeHiddenInput').val();
     if (userType !== "") {
@@ -135,6 +155,26 @@ $(document).ready(function () {
     $('#tandcModal').on('hidden.bs.modal', function () {
         $('#agreementCheckBox').css("display", "none");
         $('#agreementCheckBoxLabel').css("display", "none");
+
+        if (submitFromTermsModal) {
+            submitFromTermsModal = false;
+            const submitBtn = document.getElementById('submitButton');
+            if (!submitBtn) {
+                return;
+            }
+            submitBtn.click();
+            setTimeout(function () {
+                const registerForm = submitBtn.closest('form');
+                if (!registerForm) {
+                    return;
+                }
+                const firstInvalidField = registerForm.querySelector(':invalid');
+                if (firstInvalidField && typeof firstInvalidField.reportValidity === 'function') {
+                    firstInvalidField.focus();
+                    firstInvalidField.reportValidity();
+                }
+            }, 50);
+        }
     })
 
     $('#termsButton').click(function () {
@@ -145,9 +185,11 @@ $(document).ready(function () {
     $('#agreementCheckBox').click(function () {
         if ($('#agreementCheckBox').prop("checked") === true) {
             $('#submitButton').prop('disabled', false);
+            termsActionButton.prop('disabled', false);
         }
         else {
             $('#submitButton').prop('disabled', true);
+            termsActionButton.prop('disabled', true);
         }
     });
 

@@ -151,7 +151,11 @@
   <div id="auctionListDiv" class="row mb-3">
     {% include 'auction/partials/auction_list.html' %}
     {% for auction in auctions %}
+    {% if auction.closed and not auction.active %}
+    {% include 'auction/card_past_auction.html' with auction=auction %}
+    {% else %}
     {% include 'auction/card_active_auction.html' with auction=auction %}
+    {% endif %}
     {% endfor %}
   </div>
   <!-- End of auction loops -->

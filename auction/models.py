@@ -36,6 +36,25 @@ PAYMENT_TYPE_CHOICES = (
     ('Flat Fee', 'Flat Fee'),
 )
 
+LISTING_SKILL_OPTIONS = [
+    'Private clinic experience',
+    'Ability to work independently',
+    'Experience with specific treatments/modalities',
+    'Strong communication/interpersonal skills',
+    'Documentation and EMR proficiency',
+    'Previous experience in a similar role',
+]
+
+PROFILE_SKILL_OPTIONS = [
+    'Private clinic experience',
+    'Ability to work independently',
+    'Experience with specific treatments/modalities',
+    'Strong communication/interpersonal skills',
+    'Documentation and EMR proficiency',
+]
+
+DEFAULT_SKILL_OPTIONS = PROFILE_SKILL_OPTIONS
+
 FLAT_FEE_TYPE_CHOICES = (
     ('hourly', 'Hourly'),
     ('total_contract', 'Total Contract Price'),
@@ -97,6 +116,7 @@ class Account(models.Model):
     # Referral fields
     referral_code = models.CharField(max_length=12, unique=True, blank=True, null=True)
     referred_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='referrals_made')
+    clinicianSkills = models.JSONField(verbose_name='Clinician Skills', blank=True, null=True, default=list)
 
     def __str__(self):
         return str(self.user)
@@ -218,6 +238,19 @@ class Account(models.Model):
     def get_split_user_type(self):
         return str(self.userType).split(' ')[-1]
 
+    def get_clinician_skill_names(self):
+        skills = self.clinicianSkills or []
+        names = []
+        for skill in skills:
+            if isinstance(skill, str):
+                names.append(skill)
+            elif isinstance(skill, dict):
+                name = (skill.get('name') or '').strip()
+                selected = bool(skill.get('selected', True))
+                if name and selected:
+                    names.append(name)
+        return names
+
 class Referral(models.Model):
     STATUS_CHOICES = (
         ('pending', 'Pending Verification'),
@@ -273,6 +306,9 @@ class Auction(models.Model):
     paymentTypes = models.TextField(verbose_name='Payment Types', null=True, blank=True, help_text='Comma-separated list of payment types the clinic offers.')
     flatFeeType = models.CharField(verbose_name='Flat Fee Offer Type', max_length=50, null=True, blank=True, choices=FLAT_FEE_TYPE_CHOICES, help_text='Choose how flat-fee offers should be priced.')
     desiredFeeSplitPercentage = models.IntegerField(verbose_name='Desired Fee Split Percentage', null=True, blank=True)
+    minimumCompensation = models.IntegerField(verbose_name='Minimum Compensation', null=True, blank=True)
+    requiredSkills = models.JSONField(verbose_name='Required Skills Payload', blank=True, null=True, default=list)
+    negotiablePerks = models.JSONField(verbose_name='Negotiable Perks Payload', blank=True, null=True, default=list)
     desiredFlatFeeHourly = models.IntegerField(verbose_name='Desired Flat Fee Hourly', null=True, blank=True)
     desiredFlatFeeTotalContract = models.IntegerField(verbose_name='Desired Flat Fee Total Contract', null=True, blank=True)
     startingBid = models.IntegerField(verbose_name='Starting Bid', null=True, blank=True, help_text='The initial bid amount.')
@@ -446,8 +482,55 @@ class Auction(models.Model):
         return 'Low Offers: ' + ' / '.join(offer_labels)
 
     def get_num_bids(self):
-        num_bids = Bid.objects.filter(auction=self.auctionID, active=True).count()
+        if self.closed and self.active == False:
+            num_bids = Bid.objects.filter(auction=self.auctionID).count()
+        else:
+            num_bids = Bid.objects.filter(auction=self.auctionID, active=True).count()
         return num_bids
+
+    def get_winning_offer_display(self):
+        if self.winningPrice is None:
+            return 'No winner'
+
+        winning_bid = Bid.objects.filter(
+            auction=self,
+            user=self.winner,
+            amount=self.winningPrice,
+        ).order_by('-created').first()
+
+        if winning_bid is not None:
+            if winning_bid.offerType == 'Fee Split':
+                return str('{:,}'.format(self.winningPrice)) + '%'
+            if winning_bid.offerType == 'Flat Fee':
+                if self.flatFeeType == 'hourly':
+                    return '$' + str('{:,}'.format(self.winningPrice)) + '/hr'
+                return '$' + str('{:,}'.format(self.winningPrice))
+
+        if self.is_fee_split() and not self.is_flat_fee():
+            return str('{:,}'.format(self.winningPrice)) + '%'
+        if self.flatFeeType == 'hourly':
+            return '$' + str('{:,}'.format(self.winningPrice)) + '/hr'
+        return '$' + str('{:,}'.format(self.winningPrice))
+
+    def get_winning_offer_symbol(self):
+        if self.winningPrice is None:
+            return '$'
+
+        winning_bid = Bid.objects.filter(
+            auction=self,
+            user=self.winner,
+            amount=self.winningPrice,
+        ).order_by('-created').first()
+
+        if winning_bid is not None:
+            if winning_bid.offerType == 'Fee Split':
+                return '%'
+            if winning_bid.offerType == 'Flat Fee':
+                return '$'
+
+        if self.is_fee_split() and not self.is_flat_fee():
+            return '%'
+        return '$'
     
     def get_winning_price(self):
         if self.winningPrice is not None:
@@ -460,6 +543,49 @@ class Auction(models.Model):
             return 'Temporary Physiotherapist'
         else:
             return ''
+
+    def get_required_skill_rows(self):
+        rows = []
+        for item in (self.requiredSkills or []):
+            if isinstance(item, dict):
+                name = (item.get('name') or '').strip()
+                selected = bool(item.get('selected', False))
+                requirement = (item.get('requirement') or 'Required').strip() or 'Required'
+                if name and selected:
+                    rows.append({'name': name, 'requirement': requirement})
+        return rows
+
+    def get_public_perk_rows(self):
+        rows = []
+        for item in (self.negotiablePerks or []):
+            if isinstance(item, dict):
+                name = (item.get('name') or '').strip()
+                included = bool(item.get('selected', False) or item.get('included', False))
+                if name and included:
+                    rows.append({'name': name})
+        return rows
+
+    def get_private_perk_rows(self):
+        rows = []
+        for item in (self.negotiablePerks or []):
+            if isinstance(item, dict):
+                name = (item.get('name') or '').strip()
+                included = bool(item.get('selected', False) or item.get('included', False))
+                amount = item.get('amount')
+                details = (item.get('details') or '').strip()
+
+                try:
+                    amount_value = int(amount) if amount not in (None, '') else 0
+                except (TypeError, ValueError):
+                    amount_value = 0
+
+                if name and included:
+                    rows.append({
+                        'name': name,
+                        'amount': amount_value,
+                        'details': details,
+                    })
+        return rows
 
     def get_max_bid(self):
         primary_offer_type = self.get_primary_payment_type()
@@ -512,6 +638,7 @@ class Bid(models.Model):
     amount = models.IntegerField(verbose_name='Amount1', blank=True, null=True, help_text='Enter the amount you would like to bid.')
     offerType = models.CharField(verbose_name='Offer Type', max_length=20, choices=OFFER_TYPE_CHOICES, blank=True, null=True)
     submissionGroup = models.UUIDField(verbose_name='Submission Group', blank=True, null=True)
+    selectedSkills = models.JSONField(verbose_name='Selected Skills', blank=True, null=True, default=list)
     active = models.BooleanField(verbose_name='Active Bid')
     created = models.DateTimeField(verbose_name='Created Time', auto_now_add=True)
     createdBy = models.ForeignKey(User, related_name='bid_created_by', blank=True, null=True, on_delete=models.CASCADE)

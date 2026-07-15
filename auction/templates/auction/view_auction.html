@@ -1,4 +1,4 @@
-{% extends 'auction/base.html' %}
+﻿{% extends 'auction/base.html' %}
 {% load crispy_forms_tags %}
 {% load static %}
 {% block content %}
@@ -51,13 +51,12 @@
     <section class="d-inline-flex align-items-center text-white bg-dark py-2 px-3 me-3 rounded mb-4 mb-md-0">
       <span class="material-icons small text-white">schedule</span><time id="auctionTimer-{{ auction.auctionID }}"
         class="m-0 d-flex me-3 text-white">{{ auction.get_time_diff }}</time>
-      <p id="bidText" class="m-0 text-white">{{ auction.get_bid }}</p>
-      <p class="m-0 mx-4 d-none d-lg-block text-white"># Bids:<span class="ms-2 text-white">{{ num_bids }}</span></p>
-      <p class="m-0 me-4 d-none d-lg-block text-white"># of Therapists Bidding:<span
+        <p id="bidText" class="m-0 me-4 text-white"># Bids:<span class="ms-2 text-white">{{ num_bids }}</span></p>
+        <p class="m-0 d-none d-lg-block text-white"># of Therapists Bidding:<span
           class="ms-2 text-white">{{num_biders}}</span></p>
     </section>
 
-    {%if user.is_authenticated and user.account.userType == auction.type and auction.active%}
+    {% if can_place_offer %}
     <button id="bidButton" type="button" class="btn-lg btn-primary" data-bs-toggle="modal"
       data-bs-target="#exampleModal" data-bs-whatever="@mdo">Place Offer</button>
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -73,6 +72,7 @@
               <input type="hidden" name="amount" id="id_amount">
               <input type="hidden" name="offerType" id="id_offerType">
               <input type="hidden" name="feeSplitAmount" id="feeSplitAmountInput" value="0">
+              <input type="hidden" name="offerSelectedSkillsPayload" id="offerSelectedSkillsPayloadInput" value="[]">
 
               <div class="d-flex justify-content-between align-items-start gap-3 mb-3 flex-wrap">
                 <div>
@@ -81,7 +81,7 @@
                 </div>
                 <div class="text-end">
                   <p class="mb-1">{{ auction.get_bid }}</p>
-                  <p class="mb-0"># Offers: {{ num_bids }}</p>
+                  <p class="mb-0"># Bids: {{ num_bids }}</p>
                 </div>
               </div>
 
@@ -99,6 +99,8 @@
                 {% endif %}
               </div>
               {% endif %}
+
+              <div id="warningMessage" class="alert mt-2 mb-3" role="alert"></div>
 
               <ul class="nav nav-tabs mb-3 ttt-offer-tabs" id="offerTabs" role="tablist">
                 {% if allow_flat_fee %}
@@ -206,22 +208,160 @@
                     {% if allow_flat_fee %}
                     <p class="mb-2">Flat Fee Offer: <strong id="summaryFlatFee">Not entered</strong></p>
                     {% endif %}
-                    <p class="mb-0 text-muted small">You must enter at least one offer before confirming.</p>
+                    {% if private_perk_rows %}
+                    <hr>
+                    <p class="mb-2 fw-semibold">Negotiable Perks</p>
+                    {% for perk in private_perk_rows %}
+                    <p class="mb-1">
+                      <strong>{{ perk.name }}</strong>
+                      {% if perk.amount > 0 %}<span class="ms-1">- ${{ perk.amount }}</span>{% endif %}
+                      {% if perk.details %}<span class="text-muted">({{ perk.details }})</span>{% endif %}
+                    </p>
+                    {% endfor %}
+                    {% endif %}
+                    {% if finalize_skill_rows %}
+                    <hr>
+                    <p class="mb-2 fw-semibold">Skills and Qualifications for This Listing</p>
+                    <p class="small text-muted mb-2">Skills already selected in your profile are pre-checked. Add listing-specific skills before confirming your offer.</p>
+                    <div id="finalizeSkillChecklist" class="d-flex flex-column gap-1">
+                      {% for skill in finalize_skill_rows %}
+                      <label class="d-flex align-items-center justify-content-between border rounded px-2 py-1 mb-0" data-skill-name="{{ skill.name }}">
+                        <span><input type="checkbox" class="form-check-input me-2 finalize-skill-check" {% if skill.selected %}checked{% endif %}>{{ skill.name }}</span>
+                        <span class="ttt-requirement-pill {% if skill.requirement == 'Preferred' %}ttt-requirement-pill-preferred{% else %}ttt-requirement-pill-required{% endif %}">{{ skill.requirement }}</span>
+                      </label>
+                      {% endfor %}
+                    </div>
+                    {% endif %}
                   </div>
                 </div>
               </div>
 
-              <div id="warningMessage" class="alert mt-3" role="alert"></div>
+              <div id="offerFaqHelper" class="mt-3">
+                <small class="d-block">For more information on the bidding process see our <a href="{% url 'faq' %}" target="_blank">FAQ</a></small>
+              </div>
 
-              <small>For more information on the bidding process see our <a href="{% url 'faq' %}"
-                  target="_blank">FAQ</a></small>
               <div class="modal-footer">
                 <button id="closeButton" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 <button id="backTabButton" type="button" class="btn btn-outline-secondary">Back</button>
                 <button id="nextTabButton" type="button" class="btn btn-primary">Next</button>
                 <button id="skipTabButton" type="button" class="btn btn-outline-primary">Skip</button>
-                <button id="confirmBidButton" type="submit" class="btn btn-primary" disabled>Confirm Offer</button>
+                <span id="confirmBidTooltipWrap">
+                  <button id="confirmBidButton" type="submit" class="btn btn-primary" disabled>Confirm Offer</button>
+                </span>
               </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    {% if can_review_offers %}
+    <button id="reviewOffersButton" type="button" class="btn-lg btn-outline-primary" data-bs-toggle="modal" data-bs-target="#reviewOffersModal">Review Offers</button>
+    <div class="modal fade" id="reviewOffersModal" tabindex="-1" aria-labelledby="reviewOffersModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="reviewOffersModalLabel">Review Offers</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            {% if clinic_offer_rows %}
+            <div class="row g-2 align-items-center border-bottom pb-2 mb-2 small fw-semibold text-muted">
+              <div class="col-2">Initials</div>
+              <div class="col-3">Submitted</div>
+              <div class="col-5">Offers</div>
+              <div class="col-2 text-end">Skill Match</div>
+            </div>
+            <div class="d-flex flex-column gap-2" id="reviewOfferAccordion">
+              {% for row in clinic_offer_rows %}
+              <div class="border rounded p-2">
+                <div class="row g-2 align-items-center">
+                  <div class="col-12 col-lg-2">
+                    <div class="fw-bold">{{ row.hcp_initials }}</div>
+                  </div>
+                  <div class="col-12 col-lg-3">
+                    <div class="small text-muted">{{ row.submitted_at|date:"M j, Y g:i A" }}</div>
+                  </div>
+                  <div class="col-12 col-lg-5 d-flex align-items-center gap-2 flex-wrap">
+                    {% if row.fee_split_bid_id %}
+                    <label class="d-flex justify-content-between align-items-center border rounded px-2 py-1 mb-0">
+                      <span class="small">Fee Split: <strong>{{ row.fee_split_offer }}</strong></span>
+                      <input class="form-check-input review-offer-choice ms-2" type="radio" name="selectedReviewOffer" value="{{ row.fee_split_bid_id }}" data-hcp-initials="{{ row.hcp_initials }}" data-offer-type="Fee Split" data-offer-amount="{{ row.fee_split_offer }}">
+                    </label>
+                    {% endif %}
+                    {% if row.flat_fee_bid_id %}
+                    <label class="d-flex justify-content-between align-items-center border rounded px-2 py-1 mb-0">
+                      <span class="small">{% if auction.flatFeeType == 'hourly' %}Flat Fee (Hourly){% elif auction.flatFeeType == 'total_contract' %}Flat Fee (Total Contract Price){% else %}Flat Fee{% endif %}: <strong>{{ row.flat_fee_offer }}</strong></span>
+                      <input class="form-check-input review-offer-choice ms-2" type="radio" name="selectedReviewOffer" value="{{ row.flat_fee_bid_id }}" data-hcp-initials="{{ row.hcp_initials }}" data-offer-type="{% if auction.flatFeeType == 'hourly' %}Flat Fee (Hourly){% elif auction.flatFeeType == 'total_contract' %}Flat Fee (Total Contract Price){% else %}Flat Fee{% endif %}" data-offer-amount="{{ row.flat_fee_offer }}">
+                    </label>
+                    {% endif %}
+                  </div>
+                  <div class="col-12 col-lg-2 d-flex justify-content-lg-end align-items-center gap-2">
+                    <div class="small text-muted text-nowrap">Required {{ row.skill_match.required_met|length }}/{{ row.skill_match.required_total }} Preferred {{ row.skill_match.preferred_met|length }}/{{ row.skill_match.preferred_total }}</div>
+                    <button class="btn btn-sm btn-light d-inline-flex align-items-center review-row-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#reviewRow{{ forloop.counter }}" aria-expanded="false" aria-controls="reviewRow{{ forloop.counter }}">
+                      <span class="material-icons">chevron_right</span>
+                    </button>
+                  </div>
+                </div>
+
+                <div class="collapse mt-2" id="reviewRow{{ forloop.counter }}" data-bs-parent="#reviewOfferAccordion">
+                  <div class="row g-2">
+                    <div class="col-lg-7">
+                      <div class="border rounded p-2 h-100">
+                        <p class="mb-2 fw-semibold small">Listing Skill Match</p>
+                        {% for skill in row.skill_match.required_met %}<p class="mb-1 small d-flex align-items-center gap-2"><span class="material-icons align-middle" style="font-size:16px; color:#198754;">check_box</span><span>{{ skill }}</span><span class="ttt-requirement-pill ttt-requirement-pill-required">Required</span></p>{% endfor %}
+                        {% for skill in row.skill_match.required_missing %}<p class="mb-1 small d-flex align-items-center gap-2"><span class="material-icons align-middle" style="font-size:16px; color:#adb5bd;">check_box_outline_blank</span><span>{{ skill }}</span><span class="ttt-requirement-pill ttt-requirement-pill-required">Required</span></p>{% endfor %}
+                        {% for skill in row.skill_match.preferred_met %}<p class="mb-1 small d-flex align-items-center gap-2"><span class="material-icons align-middle" style="font-size:16px; color:#198754;">check_box</span><span>{{ skill }}</span><span class="ttt-requirement-pill ttt-requirement-pill-preferred">Preferred</span></p>{% endfor %}
+                        {% for skill in row.skill_match.preferred_missing %}<p class="mb-1 small d-flex align-items-center gap-2"><span class="material-icons align-middle" style="font-size:16px; color:#adb5bd;">check_box_outline_blank</span><span>{{ skill }}</span><span class="ttt-requirement-pill ttt-requirement-pill-preferred">Preferred</span></p>{% endfor %}
+                      </div>
+                    </div>
+                    <div class="col-lg-5">
+                      <div class="border rounded p-2 h-100">
+                        <p class="mb-2 fw-semibold small">Other Skills</p>
+                        {% if row.custom_profile_skills %}
+                        {% for skill in row.custom_profile_skills %}
+                        <p class="mb-1 small"><span class="material-icons align-middle" style="font-size:16px; color:#198754;">check_box</span> {{ skill }}</p>
+                        {% endfor %}
+                        {% else %}
+                        <p class="mb-0 small text-muted">No custom profile skills submitted.</p>
+                        {% endif %}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+            <div class="d-flex justify-content-end mt-3">
+              <button id="reviewOffersConfirmButton" type="button" class="btn btn-primary" disabled>Accept</button>
+            </div>
+            {% else %}
+            <p class="text-muted mb-0">No offers have been submitted yet.</p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="confirmOfferAcceptanceModal" tabindex="-1" aria-labelledby="confirmOfferAcceptanceModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="confirmOfferAcceptanceModalLabel">Confirm Offer Acceptance</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <p class="mb-2" id="confirmOfferAcceptanceText"></p>
+            <p class="mb-0">Once our invoice is finalized, you can immediately begin the contract process with this clinician and fill your spot!</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Back</button>
+            <form method="post" class="m-0">
+              {% csrf_token %}
+              <input type="hidden" name="acceptOfferAction" value="1">
+              <input type="hidden" id="selectedOfferBidIdInput" name="selectedOfferBidId" value="">
+              <button type="submit" class="btn btn-primary">Confirm</button>
             </form>
           </div>
         </div>
@@ -335,6 +475,33 @@
       </table>
     </div>
   </div>
+  {% if required_skill_rows or public_perk_rows %}
+  <section class="mt-3 mb-3 p-3 border rounded bg-light-subtle">
+    <h3 class="h5 mb-3">Additional Information</h3>
+    <div class="row g-3">
+      {% if required_skill_rows %}
+      <div class="col-md-6">
+        <h4 class="h6 mb-2 "><strong>Skills and Qualifications</strong></h4>
+        {% for skill in required_skill_rows %}
+        <div class="d-flex justify-content-between align-items-center border rounded px-2 py-1 mb-1">
+          <span>{{ skill.name }}</span>
+          <span class="ttt-requirement-pill {% if skill.requirement == 'Preferred' %}ttt-requirement-pill-preferred{% else %}ttt-requirement-pill-required{% endif %}">{{ skill.requirement }}</span>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+      {% if public_perk_rows %}
+      <div class="col-md-6">
+        <h4 class="h6 mb-2 "><strong>Negotiable Job Perks</strong></h4>
+        {% for perk in public_perk_rows %}
+        <div class="border rounded px-2 py-1 mb-1">{{ perk.name }}</div>
+        {% endfor %}
+        <p class="small text-muted mt-2 mb-0">Perk amounts and details are shared privately with clinicians during offer submission.</p>
+      </div>
+      {% endif %}
+    </div>
+  </section>
+  {% endif %}
   <div id="demographicAOPDiv" class="row w-100 mx-auto d-none">
     <div class="col-md-6 border">
       <div class="offset-2 col-8">
@@ -359,6 +526,120 @@
   <p class="text-weight-light">{{ auction.comments|linebreaksbr }}</p>
 </div>
 
-<script src="{% static 'auction/bid-page.js' %}?v=20260708-offer-skip-layout-fix"></script>
+<script src="{% static 'auction/bid-page.js' %}?v=20260715-offer-tooltip-disabled-only-v1"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const checklist = document.getElementById('finalizeSkillChecklist');
+    const payloadInput = document.getElementById('offerSelectedSkillsPayloadInput');
+
+    function syncFinalizeSkillsPayload() {
+      if (!checklist || !payloadInput) {
+        return;
+      }
+
+      const rows = Array.from(checklist.querySelectorAll('[data-skill-name]')).map(function (row) {
+        const checkbox = row.querySelector('.finalize-skill-check');
+        return {
+          name: row.getAttribute('data-skill-name') || '',
+          selected: checkbox ? checkbox.checked : false,
+        };
+      }).filter(function (row) {
+        return row.name.trim() !== '';
+      });
+
+      payloadInput.value = JSON.stringify(rows);
+    }
+
+    if (checklist && payloadInput) {
+      checklist.addEventListener('change', function (event) {
+        if (event.target.classList.contains('finalize-skill-check')) {
+          syncFinalizeSkillsPayload();
+        }
+      });
+      syncFinalizeSkillsPayload();
+    }
+
+    const reviewCollapseEls = Array.from(document.querySelectorAll('#reviewOfferAccordion .collapse'));
+    reviewCollapseEls.forEach(function (collapseEl) {
+      collapseEl.addEventListener('show.bs.collapse', function () {
+        const toggleButton = document.querySelector('[data-bs-target="#' + collapseEl.id + '"]');
+        if (toggleButton) {
+          const icon = toggleButton.querySelector('.material-icons');
+          if (icon) {
+            icon.textContent = 'expand_more';
+          }
+        }
+      });
+      collapseEl.addEventListener('hide.bs.collapse', function () {
+        const toggleButton = document.querySelector('[data-bs-target="#' + collapseEl.id + '"]');
+        if (toggleButton) {
+          const icon = toggleButton.querySelector('.material-icons');
+          if (icon) {
+            icon.textContent = 'chevron_right';
+          }
+        }
+      });
+    });
+  });
+</script>
+{% if can_review_offers %}
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const reviewOfferChoices = Array.from(document.querySelectorAll('.review-offer-choice'));
+    const confirmButton = document.getElementById('reviewOffersConfirmButton');
+    const confirmText = document.getElementById('confirmOfferAcceptanceText');
+    const selectedOfferBidIdInput = document.getElementById('selectedOfferBidIdInput');
+    const confirmModalEl = document.getElementById('confirmOfferAcceptanceModal');
+    const reviewModalEl = document.getElementById('reviewOffersModal');
+
+    if (!confirmButton || !confirmText || !selectedOfferBidIdInput || !confirmModalEl || !reviewModalEl || reviewOfferChoices.length === 0) {
+      return;
+    }
+
+    const confirmModal = bootstrap.Modal.getOrCreateInstance(confirmModalEl);
+    const reviewModal = bootstrap.Modal.getOrCreateInstance(reviewModalEl);
+
+    function syncConfirmAvailability() {
+      const selectedChoice = reviewOfferChoices.find(function (choice) {
+        return choice.checked;
+      });
+      confirmButton.disabled = !selectedChoice;
+    }
+
+    reviewOfferChoices.forEach(function (choice) {
+      choice.addEventListener('change', syncConfirmAvailability);
+      choice.addEventListener('click', syncConfirmAvailability);
+    });
+    syncConfirmAvailability();
+
+    confirmButton.addEventListener('click', function () {
+      const selectedChoice = reviewOfferChoices.find(function (choice) {
+        return choice.checked;
+      });
+
+      if (!selectedChoice) {
+        confirmButton.disabled = true;
+        return;
+      }
+
+      const hcpInitials = selectedChoice.getAttribute('data-hcp-initials') || 'the selected clinician';
+      const offerType = selectedChoice.getAttribute('data-offer-type') || 'offer';
+      const offerAmount = selectedChoice.getAttribute('data-offer-amount') || '';
+
+      confirmText.textContent = "Are you sure you want to accept " + hcpInitials + "'s " + offerType + " offer of " + offerAmount + "?";
+
+      selectedOfferBidIdInput.value = selectedChoice.value;
+      reviewModal.hide();
+      confirmModal.show();
+    });
+
+    confirmModalEl.addEventListener('hidden.bs.modal', function () {
+      if (selectedOfferBidIdInput.value) {
+        reviewModal.show();
+      }
+    });
+  });
+</script>
+{% endif %}
 <!-- Content End -->
 {% endblock %}

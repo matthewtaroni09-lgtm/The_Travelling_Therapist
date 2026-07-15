@@ -11,6 +11,395 @@ var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
 let feeSplitCalcShown = false;
 let assessmentChecked = false;
 let treatmentChecked = false;
+let dynamicSkillCounter = 100;
+let dynamicPerkCounter = 200;
+
+const REQUIRED_SKILLS_BY_TYPE = {
+    physio: [
+        'Canadian Physiotherapy License',
+        'PT Resident',
+        'Physiotherapy Insurance',
+        'First Aid/CPR/AED',
+        'Digital/Software Based Charting',
+        'AI Charting',
+        'Working with a PTA/Rehab Assistant Experience',
+        'Outpatient & Community Experience',
+        'Hospital/Long Term Care/Retirement Home Experience',
+        'Home care Experience',
+        'Virtual Care Experience',
+        'Orthopedics Experience',
+        'Neurological Experience',
+        'Cardiorespiratory Experience',
+        'Sports Experience',
+        "Women's Health & Pelvic Health Experience",
+        'Acupuncture',
+        'Spinal Manipulation',
+        'Pelvic Internal Examination',
+        'Wound Care',
+        'Tracheal Suctioning',
+        'Administering a Substance by Inhalation',
+    ],
+    pta: [
+        'Diploma/Degree in PTA/OTA/Rehab Assistant',
+        'Kinesiology Degree',
+        'Kinesiologist Certification',
+        'Personal Trainer Certification',
+        'Practice Insurance',
+        'First Aid/CPR/AED',
+        'Digital/Software Based Charting',
+        'AI Charting',
+        'Working with a PT Experience',
+        'Working with an OT Experience',
+        'Outpatient & Community Experience',
+        'Hospital/Long Term Care/Retirement Home Experience',
+        'Home care Experience',
+        'Virtual Care Experience',
+        'Orthopedics Experience',
+        'Neurological Experience',
+        'Cardiorespiratory Experience',
+        'Geriatrics Experience',
+        'Sports Experience',
+        "Women's Health & Pelvic Health Experience",
+    ],
+    rmt: [
+        'Canadian Registered Massage Therapy License',
+        'Massage Therapy Insurance',
+        'First Aid/CPR/AED',
+        'Digital/Software Based Charting',
+        'AI Charting',
+        'Outpatient & Community Experience',
+        'Hospital/Long Term Care/Retirement Home',
+        'Home care Experience',
+        'Orthopedics Experience',
+        'Sports Experience',
+        "Women's Health & Pelvic Health Experience",
+        'Acupuncture',
+    ],
+    default: [
+        'Canadian License to Practice',
+        'Practice Insurance',
+        'First Aid/CPR/AED',
+        'Hospital/Long Term Care/Retirement Home',
+        'Home care Experience',
+        'Orthopedics Experience',
+        'Sports Experience',
+        "Women's Health & Pelvic Health Experience",
+    ],
+};
+
+const NON_REGULATED_TYPE_KEYWORDS = [
+    'dietary aide',
+    'pta',
+    'ota',
+    'rehab assistant',
+    'psw',
+    'recreation therapist',
+    'dental assistant',
+];
+
+function escapeHtml(value) {
+    return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
+function getSelectedClinicianTypeLabel() {
+    const $type = $('#id_type');
+    if ($type.length === 0) {
+        return '';
+    }
+
+    const value = ($type.val() || '').trim();
+    if (!value || value === '0') {
+        return '';
+    }
+
+    return ($type.find(':selected').text() || '').trim();
+}
+
+function resolveClinicianSkillKey(typeLabel) {
+    const normalized = (typeLabel || '').toLowerCase();
+
+    if (normalized.includes('physio') || normalized.includes('physiotherapist') || normalized.includes('physiotherapy')) {
+        return 'physio';
+    }
+    if (
+        normalized.includes('pta')
+        || normalized.includes('ota')
+        || normalized.includes('rehab assistant')
+        || normalized.includes('rehab assis')
+        || normalized.includes('rehab ass')
+    ) {
+        return 'pta';
+    }
+    if (
+        normalized.includes('rmt')
+        || normalized.includes('massage therapist')
+        || normalized.includes('registered massage')
+        || normalized.includes('massage therapy')
+    ) {
+        return 'rmt';
+    }
+
+    return 'default';
+}
+
+function shouldIncludeLicenseSkill(typeLabel) {
+    const normalized = (typeLabel || '').toLowerCase();
+    return !NON_REGULATED_TYPE_KEYWORDS.some(function (keyword) {
+        return normalized.includes(keyword);
+    });
+}
+
+function buildStandardSkillRow(name, index) {
+    const safeName = escapeHtml(name);
+    const radioName = `skill_req_${index}`;
+    const requiredId = `${radioName}_required`;
+    const preferredId = `${radioName}_preferred`;
+
+    return `
+        <div class="ttt-grid-row" data-item-name="${safeName}">
+            <label><input type="checkbox" class="form-check-input ttt-grid-check"> ${safeName}</label>
+            <div class="ttt-grid-toggle" role="group" aria-label="${safeName} requirement">
+                <input type="radio" class="btn-check" name="${radioName}" id="${requiredId}" checked>
+                <label class="btn btn-sm btn-outline-secondary" for="${requiredId}">Required</label>
+                <input type="radio" class="btn-check" name="${radioName}" id="${preferredId}">
+                <label class="btn btn-sm btn-outline-secondary" for="${preferredId}">Preferred</label>
+            </div>
+        </div>
+    `;
+}
+
+function populateRequiredSkillsByClinicianType() {
+    const $container = $('#requiredSkillsContainer');
+    if ($container.length === 0) {
+        return;
+    }
+
+    const $gridHead = $container.find('.ttt-grid-head');
+    const $gridList = $container.find('.ttt-grid-list');
+    const $addRow = $container.find('.ttt-add-row');
+    const $prompt = $('#requiredSkillsTypePrompt');
+    const typeLabel = getSelectedClinicianTypeLabel();
+
+    if (!typeLabel) {
+        $gridList.empty().addClass('d-none');
+        $gridHead.addClass('d-none');
+        $addRow.addClass('d-none');
+        $prompt.removeClass('d-none');
+        syncNegotiablePayloads();
+        return;
+    }
+
+    const skillKey = resolveClinicianSkillKey(typeLabel);
+    let skillRows = REQUIRED_SKILLS_BY_TYPE[skillKey] || REQUIRED_SKILLS_BY_TYPE.default;
+    if (skillKey === 'default' && !shouldIncludeLicenseSkill(typeLabel)) {
+        skillRows = skillRows.filter(function (name) {
+            return name !== 'Canadian License to Practice';
+        });
+    }
+    const markup = skillRows.map(function (itemName, i) {
+        return buildStandardSkillRow(itemName, i + 1);
+    }).join('');
+
+    $gridList.html(markup).removeClass('d-none');
+    $gridHead.removeClass('d-none');
+    $addRow.removeClass('d-none');
+    $prompt.addClass('d-none');
+
+    syncAllGridRowsAvailability();
+    syncNegotiablePayloads();
+}
+
+    function initializeTooltips(root) {
+        const targetRoot = root || document;
+        const tooltipTargets = targetRoot.querySelectorAll('[data-bs-toggle="tooltip"]');
+        tooltipTargets.forEach(function (el) {
+            bootstrap.Tooltip.getOrCreateInstance(el);
+        });
+    }
+
+function buildCustomGridRow(name, kind, index) {
+    const safeName = escapeHtml(name);
+    if (kind === 'perk') {
+        const perkId = `${kind}_custom_${index}`;
+        return `
+        <div class="ttt-grid-row" data-item-name="${safeName}" data-custom-item="true">
+            <span class="ttt-grid-item-label">${safeName}</span>
+            <div class="d-flex align-items-center gap-2">
+                <div class="ttt-perk-switch-wrap">
+                    <div class="form-check form-switch">
+                        <input type="checkbox" class="form-check-input ttt-perk-switch" role="switch" aria-label="Custom perk included" checked>
+                    </div>
+                </div>
+                <button type="button" class="ttt-perk-expand-toggle" aria-expanded="true" aria-controls="${perkId}_details" aria-label="Toggle custom perk details">
+                    <span class="material-icons ttt-perk-expand-icon">chevron_right</span>
+                </button>
+                <button type="button" class="ttt-remove-item" aria-label="Remove custom ${kind}">Remove</button>
+            </div>
+        </div>
+        <div class="ttt-perk-detail-panel" id="${perkId}_details">
+            <div class="row g-2 align-items-end">
+                <div class="col-sm-4">
+                    <label class="form-label form-label-sm mb-1 ttt-perk-detail-label-wrap">
+                        <span class="ttt-perk-detail-label">Amount <span class="text-muted">(optional)</span></span>
+                        <button type="button" class="ttt-info-dot-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Amounts are hidden on public listings and shown only to clinicians in the offer finalization step." aria-label="Perk amount info">i</button>
+                    </label>
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text">$</span>
+                        <input type="number" min="0" class="form-control ttt-perk-amount" placeholder="0">
+                    </div>
+                </div>
+                <div class="col-sm-8">
+                    <label class="form-label form-label-sm mb-1 ttt-perk-detail-label">Additional details <span class="text-muted">(optional)</span></label>
+                    <input type="text" class="form-control form-control-sm ttt-perk-details" placeholder="Example: up to $1,500 after 3 months">
+                </div>
+            </div>
+        </div>
+        `;
+    }
+
+    const radioPrefix = `${kind}_custom_req_${index}`;
+    return `
+        <div class="ttt-grid-row" data-item-name="${safeName}" data-custom-item="true">
+            <label><input type="checkbox" class="form-check-input ttt-grid-check" checked> <span>${safeName}</span></label>
+            <div class="d-flex align-items-center gap-2">
+                <div class="ttt-grid-toggle" role="group" aria-label="Custom ${kind} requirement">
+                    <input type="radio" class="btn-check" name="${radioPrefix}" id="${radioPrefix}_required" checked>
+                    <label class="btn btn-sm btn-outline-secondary" for="${radioPrefix}_required">Required</label>
+                    <input type="radio" class="btn-check" name="${radioPrefix}" id="${radioPrefix}_preferred">
+                    <label class="btn btn-sm btn-outline-secondary" for="${radioPrefix}_preferred">Preferred</label>
+                </div>
+                <button type="button" class="ttt-remove-item" aria-label="Remove custom ${kind}">Remove</button>
+            </div>
+        </div>
+    `;
+}
+
+function serializeGridRows(containerId) {
+    const rows = [];
+    $(`#${containerId} .ttt-grid-list > .ttt-grid-row`).each(function () {
+        const $row = $(this);
+        const itemName = ($row.attr('data-item-name') || '').trim();
+        if (!itemName) {
+            return;
+        }
+        const isPerkRow = $row.find('.ttt-perk-switch').length > 0;
+        const selected = isPerkRow ? $row.find('.ttt-perk-switch').is(':checked') : $row.find('.ttt-grid-check').is(':checked');
+        const requirement = isPerkRow ? '' : $row.find('.ttt-grid-toggle input[type="radio"]:checked').next('label').text().trim();
+        const $detailPanel = isPerkRow ? $row.next('.ttt-perk-detail-panel') : null;
+        const amountRaw = isPerkRow && $detailPanel && $detailPanel.length ? ($detailPanel.find('.ttt-perk-amount').val() || '').trim() : '';
+        const details = isPerkRow && $detailPanel && $detailPanel.length ? ($detailPanel.find('.ttt-perk-details').val() || '').trim() : '';
+        rows.push({
+            name: itemName,
+            selected: selected,
+            included: selected,
+            requirement: isPerkRow ? null : (requirement || 'Required'),
+            amount: isPerkRow ? (amountRaw === '' ? 0 : parseInt(amountRaw, 10) || 0) : null,
+            details: isPerkRow ? details : '',
+            custom: $row.attr('data-custom-item') === 'true',
+        });
+    });
+    return rows;
+}
+
+function syncNegotiablePayloads() {
+    const skillsPayload = serializeGridRows('requiredSkillsContainer');
+    const perksPayload = serializeGridRows('negotiablePerksContainer');
+    $('#id_requiredSkillsPayload').val(JSON.stringify(skillsPayload));
+    $('#id_negotiablePerksPayload').val(JSON.stringify(perksPayload));
+}
+
+function syncGridRowAvailability($row) {
+    if ($row.find('.ttt-grid-check').length === 0) {
+        return;
+    }
+
+    const isChecked = $row.find('.ttt-grid-check').is(':checked');
+    const $toggle = $row.find('.ttt-grid-toggle');
+    const $radios = $toggle.find('input[type="radio"]');
+    $radios.prop('disabled', !isChecked);
+    $toggle.toggleClass('is-disabled', !isChecked);
+}
+
+function syncAllGridRowsAvailability() {
+    $('.ttt-grid-list .ttt-grid-row').each(function () {
+        syncGridRowAvailability($(this));
+    });
+}
+
+function syncPerkDetailPanel($row, animate) {
+    const $switch = $row.find('.ttt-perk-switch');
+    if ($switch.length === 0) {
+        return;
+    }
+
+    const shouldAnimate = animate === true;
+    const isIncluded = $switch.is(':checked');
+    const $detailPanel = $row.next('.ttt-perk-detail-panel');
+    const $toggle = $row.find('.ttt-perk-expand-toggle');
+
+    if ($detailPanel.length > 0) {
+        $detailPanel.stop(true, true);
+        if (isIncluded) {
+            $detailPanel.removeClass('d-none');
+            if (shouldAnimate) {
+                $detailPanel.slideDown(180);
+            }
+            else {
+                $detailPanel.show();
+            }
+        }
+        else {
+            if (shouldAnimate) {
+                $detailPanel.slideUp(180, function () {
+                    $detailPanel.addClass('d-none');
+                });
+            }
+            else {
+                $detailPanel.hide().addClass('d-none');
+            }
+        }
+
+        if (!isIncluded) {
+            $detailPanel.find('.ttt-perk-amount').val('');
+            $detailPanel.find('.ttt-perk-details').val('');
+        }
+    }
+
+    if ($toggle.length > 0) {
+        $toggle.prop('disabled', !isIncluded);
+        $toggle.toggleClass('is-disabled', !isIncluded);
+        $toggle.attr('aria-expanded', isIncluded ? 'true' : 'false');
+    }
+}
+
+function syncAllPerkDetailPanels() {
+    $('#negotiablePerksContainer .ttt-grid-list > .ttt-grid-row').each(function () {
+        syncPerkDetailPanel($(this), false);
+    });
+}
+
+function addCustomGridItem(containerId) {
+    const $container = $(`#${containerId}`);
+    const $input = $(`[data-custom-input="${containerId}"]`);
+    const rawValue = ($input.val() || '').trim();
+    if (!rawValue) {
+        return;
+    }
+    const kind = containerId === 'requiredSkillsContainer' ? 'skill' : 'perk';
+    const nextIndex = kind === 'skill' ? dynamicSkillCounter++ : dynamicPerkCounter++;
+    $container.find('.ttt-grid-list').append(buildCustomGridRow(rawValue, kind, nextIndex));
+    const $lastRow = $container.find('.ttt-grid-list > .ttt-grid-row').last();
+    syncGridRowAvailability($lastRow);
+    syncPerkDetailPanel($lastRow, false);
+    initializeTooltips($container[0]);
+    $input.val('');
+    syncNegotiablePayloads();
+}
 
 function getSelectedPaymentTypes() {
     return $('input[name="paymentTypesSelection"]:checked').map(function () {
@@ -35,6 +424,7 @@ function syncOfferGuidanceUI(selectedPaymentTypes) {
 
     if (!showFeeSplitGuidance) {
         $('#id_desiredFeeSplitPercentage').val('');
+        $('#id_minimumCompensation').val('');
     }
     if (!showHourlyGuidance) {
         $('#id_desiredFlatFeeHourly').val('');
@@ -63,12 +453,10 @@ function syncPaymentTypeUI() {
     syncOfferGuidanceUI(selectedPaymentTypes);
 
     if (feeSplitEnabled) {
-        $('#assessmentCheckBoxDiv').removeClass('d-none');
-        $('#treatmentCheckBoxDiv').removeClass('d-none');
-        $('#assessmentTreatmentInfoDiv').removeClass('d-none');
         greyOutFields(false);
     }
     else {
+        /* Deprecated fee split minimums UI retained in source for reference.
         $('#assessmentCheckBoxDiv').addClass('d-none');
         $('#treatmentCheckBoxDiv').addClass('d-none');
         $('#assessmentTreatmentInfoDiv').addClass('d-none');
@@ -84,6 +472,7 @@ function syncPaymentTypeUI() {
         $('#id_treatmentMin').val('');
         $('#id_treatmentCost').val('');
         calculateDailyMin();
+        */
     }
 }
 
@@ -100,6 +489,8 @@ $(document).ready(function () {
         });
 
     $('#id_type').change(function () {
+        populateRequiredSkillsByClinicianType();
+
         if ($('#id_type').find(":selected").text() != '---------') {
             $('#practiceAreaCheckBoxDiv').removeClass('d-none');
             $("#optionsMessage").hide();
@@ -141,6 +532,64 @@ $(document).ready(function () {
 
     $('input[name="flatFeeType"]').change(function () {
         syncOfferGuidanceUI(getSelectedPaymentTypes());
+    });
+
+    $('.ttt-add-trigger').on('click', function () {
+        addCustomGridItem($(this).data('grid-target'));
+    });
+
+    $('[data-custom-input]').on('keypress', function (event) {
+        if (event.which === 13) {
+            event.preventDefault();
+            addCustomGridItem($(this).data('custom-input'));
+        }
+    });
+
+    $(document).on('click', '.ttt-remove-item', function () {
+        const $row = $(this).closest('.ttt-grid-row');
+        const $detailPanel = $row.next('.ttt-perk-detail-panel');
+        if ($detailPanel.length > 0) {
+            $detailPanel.remove();
+        }
+        $row.remove();
+        syncNegotiablePayloads();
+    });
+
+    $(document).on('change', '.ttt-grid-check', function () {
+        syncGridRowAvailability($(this).closest('.ttt-grid-row'));
+        syncNegotiablePayloads();
+    });
+
+    $(document).on('change', '.ttt-grid-toggle input[type="radio"]', function () {
+        syncNegotiablePayloads();
+    });
+
+    $(document).on('change', '.ttt-perk-switch', function () {
+        syncPerkDetailPanel($(this).closest('.ttt-grid-row'), true);
+        syncNegotiablePayloads();
+    });
+
+    $(document).on('click', '.ttt-perk-expand-toggle', function () {
+        const $row = $(this).closest('.ttt-grid-row');
+        const $panel = $row.next('.ttt-perk-detail-panel');
+        if ($panel.length === 0 || $(this).prop('disabled')) {
+            return;
+        }
+        const isExpanded = $(this).attr('aria-expanded') === 'true';
+        $panel.stop(true, true);
+        if (isExpanded) {
+            $panel.slideUp(180, function () {
+                $panel.addClass('d-none');
+            });
+        }
+        else {
+            $panel.removeClass('d-none').hide().slideDown(180);
+        }
+        $(this).attr('aria-expanded', isExpanded ? 'false' : 'true');
+    });
+
+    $(document).on('input', '.ttt-perk-amount, .ttt-perk-details', function () {
+        syncNegotiablePayloads();
     });
 
     //Show assessment fields checkbox
@@ -241,6 +690,11 @@ $(document).ready(function () {
     $("#id_type option[value='" + clinicVal + "']").remove();
 
     syncPaymentTypeUI();
+    populateRequiredSkillsByClinicianType();
+    syncAllGridRowsAvailability();
+    syncAllPerkDetailPanels();
+    initializeTooltips(document);
+    syncNegotiablePayloads();
 });
 
 $('#id_placementStart').change(function () {
@@ -268,9 +722,10 @@ $('#assessmentTreatmentInfoIcon').click(function () {
 
 $("#submitButton").click(function () {
     let errorList = '';
+    syncNegotiablePayloads();
 
     if ($("#id_type").val() === "0") {
-        errorList += "<li>Please select an clinician type.</li>";
+        errorList += "<li>Please select a clinician type.</li>";
     }
 
     if (getSelectedPaymentTypes().length === 0) {
@@ -398,57 +853,20 @@ $("#submitButton").click(function () {
         errorList += '<li>Looks like you are trying to create an ad for an opening longer than 18 months! Please contact us to help you set this up.</li>';
     }
 
-    //Validate treatment and assessment costs if the payment type is fee split
+    let minimumCompensation = $('#id_minimumCompensation').val();
+
+    // Validate optional minimum compensation for fee split listings.
     if (getSelectedPaymentTypes().includes('Fee Split')) {
-        //Minimum # of Assessments
-        if (assessmentMin === "" && assessmentCost !== "") {
-            errorList += "<li>Please enter a Minimum Number of Assessments.</li>";
-        }
-        if (assessmentMin > sessionMax && assessmentMin !== "") {
-            errorList += "<li>Minimum Number of Assessments cannot exceed " + sessionMax + "</li>";
-        }
-        if (assessmentMin < 0 && assessmentMin !== "") {
-            errorList += "<li>Minimum Number of Assessments sessions cannot be negative.</li>";
-        }
-
-        //Assessment Cost
-        if (assessmentCost === "" && assessmentMin !== "") {
-            errorList += "<li>Please enter a Assessment Cost.</li>";
-        }
-        if (assessmentCost > costMax && assessmentCost !== "") {
-            errorList += "<li>Assessment Costs cannot exceed " + currencyFormatter.format(costMax) + "</li>";
-        }
-        if (assessmentCost < 1 && assessmentCost !== "" && assessmentMin > 0 && assessmentMin !== "") {
-            errorList += "<li>Assessment Costs must be at least $1.</li>";
-        }
-        if (assessmentCost > 0 && assessmentCost !== "" && assessmentMin == 0 && assessmentMin !== "") {
-            errorList += "<li>There cannot be an assessment cost if there isn't at least 1 Daily Minimum Assessment.</li>";
-        }
-
-        //Minimum # of Treatments
-        if (treatmentMin === "" && treatmentCost !== "") {
-            errorList += "<li>Please enter a Minimum Number of Treatments.</li>";
-        }
-        if (treatmentMin > sessionMax && treatmentMin !== "") {
-            errorList += "<li>Minimum Number of Treatment sessions cannot exceed " + sessionMax + "</li>";
-        }
-        if (treatmentMin < 0 && treatmentMin !== "") {
-            errorList += "<li>Minimum Number of Treatment sessions cannot be negative.</li>";
-        }
-        //Treatment Cost
-        if (treatmentCost === "" && treatmentMin !== "") {
-            errorList += "<li>Please enter a Treatment Cost.</li>";
-        }
-        if (treatmentCost > costMax && treatmentCost !== "") {
-            errorList += "<li>Treatment Costs cannot exceed " + currencyFormatter.format(costMax) + "</li>";
-        }
-        if (treatmentCost < 1 && treatmentCost !== "" && treatmentMin > 0 && treatmentMin !== "") {
-            errorList += "<li>Treatment Costs must be at least $1.</li>";
-        }
-        if (treatmentCost > 0 && treatmentCost !== "" && treatmentMin == 0 && treatmentMin !== "") {
-            errorList += "<li>There cannot be an Treatment Cost if there isn't at least 1 Daily Minimum Treatments.</li>";
+        if (minimumCompensation !== '' && parseInt(minimumCompensation, 10) < 1) {
+            errorList += '<li>Minimum compensation must be at least $1.</li>';
         }
     }
+
+    /* Deprecated fee split assessment/treatment validation retained in source for reference.
+    if (getSelectedPaymentTypes().includes('Fee Split')) {
+        ...
+    }
+    */
 
 
     //Validate Therapist Schedule
