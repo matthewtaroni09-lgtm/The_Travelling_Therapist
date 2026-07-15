@@ -307,7 +307,7 @@ def therapist_auction_thank_you_bid(first_name, last_name, clinic_name, start_da
   <p>Hello <span class="text-weight-bold">""" + first_name + """ """ + last_name + """</span>,</p>
   
   <p>Thank you for submitting your offer for <a href=""" + ACTIVE_LINK + "/auction/" + str(auctionID) + """>""" + clinic_name + """ 's: """ + str(start_date.strftime("%Y-%m-%d")) + """</a> listing. We appreciate your participation.</p>
-  <p>If another candidate submits a lower offer, you will receive an email allowing you to resubmit a new offer if you wish to stay in the running. </p>
+  <p>If another candidate submits another offer, you will receive an email. </p>
   <br>
   <p style="font-weight: 700; padding-top: 0rem; margin-top: 0; line-height: 0;">The Traveling Therapist Team</p>
 
