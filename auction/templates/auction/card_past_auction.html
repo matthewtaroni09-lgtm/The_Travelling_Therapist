@@ -10,13 +10,17 @@
       {% endif %}
     </div>
     <div class="d-inline-flex text-align-center align-items-center bg-dark p-2 rounded text-x-small ttt-card-stats ttt-card-stats-completed ttt-card-stats-seam mb-3" style="width: max-content; min-width: 0; max-width: calc(100% - 24px); min-height: 50px; padding-left: 10px !important; padding-right: 10px !important; column-gap: 8px; flex-wrap: nowrap;">
-      {% if '%' in auction.get_winning_offer_display %}
+      {% if auction.get_winning_offer_symbol == '%' %}
       <span class="ttt-stat-coin ttt-stat-percent-circle" style="top: 1px;">%</span>
       {% else %}
       <span class="material-icons small text-white ttt-stat-coin">paid</span>
       {% endif %}
-      <p class="m-0 d-flex me-3 text-white">Winning Offer:<span class="ms-2 text-white">{{ auction.get_winning_offer_display }}</span></p>
-      <p class="m-0 text-white"># Bids:<span class="ms-2 text-white">{{ auction.get_num_bids }}</span></p>
+      {% if auction.has_winning_offer %}
+      <p class="m-0 d-flex me-3 text-white">{{ auction.get_completed_card_title }}<span class="ms-2 text-white">{{ auction.get_winning_offer_display }}</span></p>
+      <p class="m-0 text-white"># Offers:<span class="ms-2 text-white">{{ auction.get_num_bids }}</span></p>
+      {% else %}
+      <p class="m-0 text-white">{{ auction.get_completed_card_title }}</p>
+      {% endif %}
     </div>
     <div class="card-body ttt-card-body">
       <h2 class="card-title mb-1">{{ auction.clinic.clinicName }}{{ auction.clinicName }}</h2>

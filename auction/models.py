@@ -97,7 +97,7 @@ class Account(models.Model):
         verbose_name='Clinic Website',
         blank=True,
         null=True,
-        help_text='This field is optional. Adding a website may give more traction to your listing.'
+        help_text='This field is optional. Adding a website may give more traction to your listing - your website will be linked in your listings.'
     )
     underEighteen = models.IntegerField(verbose_name='% Under 18', blank=True, null=True)
     eighteenToSixtyFive = models.IntegerField(verbose_name='% 18 - 65', blank=True, null=True)
@@ -285,8 +285,8 @@ class Auction(models.Model):
     clinic = models.ForeignKey(Account, related_name='auction_clinic', on_delete=models.CASCADE)
     auctionStart = models.DateTimeField(verbose_name='Auction Start', help_text='Enter the start date of the listing.')
     auctionEnd = models.DateTimeField(verbose_name='Auction End', help_text='Enter the end date of the listing.')
-    placementStart = models.DateField(verbose_name='Clinican Start Date', help_text='Enter the start date of the placement.', default=datetime.date.today)
-    placementEnd = models.DateField(verbose_name='Clinican End Date', help_text='Enter the end date of the placement.', default=datetime.date.today)
+    placementStart = models.DateField(verbose_name='Clinican Start Date', help_text='Enter the start date of the placement.', default=lambda: datetime.date.today() + datetime.timedelta(days=1))
+    placementEnd = models.DateField(verbose_name='Clinican End Date', help_text='Enter the end date of the placement.', default=lambda: datetime.date.today() + datetime.timedelta(days=1))
     mondayStart = models.TimeField(verbose_name='Start Time', null=True, blank=True, default='09:00')
     mondayEnd = models.TimeField(verbose_name='End Time', null=True, blank=True, default='17:00')
     tuesdayStart = models.TimeField(verbose_name='Start Time', null=True, blank=True, default='09:00')
@@ -487,6 +487,24 @@ class Auction(models.Model):
         else:
             num_bids = Bid.objects.filter(auction=self.auctionID, active=True).count()
         return num_bids
+
+    def has_winning_offer(self):
+        return self.winner_id is not None and self.winningPrice is not None
+
+    def is_effectively_closed(self):
+        if self.closed and not self.active:
+            return True
+        if self.active and self.auctionEnd is not None and self.auctionEnd <= django_timezone.now():
+            return True
+        return False
+
+    def is_effectively_active(self):
+        return self.active and not self.is_effectively_closed()
+
+    def get_completed_card_title(self):
+        if not self.has_winning_offer():
+            return 'Completed'
+        return 'Winning Offer:'
 
     def get_winning_offer_display(self):
         if self.winningPrice is None:

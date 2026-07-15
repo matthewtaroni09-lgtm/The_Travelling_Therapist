@@ -48,13 +48,29 @@
   </div>
 
   <div class="d-flex">
+    {% if auction.is_effectively_closed %}
+    <section class="d-inline-flex align-items-center text-white bg-dark py-2 px-3 me-3 rounded mb-4 mb-md-0">
+      {% if auction.get_winning_offer_symbol == '%' %}
+      <span class="ttt-stat-coin ttt-stat-percent-circle me-2" style="top: 1px;">%</span>
+      {% else %}
+      <span class="material-icons small text-white me-2">paid</span>
+      {% endif %}
+      {% if auction.has_winning_offer %}
+      <p class="m-0 me-4 text-white">{{ auction.get_completed_card_title }} <span class="ms-2 text-white">{{ auction.get_winning_offer_display }}</span></p>
+      <p class="m-0 d-none d-lg-block text-white"># Offers:<span class="ms-2 text-white">{{ num_bids }}</span></p>
+      {% else %}
+      <p class="m-0 text-white">{{ auction.get_completed_card_title }}</p>
+      {% endif %}
+    </section>
+    {% else %}
     <section class="d-inline-flex align-items-center text-white bg-dark py-2 px-3 me-3 rounded mb-4 mb-md-0">
       <span class="material-icons small text-white">schedule</span><time id="auctionTimer-{{ auction.auctionID }}"
         class="m-0 d-flex me-3 text-white">{{ auction.get_time_diff }}</time>
-        <p id="bidText" class="m-0 me-4 text-white"># Bids:<span class="ms-2 text-white">{{ num_bids }}</span></p>
-        <p class="m-0 d-none d-lg-block text-white"># of Therapists Bidding:<span
+      <p id="bidText" class="m-0 me-4 text-white"># Offers:<span class="ms-2 text-white">{{ num_bids }}</span></p>
+      <p class="m-0 d-none d-lg-block text-white"># of Clinicians Offering:<span
           class="ms-2 text-white">{{num_biders}}</span></p>
     </section>
+    {% endif %}
 
     {% if can_place_offer %}
     <button id="bidButton" type="button" class="btn-lg btn-primary" data-bs-toggle="modal"
@@ -81,7 +97,7 @@
                 </div>
                 <div class="text-end">
                   <p class="mb-1">{{ auction.get_bid }}</p>
-                  <p class="mb-0"># Bids: {{ num_bids }}</p>
+                  <p class="mb-0"># Offers: {{ num_bids }}</p>
                 </div>
               </div>
 

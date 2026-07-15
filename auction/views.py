@@ -48,6 +48,10 @@ DEFAULT_PERK_OPTIONS = [
     'Flexible schedule',
 ]
 
+
+def _effective_auction_sort_key(auction):
+    return (auction.is_effectively_closed(), auction.auctionEnd or timezone.now())
+
 CLINICIAN_SKILL_OPTIONS_BY_TYPE = {
     'physio': [
         'Canadian Physiotherapy License',
@@ -392,8 +396,8 @@ def contact(request):
         return render(request, "auction/contact_us.html", {'form': form, 'recaptcha_site_key':settings.GOOGLE_RECAPTCHA_SITE_KEY})
 
 def view_all_auctions(request):
-    auctions = ''
-    auctions = Auction.objects.filter(active=True).order_by('-auctionEnd') | Auction.objects.filter(closed=True).order_by('-auctionEnd')
+    auctions = Auction.objects.filter(Q(active=True) | Q(closed=True), deleted=False)
+    auctions = sorted(auctions, key=_effective_auction_sort_key)
     print(auctions)
     return render(request, 'auction/partials/auction_list.html', {'auction': auctions, 'length': len(auctions), 'auction_search': True})
 
@@ -428,14 +432,16 @@ def auction_search(request):
     else:
         payment_type_fitler = Q()
 
+    now = timezone.now()
+
     # Filter statues
     if status_select == '0':
         status_select_fitler = Q()
     else:
         if status_select == 'Active':
-            status_select_fitler = Q(active=True)
+            status_select_fitler = Q(active=True, closed=False, auctionEnd__gt=now)
         elif status_select == 'Closed':
-            status_select_fitler = Q(closed=True)
+            status_select_fitler = Q(closed=True) | Q(auctionEnd__lte=now)
         else:
             status_select_fitler = Q()
     # Filter clinic search
@@ -452,16 +458,19 @@ def auction_search(request):
     filter = city_fitler & payment_type_fitler & status_select_fitler & clinic_fitler & type_filter
     # filter = city_fitler & payment_type_fitler & status_select_fitler & clinic_fitler
     print(filter)
-    auctions = Auction.objects.filter(filter)
+    auctions = Auction.objects.filter(filter, deleted=False)
+    auctions = sorted(auctions, key=_effective_auction_sort_key)
     return render(request, 'auction/partials/auction_list.html', {'auction': auctions, 'length': len(auctions), 'auction_search': True})
 
 def index(request):
     logger.warning('Homepage was accessed at '+str(datetime.datetime.now())+' hours!')
     auction = ''
+    now = timezone.now()
     if request.user.is_authenticated == False or str(request.user.account.userType) == 'Clinic' or request.user.is_staff:
-        auctions = Auction.objects.filter(((Q(active=True)) | (Q(closed=True))) & Q(deleted=False)).order_by('-active', 'auctionEnd')
+        auctions = Auction.objects.filter(((Q(active=True)) | (Q(closed=True))) & Q(deleted=False))
     elif request.user.is_authenticated == True and request.user.account.userType != 'Clinic':
-        auctions = Auction.objects.filter(((Q(active=True)) | (Q(closed=True))) & Q(type=request.user.account.userType)).order_by('-active', 'auctionEnd')
+        auctions = Auction.objects.filter(((Q(active=True)) | (Q(closed=True))) & Q(type=request.user.account.userType) & Q(deleted=False))
+    auctions = sorted(auctions, key=_effective_auction_sort_key)
     cities = []
     payment_type_options = []
     statuses = []
@@ -473,9 +482,9 @@ def index(request):
                 payment_type_options.append(payment_type)
         
         status = ''
-        if auction.active:
+        if auction.is_effectively_active():
             status = 'Active'
-        elif auction.closed:
+        elif auction.is_effectively_closed():
             status = 'Closed'
         if status not in statuses:
             statuses.append(status)
@@ -507,7 +516,8 @@ def test(request):
 def view_user_auctions(request):
     auctions = ''
     user_type = request.user.account.userType
-    auctions = Auction.objects.filter(active=True, type=user_type).order_by('-auctionEnd') | Auction.objects.filter(closed=True, type=user_type).order_by('-auctionEnd')
+    auctions = Auction.objects.filter(Q(active=True) | Q(closed=True), type=user_type, deleted=False)
+    auctions = sorted(auctions, key=_effective_auction_sort_key)
     return render(request, 'auction/partials/auction_list.html', {'auction': auctions})
 
 # Page Links
@@ -591,8 +601,9 @@ def profile(request):
         active_raffles = Raffle.objects.filter(active=True, target_audience__in=['Both', 'Clinic'])
         print(request.method)
         # Not closed and not deleted counts any auctions that are active or have no status selected
-        active_auctions_list = Auction.objects.filter(active=True, closed=False, deleted=False, clinic=request.user.account)
-        past_auctions_list = Auction.objects.filter(active=False, closed=True, deleted=False, clinic=request.user.account)
+        now = timezone.now()
+        active_auctions_list = Auction.objects.filter(active=True, closed=False, deleted=False, clinic=request.user.account, auctionEnd__gt=now)
+        past_auctions_list = Auction.objects.filter(deleted=False, clinic=request.user.account).filter(Q(closed=True) | Q(auctionEnd__lte=now)).order_by('-auctionEnd')
         pending_auctions_list = Auction.objects.filter(active=False, closed=False, deleted=False, clinic=request.user.account)
         num_pending = pending_auctions_list.count()
         submitted_profile = False
@@ -667,16 +678,23 @@ def profile(request):
         therapist_type = request.user.account.userType
         therapist_bids = Bid.objects.filter(
             user=request.user,
-            active=True,
             auction__type=therapist_type,
             auction__deleted=False,
         )
-        active_auctions_list = list(Auction.objects.filter(
-            auctionID__in=therapist_bids.filter(auction__active=True, auction__closed=False).values_list('auction_id', flat=True)
-        ).order_by('-auctionEnd').distinct())
-        past_auctions_list = list(Auction.objects.filter(
-            auctionID__in=therapist_bids.filter(auction__active=False, auction__closed=True).values_list('auction_id', flat=True)
-        ).order_by('-auctionEnd').distinct())
+        therapist_auctions = list(Auction.objects.filter(
+            auctionID__in=therapist_bids.values_list('auction_id', flat=True),
+            deleted=False,
+        ).distinct())
+        active_auctions_list = sorted(
+            [listing for listing in therapist_auctions if listing.is_effectively_active()],
+            key=lambda listing: listing.auctionEnd or timezone.now(),
+            reverse=True,
+        )
+        past_auctions_list = sorted(
+            [listing for listing in therapist_auctions if listing.is_effectively_closed()],
+            key=lambda listing: listing.auctionEnd or timezone.now(),
+            reverse=True,
+        )
         therapist_offer_history = list(
             Bid.objects.filter(user=user).select_related('auction', 'auction__clinic').order_by('-created')
         )
@@ -757,8 +775,13 @@ def view_auction(request, auction_id):
     admin = AdminSetting.objects.first()
     auction = Auction.objects.get(pk=auction_id)
     print(auction.comments)
-    num_bids = Bid.objects.filter(auction=auction_id, active=True).count()
-    num_biders = Bid.objects.values('user').filter(auction=auction_id, active=True).distinct().count()
+    is_effectively_active = auction.is_effectively_active()
+    if is_effectively_active:
+        num_bids = Bid.objects.filter(auction=auction_id, active=True).count()
+        num_biders = Bid.objects.values('user').filter(auction=auction_id, active=True).distinct().count()
+    else:
+        num_bids = Bid.objects.filter(auction=auction_id).count()
+        num_biders = Bid.objects.values('user').filter(auction=auction_id).distinct().count()
     bids = Bid.objects.filter(auction=auction_id, active=True).annotate(Min('amount')).order_by('amount')
     payment_types = auction.get_payment_types_list()
     payment_type = auction.get_primary_payment_type()
@@ -768,7 +791,7 @@ def view_auction(request, auction_id):
         request.user.is_authenticated
         and hasattr(request.user, 'account')
         and request.user.account.userType == auction.type
-        and auction.active
+        and is_effectively_active
     )
     auction_change = False
     submitted = False
@@ -779,7 +802,7 @@ def view_auction(request, auction_id):
         request.user.is_authenticated
         and hasattr(request.user, 'account')
         and request.user.account == auction.clinic
-        and auction.active
+        and is_effectively_active
     )
     clinic_offer_rows = []
     required_skill_rows = auction.get_required_skill_rows()
@@ -1268,7 +1291,7 @@ def set_acknowledgement(request):
     return HttpResponse(json.dumps('Success'), content_type="application/json")
 
 def get_all_auctions(request):
-    auction_list = list(Auction.objects.filter(Q(active=True) | Q(closed=True)).values())
+    auction_list = list(Auction.objects.filter((Q(active=True) | Q(closed=True)) & Q(deleted=False)).values())
     return JsonResponse({'data': auction_list})
 
 def get_practice_types(request):
@@ -1286,7 +1309,7 @@ def get_practice_types(request):
 def get_active_auctions_clinic(request):
     active_auctions_list = ''
     if str(request.user.account.userType).split(' ')[-1] == "Clinic":
-        active_auctions_list = list(Auction.objects.filter(active=True, clinic=request.user.account).values())
+        active_auctions_list = list(Auction.objects.filter(active=True, closed=False, clinic=request.user.account, auctionEnd__gt=timezone.now()).values())
     else:
         query = 'SELECT DISTINCT AA.auctionID, AA.auctionStart, AA.auctionEnd, AA.currentLowBid, AB.bidID, AA.placementStart, AA.placementEnd, AA.clinic_id, AC.user_id, AC.clinicName, AC.city, AC.province, AC.about, AC.imageOne, AC.imageTwo, UT.name "userType" FROM auction_auction AA LEFT JOIN auction_bid AB ON AA.auctionID = AB.auction_id LEFT JOIN auction_account AC ON AA.clinic_id = AC.id LEFT JOIN auction_usertype UT ON AC.userType_id = UT.id WHERE AB.user_id = ' + str(request.user.account.user_id) + ' AND AA.active = 1 AND AA.closed = 0 AND AA.deleted = 0 GROUP BY auctionID, AA.placementStart, AA.placementEnd, AA.clinic_id, AC.user_id , AC.clinicName, AC.city, AC.about, AC.imageOne, AC.imageTwo, UT.name;'
         auction_list = Bid.objects.raw(query)
@@ -1327,7 +1350,7 @@ def get_view_auction_data(request):
         'paymentType': payment_type,
         'paymentTypes': payment_types,
         'flatFeeType': auction.flatFeeType,
-        'active': auction.active,
+        'active': auction.is_effectively_active(),
         'matchtingTypes': matchting_types
     })
 
@@ -2099,4 +2122,3 @@ def update_v6_1(request):
 
 def update_v6_0(request):
     return render(request, 'auction/updates/v6_0.html')
-

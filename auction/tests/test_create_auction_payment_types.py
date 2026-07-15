@@ -12,7 +12,8 @@ from auction.models import Account, AdminSetting, Auction, Bid, PaymentType, Use
 class AuctionPaymentTypeFormTests(TestCase):
 	def setUp(self):
 		self.clinic_user_type = UserType.objects.create(name='Physiotherapy Clinic')
-		self.clinician_user_type = UserType.objects.create(name='Physiotherapist')
+		self.clinician_user_type = UserType.objects.create(name='Physiotherapist', feeSplit=True)
+		self.restricted_clinician_user_type = UserType.objects.create(name='Restricted Clinician', feeSplit=False)
 		self.fee_split = PaymentType.objects.create(name='Fee Split')
 		self.flat_fee = PaymentType.objects.create(name='Flat Fee')
 
@@ -93,6 +94,36 @@ class AuctionPaymentTypeFormTests(TestCase):
 		self.assertEqual(auction.desiredFlatFeeHourly, 90)
 		self.assertIsNone(auction.desiredFlatFeeTotalContract)
 
+	def test_restricted_user_type_cannot_select_fee_split(self):
+		data = self._base_form_data()
+		data['type'] = self.restricted_clinician_user_type.pk
+		data['paymentTypesSelection'] = ['Fee Split']
+		form = AuctionForm(data=data)
+
+		self.assertFalse(form.is_valid())
+		self.assertIn(
+			'Fee Split is not available for Restricted Clinician. Please choose Flat Fee.',
+			form.non_field_errors(),
+		)
+
+	def test_placement_start_must_be_tomorrow_or_later(self):
+		data = self._base_form_data()
+		data['paymentTypesSelection'] = ['Flat Fee']
+		data['flatFeeType'] = 'hourly'
+		data['placementStart'] = timezone.localdate().isoformat()
+		data['placementEnd'] = (timezone.localdate() + timedelta(days=3)).isoformat()
+		form = AuctionForm(data=data)
+
+		self.assertFalse(form.is_valid())
+		self.assertIn('The clinician start date must be tomorrow or later.', form.non_field_errors())
+
+	def test_default_placement_start_is_tomorrow(self):
+		form = AuctionForm()
+		tomorrow = timezone.localdate() + timedelta(days=1)
+
+		self.assertEqual(form.fields['placementStart'].widget.attrs.get('min'), tomorrow.isoformat())
+		self.assertEqual(form.fields['placementStart'].widget.attrs.get('value'), tomorrow.isoformat())
+
 
 class AuctionPaymentTypeHelperTests(TestCase):
 	def setUp(self):
@@ -169,6 +200,47 @@ class AuctionPaymentTypeHelperTests(TestCase):
 		self.assertEqual(hourly_auction.get_payment_type_badge_lines(), ['Fee Split', 'Flat Fee', '(Hourly)'])
 		self.assertEqual(tcp_auction.get_payment_type_filter_labels(), ['Flat Fee (Total Contract Price)'])
 		self.assertEqual(tcp_auction.get_payment_type_badge_lines(), ['Flat Fee', '(Total Contract Price)'])
+
+	def test_effective_closed_when_listing_end_has_passed(self):
+		expired_auction = Auction(
+			clinic=self.account,
+			auctionStart=timezone.now() - timedelta(days=3),
+			auctionEnd=timezone.now() - timedelta(minutes=1),
+			placementStart=timezone.localdate(),
+			placementEnd=timezone.localdate() + timedelta(days=10),
+			active=True,
+			closed=False,
+			deleted=False,
+			cronID='expired-cron',
+			type=self.clinician_user_type,
+			paymentType=self.flat_fee,
+			paymentTypes='Flat Fee',
+			flatFeeType='hourly',
+		)
+
+		self.assertTrue(expired_auction.is_effectively_closed())
+		self.assertFalse(expired_auction.is_effectively_active())
+
+	def test_completed_card_uses_default_copy_without_winner(self):
+		no_winner_auction = Auction(
+			clinic=self.account,
+			auctionStart=timezone.now() - timedelta(days=2),
+			auctionEnd=timezone.now() - timedelta(days=1),
+			placementStart=timezone.localdate(),
+			placementEnd=timezone.localdate() + timedelta(days=10),
+			active=False,
+			closed=True,
+			deleted=False,
+			cronID='no-winner-cron',
+			type=self.clinician_user_type,
+			paymentType=self.flat_fee,
+			paymentTypes='Flat Fee',
+			flatFeeType='hourly',
+		)
+
+		self.assertFalse(no_winner_auction.has_winning_offer())
+		self.assertEqual(no_winner_auction.get_winning_offer_symbol(), '$')
+		self.assertEqual(no_winner_auction.get_completed_card_title(), 'Completed')
 
 
 class DualOfferSubmissionTests(TestCase):

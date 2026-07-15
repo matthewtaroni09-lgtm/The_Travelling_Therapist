@@ -14,6 +14,48 @@ let treatmentChecked = false;
 let dynamicSkillCounter = 100;
 let dynamicPerkCounter = 200;
 
+function toIsoDateString(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+}
+
+function getTomorrowDateString() {
+    const tomorrow = new Date();
+    tomorrow.setHours(0, 0, 0, 0);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    return toIsoDateString(tomorrow);
+}
+
+function setPlacementStartConstraints() {
+    const $placementStart = $('#id_placementStart');
+    if ($placementStart.length === 0) {
+        return;
+    }
+
+    const tomorrowDate = getTomorrowDateString();
+    $placementStart.attr('min', tomorrowDate);
+
+    if (!$placementStart.val()) {
+        $placementStart.val(tomorrowDate);
+    }
+}
+
+function setPlacementEndConstraints() {
+    const $placementStart = $('#id_placementStart');
+    const $placementEnd = $('#id_placementEnd');
+    if ($placementStart.length === 0 || $placementEnd.length === 0) {
+        return;
+    }
+
+    const minimumEndDate = $placementStart.val() || getTomorrowDateString();
+    $placementEnd.attr('min', minimumEndDate);
+    if ($placementEnd.val() && $placementEnd.val() < minimumEndDate) {
+        $placementEnd.val(minimumEndDate);
+    }
+}
+
 const REQUIRED_SKILLS_BY_TYPE = {
     physio: [
         'Canadian Physiotherapy License',
@@ -434,6 +476,21 @@ function syncOfferGuidanceUI(selectedPaymentTypes) {
     }
 }
 
+function setFeeSplitOptionAvailability(allowsFeeSplit) {
+    const $feeSplitOption = $('#id_paymentTypesSelection_0');
+    if ($feeSplitOption.length === 0) {
+        return;
+    }
+
+    const $feeSplitContainer = $feeSplitOption.closest('.ttt-payment-option');
+    if (!allowsFeeSplit) {
+        $feeSplitOption.prop('checked', false);
+    }
+
+    $feeSplitOption.prop('disabled', !allowsFeeSplit);
+    $feeSplitContainer.toggleClass('is-disabled', !allowsFeeSplit);
+}
+
 function syncPaymentTypeUI() {
     const selectedPaymentTypes = getSelectedPaymentTypes();
     const feeSplitEnabled = selectedPaymentTypes.includes('Fee Split');
@@ -480,6 +537,8 @@ $(document).ready(function () {
     $('.alert.alert-block.alert-danger').hide();
     $('.feeSplitFields').hide();
     greyOutFields(true);
+    setPlacementStartConstraints();
+    setPlacementEndConstraints();
     // Prevent pressing enter from submitting the form
     $(document).keypress(
         function (event) {
@@ -487,6 +546,10 @@ $(document).ready(function () {
                 event.preventDefault();
             }
         });
+
+    if ($('#id_type').find(':selected').text() !== '---------') {
+        $('#id_type').trigger('change');
+    }
 
     $('#id_type').change(function () {
         populateRequiredSkillsByClinicianType();
@@ -509,10 +572,8 @@ $(document).ready(function () {
                     'name': $('#id_type').find(":selected").text()
                 },
                 success: function (response) {
-                    console.log(response);
-                    $('#id_paymentTypesSelection_0').prop('disabled', false);
+                    setFeeSplitOptionAvailability(Boolean(response.feeSplit));
                     syncPaymentTypeUI();
-
                 },
                 error: function (error) {
                     console.log('error: ', error);
@@ -522,6 +583,7 @@ $(document).ready(function () {
         else {
             $("#optionsMessage").hide();
             $('input[name="paymentTypesSelection"]').prop('checked', false).prop('disabled', false);
+            setFeeSplitOptionAvailability(true);
             syncPaymentTypeUI();
         }
     });
@@ -698,6 +760,7 @@ $(document).ready(function () {
 });
 
 $('#id_placementStart').change(function () {
+    setPlacementEndConstraints();
     getDateDiff();
 });
 $('#id_placementEnd').change(function () {
@@ -821,6 +884,9 @@ $("#submitButton").click(function () {
 
     //Validate Start/End date
     var now = new Date();
+    now.setHours(0, 0, 0, 0);
+    const tomorrowDate = new Date(now);
+    tomorrowDate.setDate(now.getDate() + 1);
     let oneYear = new Date(now);
     oneYear.setDate(now.getDate() + 365)
 
@@ -828,8 +894,8 @@ $("#submitButton").click(function () {
         errorList += '<li>The placement must be at least one day long.</li>';
     }
     else {
-        if (days_between(placementStart, now, false) < 0) {
-            errorList += '<li>Clinician Start Date cannot be in the past.</li>';
+        if (placementStart < tomorrowDate) {
+            errorList += '<li>Clinician Start Date must be tomorrow or later.</li>';
         }
 
         if (days_between(placementEnd, now, false) < 0) {
@@ -837,10 +903,10 @@ $("#submitButton").click(function () {
         }
     }
 
-    if (placementStart === NaN) {
+    if (Number.isNaN(placementStart.getTime())) {
         errorList += '<li>Please enter a valid Clinician Start Date.</li>';
     }
-    if (placementEnd === NaN) {
+    if (Number.isNaN(placementEnd.getTime())) {
         errorList += '<li>Please enter a valid Clinician End Date.</li>';
     }
     if (placementEnd < placementStart) {

@@ -48,6 +48,14 @@
         line-height: 1.2;
       }
 
+      .ttt-payment-option.is-disabled .ttt-payment-label {
+        color: #8d99a4;
+      }
+
+      .ttt-payment-option.is-disabled input[type="checkbox"] {
+        opacity: 0.65;
+      }
+
       .ttt-guidance-wrap {
         margin-left: 1.5rem;
         padding: 0.65rem 0.75rem;
@@ -761,7 +769,7 @@
   </div>
 </div>
 <!-- </div> -->
-<script src="{% static 'auction/create_auction.js' %}?v=20260715-skills-by-clinician-v2"></script>
+<script src="{% static 'auction/create_auction.js' %}?v=20260715-status-and-enddate-v4"></script>
 <script src="{% static 'auction/textarea.js' %}"></script>
 {% else %}
 <p>You must be logged in to access this page. Please <a href="{% url 'login' %}">login here</a>

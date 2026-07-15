@@ -68,6 +68,25 @@ function userTypeChange(userType) {
 $(document).ready(function () {
     const termsActionButton = $('#termsActionButton');
     let submitFromTermsModal = false;
+    const registerForm = document.querySelector('form[method="post"]');
+
+    function focusAndRevealInvalidField(field) {
+        if (!field) {
+            return;
+        }
+        field.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        field.focus({ preventScroll: true });
+        if (typeof field.reportValidity === 'function') {
+            field.reportValidity();
+        }
+    }
+
+    if (registerForm) {
+        registerForm.addEventListener('invalid', function (event) {
+            focusAndRevealInvalidField(event.target);
+        }, true);
+    }
+
         if (termsActionButton.length) {
             termsActionButton.text('Create Account');
             termsActionButton.prop('disabled', !$('#agreementCheckBox').prop('checked'));
@@ -169,10 +188,7 @@ $(document).ready(function () {
                     return;
                 }
                 const firstInvalidField = registerForm.querySelector(':invalid');
-                if (firstInvalidField && typeof firstInvalidField.reportValidity === 'function') {
-                    firstInvalidField.focus();
-                    firstInvalidField.reportValidity();
-                }
+                focusAndRevealInvalidField(firstInvalidField);
             }, 50);
         }
     })

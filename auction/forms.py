@@ -148,8 +148,8 @@ class AuctionForm(forms.ModelForm):
         )
 
         widgets = {
-            'placementStart': forms.DateInput(format=('%Y-%m-%d'), attrs={'class': 'form-control', 'placeholder': 'Select a date', 'type': 'date', 'value': '2022-01-01'}),
-            'placementEnd': forms.DateInput(format=('%Y-%m-%d'), attrs={'class': 'form-control', 'placeholder': 'Select a date', 'type': 'date', 'value': '2022-01-02'}),
+            'placementStart': forms.DateInput(format=('%Y-%m-%d'), attrs={'class': 'form-control', 'placeholder': 'Select a date', 'type': 'date'}),
+            'placementEnd': forms.DateInput(format=('%Y-%m-%d'), attrs={'class': 'form-control', 'placeholder': 'Select a date', 'type': 'date'}),
             'mondayStart': forms.TimeInput(attrs={'class': 'form-control', 'placeholder': 'Select a date', 'type': 'time'}),
             'mondayEnd': forms.TimeInput(attrs={'class': 'form-control', 'placeholder': 'Select a date', 'type': 'time'}),
             'tuesdayStart': forms.TimeInput(attrs={'class': 'form-control', 'placeholder': 'Select a date', 'type': 'time'}),
@@ -173,15 +173,27 @@ class AuctionForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        tomorrow = datetime.now().date() + timedelta(days=1)
+        self.fields['placementStart'].widget.attrs['min'] = tomorrow.isoformat()
+        self.fields['placementEnd'].widget.attrs['min'] = tomorrow.isoformat()
+        if not self.is_bound and self.instance and self.instance._state.adding:
+            self.fields['placementStart'].widget.attrs['value'] = tomorrow.isoformat()
         if self.instance and self.instance.pk:
             self.initial.setdefault('paymentTypesSelection', self.instance.get_payment_types_list())
             self.initial.setdefault('flatFeeType', self.instance.flatFeeType)
 
     def clean(self):
         cleaned_data = super().clean()
+        error_list = []
         placementStart = cleaned_data.get('placementStart')
         placementEnd = cleaned_data.get('placementEnd')
         payment_types = cleaned_data.get('paymentTypesSelection') or []
+        selected_type = cleaned_data.get('type')
+
+        if selected_type and not selected_type.feeSplit and 'Fee Split' in payment_types:
+            error_list.append(ValidationError(
+                f"Fee Split is not available for {selected_type.name}. Please choose Flat Fee."
+            ))
         flat_fee_type = cleaned_data.get('flatFeeType')
         desired_fee_split_percentage = cleaned_data.get('desiredFeeSplitPercentage')
         desired_flat_fee_hourly = cleaned_data.get('desiredFlatFeeHourly')
@@ -212,16 +224,19 @@ class AuctionForm(forms.ModelForm):
         saturday_val = check_times(saturdayStart, saturdayEnd, 'Saturday')
         sunday_val = check_times(sundayStart, sundayEnd, 'Sunday')
 
-        error_list = []
         none_count = 0
+        tomorrow = datetime.now().date() + timedelta(days=1)
 
-        if placementStart > datetime.now().date() + timedelta(days=365):
+        if placementStart and placementStart < tomorrow:
+            error_list.append(ValidationError("The clinician start date must be tomorrow or later."))
+
+        if placementStart and placementStart > datetime.now().date() + timedelta(days=365):
             error_list.append(ValidationError("Placements must start within the next 12 months."))
 
-        if placementEnd <= placementStart:
+        if placementStart and placementEnd and placementEnd <= placementStart:
             error_list.append(ValidationError("The end of placement date must be after the start date of placement"))
 
-        if (placementEnd - placementStart).days > 730:
+        if placementStart and placementEnd and (placementEnd - placementStart).days > 730:
             error_list.append(ValidationError("Placements must be less than two years."))
 
         if monday_val == 'None':
@@ -637,4 +652,3 @@ class MessageAcknowledgementForm(forms.ModelForm):
     class Meta:
         model = MessageAcknowledgement
         fields = ['acknowledged']
-
