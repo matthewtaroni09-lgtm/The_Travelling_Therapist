@@ -12,6 +12,15 @@ $(document).ready(function () {
         }
     };
 
+    const openChallengesAccordion = () => {
+        const challengeCollapse = document.getElementById('collapseChallengesT') || document.getElementById('collapseChallenges');
+        if (!challengeCollapse) {
+            return;
+        }
+        const collapseInstance = bootstrap.Collapse.getOrCreateInstance(challengeCollapse, { toggle: false });
+        collapseInstance.show();
+    };
+
     if ($('.alert-block').css("display") === "block") {
         showTab('#profile-tab');
     }
@@ -32,7 +41,21 @@ $(document).ready(function () {
     // Handle hash in URL to show specific tab
     var hash = window.location.hash;
     if (hash) {
-        showTab('button[data-bs-target="' + hash + '"]');
+        if (hash.indexOf('#raffles') === 0) {
+            if (document.querySelector('button[data-bs-target="#raffles-t"]')) {
+                showTab('button[data-bs-target="#raffles-t"]');
+            }
+            else {
+                showTab('button[data-bs-target="#raffles"]');
+            }
+
+            if (hash.indexOf('challenges') !== -1) {
+                openChallengesAccordion();
+            }
+        }
+        else {
+            showTab('button[data-bs-target="' + hash + '"]');
+        }
     }
 
     // Raffle Modal Logic
@@ -60,7 +83,18 @@ $(document).ready(function () {
     });
 
     $('#ticket-count').on('keydown', function (event) {
-        if (event.key === '-' || event.key === '+' || event.key === 'e' || event.key === 'E') {
+        if (
+            event.key === '-' || event.key === '+' || event.key === 'e' || event.key === 'E'
+            || event.code === 'NumpadSubtract' || event.code === 'NumpadAdd'
+        ) {
+            event.preventDefault();
+        }
+    });
+
+    $('#ticket-count').on('beforeinput', function (event) {
+        const rawEvent = event.originalEvent;
+        const inputData = rawEvent && rawEvent.data ? rawEvent.data : '';
+        if (/[-+eE]/.test(inputData)) {
             event.preventDefault();
         }
     });
