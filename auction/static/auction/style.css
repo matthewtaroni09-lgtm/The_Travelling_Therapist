@@ -1365,6 +1365,14 @@ input[type=number] {
     max-width: 680px;
 }
 
+.ttt-offer-guidance-tab {
+    border-left: 4px solid #1d745d;
+    border-radius: 10px;
+    background: #dcefe9;
+    color: #123d33;
+    padding: 0.65rem 0.85rem;
+}
+
 .ttt-fee-split-value {
     min-width: 96px;
     text-align: center;

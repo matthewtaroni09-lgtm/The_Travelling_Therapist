@@ -568,7 +568,7 @@ class ProfileUpdateClinic(forms.ModelForm):
         info_text = 'You can put your social media account here or another link of your choice if you prefer.'
         self.fields['clinicWebsite'].help_text = mark_safe(
             'This field is optional. Adding a website may give more traction to your listing - your website will be linked in your listings. '
-            '<span class="ttt-inline-info" data-bs-toggle="tooltip" title="' + info_text + '">(i)</span>'
+            '<button type="button" class="ttt-inline-info-dot" data-bs-toggle="tooltip" data-bs-placement="top" title="' + info_text + '">i</button>'
         )
 
         for image_field in ('imageOne', 'imageTwo', 'imageThree', 'imageFour'):

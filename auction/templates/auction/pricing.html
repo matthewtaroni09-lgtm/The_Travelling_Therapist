@@ -1,0 +1,473 @@
+{% extends 'auction/base.html' %}
+{% load static %}
+{% block content %}
+<p id="pageTitle" class="d-none">Pricing</p>
+
+<style>
+  .ttt-pricing-page {
+    --ttt-ink: #17322d;
+    --ttt-muted: #4f6460;
+    --ttt-accent: #0f9972;
+    --ttt-soft: #f2faf7;
+    --ttt-border: #d7e7e2;
+    --ttt-panel: #ffffff;
+    max-width: 1080px;
+  }
+
+  .ttt-pricing-hero {
+    border: 1px solid var(--ttt-border);
+    border-radius: 16px;
+    background: linear-gradient(180deg, #f8fcfb 0%, #ffffff 100%);
+    padding: 1.5rem 1.2rem;
+    box-shadow: 0 6px 16px rgba(10, 76, 61, 0.06);
+    margin-bottom: 1rem;
+  }
+
+  .ttt-transparency-kicker {
+    display: inline-block;
+    padding: 0.6rem 0.9rem;
+    border-radius: 10px;
+    background: #e8f6f1;
+    color: #165c49;
+    font-family: Futura-Bold, sans-serif;
+    text-align: center;
+    font-size: 0.92rem;
+    line-height: 1.3;
+  }
+
+  .ttt-pricing-headline {
+    margin: 0.8rem 0 1rem;
+    font-family: Futura-Extra-Bold, sans-serif;
+    color: var(--ttt-ink);
+    font-size: clamp(1.65rem, 4vw, 2.35rem);
+    letter-spacing: 0.01em;
+    background: #f5f7f6;
+    border: 1px solid #e1e7e5;
+    border-radius: 10px;
+    padding: 0.4rem 0.75rem;
+    text-align: center;
+  }
+
+  .ttt-page-title {
+    text-align: center;
+    font-family: Futura-Extra-Bold, sans-serif;
+    color: var(--ttt-ink);
+    font-size: clamp(1.2rem, 3vw, 1.6rem);
+    margin-bottom: 0.75rem;
+  }
+
+  .ttt-stream-switch {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.35rem;
+    padding: 0.35rem;
+    border-radius: 999px;
+    border: 1px solid #d5e6e0;
+    background: #f6faf8;
+    max-width: 640px;
+    margin: 0 auto;
+  }
+
+  .ttt-stream-btn {
+    border: 0;
+    border-radius: 999px;
+    padding: 0.56rem 0.9rem;
+    font-family: Futura-Bold, sans-serif;
+    color: #3f655c;
+    background: transparent;
+    transition: transform 0.15s ease, background 0.2s ease, color 0.2s ease;
+  }
+
+  .ttt-stream-btn:hover {
+    background: #e8f3ef;
+  }
+
+  .ttt-stream-btn.is-active {
+    background: #ffffff;
+    color: #0c5f4a;
+    border: 1px solid #cfe1db;
+    box-shadow: 0 3px 8px rgba(19, 135, 105, 0.12);
+  }
+
+  .ttt-audience-stream {
+    display: none;
+    margin-top: 0.9rem;
+    animation: tttFadeIn 0.25s ease;
+  }
+
+  .ttt-audience-stream.is-visible {
+    display: block;
+  }
+
+  .ttt-panel {
+    border: 1px solid var(--ttt-border);
+    border-radius: 12px;
+    background: var(--ttt-panel);
+    padding: 1rem;
+    box-shadow: 0 3px 10px rgba(16, 64, 53, 0.05);
+  }
+
+  .ttt-value-card {
+    border: 1px solid #d3e5df;
+    border-radius: 10px;
+    background: #f2faf7;
+    color: #173f34;
+    padding: 1rem;
+    margin: 0.7rem 0;
+  }
+
+  .ttt-value-card h3 {
+    font-family: Futura-Bold, sans-serif;
+    font-size: clamp(1.2rem, 2.9vw, 1.75rem);
+    margin-bottom: 0.45rem;
+  }
+
+  .ttt-value-cost {
+    font-family: Futura-Extra-Bold, sans-serif;
+    font-size: clamp(1.2rem, 3vw, 1.6rem);
+    margin-bottom: 0.4rem;
+    color: #0e7d5d;
+  }
+
+  .ttt-muted-lead {
+    color: var(--ttt-muted);
+    margin-bottom: 0.5rem;
+  }
+
+  .ttt-case-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.85rem;
+  }
+
+  .ttt-case-grid-three {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .ttt-case-card {
+    border: 1px solid #d7e6e1;
+    border-radius: 12px;
+    background: #ffffff;
+    color: #21473d;
+    padding: 0.95rem;
+    height: 100%;
+  }
+
+  .ttt-case-card h4 {
+    font-family: Futura-Bold, sans-serif;
+    margin-bottom: 0.6rem;
+  }
+
+  .ttt-case-card ul {
+    margin-bottom: 0.6rem;
+    padding-left: 1rem;
+  }
+
+  .ttt-pricing-link {
+    font-family: Futura-Bold, sans-serif;
+    color: #0c7e61;
+    text-decoration: underline;
+  }
+
+  .ttt-safety-list {
+    margin-bottom: 0;
+    padding-left: 1.25rem;
+  }
+
+  .ttt-dual-referral-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.85rem;
+  }
+
+  .ttt-referral-box {
+    border: 1px solid #d7e6e1;
+    background: #f7fbf9;
+    border-radius: 8px;
+    padding: 1rem;
+  }
+
+  .ttt-referral-box h4 {
+    font-family: Futura-Bold, sans-serif;
+    margin-bottom: 0.6rem;
+  }
+
+  @keyframes tttFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(4px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (max-width: 991.98px) {
+    .ttt-case-grid,
+    .ttt-case-grid-three,
+    .ttt-dual-referral-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .ttt-pricing-headline {
+      font-size: clamp(1.45rem, 6vw, 2rem);
+    }
+  }
+</style>
+
+<div class="ttt-pricing-page container my-3 mb-5">
+  <section class="ttt-pricing-hero">
+    <p class="ttt-page-title">Transparent, No-Risk Pricing Built for Healthcare</p>
+    <p class="ttt-transparency-kicker mb-0">We believe in full transparency for both Clinicians and Clinics here at The Traveling Therapist</p>
+    <h1 class="ttt-pricing-headline">Who Are We Pricing For?</h1>
+
+    <div class="ttt-stream-switch" role="tablist" aria-label="Pricing audience switch">
+      <button type="button" id="streamClinicianBtn" class="ttt-stream-btn is-active" role="tab" aria-selected="true" aria-controls="clinicianStream" data-stream-target="clinician">Healthcare Professional</button>
+      <button type="button" id="streamFacilityBtn" class="ttt-stream-btn" role="tab" aria-selected="false" aria-controls="facilityStream" data-stream-target="facility">Healthcare Facility</button>
+    </div>
+  </section>
+
+  <section id="clinicianStream" class="ttt-audience-stream is-visible" data-stream="clinician" aria-labelledby="streamClinicianBtn">
+    <div class="ttt-panel mb-3">
+      <h2 class="h4 mb-2">Clinicians / Healthcare Professionals</h2>
+      <p class="ttt-muted-lead">Browsing, Matching, and Scaling Your Career is 100% Free.</p>
+      <div class="ttt-value-card">
+        <h3>Your Cost As a Clinician</h3>
+        <p class="ttt-value-cost">$0</p>
+        <p class="mb-0">We never shave down your hourly contractor rates or charge you a subscription to browse shifts. You keep every dollar of your contract rate.</p>
+      </div>
+      <p class="fst-italic mb-2">Wondering how the Traveling Therapist makes money?</p>
+      <p class="mb-2">We invoice the healthcare facilities for a platform premium on top of your rate, they pay for the software solution; you keep 100% of your hard-earned clinical revenue!</p>
+      <a class="ttt-pricing-link" href="{% url 'benefits' %}">Learn about other premium benefits of Traveling Therapist for clinicians here</a>
+    </div>
+
+    <div class="ttt-panel mb-3">
+      <h3 class="h5 mb-3">Real-World Clinician Case Examples</h3>
+      <div class="ttt-case-grid">
+        <article class="ttt-case-card">
+          <h4>Example A: The Weekend Multiplier Shift</h4>
+          <p><strong>The Scenario:</strong> A freelance practitioner picks up a Saturday coverage shift at a local multidisciplinary clinic.</p>
+          <ul>
+            <li>Clinician's Contract Rate: $75/hr x 6 hours = $450</li>
+            <li>The Traveling Therapist Platform Usage Fee: $0</li>
+            <li>Total Clinician Payout: $450</li>
+          </ul>
+          <p class="mb-0"><strong>The Outcome:</strong> The practitioner walks away with 100% of their earned revenue!</p>
+        </article>
+        <article class="ttt-case-card">
+          <h4>Example B: The 2-Week Vacation Bridge</h4>
+          <p><strong>The Scenario:</strong> A clinic uses The Traveling Therapist to fill a 3-week vacation vacancy, then offers the clinician a permanent role.</p>
+          <ul>
+            <li>For the 3 weeks of contract coverage only: Clinician's Contract Rate: $70/hr x 60 hours = $4,200</li>
+            <li>The Traveling Therapist Platform Usage Fee: $0</li>
+            <li>Total Clinician Payout: $4,200</li>
+            <li>Direct Onboarding/Hiring fee: $0</li>
+          </ul>
+          <p class="mb-0"><strong>The Result:</strong> Unlike traditional staffing agencies that charge predatory $5,000+ placement or buyout fees, The Traveling Therapist charges absolutely nothing to transition a contract clinician into a permanent team member.</p>
+        </article>
+      </div>
+    </div>
+
+    <div class="ttt-panel mb-3">
+      <h3 class="h5 mb-2">Why Use The Traveling Therapist Instead of a Direct Personal Referral?</h3>
+      <p class="mb-2"><strong>The Clinician's Logical Next Question:</strong> "If I keep 100% of my rate either way, why shouldn't I just find coverage shifts through my personal network?"</p>
+      <p class="ttt-value-card mb-2">When you accept an informal referral shift, you are on your own to negotiate terms, manage invoicing, and chase communication. Any breakdown can risk a dropped contract and lost income.</p>
+      <p class="fst-italic mb-2">Traveling Therapist gives you a smooth, automated, and entirely frictionless experience by helping you secure your rate, your billing, and guidance throughout our website.</p>
+      <p class="mb-2">Your contract is fully secured. You get the same 100% payout but with less administrative headaches.</p>
+      <a class="ttt-pricing-link" href="{% url 'referrals-and-networks' %}">See How The Traveling Therapist Streamlines Referrals vs. Going Solo</a>
+    </div>
+
+    <div class="ttt-panel mb-3">
+      <h3 class="h5 mb-3">FAQs</h3>
+      <div class="accordion" id="clinicianPricingFaq">
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="clinicianFaqOne">
+            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#clinicianFaqOneCollapse" aria-expanded="true" aria-controls="clinicianFaqOneCollapse">
+              Q1: Does The Traveling Therapist take a cut of my posted hourly or contract rate?
+            </button>
+          </h2>
+          <div id="clinicianFaqOneCollapse" class="accordion-collapse collapse show" aria-labelledby="clinicianFaqOne" data-bs-parent="#clinicianPricingFaq">
+            <div class="accordion-body">A: No. The platform is 100% free for clinicians. The hourly rate you offer a facility is the exact gross amount you take home. The Traveling Therapist bills the healthcare facility a separate platform premium on top of your rate, meaning your hard-earned clinical revenue is never cut down.</div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="clinicianFaqTwo">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#clinicianFaqTwoCollapse" aria-expanded="false" aria-controls="clinicianFaqTwoCollapse">
+              Q2: How and when do I get paid for the contract hours I complete?
+            </button>
+          </h2>
+          <div id="clinicianFaqTwoCollapse" class="accordion-collapse collapse" aria-labelledby="clinicianFaqTwo" data-bs-parent="#clinicianPricingFaq">
+            <div class="accordion-body">A: Invoicing is through direct payment methods between the clinician and healthcare facility, which is done outside of The Traveling Therapist.</div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="clinicianFaqThree">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#clinicianFaqThreeCollapse" aria-expanded="false" aria-controls="clinicianFaqThreeCollapse">
+              Q3: Do clinics/healthcare facilities set the rates?
+            </button>
+          </h2>
+          <div id="clinicianFaqThreeCollapse" class="accordion-collapse collapse" aria-labelledby="clinicianFaqThree" data-bs-parent="#clinicianPricingFaq">
+            <div class="accordion-body">A: No. As a clinician/healthcare professional, The Traveling Therapist enables you to set your own rates as offers on posted listings along with other healthcare professionals. Clinics and healthcare facilities accept offers on their listings based on their preference - which is how The Traveling Therapist makes matches!</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="facilityStream" class="ttt-audience-stream" data-stream="facility" aria-labelledby="streamFacilityBtn" hidden>
+    <div class="ttt-panel mb-3">
+      <h2 class="h4 mb-2">Clinics / Healthcare Facilities</h2>
+      <p class="ttt-muted-lead">Protect your revenue. Pay only for results.</p>
+      <div class="ttt-value-card">
+        <h3>Your Cost As a Clinic</h3>
+        <p class="ttt-value-cost">Predictable, Success-Based Premium (5% Flat Fee)</p>
+        <p class="mb-0">From emergency single-shift coverage to year-long parental leave contracts, The Traveling Therapist connects your facility with local clinicians. Posting listings and browsing offers is free. A transparent 5% platform fee is applied only when a contract offer is successfully accepted and communicated.</p>
+      </div>
+      <p class="mb-0">We charge a max of $5,000+HST/tax per transaction for large listings and a $300+HST/tax min.</p>
+    </div>
+
+    <div class="ttt-panel mb-3">
+      <h3 class="h5 mb-3">Real-World Facility Case Examples</h3>
+      <div class="ttt-case-grid ttt-case-grid-three">
+        <article class="ttt-case-card">
+          <h4>Example A: The Single-Day Emergency Cover</h4>
+          <p><strong>The Scenario:</strong> A private practice clinic needs a Registered Physiotherapist to cover a single 8-hour shift.</p>
+          <ul>
+            <li>Clinician's Direct Contract Rate: $65/hr x 8 hours = $520</li>
+            <li>The Traveling Therapist Platform Fulfillment Fee (5%): $26</li>
+            <li>Total Facility Investment: $546</li>
+          </ul>
+          <p class="mb-0"><strong>The Result:</strong> The clinic protects its entire daily patient billing and keeps its caseload intact for a minor $26 platform fee.</p>
+        </article>
+        <article class="ttt-case-card">
+          <h4>Example B: The 12-Month Maternity/Parental Leave Bridge</h4>
+          <p><strong>The Scenario:</strong> A rehabilitation center needs long-term coverage for a 1-year maternity or parental leave.</p>
+          <ul>
+            <li>Baseline Annualized Contract Valuation: $75,000</li>
+            <li>The Traveling Therapist Platform Fulfillment Fee (5%): $3,750</li>
+            <li>Total 1-Year Coverage Investment: $78,750</li>
+          </ul>
+          <p class="mb-0"><strong>The Result:</strong> The clinic entirely avoids the massive overhead of permanent recruiting agencies or paying high employee benefits for temporary staff, while saving its long-term clinic caseload.</p>
+        </article>
+        <article class="ttt-case-card">
+          <h4>Example C: The Direct Permanent Placement</h4>
+          <p><strong>The Scenario:</strong> A temporary The Traveling Therapist clinician is converted to a permanent full-time hire.</p>
+          <ul>
+            <li>Direct Onboarding/Hiring Fee: $0</li>
+          </ul>
+          <p class="mb-0"><strong>The Result:</strong> Unlike traditional staffing agencies that charge predatory $5,000+ recruitment buyout fees, The Traveling Therapist charges absolutely nothing to transition a contract clinician into a permanent team member.</p>
+        </article>
+      </div>
+    </div>
+
+    <div class="ttt-panel mb-3">
+      <h3 class="h4 mb-2">The Safety Net (When we charge $0)</h3>
+      <p class="fst-italic mb-2">Many traditional staffing agencies or software platforms lock you into heavy upfront fees just to look around. The Traveling Therapist is built on strictly charging your facility $0 for:</p>
+      <ul class="ttt-safety-list">
+        <li>Post listings at no initial cost.</li>
+        <li>Log in and review local clinician offers and pricing.</li>
+        <li>If a temporary The Traveling Therapist clinician fits your clinic culture and you choose to hire them full-time, onboarding them is not charged with any fees.</li>
+      </ul>
+    </div>
+
+    <div class="ttt-panel mb-3">
+      <h3 class="h5 mb-3">FAQs</h3>
+      <div class="accordion" id="facilityPricingFaq">
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="facilityFaqOne">
+            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#facilityFaqOneCollapse" aria-expanded="true" aria-controls="facilityFaqOneCollapse">
+              Q1: What happens if a clinician cancels a shift coverage last minute?
+            </button>
+          </h2>
+          <div id="facilityFaqOneCollapse" class="accordion-collapse collapse show" aria-labelledby="facilityFaqOne" data-bs-parent="#facilityPricingFaq">
+            <div class="accordion-body">A: Your momentum doesn't stop. If a clinician backs out last minute, your listing stays live on the platform instead of being pulled down. You can immediately choose another available clinician from your active offer pool. To protect your facility, the clinician who backed out is flagged and/or penalized/banned from our system.</div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="facilityFaqTwo">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#facilityFaqTwoCollapse" aria-expanded="false" aria-controls="facilityFaqTwoCollapse">
+              Q2: How does communication work after a clinician accepts our listing?
+            </button>
+          </h2>
+          <div id="facilityFaqTwoCollapse" class="accordion-collapse collapse" aria-labelledby="facilityFaqTwo" data-bs-parent="#facilityPricingFaq">
+            <div class="accordion-body">A: Once a match occurs, clinicians have a strict 48-hour window to connect with your facility and finalize. In the event that a clinician fails to respond within this 48-hour timestamp, The Traveling Therapist will contact you to advise you that the contract has been voided, allowing us to reset your listing, refund your fees, and find backup coverage right away.</div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="facilityFaqThree">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#facilityFaqThreeCollapse" aria-expanded="false" aria-controls="facilityFaqThreeCollapse">
+              Q3: Are there any monthly or annual recurring fees to stay active on The Traveling Therapist?
+            </button>
+          </h2>
+          <div id="facilityFaqThreeCollapse" class="accordion-collapse collapse" aria-labelledby="facilityFaqThree" data-bs-parent="#facilityPricingFaq">
+            <div class="accordion-body">A: No. There are no recurring software subscription fees, maintenance fees, or seat license costs. Your facility profile stays active. You only pay our flat 5% platform fulfillment fee when you successfully secure a clinician match.</div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="facilityFaqFour">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#facilityFaqFourCollapse" aria-expanded="false" aria-controls="facilityFaqFourCollapse">
+              Q4: What happens if a match is made but our clinic hires someone internally?
+            </button>
+          </h2>
+          <div id="facilityFaqFourCollapse" class="accordion-collapse collapse" aria-labelledby="facilityFaqFour" data-bs-parent="#facilityPricingFaq">
+            <div class="accordion-body">A: If a clinic posts a listing, and accepts an offer from a clinician, the match is successfully made. Backing out after this point due to hiring outside of The Traveling Therapist, does not eliminate the platform fulfillment fee.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ttt-panel mt-3">
+    <h2 class="h3 mb-2">Turn Your Referral Tickets Into Instant Billing Credits</h2>
+    <p class="mb-2">Want to lower your platform fulfillment fees? Use your unique link to invite peer clinic owners or freelance clinicians to join the The Traveling Therapist network. Every successful invite earns you Raffle Tickets.</p>
+    <p class="mb-3">While these tickets enter you into our premium monthly prize draws, you can also cash them in directly at your billing portal to unlock instant percentage discounts or credits on your very next The Traveling Therapist fulfillment invoice.</p>
+
+    <div class="ttt-dual-referral-grid">
+      <div class="ttt-referral-box">
+        <h4>Healthcare Facility</h4>
+        <p class="mb-0">Invite peer healthcare employers to the platform, then apply your earned referral tickets toward upcoming fulfillment invoices.</p>
+      </div>
+      <div class="ttt-referral-box">
+        <h4>Healthcare Clinician</h4>
+        <p class="mb-0">Invite freelance clinicians to the network and use your referral tickets for premium draw entries or invoice-credit opportunities where applicable.</p>
+      </div>
+    </div>
+
+  </section>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var streamButtons = Array.prototype.slice.call(document.querySelectorAll('.ttt-stream-btn'));
+    var streams = Array.prototype.slice.call(document.querySelectorAll('.ttt-audience-stream'));
+
+    if (!streamButtons.length || !streams.length) {
+      return;
+    }
+
+    function setActiveStream(streamName) {
+      streamButtons.forEach(function (btn) {
+        var isActive = btn.getAttribute('data-stream-target') === streamName;
+        btn.classList.toggle('is-active', isActive);
+        btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
+      });
+
+      streams.forEach(function (section) {
+        var isVisible = section.getAttribute('data-stream') === streamName;
+        section.classList.toggle('is-visible', isVisible);
+        section.hidden = !isVisible;
+      });
+    }
+
+    streamButtons.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        setActiveStream(btn.getAttribute('data-stream-target'));
+      });
+    });
+
+    setActiveStream('clinician');
+  });
+</script>
+{% endblock %}

@@ -33,13 +33,10 @@ class AuctionAdmin(admin.ModelAdmin):
             'fields': ('clinic', 'type', 'auctionNumber', 'auctionStart', 'auctionEnd', 'placementStart', 'placementEnd'),
         }),
         ('Offer Settings', {
-            'fields': ('paymentTypes', 'paymentTypesSelection', 'flatFeeType', 'desiredFeeSplitPercentage', 'minimumCompensation', 'desiredFlatFeeHourly', 'desiredFlatFeeTotalContract', 'minimumBidIncrement', 'currentLowBid', 'winner', 'winningPrice'),
+            'fields': ('paymentTypes', 'paymentTypesSelection', 'flatFeeType', 'desiredFeeSplitPercentage', 'minimumCompensation', 'desiredFlatFeeHourly', 'desiredFlatFeeTotalContract', 'winner', 'winningPrice'),
         }),
         ('Skills and Perks', {
             'fields': ('required_skills_display', 'negotiable_perks_display', 'requiredSkills', 'negotiablePerks'),
-        }),
-        ('Treatment Pricing', {
-            'fields': ('treatmentCost', 'treatmentMin', 'assessmentCost', 'assessmentMin'),
         }),
         ('Working Hours', {
             'fields': ('mondayStart', 'mondayEnd', 'tuesdayStart', 'tuesdayEnd', 'wednesdayStart', 'wednesdayEnd', 'thursdayStart', 'thursdayEnd', 'fridayStart', 'fridayEnd', 'saturdayStart', 'saturdayEnd', 'sundayStart', 'sundayEnd'),

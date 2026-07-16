@@ -26,6 +26,7 @@
                         <li><a class="dropdown-item" href="{% url 'what-is-TTT' %}">What's The Traveling Therapist?</a>
                         </li>
                         <li><a class="dropdown-item" href="{% url 'how-it-works' %}">How it Works</a></li>
+                        <li><a class="dropdown-item {% if path == 'pricing' %}active{% endif %}" href="{% url 'pricing' %}">Pricing</a></li>
                         <li><a class="dropdown-item" href="{% url 'mission-vision' %}">Company Mission & Vision</a></li>
                     </ul>
                 </li>

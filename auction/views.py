@@ -43,7 +43,6 @@ logger = logging.getLogger(__name__)
 DEFAULT_PERK_OPTIONS = [
     'Relocation assistance',
     'Housing/accommodation',
-    'Travel reimbursement',
     'Signing bonus',
     'Flexible schedule',
 ]
@@ -526,6 +525,9 @@ def about(request):
 
 def faq(request):
     return render(request, 'auction/faq.html', {'path': 'faq'})
+
+def pricing(request):
+    return render(request, 'auction/pricing.html', {'path': 'pricing'})
 
 def how_it_works(request):
     return render(request, 'auction/how_it_works.html', {'path': 'how-it-works'})
@@ -2104,8 +2106,17 @@ def join_raffle(request):
 def platform_updates_hub(request):
     return render(request, 'auction/platform_updates_hub.html')
 
+def update_v10_0(request):
+    return render(request, 'auction/updates/v10_0.html')
+
+def update_v9_0(request):
+    return render(request, 'auction/updates/v9_0.html')
+
 def update_v8_0(request):
     return render(request, 'auction/updates/v8_0.html')
+
+def update_v7_0(request):
+    return render(request, 'auction/updates/v7_0.html')
 
 def update_v6_1(request):
     return render(request, 'auction/updates/v6_1.html')
