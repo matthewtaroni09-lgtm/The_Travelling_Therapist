@@ -284,7 +284,6 @@ function populateRequiredSkillsByClinicianType() {
 function buildCustomGridRow(name, kind, index) {
     const safeName = escapeHtml(name);
     if (kind === 'perk') {
-        const perkId = `${kind}_custom_${index}`;
         return `
         <div class="ttt-grid-row" data-item-name="${safeName}" data-custom-item="true">
             <span class="ttt-grid-item-label">${safeName}</span>
@@ -294,28 +293,7 @@ function buildCustomGridRow(name, kind, index) {
                         <input type="checkbox" class="form-check-input ttt-perk-switch" role="switch" aria-label="Custom perk included" checked>
                     </div>
                 </div>
-                <button type="button" class="ttt-perk-expand-toggle" aria-expanded="true" aria-controls="${perkId}_details" aria-label="Toggle custom perk details">
-                    <span class="material-icons ttt-perk-expand-icon">chevron_right</span>
-                </button>
                 <button type="button" class="ttt-remove-item" aria-label="Remove custom ${kind}">Remove</button>
-            </div>
-        </div>
-        <div class="ttt-perk-detail-panel" id="${perkId}_details">
-            <div class="row g-2 align-items-end">
-                <div class="col-sm-4">
-                    <label class="form-label form-label-sm mb-1 ttt-perk-detail-label-wrap">
-                        <span class="ttt-perk-detail-label">Amount <span class="text-muted">(optional)</span></span>
-                        <button type="button" class="ttt-info-dot-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Amounts are hidden on public listings and shown only to clinicians in the offer finalization step." aria-label="Perk amount info">i</button>
-                    </label>
-                    <div class="input-group input-group-sm">
-                        <span class="input-group-text">$</span>
-                        <input type="number" min="0" class="form-control ttt-perk-amount" placeholder="0">
-                    </div>
-                </div>
-                <div class="col-sm-8">
-                    <label class="form-label form-label-sm mb-1 ttt-perk-detail-label">Additional details <span class="text-muted">(optional)</span></label>
-                    <input type="text" class="form-control form-control-sm ttt-perk-details" placeholder="Example: up to $1,500 after 3 months">
-                </div>
             </div>
         </div>
         `;

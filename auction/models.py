@@ -312,8 +312,8 @@ class Auction(models.Model):
     desiredFlatFeeHourly = models.IntegerField(verbose_name='Desired Flat Fee Hourly', null=True, blank=True)
     desiredFlatFeeTotalContract = models.IntegerField(verbose_name='Desired Flat Fee Total Contract', null=True, blank=True)
     startingBid = models.IntegerField(verbose_name='Starting Bid', null=True, blank=True, help_text='The initial bid amount.')
-    minimumBidIncrement = models.IntegerField(verbose_name='Minimum Bid Increment', null=True, blank=True, help_text='All bids must decrease by the minimum bid increment.')
-    currentLowBid = models.IntegerField(verbose_name='Current Low Bid', blank=True, null=True)
+    minimumBidIncrement = models.IntegerField(verbose_name='Winning Offer Step', null=True, blank=True, help_text='Each new winning offer must improve by at least this amount.')
+    currentLowBid = models.IntegerField(verbose_name='Current Winning Offer', blank=True, null=True)
     winner = models.ForeignKey(User, related_name='auction_winner', blank=True, null=True, on_delete=models.CASCADE)
     winningPrice = models.IntegerField(verbose_name='Winning Price', blank=True, null=True)
     underEightteen = models.IntegerField(verbose_name='Under 18', blank=True, null=True)
@@ -571,7 +571,9 @@ class Auction(models.Model):
                 name = (item.get('name') or '').strip()
                 selected = bool(item.get('selected', False))
                 requirement = (item.get('requirement') or 'Required').strip() or 'Required'
-                if name and selected:
+                if not name:
+                    continue
+                if selected:
                     rows.append({'name': name, 'requirement': requirement})
         return rows
 

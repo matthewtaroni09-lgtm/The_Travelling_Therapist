@@ -6,19 +6,21 @@
 {% if user.is_authenticated %}
 <p id="pageTitle" class="d-none">Profile</p>
 <style>
-  .ttt-inline-info {
+  .ttt-inline-info-dot {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
     margin-left: 6px;
     border: 1px solid #6c757d;
     border-radius: 999px;
     color: #6c757d;
-    font-size: 11px;
+    font-size: 12px;
     line-height: 1;
-    cursor: help;
+    padding: 0;
+    background: transparent;
+    cursor: pointer;
     vertical-align: middle;
   }
 </style>
