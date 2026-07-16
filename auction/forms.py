@@ -11,6 +11,20 @@ import random
 from django.core.exceptions import ValidationError
 import os
 from django.forms import inlineformset_factory
+from django.utils import timezone
+from django.utils.safestring import mark_safe
+
+
+class ProfileImageInput(forms.ClearableFileInput):
+    """Hide the default placeholder file from clearable widget metadata."""
+
+    def is_initial(self, value):
+        if not value:
+            return False
+        file_name = str(getattr(value, 'name', value) or '')
+        if file_name in ('default.jpg', 'images/default.jpg'):
+            return False
+        return super().is_initial(value)
 
 def check_times(start_time, end_time, day):
     if (start_time is None and end_time is not None) or (start_time is not None and end_time is None):
@@ -173,7 +187,7 @@ class AuctionForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        tomorrow = datetime.now().date() + timedelta(days=1)
+        tomorrow = timezone.localdate() + timedelta(days=1)
         self.fields['placementStart'].widget.attrs['min'] = tomorrow.isoformat()
         self.fields['placementEnd'].widget.attrs['min'] = tomorrow.isoformat()
         if not self.is_bound and self.instance and self.instance._state.adding:
@@ -225,12 +239,13 @@ class AuctionForm(forms.ModelForm):
         sunday_val = check_times(sundayStart, sundayEnd, 'Sunday')
 
         none_count = 0
-        tomorrow = datetime.now().date() + timedelta(days=1)
+        today = timezone.localdate()
+        tomorrow = today + timedelta(days=1)
 
         if placementStart and placementStart < tomorrow:
             error_list.append(ValidationError("The clinician start date must be tomorrow or later."))
 
-        if placementStart and placementStart > datetime.now().date() + timedelta(days=365):
+        if placementStart and placementStart > today + timedelta(days=365):
             error_list.append(ValidationError("Placements must start within the next 12 months."))
 
         if placementStart and placementEnd and placementEnd <= placementStart:
@@ -547,6 +562,18 @@ class ProfileUpdateClinic(forms.ModelForm):
     class Meta:
         model = Account
         fields = ['clinicName', 'city', 'province', 'about', 'clinicWebsite', 'imageOne', 'imageTwo', 'imageThree', 'imageFour']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        info_text = 'You can put your social media account here or another link of your choice if you prefer.'
+        self.fields['clinicWebsite'].help_text = mark_safe(
+            'This field is optional. Adding a website may give more traction to your listing - your website will be linked in your listings. '
+            '<span class="ttt-inline-info" data-bs-toggle="tooltip" title="' + info_text + '">(i)</span>'
+        )
+
+        for image_field in ('imageOne', 'imageTwo', 'imageThree', 'imageFour'):
+            self.fields[image_field].widget = ProfileImageInput()
+            self.fields[image_field].help_text = 'Upload an image (optional).'
 
     def clean(self):
         clinicName = self.cleaned_data.get('clinicName')

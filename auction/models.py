@@ -286,7 +286,7 @@ class Auction(models.Model):
     auctionStart = models.DateTimeField(verbose_name='Auction Start', help_text='Enter the start date of the listing.')
     auctionEnd = models.DateTimeField(verbose_name='Auction End', help_text='Enter the end date of the listing.')
     placementStart = models.DateField(verbose_name='Clinican Start Date', help_text='Enter the start date of the placement.', default=lambda: datetime.date.today() + datetime.timedelta(days=1))
-    placementEnd = models.DateField(verbose_name='Clinican End Date', help_text='Enter the end date of the placement.', default=lambda: datetime.date.today() + datetime.timedelta(days=1))
+    placementEnd = models.DateField(verbose_name='Clinican End Date', help_text='Enter the end date of the placement.', default=lambda: datetime.date.today() + datetime.timedelta(days=30))
     mondayStart = models.TimeField(verbose_name='Start Time', null=True, blank=True, default='09:00')
     mondayEnd = models.TimeField(verbose_name='End Time', null=True, blank=True, default='17:00')
     tuesdayStart = models.TimeField(verbose_name='Start Time', null=True, blank=True, default='09:00')
@@ -502,7 +502,7 @@ class Auction(models.Model):
         return self.active and not self.is_effectively_closed()
 
     def get_completed_card_title(self):
-        if not self.has_winning_offer():
+        if self.get_num_bids() == 0:
             return 'Completed'
         return 'Winning Offer:'
 
@@ -532,6 +532,8 @@ class Auction(models.Model):
 
     def get_winning_offer_symbol(self):
         if self.winningPrice is None:
+            if self.is_fee_split() and not self.is_flat_fee():
+                return '%'
             return '$'
 
         winning_bid = Bid.objects.filter(

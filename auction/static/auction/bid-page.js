@@ -7,6 +7,7 @@ let minBidIncrement = 0;
 let reservePrice = null;
 let paymentTypes = [];
 let currentOfferTabIndex = 0;
+let isAuctionActive = false;
 
 $(document).ready(function () {
     $("#warningMessage").hide();
@@ -16,11 +17,7 @@ $(document).ready(function () {
     let confirmDisabledTooltip = null;
 
     if (confirmTooltipWrap && window.bootstrap) {
-        confirmTooltipWrap.setAttribute('data-bs-toggle', 'tooltip');
-        confirmTooltipWrap.setAttribute('data-bs-placement', 'top');
-        confirmTooltipWrap.setAttribute('title', 'You must enter at least one offer before confirming.');
         confirmDisabledTooltip = bootstrap.Tooltip.getOrCreateInstance(confirmTooltipWrap);
-        confirmDisabledTooltip.disable();
     }
 
     $(document).keypress(function (event) {
@@ -120,11 +117,10 @@ $(document).ready(function () {
         if (confirmTooltipWrap && confirmDisabledTooltip && confirmButton) {
             if (confirmButton.disabled) {
                 confirmTooltipWrap.setAttribute('tabindex', '0');
-                confirmDisabledTooltip.enable();
+                confirmTooltipWrap.setAttribute('data-bs-toggle', 'tooltip');
             }
             else {
                 confirmDisabledTooltip.hide();
-                confirmDisabledTooltip.disable();
                 confirmTooltipWrap.removeAttribute('tabindex');
             }
         }
@@ -207,7 +203,7 @@ $(document).ready(function () {
         clearWarning();
         if (!isValidFlatFeeOffer() && !isValidFeeSplitOffer()) {
             event.preventDefault();
-            return;
+            showWarning('danger', 'You must enter at least one offer before confirming.');
         }
     });
 
@@ -224,10 +220,13 @@ $(document).ready(function () {
             paymentType = response.paymentType;
             paymentTypes = response.paymentTypes || [];
             minBidIncrement = response.minimumBidIncrement;
+            isAuctionActive = !!response.active;
 
-            const currentTime = new Date().getTime();
-            const subtractMilliSecondsValue = auctionEnd.getTime() - currentTime;
-            setTimeout(auctionEnded, subtractMilliSecondsValue);
+            if (isAuctionActive) {
+                const currentTime = new Date().getTime();
+                const subtractMilliSecondsValue = auctionEnd.getTime() - currentTime;
+                setTimeout(auctionEnded, subtractMilliSecondsValue);
+            }
 
             if ($('#feeSplitSlider').length) {
                 const feeSplitStart = 0;
@@ -259,7 +258,9 @@ const getAuction = () => {
             auctionStartDateTime = response.data.auctionStart;
             auctionEndDateTime = response.data.auctionEnd;
             currentLowBid = response.data.currentLowBid;
-            countDown(auctionEndDateTime, auctionID);
+            if (isAuctionActive) {
+                countDown(auctionEndDateTime, auctionID);
+            }
 
             if (response.data.practice_area_valid) {
                 $('#demographicAOPDiv').removeClass('d-none');

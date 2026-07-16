@@ -5,6 +5,23 @@
 {% block content %}
 {% if user.is_authenticated %}
 <p id="pageTitle" class="d-none">Profile</p>
+<style>
+  .ttt-inline-info {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    margin-left: 6px;
+    border: 1px solid #6c757d;
+    border-radius: 999px;
+    color: #6c757d;
+    font-size: 11px;
+    line-height: 1;
+    cursor: help;
+    vertical-align: middle;
+  }
+</style>
 
 {% if user.account.get_split_user_type == 'Clinic' %}
 <!-- START CLINIC SECTION -->

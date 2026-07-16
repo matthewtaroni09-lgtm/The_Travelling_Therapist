@@ -116,7 +116,7 @@
     <!-- Footer -->
     {% include 'auction/footer.html' %}
     <!-- Message Notifications -->
-    {% if messages %}
+    {% if user.is_authenticated and messages %}
     <script>
         $(document).ready(function() {
             {% for message in messages %}

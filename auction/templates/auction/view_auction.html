@@ -48,29 +48,13 @@
   </div>
 
   <div class="d-flex">
-    {% if auction.is_effectively_closed %}
-    <section class="d-inline-flex align-items-center text-white bg-dark py-2 px-3 me-3 rounded mb-4 mb-md-0">
-      {% if auction.get_winning_offer_symbol == '%' %}
-      <span class="ttt-stat-coin ttt-stat-percent-circle me-2" style="top: 1px;">%</span>
-      {% else %}
-      <span class="material-icons small text-white me-2">paid</span>
-      {% endif %}
-      {% if auction.has_winning_offer %}
-      <p class="m-0 me-4 text-white">{{ auction.get_completed_card_title }} <span class="ms-2 text-white">{{ auction.get_winning_offer_display }}</span></p>
-      <p class="m-0 d-none d-lg-block text-white"># Offers:<span class="ms-2 text-white">{{ num_bids }}</span></p>
-      {% else %}
-      <p class="m-0 text-white">{{ auction.get_completed_card_title }}</p>
-      {% endif %}
-    </section>
-    {% else %}
     <section class="d-inline-flex align-items-center text-white bg-dark py-2 px-3 me-3 rounded mb-4 mb-md-0">
       <span class="material-icons small text-white">schedule</span><time id="auctionTimer-{{ auction.auctionID }}"
-        class="m-0 d-flex me-3 text-white">{{ auction.get_time_diff }}</time>
-      <p id="bidText" class="m-0 me-4 text-white"># Offers:<span class="ms-2 text-white">{{ num_bids }}</span></p>
-      <p class="m-0 d-none d-lg-block text-white"># of Clinicians Offering:<span
-          class="ms-2 text-white">{{num_biders}}</span></p>
+        class="m-0 d-flex me-3 text-white">{% if auction.is_effectively_active %}{{ auction.get_time_diff }}{% elif auction.is_effectively_closed %}Completed{% else %}Pending{% endif %}</time>
+      <p class="m-0 mx-4 d-none d-lg-block text-white"># Offers:<span id="offerCount" class="ms-2 text-white">{{ num_bids }}</span></p>
+      <p class="m-0 me-4 d-none d-lg-block text-white"># of Therapists Offering:<span
+          id="clinicianCount" class="ms-2 text-white">{{num_biders}}</span></p>
     </section>
-    {% endif %}
 
     {% if can_place_offer %}
     <button id="bidButton" type="button" class="btn-lg btn-primary" data-bs-toggle="modal"
@@ -96,7 +80,6 @@
                   <p class="mb-0 text-muted">{{ auction.type }}</p>
                 </div>
                 <div class="text-end">
-                  <p class="mb-1">{{ auction.get_bid }}</p>
                   <p class="mb-0"># Offers: {{ num_bids }}</p>
                 </div>
               </div>
@@ -243,7 +226,7 @@
                       {% for skill in finalize_skill_rows %}
                       <label class="d-flex align-items-center justify-content-between border rounded px-2 py-1 mb-0" data-skill-name="{{ skill.name }}">
                         <span><input type="checkbox" class="form-check-input me-2 finalize-skill-check" {% if skill.selected %}checked{% endif %}>{{ skill.name }}</span>
-                        <span class="ttt-requirement-pill {% if skill.requirement == 'Preferred' %}ttt-requirement-pill-preferred{% else %}ttt-requirement-pill-required{% endif %}">{{ skill.requirement }}</span>
+                        <span class="small text-muted">{{ skill.requirement }}</span>
                       </label>
                       {% endfor %}
                     </div>
@@ -261,7 +244,7 @@
                 <button id="backTabButton" type="button" class="btn btn-outline-secondary">Back</button>
                 <button id="nextTabButton" type="button" class="btn btn-primary">Next</button>
                 <button id="skipTabButton" type="button" class="btn btn-outline-primary">Skip</button>
-                <span id="confirmBidTooltipWrap">
+                <span id="confirmBidTooltipWrap" data-bs-toggle="tooltip" data-bs-placement="top" title="You must enter at least one offer before confirming.">
                   <button id="confirmBidButton" type="submit" class="btn btn-primary" disabled>Confirm Offer</button>
                 </span>
               </div>
@@ -326,10 +309,10 @@
                     <div class="col-lg-7">
                       <div class="border rounded p-2 h-100">
                         <p class="mb-2 fw-semibold small">Listing Skill Match</p>
-                        {% for skill in row.skill_match.required_met %}<p class="mb-1 small d-flex align-items-center gap-2"><span class="material-icons align-middle" style="font-size:16px; color:#198754;">check_box</span><span>{{ skill }}</span><span class="ttt-requirement-pill ttt-requirement-pill-required">Required</span></p>{% endfor %}
-                        {% for skill in row.skill_match.required_missing %}<p class="mb-1 small d-flex align-items-center gap-2"><span class="material-icons align-middle" style="font-size:16px; color:#adb5bd;">check_box_outline_blank</span><span>{{ skill }}</span><span class="ttt-requirement-pill ttt-requirement-pill-required">Required</span></p>{% endfor %}
-                        {% for skill in row.skill_match.preferred_met %}<p class="mb-1 small d-flex align-items-center gap-2"><span class="material-icons align-middle" style="font-size:16px; color:#198754;">check_box</span><span>{{ skill }}</span><span class="ttt-requirement-pill ttt-requirement-pill-preferred">Preferred</span></p>{% endfor %}
-                        {% for skill in row.skill_match.preferred_missing %}<p class="mb-1 small d-flex align-items-center gap-2"><span class="material-icons align-middle" style="font-size:16px; color:#adb5bd;">check_box_outline_blank</span><span>{{ skill }}</span><span class="ttt-requirement-pill ttt-requirement-pill-preferred">Preferred</span></p>{% endfor %}
+                        {% for skill in row.skill_match.required_met %}<p class="mb-1 small"><span class="material-icons align-middle" style="font-size:16px; color:#198754;">check_box</span> {{ skill }} <span class="text-muted">(Required)</span></p>{% endfor %}
+                        {% for skill in row.skill_match.required_missing %}<p class="mb-1 small"><span class="material-icons align-middle" style="font-size:16px; color:#adb5bd;">check_box_outline_blank</span> {{ skill }} <span class="text-muted">(Required)</span></p>{% endfor %}
+                        {% for skill in row.skill_match.preferred_met %}<p class="mb-1 small"><span class="material-icons align-middle" style="font-size:16px; color:#198754;">check_box</span> {{ skill }} <span class="text-muted">(Preferred)</span></p>{% endfor %}
+                        {% for skill in row.skill_match.preferred_missing %}<p class="mb-1 small"><span class="material-icons align-middle" style="font-size:16px; color:#adb5bd;">check_box_outline_blank</span> {{ skill }} <span class="text-muted">(Preferred)</span></p>{% endfor %}
                       </div>
                     </div>
                     <div class="col-lg-5">
@@ -501,7 +484,7 @@
         {% for skill in required_skill_rows %}
         <div class="d-flex justify-content-between align-items-center border rounded px-2 py-1 mb-1">
           <span>{{ skill.name }}</span>
-          <span class="ttt-requirement-pill {% if skill.requirement == 'Preferred' %}ttt-requirement-pill-preferred{% else %}ttt-requirement-pill-required{% endif %}">{{ skill.requirement }}</span>
+          <span class="badge bg-secondary-subtle text-dark">{{ skill.requirement }}</span>
         </div>
         {% endfor %}
       </div>
@@ -542,7 +525,7 @@
   <p class="text-weight-light">{{ auction.comments|linebreaksbr }}</p>
 </div>
 
-<script src="{% static 'auction/bid-page.js' %}?v=20260715-offer-tooltip-disabled-only-v1"></script>
+<script src="{% static 'auction/bid-page.js' %}?v=20260714-review-offers-polish"></script>
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     const checklist = document.getElementById('finalizeSkillChecklist');

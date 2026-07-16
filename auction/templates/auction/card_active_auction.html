@@ -20,7 +20,7 @@
       {% else %}
       <span class="material-icons small text-white ttt-stat-coin">paid</span>
       {% endif %}
-      {% if auction.has_winning_offer %}
+      {% if auction.get_num_bids > 0 %}
       <p class="m-0 d-flex me-3 text-white">{{ auction.get_completed_card_title }}<span class="ms-2 text-white">{{ auction.get_winning_offer_display }}</span></p>
       <p class="m-0 text-white"># Offers:<span class="ms-2 text-white">{{ auction.get_num_bids }}</span></p>
       {% else %}
