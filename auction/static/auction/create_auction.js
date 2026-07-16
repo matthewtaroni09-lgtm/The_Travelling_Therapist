@@ -28,6 +28,23 @@ function getTomorrowDateString() {
     return toIsoDateString(tomorrow);
 }
 
+function parseLocalDateInput(value) {
+    if (!value) {
+        return new Date('');
+    }
+    const pieces = value.split('-');
+    if (pieces.length !== 3) {
+        return new Date('');
+    }
+    const year = parseInt(pieces[0], 10);
+    const month = parseInt(pieces[1], 10);
+    const day = parseInt(pieces[2], 10);
+    if (Number.isNaN(year) || Number.isNaN(month) || Number.isNaN(day)) {
+        return new Date('');
+    }
+    return new Date(year, month - 1, day);
+}
+
 function setPlacementStartConstraints() {
     const $placementStart = $('#id_placementStart');
     if ($placementStart.length === 0) {
@@ -799,8 +816,8 @@ $("#submitButton").click(function () {
         errorList += "<li>Please select how flat fee offers should be priced.</li>";
     }
 
-    let placementStart = new Date($("#id_placementStart").val());
-    let placementEnd = new Date($("#id_placementEnd").val());
+    let placementStart = parseLocalDateInput($("#id_placementStart").val());
+    let placementEnd = parseLocalDateInput($("#id_placementEnd").val());
 
     let mondayStart = '';
     let mondayEnd = '';

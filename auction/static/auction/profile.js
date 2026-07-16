@@ -1,4 +1,9 @@
 $(document).ready(function () {
+    const tooltipEls = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    tooltipEls.forEach(function (el) {
+        bootstrap.Tooltip.getOrCreateInstance(el);
+    });
+
     const showTab = (selector) => {
         const el = document.querySelector(selector);
         if (el) {
@@ -50,7 +55,23 @@ $(document).ready(function () {
         $('#ticket-count').attr('data-step', tickets);
         $('#ticket-count').attr('min', tickets);
         $('#ticket-count').attr('step', tickets);
+        $('#ticket-count').attr('inputmode', 'numeric');
         $('#ticket-count').val(tickets);
+    });
+
+    $('#ticket-count').on('keydown', function (event) {
+        if (event.key === '-' || event.key === '+' || event.key === 'e' || event.key === 'E') {
+            event.preventDefault();
+        }
+    });
+
+    $('#ticket-count').on('input', function () {
+        const step = parseInt($(this).attr('data-step')) || 1;
+        let value = parseInt($(this).val(), 10);
+        if (Number.isNaN(value) || value < step) {
+            value = step;
+        }
+        $(this).val(value);
     });
 
     $('#increment-tickets').on('click', function() {

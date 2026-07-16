@@ -623,7 +623,7 @@ def profile(request):
                     profile_instance.imageOne = 'default.jpg'
                 profile_instance.save()
                 # messages.success(request, f'Your profile has been updated!')
-                return HttpResponseRedirect('profile')
+                return HttpResponseRedirect('/profile#profile')
             else:
                 print("fail")
                 parameter.update({
@@ -725,7 +725,7 @@ def profile(request):
                 request.user.account.save(update_fields=['clinicianSkills'])
 
                 # messages.success(request, f'Your profile has been updated!')
-                return HttpResponseRedirect('profile')
+                return HttpResponseRedirect('/profile#profile-t')
             else:
                 parameter.update({
                     'active_auctions_list': active_auctions_list,
@@ -1229,6 +1229,8 @@ def get_popups(request):
 
     if popups.count() > 0: 
         for popup in popups:
+            if request_page == 'View_Auction' and str(popup.title or '').strip().lower() == 'before you bid':
+                continue
             try:
                 message_acknowledgement = MessageAcknowledgement.objects.get(user = user, popup = popup)
                 acknowledged = message_acknowledgement.acknowledged
@@ -1239,25 +1241,6 @@ def get_popups(request):
             if acknowledged == False or click_id != None:
                 message = message + " " + popup.message
                 title = title + " " + popup.title
-
-    if (
-        message == ''
-        and click_id is None
-        and request_page == 'View_Auction'
-        and request.user.is_authenticated
-        and hasattr(request.user, 'account')
-    ):
-        account = request.user.account
-        try:
-            is_practitioner = account.get_split_user_type() != 'Clinic'
-        except Exception:
-            is_practitioner = False
-
-        if is_practitioner and not account.auction_message_displayed:
-            title = 'Before You Bid'
-            message = 'Check out our <a href="/faq" target="_blank" rel="noopener noreferrer">FAQ</a> for more information on the bidding process.'
-            account.auction_message_displayed = True
-            account.save(update_fields=['auction_message_displayed'])
 
     return JsonResponse({'title': title, 'message': message})
 
@@ -1327,7 +1310,12 @@ def get_active_auctions_theraipist(request):
 
 def get_view_auction_data(request):
     auction = Auction.objects.get(auctionID=request.GET['auctionID'])
-    num_bids = Bid.objects.filter(auction=request.GET['auctionID'], active=True).count()
+    if auction.is_effectively_active():
+        num_bids = Bid.objects.filter(auction=request.GET['auctionID'], active=True).count()
+        num_biders = Bid.objects.values('user').filter(auction=request.GET['auctionID'], active=True).distinct().count()
+    else:
+        num_bids = Bid.objects.filter(auction=request.GET['auctionID']).count()
+        num_biders = Bid.objects.values('user').filter(auction=request.GET['auctionID']).distinct().count()
     payment_type = auction.get_primary_payment_type()
     payment_types = auction.get_payment_types_list()
     max_bid = 0
@@ -1351,7 +1339,9 @@ def get_view_auction_data(request):
         'paymentTypes': payment_types,
         'flatFeeType': auction.flatFeeType,
         'active': auction.is_effectively_active(),
-        'matchtingTypes': matchting_types
+        'matchtingTypes': matchting_types,
+        'numBids': num_bids,
+        'numBiders': num_biders,
     })
 
 def get_demographics(request, clinic_id):
