@@ -18,7 +18,7 @@
                     <label for="ticket-count" class="form-label mb-2">How many tickets would you like to add?</label>
                     <div class="input-group mb-3 justify-content-center" style="max-width: 200px; margin: 0 auto;">
                         <button class="btn btn-outline-primary" type="button" id="decrement-tickets" style="width: 45px;">-</button>
-                        <input type="number" class="form-control text-center" id="ticket-count" value="1" min="1" style="max-width: 80px;">
+                        <input type="number" class="form-control text-center" id="ticket-count" value="1" min="1" step="1" inputmode="numeric" pattern="[0-9]*" style="max-width: 80px;">
                         <button class="btn btn-outline-primary" type="button" id="increment-tickets" style="width: 45px;">+</button>
                     </div>
                 </div>
