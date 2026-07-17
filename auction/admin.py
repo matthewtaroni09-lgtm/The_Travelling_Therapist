@@ -3,6 +3,8 @@ from unicodedata import category
 from django import forms
 from django.contrib import admin
 from django.http import BadHeaderError, HttpResponse
+from django.urls import reverse
+from django.utils.html import format_html
 from .models import Auction, Bid, Account, PayFrequency, PracticeArea, PracticeAreaType, ProMember, UserType, Demographic, DemographicType, ProMember, AdminSetting, Page, PopupMessage, MessageAcknowledgement, PaymentType, Number, Raffle, RaffleEntry, Referral, RaffleTicket
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
@@ -17,20 +19,27 @@ import time
 class BidInline(admin.TabularInline):
     model = Bid
     ordering = ('amount',)
+    verbose_name = 'Offer'
+    verbose_name_plural = 'Offers'
+    show_change_link = True
 
 @admin.register(Auction)
 class AuctionAdmin(admin.ModelAdmin):
     form = AuctionAdminForm
-    readonly_fields = ('cronID', 'required_skills_display', 'negotiable_perks_display')
-    list_display = ('auctionID', 'auctionNumber', 'clinic', 'payment_type_label', 'desired_offer_guidance', 'minimum_compensation_display', 'required_skills_count', 'negotiable_perks_count', 'auctionStart', 'auctionEnd', 'active', 'closed', 'placementStart', 'placementEnd', 'winner', 'winningPrice')
+    readonly_fields = ('auctionID', 'cronID', 'required_skills_display', 'negotiable_perks_display', 'created', 'modified')
+    list_display = ('auction_number_admin', 'listing_view_link', 'status_display', 'clinic_display', 'payment_type_label', 'desired_offer_guidance', 'minimum_compensation_display', 'required_skills_count', 'negotiable_perks_count', 'auctionStart', 'auctionEnd', 'placementStart', 'placementEnd', 'winner', 'winning_offer_display_admin')
+    list_display_links = ('auction_number_admin',)
     # Reverse alpahbetical order -name
     ordering = ('-auctionNumber', )
-    search_fields = ('auctionID',)
+    search_fields = ('auctionID', 'auctionNumber', 'clinic__clinicName', 'clinic__user__email', 'winner__username', 'winner__email')
     inlines = [BidInline]
     exclude = ['startingBid', 'underEightteen', 'eightteenToSixtyFive', 'overSixtyFive', 'MSK', 'neuro', 'cardioResp', 'payFrequency', 'paymentType']
     fieldsets = (
-        ('Listing Details', {
-            'fields': ('clinic', 'type', 'auctionNumber', 'auctionStart', 'auctionEnd', 'placementStart', 'placementEnd'),
+        ('Quick Info', {
+            'fields': ('auctionID', 'auctionNumber', 'clinic', 'type', 'comments'),
+        }),
+        ('Listing Dates', {
+            'fields': ('auctionStart', 'auctionEnd', 'placementStart', 'placementEnd'),
         }),
         ('Offer Settings', {
             'fields': ('paymentTypes', 'paymentTypesSelection', 'flatFeeType', 'desiredFeeSplitPercentage', 'minimumCompensation', 'desiredFlatFeeHourly', 'desiredFlatFeeTotalContract', 'winner', 'winningPrice'),
@@ -38,21 +47,58 @@ class AuctionAdmin(admin.ModelAdmin):
         ('Skills and Perks', {
             'fields': ('required_skills_display', 'negotiable_perks_display', 'requiredSkills', 'negotiablePerks'),
         }),
-        ('Working Hours', {
+        ('Clinician Schedule', {
             'fields': ('mondayStart', 'mondayEnd', 'tuesdayStart', 'tuesdayEnd', 'wednesdayStart', 'wednesdayEnd', 'thursdayStart', 'thursdayEnd', 'fridayStart', 'fridayEnd', 'saturdayStart', 'saturdayEnd', 'sundayStart', 'sundayEnd'),
         }),
         ('Listing Status', {
-            'fields': ('active', 'closed', 'deleted', 'comments', 'cronID'),
+            'fields': ('active', 'closed', 'deleted', 'cronID'),
         }),
-        ('Audit', {
+        ('Nice to Know', {
             'fields': ('createdBy', 'modified', 'modifiedBy'),
         }),
     )
 
+    def auction_number_admin(self, obj):
+        return f'#{obj.auctionNumber}' if obj.auctionNumber is not None else '-'
+
+    auction_number_admin.short_description = 'Listing #'
+    auction_number_admin.admin_order_field = 'auctionNumber'
+
+    def listing_view_link(self, obj):
+        return format_html('<a href="{}" target="_blank" rel="noopener noreferrer">View</a>', reverse('auction', args=[obj.auctionID]))
+
+    listing_view_link.short_description = 'Listing'
+
+    def clinic_display(self, obj):
+        username = getattr(obj.clinic.user, 'username', '')
+        email = getattr(obj.clinic.user, 'email', '')
+        return f'{username} ({email})' if username or email else str(obj.clinic)
+
+    clinic_display.short_description = 'Facility Username (Email)'
+    clinic_display.admin_order_field = 'clinic__user__username'
+
+    def status_display(self, obj):
+        if obj.deleted:
+            return format_html('<span style="color:#111827;font-weight:600;">Deleted</span>')
+        if obj.closed or obj.is_effectively_closed():
+            return format_html('<span style="color:#dc3545;font-weight:600;">Closed</span>')
+        if obj.active:
+            return format_html('<span style="color:#198754;font-weight:600;">Active</span>')
+        return format_html('<span style="color:#f0ad4e;font-weight:600;">Pending</span>')
+
+    status_display.short_description = 'Status'
+    status_display.admin_order_field = 'active'
+
+    def winning_offer_display_admin(self, obj):
+        return obj.get_winning_offer_display() if obj.winner_id is not None else 'None'
+
+    winning_offer_display_admin.short_description = 'Winning Offer'
+    winning_offer_display_admin.admin_order_field = 'winningPrice'
+
     def payment_type_label(self, obj):
         return obj.get_payment_type_label()
 
-    payment_type_label.short_description = 'Payment Type'
+    payment_type_label.short_description = 'Payment Types'
 
     def desired_offer_guidance(self, obj):
         guidance = []
@@ -69,17 +115,17 @@ class AuctionAdmin(admin.ModelAdmin):
     def minimum_compensation_display(self, obj):
         return f"${obj.minimumCompensation}" if obj.minimumCompensation is not None else 'None'
 
-    minimum_compensation_display.short_description = 'Minimum Compensation'
+    minimum_compensation_display.short_description = 'Min Comp'
 
     def required_skills_count(self, obj):
         return len(obj.get_required_skill_rows())
 
-    required_skills_count.short_description = 'Skills'
+    required_skills_count.short_description = 'Skills #'
 
     def negotiable_perks_count(self, obj):
         return len(obj.get_public_perk_rows())
 
-    negotiable_perks_count.short_description = 'Perks'
+    negotiable_perks_count.short_description = 'Perks #'
 
     def required_skills_display(self, obj):
         rows = obj.get_required_skill_rows()

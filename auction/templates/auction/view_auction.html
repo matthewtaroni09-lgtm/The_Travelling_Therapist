@@ -49,8 +49,17 @@
 
   <div class="d-flex">
     <section class="d-inline-flex align-items-center text-white bg-dark py-2 px-3 me-3 rounded mb-4 mb-md-0">
+      {% if auction.is_effectively_closed %}
+      {% if auction.get_winning_offer_symbol == '%' %}
+      <span class="ttt-stat-coin ttt-stat-percent-circle me-2" style="top: 1px;">%</span>
+      {% else %}
+      <span class="material-icons small text-white ttt-stat-coin me-2">paid</span>
+      {% endif %}
+      <time class="m-0 d-flex me-3 text-white">{% if auction.has_winning_offer %}{{ auction.get_completed_card_title }} {{ auction.get_winning_offer_display }}{% else %}Completed{% endif %}</time>
+      {% else %}
       <span class="material-icons small text-white">schedule</span><time id="auctionTimer-{{ auction.auctionID }}"
-        class="m-0 d-flex me-3 text-white">{% if auction.is_effectively_active %}{{ auction.get_time_diff }}{% elif auction.is_effectively_closed %}Completed{% else %}Pending{% endif %}</time>
+        class="m-0 d-flex me-3 text-white">{% if auction.is_effectively_active %}{{ auction.get_time_diff }}{% else %}Pending{% endif %}</time>
+      {% endif %}
       <p class="m-0 mx-4 d-none d-lg-block text-white"># Offers:<span id="offerCount" class="ms-2 text-white">{{ num_bids }}</span></p>
       <p class="m-0 me-4 d-none d-lg-block text-white"># of Therapists Offering:<span
           id="clinicianCount" class="ms-2 text-white">{{num_biders}}</span></p>
@@ -125,6 +134,7 @@
                       <span class="input-group-text">/hr</span>
                       {% endif %}
                     </div>
+                    <p class="mb-3 fw-semibold">Clinic desired offer (optional guidance)</p>
                     {% if auction.flatFeeType == 'hourly' and auction.desiredFlatFeeHourly %}
                     <div class="ttt-offer-guidance-tab mb-3" role="note">
                       <p class="mb-0 small"><strong>Clinic guidance:</strong> Suggested hourly flat fee is ${{ auction.desiredFlatFeeHourly }}/hr.</p>
@@ -169,6 +179,7 @@
                     </div>
 
                     <p class="mb-2">Current selected: <strong><span id="feeSplitValue">0</span>%</strong></p>
+                    <p class="mb-3 fw-semibold">Clinic desired offer (optional guidance)</p>
                     {% if auction.desiredFeeSplitPercentage %}
                     <div class="ttt-offer-guidance-tab mb-3" role="note">
                       <p class="mb-0 small"><strong>Clinic guidance:</strong> Suggested fee split is {{ auction.desiredFeeSplitPercentage }}%.</p>

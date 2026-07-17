@@ -315,7 +315,7 @@ class Auction(models.Model):
     minimumBidIncrement = models.IntegerField(verbose_name='Winning Offer Step', null=True, blank=True, help_text='Each new winning offer must improve by at least this amount.')
     currentLowBid = models.IntegerField(verbose_name='Current Winning Offer', blank=True, null=True)
     winner = models.ForeignKey(User, related_name='auction_winner', blank=True, null=True, on_delete=models.CASCADE)
-    winningPrice = models.IntegerField(verbose_name='Winning Price', blank=True, null=True)
+    winningPrice = models.IntegerField(verbose_name='Winning Offer', blank=True, null=True)
     underEightteen = models.IntegerField(verbose_name='Under 18', blank=True, null=True)
     eightteenToSixtyFive = models.IntegerField(verbose_name='18 - 65', blank=True, null=True)
     overSixtyFive = models.IntegerField(verbose_name='Over 65', blank=True, null=True)
