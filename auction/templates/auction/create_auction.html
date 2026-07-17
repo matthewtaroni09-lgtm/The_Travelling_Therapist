@@ -218,8 +218,25 @@
       .ttt-perk-detail-panel {
         border-top: 0;
         border-bottom: 1px solid #e8edf1;
-        padding: 0 0 0.6rem;
+        padding: 0.6rem 0 0.75rem;
         margin-bottom: 0.2rem;
+      }
+
+      .ttt-perk-detail-panel .form-label {
+        margin-bottom: 0.2rem;
+        font-size: 0.84rem;
+        color: #5f6d7a;
+      }
+
+      .ttt-perk-detail-panel .form-control,
+      .ttt-perk-detail-panel .input-group-text {
+        font-size: 0.93rem;
+      }
+
+      .ttt-perk-amount-label {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
       }
 
       .ttt-perk-detail-label-wrap {
@@ -557,11 +574,41 @@
                   </div>
                 </div>
               </div>
+              <div class="ttt-perk-detail-panel">
+                <div class="row g-2 align-items-start">
+                  <div class="col-md-4">
+                    <label class="form-label ttt-perk-amount-label">Amount <button type="button" class="ttt-info-dot-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="This amount will only be shown to clinicians when they go to place an offer, it will not be seen on the listing page">i</button></label>
+                    <div class="input-group input-group-sm">
+                      <span class="input-group-text">$</span>
+                      <input type="number" min="0" class="form-control ttt-perk-amount" placeholder="Optional amount">
+                    </div>
+                  </div>
+                  <div class="col-md-8">
+                    <label class="form-label">Details</label>
+                    <textarea class="form-control form-control-sm ttt-perk-details" rows="2" placeholder="Add relocation details"></textarea>
+                  </div>
+                </div>
+              </div>
               <div class="ttt-grid-row" data-item-name="Housing/accommodation">
                 <span class="ttt-grid-item-label">Housing/accommodation</span>
                 <div class="ttt-perk-switch-wrap">
                   <div class="form-check form-switch">
                     <input type="checkbox" class="form-check-input ttt-perk-switch" role="switch" aria-label="Housing or accommodation included">
+                  </div>
+                </div>
+              </div>
+              <div class="ttt-perk-detail-panel d-none">
+                <div class="row g-2 align-items-start">
+                  <div class="col-md-4">
+                    <label class="form-label ttt-perk-amount-label">Amount <button type="button" class="ttt-info-dot-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="This amount will only be shown to clinicians when they go to place an offer, it will not be seen on the listing page">i</button></label>
+                    <div class="input-group input-group-sm">
+                      <span class="input-group-text">$</span>
+                      <input type="number" min="0" class="form-control ttt-perk-amount" placeholder="Optional amount">
+                    </div>
+                  </div>
+                  <div class="col-md-8">
+                    <label class="form-label">Details</label>
+                    <textarea class="form-control form-control-sm ttt-perk-details" rows="2" placeholder="Add housing or accommodation details"></textarea>
                   </div>
                 </div>
               </div>
@@ -573,11 +620,34 @@
                   </div>
                 </div>
               </div>
+              <div class="ttt-perk-detail-panel d-none">
+                <div class="row g-2 align-items-start">
+                  <div class="col-md-4">
+                    <label class="form-label ttt-perk-amount-label">Amount <button type="button" class="ttt-info-dot-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="This amount will only be shown to clinicians when they go to place an offer, it will not be seen on the listing page">i</button></label>
+                    <div class="input-group input-group-sm">
+                      <span class="input-group-text">$</span>
+                      <input type="number" min="0" class="form-control ttt-perk-amount" placeholder="Optional amount">
+                    </div>
+                  </div>
+                  <div class="col-md-8">
+                    <label class="form-label">Details</label>
+                    <textarea class="form-control form-control-sm ttt-perk-details" rows="2" placeholder="Add signing bonus details"></textarea>
+                  </div>
+                </div>
+              </div>
               <div class="ttt-grid-row" data-item-name="Flexible schedule">
                 <span class="ttt-grid-item-label">Flexible schedule</span>
                 <div class="ttt-perk-switch-wrap">
                   <div class="form-check form-switch">
                     <input type="checkbox" class="form-check-input ttt-perk-switch" role="switch" aria-label="Flexible schedule included">
+                  </div>
+                </div>
+              </div>
+              <div class="ttt-perk-detail-panel d-none">
+                <div class="row g-2 align-items-start">
+                  <div class="col-12">
+                    <label class="form-label">Details</label>
+                    <textarea class="form-control form-control-sm ttt-perk-details" rows="3" placeholder="Describe the scheduling flexibility"></textarea>
                   </div>
                 </div>
               </div>

@@ -300,7 +300,7 @@ class DualOfferSubmissionTests(TestCase):
 		self.assertEqual(list(bids.values_list('offerType', flat=True)), ['Fee Split', 'Flat Fee'])
 		self.assertEqual(list(bids.values_list('amount', flat=True)), [55, 120])
 
-	def test_practitioner_page_shows_clinic_desired_offer_guidance(self):
+	def test_practitioner_page_does_not_show_public_clinic_desired_offer_guidance(self):
 		self.auction.desiredFeeSplitPercentage = 60
 		self.auction.desiredFlatFeeTotalContract = 12000
 		self.auction.save(update_fields=['desiredFeeSplitPercentage', 'desiredFlatFeeTotalContract'])
@@ -310,8 +310,5 @@ class DualOfferSubmissionTests(TestCase):
 
 		self.assertEqual(response.status_code, 200)
 		content = response.content.decode('utf-8')
-		self.assertTrue(
-			('Clinic desired offer (optional guidance)' in content) or ('Offer Guidance (Optional)' in content)
-		)
-		self.assertIn('Fee Split: 60%', content)
-		self.assertIn('Flat Fee (Total Contract Price): $12000', content)
+		self.assertNotIn('Fee Split: 60%', content)
+		self.assertNotIn('Flat Fee (Total Contract Price): $12000', content)

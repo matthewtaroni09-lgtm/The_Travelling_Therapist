@@ -296,6 +296,21 @@ function buildCustomGridRow(name, kind, index) {
                 <button type="button" class="ttt-remove-item" aria-label="Remove custom ${kind}">Remove</button>
             </div>
         </div>
+        <div class="ttt-perk-detail-panel">
+            <div class="row g-2 align-items-start">
+                <div class="col-md-4">
+                    <label class="form-label ttt-perk-amount-label">Amount <button type="button" class="ttt-info-dot-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="This amount will only be shown to clinicians when they go to place an offer, it will not be seen on the listing page">i</button></label>
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text">$</span>
+                        <input type="number" min="0" class="form-control ttt-perk-amount" placeholder="Optional amount">
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <label class="form-label">Details</label>
+                    <textarea class="form-control form-control-sm ttt-perk-details" rows="2" placeholder="Add custom perk details"></textarea>
+                </div>
+            </div>
+        </div>
         `;
     }
 
