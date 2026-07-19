@@ -127,7 +127,7 @@ const REQUIRED_SKILLS_BY_TYPE = {
         'Digital/Software Based Charting',
         'AI Charting',
         'Outpatient & Community Experience',
-        'Hospital/Long Term Care/Retirement Home',
+        'Hospital/Long Term Care/Retirement Home Experience',
         'Home care Experience',
         'Orthopedics Experience',
         'Sports Experience',
@@ -138,7 +138,7 @@ const REQUIRED_SKILLS_BY_TYPE = {
         'Canadian License to Practice',
         'Practice Insurance',
         'First Aid/CPR/AED',
-        'Hospital/Long Term Care/Retirement Home',
+        'Hospital/Long Term Care/Retirement Home Experience',
         'Home care Experience',
         'Orthopedics Experience',
         'Geriatrics Experience',
@@ -482,12 +482,6 @@ function syncOfferGuidanceUI(selectedPaymentTypes) {
     if (!showHourlyGuidance) {
         $('#id_desiredFlatFeeHourly').val('');
     }
-    else if ($('#id_desiredFlatFeeHourly').val() !== '') {
-        const hourlyValue = normalizeCurrencyValue($('#id_desiredFlatFeeHourly').val(), 15, 1000);
-        if (hourlyValue !== null) {
-            setCurrencyFieldValue('#id_desiredFlatFeeHourly', '#desiredFlatFeeHourlySlider', hourlyValue);
-        }
-    }
     if (!showTotalGuidance) {
         $('#id_desiredFlatFeeTotalContract').val('');
     }
@@ -643,17 +637,9 @@ $(document).ready(function () {
         syncOfferGuidanceUI(getSelectedPaymentTypes());
     });
 
-    $('#desiredFlatFeeHourlySlider').on('input change', function () {
-        setCurrencyFieldValue('#id_desiredFlatFeeHourly', '#desiredFlatFeeHourlySlider', $(this).val());
-    });
-
     $('#id_desiredFlatFeeHourly').on('input change', function () {
         if ($(this).val() === '') {
             return;
-        }
-        const value = normalizeCurrencyValue($(this).val(), 15, 1000);
-        if (value !== null) {
-            setCurrencyFieldValue('#id_desiredFlatFeeHourly', '#desiredFlatFeeHourlySlider', value);
         }
     });
 
@@ -1006,7 +992,7 @@ $("#submitButton").click(function () {
             errorList += '<li>Suggested hourly rate must be between $15 and $1000.</li>';
         }
         else {
-            setCurrencyFieldValue('#id_desiredFlatFeeHourly', '#desiredFlatFeeHourlySlider', desiredFlatFeeHourly);
+            setCurrencyFieldValue('#id_desiredFlatFeeHourly', null, desiredFlatFeeHourly);
         }
     }
 

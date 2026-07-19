@@ -29,6 +29,17 @@
         box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
     }
 
+    .update-card.is-coming-soon {
+        pointer-events: none;
+        cursor: not-allowed;
+        filter: saturate(0.25);
+    }
+
+    .update-card.is-coming-soon:hover {
+        transform: none;
+        box-shadow: none;
+    }
+
     .update-card-img-wrapper {
         height: 100%;
         width: 100%;
@@ -76,6 +87,30 @@
     .update-card-link:hover {
         color: #fff;
     }
+
+    .coming-soon-overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(58, 65, 70, 0.65);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+        z-index: 3;
+    }
+
+    .coming-soon-pill {
+        background: rgba(88, 166, 146, 0.92);
+        color: #ffffff;
+        border-radius: 8px;
+        padding: 0.5rem 1.4rem;
+        font-size: 2.15rem;
+        font-family: 'Futura-Bold', sans-serif;
+        letter-spacing: 0.03em;
+        line-height: 1;
+        text-transform: uppercase;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.24);
+    }
 </style>
 
 <div class="update-hero text-center">
@@ -87,6 +122,24 @@
 
 <div class="container mb-5">
     <div class="row g-4">
+        <!-- V11.0 Update (Coming Soon) -->
+        <div class="col-lg-4 col-md-6">
+            <div class="card update-card shadow-sm is-coming-soon" aria-disabled="true">
+                <div class="update-card-img-wrapper">
+                    <img src="/media/images/TTT_LOGO.png" class="update-card-img" alt="V11.0 Update Coming Soon">
+                </div>
+                <div class="update-card-overlay">
+                    <h2 class="update-card-title">V11.0</h2>
+                    <span class="update-card-link">In developement</span>
+                    <span class="update-card-link"
+                        style="font-size: 0.8rem; margin-top: 0.5rem; color: #000000;">-------</span>
+                </div>
+                <div class="coming-soon-overlay">
+                    <span class="coming-soon-pill" style="text-align: center;">Coming Soon!</span>
+                </div>
+            </div>
+        </div>
+
         <!-- V10.0 Update -->
         <div class="col-lg-4 col-md-6">
             <a href="{% url 'update-v10-0' %}" class="text-decoration-none">
@@ -115,7 +168,7 @@
                         <h2 class="update-card-title">V9.0</h2>
                         <span class="update-card-link">Click to read full patch notes →</span>
                         <span class="update-card-link"
-                            style="font-size: 0.8rem; margin-top: 0.5rem; color: #000000;">Date: 2026-04-19</span>
+                            style="font-size: 0.8rem; margin-top: 0.5rem; color: #000000;">Date: 2026-06-08</span>
                     </div>
                 </div>
             </a>
@@ -149,7 +202,7 @@
                         <h2 class="update-card-title">V7.0</h2>
                         <span class="update-card-link">Click to read full patch notes →</span>
                         <span class="update-card-link"
-                            style="font-size: 0.8rem; margin-top: 0.5rem; color: #000000;">Date: 2026-04-19</span>
+                            style="font-size: 0.8rem; margin-top: 0.5rem; color: #000000;">Date: 2026-01-28</span>
                     </div>
                 </div>
             </a>

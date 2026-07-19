@@ -140,7 +140,7 @@
                         <label for="flatFeeAmount" class="form-label mb-1">Type your flat fee</label>
                         <div class="input-group">
                           <span class="input-group-text">$</span>
-                          <input id="flatFeeAmount" name="flatFeeAmount" type="number" min="1" class="form-control" placeholder="e.g. 85">
+                          <input id="flatFeeAmount" name="flatFeeAmount" type="number" step="0.01" class="form-control" placeholder="e.g. 85">
                           <span class="input-group-text">/hr</span>
                         </div>
                       </div>
@@ -148,7 +148,7 @@
                     {% else %}
                     <div class="input-group input-group-lg mb-3">
                       <span class="input-group-text">$</span>
-                      <input id="flatFeeAmount" name="flatFeeAmount" type="number" min="1" class="form-control" placeholder="Enter your offer amount">
+                      <input id="flatFeeAmount" name="flatFeeAmount" type="number" step="0.01" class="form-control" placeholder="Enter your offer amount">
                     </div>
                     {% endif %}
                     {% if auction.flatFeeType == 'hourly' and auction.desiredFlatFeeHourly %}
@@ -229,13 +229,35 @@
                     {% if private_perk_rows %}
                     <hr>
                     <p class="mb-2 fw-semibold">Negotiable Perks</p>
-                    {% for perk in private_perk_rows %}
-                    <p class="mb-1">
-                      <strong>{{ perk.name }}</strong>
-                      {% if perk.amount > 0 %}<span class="ms-1">- ${{ perk.amount }}</span>{% endif %}
-                      {% if perk.details %}<span class="text-muted">({{ perk.details }})</span>{% endif %}
-                    </p>
-                    {% endfor %}
+                    <div class="border rounded">
+                      <div class="row g-0 border-bottom small text-muted fw-semibold px-2 py-2">
+                        <div class="col-5 col-lg-4">Perk</div>
+                        <div class="col-3 col-lg-2">Value</div>
+                        <div class="col-4 col-lg-6">Description</div>
+                      </div>
+                      {% for perk in private_perk_rows %}
+                      <div class="row g-0 align-items-start px-2 py-2 border-bottom {% if forloop.last %}border-bottom-0{% endif %}">
+                        <div class="col-5 col-lg-4 d-flex align-items-center">
+                          <input class="form-check-input me-2" type="checkbox" checked disabled aria-label="Perk included">
+                          <span>{{ perk.name }}</span>
+                        </div>
+                        <div class="col-3 col-lg-2">
+                          {% if perk.amount > 0 %}
+                          <span>${{ perk.amount }}</span>
+                          {% else %}
+                          <span class="text-muted">N/A</span>
+                          {% endif %}
+                        </div>
+                        <div class="col-4 col-lg-6">
+                          {% if perk.details %}
+                          <span>{{ perk.details }}</span>
+                          {% else %}
+                          <span class="text-muted">No description provided.</span>
+                          {% endif %}
+                        </div>
+                      </div>
+                      {% endfor %}
+                    </div>
                     {% endif %}
                     {% if finalize_skill_rows %}
                     <hr>
@@ -255,7 +277,7 @@
               </div>
 
               <div id="offerFaqHelper" class="mt-3">
-                <small class="d-block">For more information on the bidding process see our <a href="{% url 'faq' %}" target="_blank">FAQ</a></small>
+                <small class="d-block">Learn more about making an offer here <a href="{% url 'faq' %}" target="_blank">FAQ</a></small>
               </div>
 
               <div class="modal-footer">
@@ -535,7 +557,7 @@
   <p class="text-weight-light">{{ auction.comments|linebreaksbr }}</p>
 </div>
 
-<script src="{% static 'auction/bid-page.js' %}?v=20260714-review-offers-polish"></script>
+<script src="{% static 'auction/bid-page.js' %}?v=20260719-flatfee-next-guard-v1"></script>
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     const checklist = document.getElementById('finalizeSkillChecklist');
