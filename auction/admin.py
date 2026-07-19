@@ -1,10 +1,14 @@
+from decimal import Decimal
 from tabnanny import verbose
 from unicodedata import category
 from django import forms
 from django.contrib import admin
+from django.contrib import messages
 from django.http import BadHeaderError, HttpResponse
-from django.urls import reverse
+from django.shortcuts import redirect
+from django.urls import path, reverse
 from django.utils.html import format_html
+from django.db import models as django_models
 from .models import Auction, Bid, Account, PayFrequency, PracticeArea, PracticeAreaType, ProMember, UserType, Demographic, DemographicType, ProMember, AdminSetting, Page, PopupMessage, MessageAcknowledgement, PaymentType, Number, Raffle, RaffleEntry, Referral, RaffleTicket
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
@@ -26,6 +30,13 @@ class BidInline(admin.TabularInline):
 @admin.register(Auction)
 class AuctionAdmin(admin.ModelAdmin):
     form = AuctionAdminForm
+    changelist_template = 'admin/auction/auction/change_list.html'
+    change_form_template = 'admin/auction/auction/change_form.html'
+    save_on_top = True
+    formfield_overrides = {
+        django_models.DateTimeField: {'widget': forms.DateTimeInput(attrs={'type': 'datetime-local'})},
+        django_models.TimeField: {'widget': forms.TimeInput(attrs={'type': 'time'})},
+    }
     readonly_fields = ('auctionID', 'cronID', 'required_skills_display', 'negotiable_perks_display', 'created', 'modified')
     list_display = ('auction_number_admin', 'listing_view_link', 'status_display', 'clinic_display', 'payment_type_label', 'desired_offer_guidance', 'minimum_compensation_display', 'required_skills_count', 'negotiable_perks_count', 'auctionStart', 'auctionEnd', 'placementStart', 'placementEnd', 'winner', 'winning_offer_display_admin')
     list_display_links = ('auction_number_admin',)
@@ -35,23 +46,27 @@ class AuctionAdmin(admin.ModelAdmin):
     inlines = [BidInline]
     exclude = ['startingBid', 'underEightteen', 'eightteenToSixtyFive', 'overSixtyFive', 'MSK', 'neuro', 'cardioResp', 'payFrequency', 'paymentType']
     fieldsets = (
-        ('Quick Info', {
-            'fields': ('auctionID', 'auctionNumber', 'clinic', 'type', 'comments'),
+        ('Quick Action', {
+            'fields': ('auctionID', 'auctionNumber', 'clinic', 'type', 'comments', 'listing_status'),
         }),
-        ('Listing Dates', {
-            'fields': ('auctionStart', 'auctionEnd', 'placementStart', 'placementEnd'),
+        ('Listing Dates and Schedule', {
+            'fields': (
+                ('auctionStart', 'auctionEnd'),
+                ('placementStart', 'placementEnd'),
+                ('mondayStart', 'mondayEnd'),
+                ('tuesdayStart', 'tuesdayEnd'),
+                ('wednesdayStart', 'wednesdayEnd'),
+                ('thursdayStart', 'thursdayEnd'),
+                ('fridayStart', 'fridayEnd'),
+                ('saturdayStart', 'saturdayEnd'),
+                ('sundayStart', 'sundayEnd'),
+            ),
         }),
         ('Offer Settings', {
             'fields': ('paymentTypes', 'paymentTypesSelection', 'flatFeeType', 'desiredFeeSplitPercentage', 'minimumCompensation', 'desiredFlatFeeHourly', 'desiredFlatFeeTotalContract', 'winner', 'winningPrice'),
         }),
         ('Skills and Perks', {
             'fields': ('required_skills_display', 'negotiable_perks_display', 'requiredSkills', 'negotiablePerks'),
-        }),
-        ('Clinician Schedule', {
-            'fields': ('mondayStart', 'mondayEnd', 'tuesdayStart', 'tuesdayEnd', 'wednesdayStart', 'wednesdayEnd', 'thursdayStart', 'thursdayEnd', 'fridayStart', 'fridayEnd', 'saturdayStart', 'saturdayEnd', 'sundayStart', 'sundayEnd'),
-        }),
-        ('Listing Status', {
-            'fields': ('active', 'closed', 'deleted', 'cronID'),
         }),
         ('Nice to Know', {
             'fields': ('createdBy', 'modified', 'modifiedBy'),
@@ -75,25 +90,39 @@ class AuctionAdmin(admin.ModelAdmin):
         return f'{username} ({email})' if username or email else str(obj.clinic)
 
     clinic_display.short_description = 'Facility Username (Email)'
-    clinic_display.admin_order_field = 'clinic__user__username'
 
     def status_display(self, obj):
+        change_url = reverse('admin:auction_auction_change', args=[obj.pk])
         if obj.deleted:
-            return format_html('<span style="color:#111827;font-weight:600;">Deleted</span>')
+            return format_html(
+                '<button type="button" class="ttt-status-open" style="color:#111827;font-weight:600;text-decoration:underline;" data-auction-id="{}" data-current-status="deleted" data-current-status-label="Deleted" data-change-url="{}">Deleted</button>',
+                obj.pk,
+                change_url,
+            )
         if obj.closed or obj.is_effectively_closed():
-            return format_html('<span style="color:#dc3545;font-weight:600;">Closed</span>')
+            return format_html(
+                '<button type="button" class="ttt-status-open" style="color:#dc3545;font-weight:600;text-decoration:underline;" data-auction-id="{}" data-current-status="closed" data-current-status-label="Closed" data-change-url="{}">Closed</button>',
+                obj.pk,
+                change_url,
+            )
         if obj.active:
-            return format_html('<span style="color:#198754;font-weight:600;">Active</span>')
-        return format_html('<span style="color:#f0ad4e;font-weight:600;">Pending</span>')
+            return format_html(
+                '<button type="button" class="ttt-status-open" style="color:#198754;font-weight:600;text-decoration:underline;" data-auction-id="{}" data-current-status="active" data-current-status-label="Active" data-change-url="{}">Active</button>',
+                obj.pk,
+                change_url,
+            )
+        return format_html(
+            '<button type="button" class="ttt-status-open" style="color:#f0ad4e;font-weight:600;text-decoration:underline;" data-auction-id="{}" data-current-status="pending" data-current-status-label="Pending" data-change-url="{}">Pending</button>',
+            obj.pk,
+            change_url,
+        )
 
     status_display.short_description = 'Status'
-    status_display.admin_order_field = 'active'
 
     def winning_offer_display_admin(self, obj):
         return obj.get_winning_offer_display() if obj.winner_id is not None else 'None'
 
     winning_offer_display_admin.short_description = 'Winning Offer'
-    winning_offer_display_admin.admin_order_field = 'winningPrice'
 
     def payment_type_label(self, obj):
         return obj.get_payment_type_label()
@@ -105,9 +134,9 @@ class AuctionAdmin(admin.ModelAdmin):
         if obj.desiredFeeSplitPercentage is not None:
             guidance.append(f"Fee Split: {obj.desiredFeeSplitPercentage}%")
         if obj.desiredFlatFeeHourly is not None:
-            guidance.append(f"Hourly: ${obj.desiredFlatFeeHourly}/hr")
+            guidance.append(f"Hourly: ${Decimal(obj.desiredFlatFeeHourly):.2f}/hr")
         if obj.desiredFlatFeeTotalContract is not None:
-            guidance.append(f"TCP: ${obj.desiredFlatFeeTotalContract}")
+            guidance.append(f"TCP: ${Decimal(obj.desiredFlatFeeTotalContract):.2f}")
         return ' | '.join(guidance) if guidance else 'None'
 
     desired_offer_guidance.short_description = 'Desired Offer'
@@ -147,6 +176,24 @@ class AuctionAdmin(admin.ModelAdmin):
     negotiable_perks_display.short_description = 'Negotiable Perks Summary'
 
     def save_model(self, request, obj, form, change):
+        listing_status = form.cleaned_data.get('listing_status') if hasattr(form, 'cleaned_data') else ''
+        if listing_status == 'deleted':
+            obj.active = False
+            obj.closed = False
+            obj.deleted = True
+        elif listing_status == 'closed':
+            obj.active = False
+            obj.closed = True
+            obj.deleted = False
+        elif listing_status == 'active':
+            obj.active = True
+            obj.closed = False
+            obj.deleted = False
+        else:
+            obj.active = False
+            obj.closed = False
+            obj.deleted = False
+
         admin = AdminSetting.objects.first()
         auction = Auction.objects.filter(pk=obj.auctionID).first()
         previous_active = auction.active if auction is not None else False
@@ -232,6 +279,27 @@ class AuctionAdmin(admin.ModelAdmin):
                         return HttpResponse('Invalid header found.')
                     break            
         super().save_model(request, obj, form, change)
+
+    def get_urls(self):
+        urls = super().get_urls()
+        custom_urls = [
+            path('update-status/', self.admin_site.admin_view(self.update_status_view), name='auction_auction_update_status'),
+        ]
+        return custom_urls + urls
+
+    def update_status_view(self, request):
+        if request.method != 'POST':
+            messages.error(request, 'Invalid request.')
+            return redirect('admin:auction_auction_changelist')
+
+        auction_id = request.POST.get('auction_id')
+        listing_status = request.POST.get('listing_status', '')
+        auction = Auction.objects.get(pk=auction_id)
+
+        dummy_form = type('StatusForm', (), {'cleaned_data': {'listing_status': listing_status}})()
+        self.save_model(request, auction, dummy_form, change=True)
+        messages.success(request, f'Listing #{auction.auctionNumber} status updated.')
+        return redirect(request.META.get('HTTP_REFERER') or reverse('admin:auction_auction_changelist'))
 
 @admin.register(Bid)
 class BidAdmin(admin.ModelAdmin):

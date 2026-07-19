@@ -61,7 +61,7 @@
         class="m-0 d-flex me-3 text-white">{% if auction.is_effectively_active %}{{ auction.get_time_diff }}{% else %}Pending{% endif %}</time>
       {% endif %}
       <p class="m-0 mx-4 d-none d-lg-block text-white"># Offers:<span id="offerCount" class="ms-2 text-white">{{ num_bids }}</span></p>
-      <p class="m-0 me-4 d-none d-lg-block text-white"># of Therapists Offering:<span
+      <p class="m-0 me-4 d-none d-lg-block text-white"># of Clinicians Offering:<span
           id="clinicianCount" class="ms-2 text-white">{{num_biders}}</span></p>
     </section>
 
@@ -127,14 +127,30 @@
 
                   <div class="ttt-offer-card">
                     <label for="flatFeeAmount" class="form-label">Enter your flat fee offer</label>
+                    {% if auction.flatFeeType == 'hourly' %}
+                    <div class="mb-3 d-flex align-items-center gap-3 flex-wrap">
+                      <div class="slidecontainer flex-grow-1" style="min-width: 220px;">
+                        <input type="range" min="15" max="1000" value="15" class="slider ttt-compact-slider" id="flatFeeHourlySlider" name="flatFeeHourlySlider" style="width: 90%;">
+                        <div class="d-flex justify-content-between mt-1" style="width: 90%;">
+                          <span class="text-muted small">$15/hr</span>
+                          <span class="text-muted small">$1000/hr</span>
+                        </div>
+                      </div>
+                      <div style="min-width: 180px;">
+                        <label for="flatFeeAmount" class="form-label mb-1">Type your flat fee</label>
+                        <div class="input-group">
+                          <span class="input-group-text">$</span>
+                          <input id="flatFeeAmount" name="flatFeeAmount" type="number" min="1" class="form-control" placeholder="e.g. 85">
+                          <span class="input-group-text">/hr</span>
+                        </div>
+                      </div>
+                    </div>
+                    {% else %}
                     <div class="input-group input-group-lg mb-3">
                       <span class="input-group-text">$</span>
                       <input id="flatFeeAmount" name="flatFeeAmount" type="number" min="1" class="form-control" placeholder="Enter your offer amount">
-                      {% if auction.flatFeeType == 'hourly' %}
-                      <span class="input-group-text">/hr</span>
-                      {% endif %}
                     </div>
-                    <p class="mb-3 fw-semibold">Clinic desired offer (optional guidance)</p>
+                    {% endif %}
                     {% if auction.flatFeeType == 'hourly' and auction.desiredFlatFeeHourly %}
                     <div class="ttt-offer-guidance-tab mb-3" role="note">
                       <p class="mb-0 small"><strong>Clinic guidance:</strong> Suggested hourly flat fee is ${{ auction.desiredFlatFeeHourly }}/hr.</p>
@@ -179,10 +195,17 @@
                     </div>
 
                     <p class="mb-2">Current selected: <strong><span id="feeSplitValue">0</span>%</strong></p>
-                    <p class="mb-3 fw-semibold">Clinic desired offer (optional guidance)</p>
                     {% if auction.desiredFeeSplitPercentage %}
                     <div class="ttt-offer-guidance-tab mb-3" role="note">
                       <p class="mb-0 small"><strong>Clinic guidance:</strong> Suggested fee split is {{ auction.desiredFeeSplitPercentage }}%.</p>
+                    </div>
+                    {% endif %}
+                    {% if auction.minimumCompensation %}
+                    <div class="ttt-offer-guidance-tab ttt-offer-guidance-tab-warning mb-3" role="note">
+                      <p class="mb-0 small d-flex align-items-center flex-wrap gap-1">
+                        <span><strong>Minimum Guaranteed Compensation</strong> is ${{ auction.minimumCompensation }}/hr when fee split revenue is low.</span>
+                        <button type="button" class="ttt-info-dot" data-bs-toggle="tooltip" data-bs-placement="top" title="The clinic will guarantee you this amount per hour if your fee split revenue is below this amount">i</button>
+                      </p>
                     </div>
                     {% endif %}
                     <div class="alert alert-light mb-0" role="alert">

@@ -16,6 +16,12 @@ $(document).ready(function () {
     const confirmTooltipWrap = document.getElementById('confirmBidTooltipWrap');
     let confirmDisabledTooltip = null;
 
+    if (window.bootstrap) {
+        document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(function (el) {
+            bootstrap.Tooltip.getOrCreateInstance(el);
+        });
+    }
+
     if (confirmTooltipWrap && window.bootstrap) {
         confirmDisabledTooltip = bootstrap.Tooltip.getOrCreateInstance(confirmTooltipWrap);
     }
@@ -53,7 +59,40 @@ $(document).ready(function () {
             return false;
         }
         const value = parseInt($('#flatFeeAmount').val() || '0', 10);
+        if ($('#flatFeeHourlySlider').length) {
+            return value >= 15 && value <= 1000;
+        }
         return value > 0;
+    }
+
+    function normalizeFlatFeeValue(rawValue) {
+        const parsed = parseInt(rawValue, 10);
+        if (Number.isNaN(parsed)) {
+            return null;
+        }
+        if ($('#flatFeeHourlySlider').length) {
+            if (parsed < 15) {
+                return 15;
+            }
+            if (parsed > 1000) {
+                return 1000;
+            }
+        }
+        if (parsed < 0) {
+            return 0;
+        }
+        return parsed;
+    }
+
+    function setFlatFeeValue(rawValue) {
+        const normalizedValue = normalizeFlatFeeValue(rawValue);
+        if (normalizedValue === null) {
+            return;
+        }
+        $('#flatFeeAmount').val(normalizedValue);
+        if ($('#flatFeeHourlySlider').length) {
+            $('#flatFeeHourlySlider').val(normalizedValue);
+        }
     }
 
     function isValidFeeSplitOffer() {
@@ -91,6 +130,17 @@ $(document).ready(function () {
         }
     }
 
+    function hasAnyValidOffer() {
+        return isValidFlatFeeOffer() || isValidFeeSplitOffer();
+    }
+
+    function hasSingleOfferInputTab() {
+        const offerInputTabs = enabledOfferTabs().filter(function (tabKey) {
+            return tabKey !== 'offer-finalize';
+        });
+        return offerInputTabs.length === 1;
+    }
+
     function updateSummary() {
         if ($('#summaryFlatFee').length) {
             if (isValidFlatFeeOffer()) {
@@ -111,8 +161,16 @@ $(document).ready(function () {
             }
         }
 
-        const hasValidOffer = isValidFlatFeeOffer() || isValidFeeSplitOffer();
+        const hasValidOffer = hasAnyValidOffer();
         $('#confirmBidButton').prop('disabled', !hasValidOffer);
+
+        if (hasSingleOfferInputTab()) {
+            const isFinalizeActive = activeTabKey() === 'offer-finalize';
+            $('#nextTabButton').prop('disabled', !hasValidOffer && !isFinalizeActive);
+        }
+        else {
+            $('#nextTabButton').prop('disabled', false);
+        }
 
         if (confirmTooltipWrap && confirmDisabledTooltip && confirmButton) {
             if (confirmButton.disabled) {
@@ -131,12 +189,20 @@ $(document).ready(function () {
         const current = activeTabKey();
         const index = tabs.indexOf(current);
         const isFinalize = current === 'offer-finalize';
+        const singleOfferTab = hasSingleOfferInputTab();
 
         $('#backTabButton').toggle(index > 0);
         $('#nextTabButton').toggle(!isFinalize);
-        $('#skipTabButton').toggle(!isFinalize);
+        $('#skipTabButton').toggle(!isFinalize && !singleOfferTab);
         $('#confirmBidButton').toggle(isFinalize);
         $('#offerFaqHelper').toggle(!isFinalize);
+
+        if (!isFinalize && singleOfferTab) {
+            $('#nextTabButton').prop('disabled', !hasAnyValidOffer());
+        }
+        else {
+            $('#nextTabButton').prop('disabled', false);
+        }
     }
 
     function activateOfferTab(tabKey) {
@@ -159,7 +225,12 @@ $(document).ready(function () {
     }
 
     $('#offerTabs .nav-link').on('click', function () {
-        activateOfferTab($(this).data('offer-tab'));
+        const selectedTab = $(this).data('offer-tab');
+        if (selectedTab === 'offer-finalize' && hasSingleOfferInputTab() && !hasAnyValidOffer()) {
+            showWarning('warning', 'Enter an offer before moving to Finalize.');
+            return;
+        }
+        activateOfferTab(selectedTab);
     });
 
     $('#nextTabButton').on('click', function () {
@@ -195,6 +266,15 @@ $(document).ready(function () {
     });
 
     $('#flatFeeAmount').on('input change', function () {
+        if ($('#flatFeeHourlySlider').length && $(this).val() !== '') {
+            setFlatFeeValue($(this).val());
+        }
+        updateSummary();
+        clearWarning();
+    });
+
+    $('#flatFeeHourlySlider').on('input change', function () {
+        setFlatFeeValue($(this).val());
         updateSummary();
         clearWarning();
     });
@@ -231,6 +311,11 @@ $(document).ready(function () {
             if ($('#feeSplitSlider').length) {
                 const feeSplitStart = 0;
                 setFeeSplitValue(feeSplitStart);
+            }
+
+            if ($('#flatFeeHourlySlider').length) {
+                const startingValue = $('#flatFeeAmount').val() || 15;
+                setFlatFeeValue(startingValue);
             }
 
             const tabs = enabledOfferTabs();
