@@ -1373,6 +1373,27 @@ input[type=number] {
     padding: 0.65rem 0.85rem;
 }
 
+.ttt-offer-guidance-tab-warning {
+    border-left-color: #c79c00;
+    background: #fff5cc;
+    color: #5f4a00;
+}
+
+.ttt-info-dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 999px;
+    border: 1px solid #6c757d;
+    color: #6c757d;
+    background: transparent;
+    font-size: 12px;
+    line-height: 1;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .ttt-fee-split-value {
     min-width: 96px;
     text-align: center;

@@ -1,0 +1,124 @@
+{% extends "admin/change_list.html" %}
+
+{% block content %}
+{{ block.super }}
+
+<style>
+  .ttt-status-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.45);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+  }
+  .ttt-status-modal-backdrop.is-open {
+    display: flex;
+  }
+  .ttt-status-modal {
+    width: min(460px, calc(100vw - 2rem));
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 18px 50px rgba(15, 23, 42, 0.3);
+    border: 1px solid #d6dde5;
+    padding: 1.25rem;
+  }
+  .ttt-status-modal h3 {
+    margin: 0 0 0.75rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+  }
+  .ttt-status-modal .actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+  .ttt-status-modal .actions .button,
+  .ttt-status-modal .actions .default {
+    min-width: 86px;
+    height: 34px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    cursor: pointer;
+  }
+  .ttt-status-open {
+    font-size: inherit;
+    line-height: 1.2;
+    cursor: pointer;
+    background: transparent;
+    border: 0;
+    padding: 0;
+  }
+  #tttStatusSelect {
+    cursor: pointer;
+  }
+</style>
+
+<div id="tttStatusModalBackdrop" class="ttt-status-modal-backdrop" aria-hidden="true">
+  <div class="ttt-status-modal" role="dialog" aria-modal="true" aria-labelledby="tttStatusModalTitle">
+    <h3 id="tttStatusModalTitle">Change Listing Status</h3>
+    <form id="tttStatusForm" method="post" action="{% url 'admin:auction_auction_update_status' %}">
+      {% csrf_token %}
+      <input type="hidden" name="auction_id" id="tttStatusAuctionId">
+      <div class="form-row">
+        <label for="tttStatusSelect" style="display:block; font-weight:600; margin-bottom:0.5rem;">Listing status</label>
+        <select id="tttStatusSelect" name="listing_status" class="form-control" required>
+          <option value="pending">Pending</option>
+          <option value="active">Active</option>
+          <option value="closed">Closed</option>
+          <option value="deleted">Deleted</option>
+        </select>
+      </div>
+      <div class="actions">
+        <button type="button" class="button" id="tttStatusCancelButton">Cancel</button>
+        <button type="submit" class="default">Save</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+(function () {
+  const backdrop = document.getElementById('tttStatusModalBackdrop');
+  const form = document.getElementById('tttStatusForm');
+  const auctionIdInput = document.getElementById('tttStatusAuctionId');
+  const statusSelect = document.getElementById('tttStatusSelect');
+  const cancelButton = document.getElementById('tttStatusCancelButton');
+
+  function openModal(button) {
+    auctionIdInput.value = button.getAttribute('data-auction-id') || '';
+    statusSelect.value = button.getAttribute('data-current-status') || 'pending';
+    backdrop.classList.add('is-open');
+    backdrop.setAttribute('aria-hidden', 'false');
+  }
+
+  function closeModal() {
+    backdrop.classList.remove('is-open');
+    backdrop.setAttribute('aria-hidden', 'true');
+  }
+
+  document.querySelectorAll('.ttt-status-open').forEach(function (button) {
+    button.addEventListener('click', function () {
+      openModal(button);
+    });
+  });
+
+  backdrop.addEventListener('click', function (event) {
+    if (event.target === backdrop) {
+      closeModal();
+    }
+  });
+
+  cancelButton.addEventListener('click', closeModal);
+  document.addEventListener('keydown', function (event) {
+    if (event.key === 'Escape') {
+      closeModal();
+    }
+  });
+})();
+</script>
+{% endblock %}

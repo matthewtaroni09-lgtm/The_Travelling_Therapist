@@ -141,6 +141,7 @@ const REQUIRED_SKILLS_BY_TYPE = {
         'Hospital/Long Term Care/Retirement Home',
         'Home care Experience',
         'Orthopedics Experience',
+        'Geriatrics Experience',
         'Sports Experience',
         "Women's Health & Pelvic Health Experience",
     ],
@@ -481,8 +482,44 @@ function syncOfferGuidanceUI(selectedPaymentTypes) {
     if (!showHourlyGuidance) {
         $('#id_desiredFlatFeeHourly').val('');
     }
+    else if ($('#id_desiredFlatFeeHourly').val() !== '') {
+        const hourlyValue = normalizeCurrencyValue($('#id_desiredFlatFeeHourly').val(), 15, 1000);
+        if (hourlyValue !== null) {
+            setCurrencyFieldValue('#id_desiredFlatFeeHourly', '#desiredFlatFeeHourlySlider', hourlyValue);
+        }
+    }
     if (!showTotalGuidance) {
         $('#id_desiredFlatFeeTotalContract').val('');
+    }
+    else if ($('#id_desiredFlatFeeTotalContract').val() !== '') {
+        const totalValue = normalizeCurrencyValue($('#id_desiredFlatFeeTotalContract').val(), 1, null);
+        if (totalValue !== null) {
+            setCurrencyFieldValue('#id_desiredFlatFeeTotalContract', null, totalValue);
+        }
+    }
+}
+
+function normalizeCurrencyValue(rawValue, minValue, maxValue) {
+    const parsed = parseFloat(rawValue);
+    if (Number.isNaN(parsed)) {
+        return null;
+    }
+
+    let normalized = Math.round((parsed + Number.EPSILON) * 100) / 100;
+    if (minValue !== null && normalized < minValue) {
+        normalized = minValue;
+    }
+    if (maxValue !== null && normalized > maxValue) {
+        normalized = maxValue;
+    }
+    return normalized;
+}
+
+function setCurrencyFieldValue(fieldSelector, sliderSelector, value) {
+    const formattedValue = Number(value).toFixed(2);
+    $(fieldSelector).val(formattedValue);
+    if (sliderSelector) {
+        $(sliderSelector).val(formattedValue);
     }
 }
 
@@ -604,6 +641,30 @@ $(document).ready(function () {
 
     $('input[name="flatFeeType"]').change(function () {
         syncOfferGuidanceUI(getSelectedPaymentTypes());
+    });
+
+    $('#desiredFlatFeeHourlySlider').on('input change', function () {
+        setCurrencyFieldValue('#id_desiredFlatFeeHourly', '#desiredFlatFeeHourlySlider', $(this).val());
+    });
+
+    $('#id_desiredFlatFeeHourly').on('input change', function () {
+        if ($(this).val() === '') {
+            return;
+        }
+        const value = normalizeCurrencyValue($(this).val(), 15, 1000);
+        if (value !== null) {
+            setCurrencyFieldValue('#id_desiredFlatFeeHourly', '#desiredFlatFeeHourlySlider', value);
+        }
+    });
+
+    $('#id_desiredFlatFeeTotalContract').on('input change', function () {
+        if ($(this).val() === '') {
+            return;
+        }
+        const value = normalizeCurrencyValue($(this).val(), 1, null);
+        if (value !== null) {
+            setCurrencyFieldValue('#id_desiredFlatFeeTotalContract', null, value);
+        }
     });
 
     $('.ttt-add-trigger').on('click', function () {
@@ -930,12 +991,27 @@ $("#submitButton").click(function () {
     }
 
     let minimumCompensation = $('#id_minimumCompensation').val();
+    let desiredFlatFeeHourly = $('#id_desiredFlatFeeHourly').val();
+    let desiredFlatFeeTotalContract = $('#id_desiredFlatFeeTotalContract').val();
 
     // Validate optional minimum compensation for fee split listings.
     if (getSelectedPaymentTypes().includes('Fee Split')) {
         if (minimumCompensation !== '' && parseInt(minimumCompensation, 10) < 1) {
             errorList += '<li>Minimum compensation must be at least $1.</li>';
         }
+    }
+
+    if (getSelectedPaymentTypes().includes('Flat Fee') && getSelectedFlatFeeType() === 'hourly' && desiredFlatFeeHourly !== '') {
+        if (parseFloat(desiredFlatFeeHourly) < 15 || parseFloat(desiredFlatFeeHourly) > 1000) {
+            errorList += '<li>Suggested hourly rate must be between $15 and $1000.</li>';
+        }
+        else {
+            setCurrencyFieldValue('#id_desiredFlatFeeHourly', '#desiredFlatFeeHourlySlider', desiredFlatFeeHourly);
+        }
+    }
+
+    if (getSelectedPaymentTypes().includes('Flat Fee') && getSelectedFlatFeeType() === 'total_contract' && desiredFlatFeeTotalContract !== '') {
+        setCurrencyFieldValue('#id_desiredFlatFeeTotalContract', null, desiredFlatFeeTotalContract);
     }
 
     /* Deprecated fee split assessment/treatment validation retained in source for reference.

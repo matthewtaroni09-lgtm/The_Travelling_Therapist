@@ -121,6 +121,7 @@ DEFAULT_OTHER_CLINICIAN_SKILL_OPTIONS = [
     'Hospital/Long Term Care/Retirement Home',
     'Home care Experience',
     'Orthopedics Experience',
+    'Geriatrics Experience',
     'Sports Experience',
     "Women's Health & Pelvic Health Experience",
 ]

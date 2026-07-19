@@ -1,4 +1,5 @@
 from dataclasses import field
+from decimal import Decimal, ROUND_HALF_UP
 from datetime import datetime, timedelta
 import email, re
 from operator import mod
@@ -117,16 +118,21 @@ class AuctionForm(forms.ModelForm):
         min_value=1,
     )
 
-    desiredFlatFeeHourly = forms.IntegerField(
+    desiredFlatFeeHourly = forms.DecimalField(
         label='Desired hourly flat fee (optional)',
         required=False,
-        min_value=1,
+        min_value=15,
+        max_value=1000,
+        max_digits=10,
+        decimal_places=4,
     )
 
-    desiredFlatFeeTotalContract = forms.IntegerField(
+    desiredFlatFeeTotalContract = forms.DecimalField(
         label='Desired total contract flat fee (optional)',
         required=False,
         min_value=1,
+        max_digits=10,
+        decimal_places=4,
     )
 
     class Meta:
@@ -180,8 +186,8 @@ class AuctionForm(forms.ModelForm):
             'sundayEnd': forms.TimeInput(attrs={'class': 'form-control', 'placeholder': 'Select a date', 'type': 'time'}),
             'desiredFeeSplitPercentage': forms.NumberInput(attrs={'class': 'form-control', 'min': '1', 'max': '100', 'placeholder': 'e.g. 65'}),
             'minimumCompensation': forms.NumberInput(attrs={'class': 'form-control', 'min': '1', 'placeholder': 'e.g. 75'}),
-            'desiredFlatFeeHourly': forms.NumberInput(attrs={'class': 'form-control', 'min': '1', 'placeholder': 'e.g. 80'}),
-            'desiredFlatFeeTotalContract': forms.NumberInput(attrs={'class': 'form-control', 'min': '1', 'placeholder': 'e.g. 5000'}),
+            'desiredFlatFeeHourly': forms.NumberInput(attrs={'class': 'form-control', 'min': '15', 'max': '1000', 'step': '0.01', 'placeholder': 'e.g. 80.00'}),
+            'desiredFlatFeeTotalContract': forms.NumberInput(attrs={'class': 'form-control', 'min': '1', 'step': '0.01', 'placeholder': 'e.g. 5000.00'}),
             'comments': forms.Textarea(attrs={'placeholder': 'Tell us about your clinic...', 'rows': '4'})
         }
 
@@ -304,6 +310,15 @@ class AuctionForm(forms.ModelForm):
         if minimum_compensation is not None and 'Fee Split' not in payment_types:
             error_list.append(ValidationError('Minimum compensation can only be set when Fee Split is selected.'))
 
+        if desired_flat_fee_hourly is not None and 'Flat Fee' in payment_types and flat_fee_type == 'hourly':
+            rounded_hourly = Decimal(str(desired_flat_fee_hourly)).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+            cleaned_data['desiredFlatFeeHourly'] = rounded_hourly
+            if rounded_hourly < Decimal('15.00') or rounded_hourly > Decimal('1000.00'):
+                error_list.append(ValidationError('Desired hourly flat fee must be between $15 and $1000.'))
+
+        if desired_flat_fee_total_contract is not None and 'Flat Fee' in payment_types and flat_fee_type == 'total_contract':
+            cleaned_data['desiredFlatFeeTotalContract'] = Decimal(str(desired_flat_fee_total_contract)).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+
         if desired_flat_fee_hourly is not None and ('Flat Fee' not in payment_types or flat_fee_type != 'hourly'):
             error_list.append(ValidationError('Desired hourly flat fee guidance can only be set when Flat Fee (Hourly) is selected.'))
 
@@ -324,11 +339,13 @@ class AuctionForm(forms.ModelForm):
         auction.desiredFeeSplitPercentage = self.cleaned_data.get('desiredFeeSplitPercentage') if 'Fee Split' in payment_types else None
         auction.minimumCompensation = self.cleaned_data.get('minimumCompensation') if 'Fee Split' in payment_types else None
         if 'Flat Fee' in payment_types and auction.flatFeeType == 'hourly':
-            auction.desiredFlatFeeHourly = self.cleaned_data.get('desiredFlatFeeHourly')
+            desired_flat_fee_hourly = self.cleaned_data.get('desiredFlatFeeHourly')
+            auction.desiredFlatFeeHourly = desired_flat_fee_hourly.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP) if desired_flat_fee_hourly is not None else None
             auction.desiredFlatFeeTotalContract = None
         elif 'Flat Fee' in payment_types and auction.flatFeeType == 'total_contract':
             auction.desiredFlatFeeHourly = None
-            auction.desiredFlatFeeTotalContract = self.cleaned_data.get('desiredFlatFeeTotalContract')
+            desired_flat_fee_total_contract = self.cleaned_data.get('desiredFlatFeeTotalContract')
+            auction.desiredFlatFeeTotalContract = desired_flat_fee_total_contract.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP) if desired_flat_fee_total_contract is not None else None
         else:
             auction.desiredFlatFeeHourly = None
             auction.desiredFlatFeeTotalContract = None
@@ -353,9 +370,17 @@ class AuctionAdminForm(AuctionForm):
         'flatFeeType',
     ]
 
-    active = forms.BooleanField(required=False, label='Active Listing')
-    closed = forms.BooleanField(required=False, label='Closed Listing')
-    deleted = forms.BooleanField(required=False, label='Deleted Listing')
+    listing_status = forms.ChoiceField(
+        required=False,
+        label='Listing Status',
+        choices=(
+            ('pending', 'Pending'),
+            ('active', 'Active'),
+            ('closed', 'Closed'),
+            ('deleted', 'Deleted'),
+        ),
+        widget=forms.RadioSelect,
+    )
 
     class Meta(AuctionForm.Meta):
         fields = '__all__'
@@ -363,10 +388,45 @@ class AuctionAdminForm(AuctionForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        day_labels = {
+            'mondayStart': 'Monday Start Time',
+            'mondayEnd': 'Monday End Time',
+            'tuesdayStart': 'Tuesday Start Time',
+            'tuesdayEnd': 'Tuesday End Time',
+            'wednesdayStart': 'Wednesday Start Time',
+            'wednesdayEnd': 'Wednesday End Time',
+            'thursdayStart': 'Thursday Start Time',
+            'thursdayEnd': 'Thursday End Time',
+            'fridayStart': 'Friday Start Time',
+            'fridayEnd': 'Friday End Time',
+            'saturdayStart': 'Saturday Start Time',
+            'saturdayEnd': 'Saturday End Time',
+            'sundayStart': 'Sunday Start Time',
+            'sundayEnd': 'Sunday End Time',
+        }
+
+        for field_name in [
+            'auctionStart', 'auctionEnd', 'placementStart', 'placementEnd',
+            'mondayStart', 'mondayEnd', 'tuesdayStart', 'tuesdayEnd',
+            'wednesdayStart', 'wednesdayEnd', 'thursdayStart', 'thursdayEnd',
+            'fridayStart', 'fridayEnd', 'saturdayStart', 'saturdayEnd',
+            'sundayStart', 'sundayEnd',
+        ]:
+            if field_name in self.fields:
+                self.fields[field_name].help_text = ''
+        for field_name, label in day_labels.items():
+            if field_name in self.fields:
+                self.fields[field_name].label = label
+
         if self.instance and self.instance.pk:
-            self.initial.setdefault('active', self.instance.active)
-            self.initial.setdefault('closed', self.instance.closed)
-            self.initial.setdefault('deleted', self.instance.deleted)
+            if self.instance.deleted:
+                self.initial.setdefault('listing_status', 'deleted')
+            elif self.instance.closed or self.instance.is_effectively_closed():
+                self.initial.setdefault('listing_status', 'closed')
+            elif self.instance.active:
+                self.initial.setdefault('listing_status', 'active')
+            else:
+                self.initial.setdefault('listing_status', 'pending')
 
 class BidForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):

@@ -1,0 +1,54 @@
+{% extends "admin/change_form.html" %}
+{% load admin_modify %}
+
+{% block field_sets %}
+<style>
+  .ttt-admin-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.6fr) minmax(320px, 0.9fr);
+    gap: 1.25rem;
+    align-items: start;
+  }
+  .ttt-admin-sidebar {
+    position: sticky;
+    top: 1rem;
+  }
+  .ttt-admin-grid .aligned .form-row {
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+  }
+  .ttt-admin-grid .aligned .form-row .fieldBox {
+    min-width: 230px;
+    margin-right: 1rem;
+  }
+  .ttt-admin-sidebar .submit-row {
+    margin-top: 1rem;
+  }
+  @media (max-width: 1200px) {
+    .ttt-admin-grid {
+      grid-template-columns: 1fr;
+    }
+    .ttt-admin-sidebar {
+      position: static;
+    }
+  }
+</style>
+
+<div class="ttt-admin-grid">
+  <div>
+    {% for fieldset in adminform %}
+      {% if fieldset.name != 'Quick Action' and fieldset.name != 'Nice to Know' %}
+        {% include "admin/includes/fieldset.html" with fieldset=fieldset %}
+      {% endif %}
+    {% endfor %}
+  </div>
+  <div class="ttt-admin-sidebar">
+    {% for fieldset in adminform %}
+      {% if fieldset.name == 'Quick Action' or fieldset.name == 'Nice to Know' %}
+        {% include "admin/includes/fieldset.html" with fieldset=fieldset %}
+      {% endif %}
+    {% endfor %}
+    {% submit_row %}
+  </div>
+</div>
+{% endblock %}
