@@ -1,54 +1,128 @@
 {% extends "admin/change_form.html" %}
 {% load admin_modify %}
+{% load admin_urls i18n %}
 
 {% block field_sets %}
 <style>
-  .ttt-admin-grid {
-    display: grid;
-    grid-template-columns: minmax(0, 1.6fr) minmax(320px, 0.9fr);
-    gap: 1.25rem;
-    align-items: start;
+  .ttt-admin-stack {
+    display: block;
   }
-  .ttt-admin-sidebar {
-    position: sticky;
-    top: 1rem;
+  .ttt-admin-stack .module {
+    margin-bottom: 1rem;
   }
-  .ttt-admin-grid .aligned .form-row {
+  .ttt-admin-stack .aligned .form-row {
     padding-top: 0.75rem;
     padding-bottom: 0.75rem;
   }
-  .ttt-admin-grid .aligned .form-row .fieldBox {
+  .ttt-admin-stack .aligned .form-row .fieldBox {
     min-width: 230px;
     margin-right: 1rem;
   }
-  .ttt-admin-sidebar .submit-row {
-    margin-top: 1rem;
+  .ttt-admin-collapsible {
+    border: 1px solid #d7dce2;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+    background: #fff;
   }
-  @media (max-width: 1200px) {
-    .ttt-admin-grid {
-      grid-template-columns: 1fr;
-    }
-    .ttt-admin-sidebar {
-      position: static;
-    }
+  .ttt-admin-collapsible > summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 0.75rem 0.95rem;
+    font-weight: 600;
+    border-bottom: 1px solid #d7dce2;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .ttt-admin-collapsible > summary::-webkit-details-marker {
+    display: none;
+  }
+  .ttt-admin-collapsible > summary::after {
+    content: '▸';
+    color: #6b7280;
+    transition: transform 0.16s ease;
+  }
+  .ttt-admin-collapsible[open] > summary::after {
+    transform: rotate(90deg);
+  }
+  .ttt-admin-collapsible[open] > summary {
+    border-bottom-color: #e5e7eb;
+  }
+  .ttt-admin-collapsible .module {
+    margin: 0;
+    border: 0;
+    border-radius: 0;
   }
 </style>
 
-<div class="ttt-admin-grid">
-  <div>
-    {% for fieldset in adminform %}
-      {% if fieldset.name != 'Quick Action' and fieldset.name != 'Nice to Know' %}
+<div class="ttt-admin-stack">
+  {% for fieldset in adminform %}
+    {% if fieldset.name == 'Quick Action' %}
+      {% include "admin/includes/fieldset.html" with fieldset=fieldset %}
+    {% endif %}
+  {% endfor %}
+
+  {% for fieldset in adminform %}
+    {% if fieldset.name == 'Offer Settings' %}
+      <details class="ttt-admin-collapsible">
+        <summary>Offer Settings</summary>
         {% include "admin/includes/fieldset.html" with fieldset=fieldset %}
-      {% endif %}
-    {% endfor %}
-  </div>
-  <div class="ttt-admin-sidebar">
-    {% for fieldset in adminform %}
-      {% if fieldset.name == 'Quick Action' or fieldset.name == 'Nice to Know' %}
+      </details>
+    {% endif %}
+  {% endfor %}
+
+  {% for fieldset in adminform %}
+    {% if fieldset.name == 'Skills and Perks' %}
+      <details class="ttt-admin-collapsible">
+        <summary>Skills &amp; Perks</summary>
         {% include "admin/includes/fieldset.html" with fieldset=fieldset %}
-      {% endif %}
-    {% endfor %}
-    {% submit_row %}
-  </div>
+      </details>
+    {% endif %}
+  {% endfor %}
+
+  {% for fieldset in adminform %}
+    {% if fieldset.name == 'Listing Dates and Schedule' %}
+      <details class="ttt-admin-collapsible">
+        <summary>Listing Dates and Schedule</summary>
+        {% include "admin/includes/fieldset.html" with fieldset=fieldset %}
+      </details>
+    {% endif %}
+  {% endfor %}
+
+  {% for fieldset in adminform %}
+    {% if fieldset.name == 'Nice to Know' %}
+      <details class="ttt-admin-collapsible">
+        <summary>Nice to know</summary>
+        {% include "admin/includes/fieldset.html" with fieldset=fieldset %}
+      </details>
+    {% endif %}
+  {% endfor %}
+
+  {% if inline_admin_formsets %}
+    <details class="ttt-admin-collapsible">
+      <summary>Offers</summary>
+      {% for inline_admin_formset in inline_admin_formsets %}
+        {% include inline_admin_formset.opts.template %}
+      {% endfor %}
+    </details>
+  {% endif %}
 </div>
 {% endblock %}
+
+{% block submit_buttons_top %}
+  {% if save_on_top %}
+    {% with show_save_and_add_another=False show_save_and_continue=False %}
+      {% comment %}Temporarily hidden actions: Save and add another, Save and continue editing.{% endcomment %}
+      {% submit_row %}
+    {% endwith %}
+  {% endif %}
+{% endblock %}
+
+{% block submit_buttons_bottom %}
+  {% with show_save_and_add_another=False show_save_and_continue=False %}
+    {% comment %}Temporarily hidden actions: Save and add another, Save and continue editing.{% endcomment %}
+    {% submit_row %}
+  {% endwith %}
+{% endblock %}
+
+{% block inline_field_sets %}{% endblock %}

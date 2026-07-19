@@ -58,7 +58,7 @@ $(document).ready(function () {
         if ($('#flatFeeAmount').length === 0) {
             return false;
         }
-        const value = parseInt($('#flatFeeAmount').val() || '0', 10);
+        const value = parseFloat($('#flatFeeAmount').val() || '0');
         if ($('#flatFeeHourlySlider').length) {
             return value >= 15 && value <= 1000;
         }
@@ -66,17 +66,9 @@ $(document).ready(function () {
     }
 
     function normalizeFlatFeeValue(rawValue) {
-        const parsed = parseInt(rawValue, 10);
+        const parsed = parseFloat(rawValue);
         if (Number.isNaN(parsed)) {
             return null;
-        }
-        if ($('#flatFeeHourlySlider').length) {
-            if (parsed < 15) {
-                return 15;
-            }
-            if (parsed > 1000) {
-                return 1000;
-            }
         }
         if (parsed < 0) {
             return 0;
@@ -234,16 +226,35 @@ $(document).ready(function () {
     });
 
     $('#nextTabButton').on('click', function () {
+        const currentTab = activeTabKey();
+        if (currentTab === 'offer-flat-fee' && $('#flatFeeHourlySlider').length) {
+            const rawValue = ($('#flatFeeAmount').val() || '').trim();
+            if (rawValue !== '') {
+                const typedValue = parseFloat(rawValue);
+                if (Number.isNaN(typedValue) || typedValue < 15 || typedValue > 1000) {
+                    showWarning('warning', 'Hourly flat fee offers must be between $15 and $1000');
+                    return;
+                }
+            }
+        }
         moveTab(1);
     });
 
     $('#skipTabButton').on('click', function () {
         const currentTab = activeTabKey();
         if (currentTab === 'offer-flat-fee' && $('#flatFeeAmount').length) {
-            $('#flatFeeAmount').val('0');
+            $('#flatFeeAmount').val('');
+            if ($('#flatFeeHourlySlider').length) {
+                $('#flatFeeHourlySlider').val(15);
+            }
         }
         if (currentTab === 'offer-fee-split' && $('#feeSplitAmountInput').length) {
-            setFeeSplitValue(0);
+            $('#feeSplitSlider').val(0);
+            $('#feeSplitValue').text('0');
+            $('#feeSplitAmountInput').val('');
+            if ($('#feeSplitAmountTyped').length) {
+                $('#feeSplitAmountTyped').val('');
+            }
         }
         updateSummary();
         moveTab(1);
@@ -267,7 +278,10 @@ $(document).ready(function () {
 
     $('#flatFeeAmount').on('input change', function () {
         if ($('#flatFeeHourlySlider').length && $(this).val() !== '') {
-            setFlatFeeValue($(this).val());
+            const typedValue = parseFloat($(this).val());
+            if (!Number.isNaN(typedValue) && typedValue >= 15 && typedValue <= 1000) {
+                $('#flatFeeHourlySlider').val(typedValue);
+            }
         }
         updateSummary();
         clearWarning();
@@ -314,8 +328,10 @@ $(document).ready(function () {
             }
 
             if ($('#flatFeeHourlySlider').length) {
-                const startingValue = $('#flatFeeAmount').val() || 15;
-                setFlatFeeValue(startingValue);
+                $('#flatFeeHourlySlider').val(15);
+                if (($('#flatFeeAmount').val() || '').trim() !== '') {
+                    setFlatFeeValue($('#flatFeeAmount').val());
+                }
             }
 
             const tabs = enabledOfferTabs();

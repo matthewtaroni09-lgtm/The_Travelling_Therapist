@@ -121,8 +121,6 @@ class AuctionForm(forms.ModelForm):
     desiredFlatFeeHourly = forms.DecimalField(
         label='Desired hourly flat fee (optional)',
         required=False,
-        min_value=15,
-        max_value=1000,
         max_digits=10,
         decimal_places=4,
     )
@@ -186,7 +184,7 @@ class AuctionForm(forms.ModelForm):
             'sundayEnd': forms.TimeInput(attrs={'class': 'form-control', 'placeholder': 'Select a date', 'type': 'time'}),
             'desiredFeeSplitPercentage': forms.NumberInput(attrs={'class': 'form-control', 'min': '1', 'max': '100', 'placeholder': 'e.g. 65'}),
             'minimumCompensation': forms.NumberInput(attrs={'class': 'form-control', 'min': '1', 'placeholder': 'e.g. 75'}),
-            'desiredFlatFeeHourly': forms.NumberInput(attrs={'class': 'form-control', 'min': '15', 'max': '1000', 'step': '0.01', 'placeholder': 'e.g. 80.00'}),
+            'desiredFlatFeeHourly': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'placeholder': 'e.g. 80.00'}),
             'desiredFlatFeeTotalContract': forms.NumberInput(attrs={'class': 'form-control', 'min': '1', 'step': '0.01', 'placeholder': 'e.g. 5000.00'}),
             'comments': forms.Textarea(attrs={'placeholder': 'Tell us about your clinic...', 'rows': '4'})
         }

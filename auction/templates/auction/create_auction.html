@@ -315,7 +315,7 @@
     <form method="post" class="p-2">
       <!-- <form method="post" class="p-md-5"> -->
       <input id="AOPPopulated" name="AOPPopulated" class="d-none" value="No">
-      <h1 class="text-large text-weight-normal mb-5">Create New Listing Post</h1>
+      <h1 class="text-large text-weight-normal mb-5">Create New Listing</h1>
       {% csrf_token %}
       {{ form|as_crispy_errors }}
       <div class="alert alert-block alert-danger">
@@ -434,22 +434,10 @@
                 <label for="id_desiredFlatFeeHourly" class="form-label mb-0">Enter a suggested hourly rate: <span class="ttt-optional-note">(optional)</span></label>
                 <button type="button" class="ttt-info-dot" data-bs-toggle="tooltip" data-bs-placement="top" title="This is a suggestion of an approximate value to guide clinicians. Clinicians are not bound by this value and may submit ANY offer.">i</button>
               </div>
-              <div class="d-flex align-items-center gap-3 flex-wrap">
-                <div class="slidecontainer flex-grow-1" style="min-width: 220px; max-width: 420px;">
-                  <input type="range" min="15" max="1000" step="0.01" value="15" class="slider ttt-compact-slider" id="desiredFlatFeeHourlySlider" style="width: 90%;">
-                  <div class="d-flex justify-content-between mt-1" style="width: 90%;">
-                    <span class="text-muted small">$15/hr</span>
-                    <span class="text-muted small">$1000/hr</span>
-                  </div>
-                </div>
-                <div style="min-width: 160px;">
-                  <label for="id_desiredFlatFeeHourly" class="form-label mb-1">Type your hourly rate</label>
-                  <div class="input-group input-group-sm">
-                    <span class="input-group-text">$</span>
-                    {{ form.desiredFlatFeeHourly }}
-                    <span class="input-group-text">/hr</span>
-                  </div>
-                </div>
+              <div class="input-group input-group-sm" style="max-width: 320px;">
+                <span class="input-group-text">$</span>
+                {{ form.desiredFlatFeeHourly }}
+                <span class="input-group-text">/hr</span>
               </div>
             </div>
             <div id="desiredFlatFeeTotalContainer" class="d-none">
@@ -738,7 +726,7 @@
   </div>
 </div>
 <!-- </div> -->
-<script src="{% static 'auction/create_auction.js' %}?v=20260715-status-and-enddate-v4"></script>
+<script src="{% static 'auction/create_auction.js' %}?v=20260719-create-flatfee-revert-v1"></script>
 <script src="{% static 'auction/textarea.js' %}"></script>
 {% else %}
 <p>You must be logged in to access this page. Please <a href="{% url 'login' %}">login here</a>
