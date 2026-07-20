@@ -23,6 +23,20 @@
     cursor: pointer;
     vertical-align: middle;
   }
+
+  .ttt-profile-carousel {
+    border: 1px solid #dbe4ea;
+    border-radius: 12px;
+    background: #f7fafb;
+    overflow: hidden;
+  }
+
+  .ttt-profile-carousel .carousel-item img {
+    width: 100%;
+    height: clamp(220px, 40vw, 420px);
+    object-fit: contain;
+    background: #ffffff;
+  }
 </style>
 
 {% if user.account.get_split_user_type == 'Clinic' %}
@@ -71,15 +85,46 @@
       <div class="tab-pane fade" id="profile" role="tabpanel">
         <div class="p-3">
           <h2 class="mb-4">Update Profile</h2>
-          {% if user.account.imageOne %}
-          <div class="row mb-3 col-md-4">
-            {% if user.account.imageOne.name == 'default.jpg' %}
-            <img src="/media/images/default.jpg" class="card-img-top card-image" alt="Clinic" onerror="this.src='/media/images/no-image.jpg';">
-            {% else %}
-            <img src="/media/{{ user.account.imageOne }}" class="card-img-top card-image" alt="Clinic" onerror="this.src='/media/images/no-image.jpg';">
-            {% endif %}
+          <div id="clinicProfileImageCarousel" class="carousel slide mb-3 ttt-profile-carousel" data-bs-ride="false">
+            <div class="carousel-inner">
+              <div class="carousel-item active">
+                {% if user.account.imageOne %}
+                <img src="/media/{{ user.account.imageOne }}" alt="Clinic image 1" onerror="this.src='/media/images/no-image.jpg';">
+                {% else %}
+                <img src="/media/images/no-image.jpg" alt="Clinic image unavailable">
+                {% endif %}
+              </div>
+              <div class="carousel-item">
+                {% if user.account.imageTwo %}
+                <img src="/media/{{ user.account.imageTwo }}" alt="Clinic image 2" onerror="this.src='/media/images/no-image.jpg';">
+                {% else %}
+                <img src="/media/images/no-image.jpg" alt="Clinic image unavailable">
+                {% endif %}
+              </div>
+              <div class="carousel-item">
+                {% if user.account.imageThree %}
+                <img src="/media/{{ user.account.imageThree }}" alt="Clinic image 3" onerror="this.src='/media/images/no-image.jpg';">
+                {% else %}
+                <img src="/media/images/no-image.jpg" alt="Clinic image unavailable">
+                {% endif %}
+              </div>
+              <div class="carousel-item">
+                {% if user.account.imageFour %}
+                <img src="/media/{{ user.account.imageFour }}" alt="Clinic image 4" onerror="this.src='/media/images/no-image.jpg';">
+                {% else %}
+                <img src="/media/images/no-image.jpg" alt="Clinic image unavailable">
+                {% endif %}
+              </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#clinicProfileImageCarousel" data-bs-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#clinicProfileImageCarousel" data-bs-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Next</span>
+            </button>
           </div>
-          {% endif %}
           <div class="row">
             <h5>User Type: {{user.account.userType}}</h5>
             <form method="post" enctype="multipart/form-data" class="d-flex flex-column gap-3">

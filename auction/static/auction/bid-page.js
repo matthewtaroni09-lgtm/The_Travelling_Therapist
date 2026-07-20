@@ -14,6 +14,7 @@ $(document).ready(function () {
     let auctionEnd = "";
     const confirmButton = document.getElementById('confirmBidButton');
     const confirmTooltipWrap = document.getElementById('confirmBidTooltipWrap');
+    const confirmTooltipText = 'You must enter at least one offer before confirming.';
     let confirmDisabledTooltip = null;
 
     if (window.bootstrap) {
@@ -168,10 +169,17 @@ $(document).ready(function () {
             if (confirmButton.disabled) {
                 confirmTooltipWrap.setAttribute('tabindex', '0');
                 confirmTooltipWrap.setAttribute('data-bs-toggle', 'tooltip');
+                confirmTooltipWrap.setAttribute('title', confirmTooltipText);
+                confirmTooltipWrap.style.pointerEvents = 'auto';
+                confirmDisabledTooltip.enable();
             }
             else {
                 confirmDisabledTooltip.hide();
+                confirmDisabledTooltip.disable();
                 confirmTooltipWrap.removeAttribute('tabindex');
+                confirmTooltipWrap.removeAttribute('data-bs-toggle');
+                confirmTooltipWrap.removeAttribute('title');
+                confirmTooltipWrap.style.pointerEvents = 'auto';
             }
         }
     }
@@ -186,6 +194,7 @@ $(document).ready(function () {
         $('#backTabButton').toggle(index > 0);
         $('#nextTabButton').toggle(!isFinalize);
         $('#skipTabButton').toggle(!isFinalize && !singleOfferTab);
+        $('#confirmBidTooltipWrap').toggle(isFinalize);
         $('#confirmBidButton').toggle(isFinalize);
         $('#offerFaqHelper').toggle(!isFinalize);
 

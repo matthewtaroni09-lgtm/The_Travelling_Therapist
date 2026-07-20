@@ -1,7 +1,7 @@
 {% extends 'auction/base.html' %}
 {% load static %}
 {% block content %}
-<p id="pageTitle" class="d-none">Pricing</p>
+<p id="pageTitle" class="d-none">Pricing at The Traveling Therapist</p>
 
 <style>
   .ttt-pricing-page {
@@ -234,8 +234,42 @@
 
   .ttt-stream-grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: 1fr;
     gap: 1rem;
+  }
+
+  .ttt-top-horizontal {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 1rem;
+    align-items: stretch;
+  }
+
+  .ttt-top-horizontal-clinic-focus {
+    grid-template-columns: 1fr 1.7fr;
+  }
+
+  .ttt-side-image-wrap {
+    border: 1px solid #d7e6e1;
+    border-radius: 14px;
+    overflow: hidden;
+    min-height: 260px;
+    background: #f3f8f6;
+  }
+
+  .ttt-side-image-wrap img {
+    width: 100%;
+    height: 100%;
+    min-height: 260px;
+    object-fit: cover;
+    display: block;
+  }
+
+  .ttt-half-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    align-items: stretch;
   }
 
   .ttt-panel {
@@ -359,6 +393,8 @@
     .ttt-pricing-highlight-list,
     .ttt-hero-mini-grid,
     .ttt-stream-grid,
+    .ttt-top-horizontal,
+    .ttt-half-split,
     .ttt-case-grid,
     .ttt-case-grid-three,
     .ttt-dual-referral-grid {
@@ -399,11 +435,6 @@
       <div class="ttt-hero-copy">
         <p class="ttt-page-title mb-2">Transparent, No-Risk Pricing Built for Healthcare</p>
         <p class="ttt-transparency-kicker mb-3">We believe in full transparency for both Clinicians and Clinics here at The Traveling Therapist!</p>
-        <ul class="ttt-pricing-highlight-list">
-          <li><strong>Clinicians</strong> Browse and bid for free. Keep your full rate.</li>
-          <li><strong>Facilities</strong> Post for free. Pay only when a match is accepted.</li>
-          <li><strong>Clear outcomes</strong> No hidden fees, no confusing upsells, no surprise add-ons.</li>
-          <li><strong>Easy comparison</strong> See the scenarios side by side before you commit.</li>
         </ul>
         <h1 class="ttt-pricing-headline mt-4 pt-2">Who Are We Pricing For?</h1>
         <div class="ttt-stream-switch" role="tablist" aria-label="Pricing audience switch">
@@ -428,17 +459,18 @@
 
   <section id="clinicianStream" class="ttt-audience-stream is-visible" data-stream="clinician" aria-labelledby="streamClinicianBtn">
     <div class="ttt-stream-grid">
-      <div class="ttt-panel ttt-panel-pop">
-        <h2 class="h4 mb-2">Clinicians / Healthcare Professionals</h2>
-        <p class="ttt-muted-lead">Browsing, matching, and scaling your career is 100% free.</p>
-        <div class="ttt-value-card">
+      <div class="ttt-panel ttt-panel-pop ttt-top-horizontal">
+        <div>
+          <h2 class="h4 mb-2">Clinicians / Healthcare Professionals</h2>
+          <p class="ttt-muted-lead">Browsing, matching, and scaling your career is 100% free.</p>
+          <p class="fst-italic mb-2">Wondering how The Traveling Therapist makes money?</p>
+          <p class="mb-2">We invoice the healthcare facilities for a platform premium on top of your rate. They pay for the software solution and you keep 100% of your clinical revenue.</p>
+        </div>
+        <div class="ttt-value-card my-0">
           <h3>Your Cost As a Clinician</h3>
           <p class="ttt-value-cost">$0</p>
           <p class="mb-0">We never shave down your hourly contractor rates or charge you a subscription to browse shifts. You keep every dollar of your contract rate.</p>
         </div>
-        <p class="fst-italic mb-2">Wondering how The Traveling Therapist makes money?</p>
-        <p class="mb-2">We invoice the healthcare facilities for a platform premium on top of your rate. They pay for the software solution and you keep 100% of your clinical revenue.</p>
-        <a class="ttt-pricing-link" href="{% url 'benefits' %}">Learn about other premium benefits of Traveling Therapist for clinicians here</a>
       </div>
 
       <div class="ttt-panel ttt-panel-pop">
@@ -469,13 +501,18 @@
         </div>
       </div>
 
-      <div class="ttt-panel ttt-panel-pop">
-        <h3 class="h5 mb-2">Why Use The Traveling Therapist Instead of a Direct Personal Referral?</h3>
-        <p class="mb-2"><strong>The logical next question:</strong> &quot;If I keep 100% of my rate either way, why shouldn't I just find coverage shifts through my personal network?&quot;</p>
-        <p class="ttt-value-card mb-2">When you accept an informal referral shift, you are on your own to negotiate terms, manage invoicing, and chase communication. Any breakdown can risk a dropped contract and lost income.</p>
-        <p class="fst-italic mb-2">Traveling Therapist gives you a smoother, more guided path while still protecting your pay.</p>
-        <p class="mb-2">Your contract is fully secured. You get the same 100% payout with less administrative headache.</p>
-        <a class="ttt-pricing-link" href="{% url 'referrals-and-networks' %}">See How The Traveling Therapist Streamlines Referrals vs. Going Solo</a>
+      <div class="ttt-panel ttt-panel-pop ttt-half-split">
+        <div>
+          <h3 class="h5 mb-2">Why Use The Traveling Therapist Instead of a Direct Personal Referral?</h3>
+          <p class="mb-2"><strong>The logical next question:</strong> &quot;If I keep 100% of my rate either way, why shouldn't I just find coverage shifts through my personal network?&quot;</p>
+          <p class="ttt-value-card mb-2">When you accept an informal referral shift, you are on your own to negotiate terms, manage invoicing, and chase communication. Any breakdown can risk a dropped contract and lost income.</p>
+          <p class="fst-italic mb-2">Traveling Therapist gives you a smoother, more guided path while still protecting your pay.</p>
+          <p class="mb-2">Your contract is fully secured. You get the same 100% payout with less administrative headache.</p>
+          <a class="ttt-pricing-link" href="{% url 'referrals-and-networks' %}">See How The Traveling Therapist Streamlines Referrals vs. Going Solo</a>
+        </div>
+        <div class="ttt-side-image-wrap">
+          <img src="/media/images/pricing_page_clinician.png" alt="Clinician pricing comparison" onerror="this.src='/media/images/default.jpg';">
+        </div>
       </div>
 
       <div class="ttt-panel ttt-panel-pop">
@@ -518,15 +555,17 @@
 
   <section id="facilityStream" class="ttt-audience-stream" data-stream="facility" aria-labelledby="streamFacilityBtn" hidden>
     <div class="ttt-stream-grid">
-      <div class="ttt-panel ttt-panel-pop">
-        <h2 class="h4 mb-2">Clinics / Healthcare Facilities</h2>
-        <p class="ttt-muted-lead">Protect your revenue. Pay only for results.</p>
-        <div class="ttt-value-card">
+      <div class="ttt-panel ttt-panel-pop ttt-top-horizontal ttt-top-horizontal-clinic-focus">
+        <div>
+          <h2 class="h4 mb-2">Clinics / Healthcare Facilities</h2>
+          <p class="ttt-muted-lead">Protect your revenue. Pay only for results.</p>
+          <p class="mb-0">We charge a max of $5,000 + HST/tax per transaction for large listings and a $300 + HST/tax minimum.</p>
+        </div>
+        <div class="ttt-value-card my-0">
           <h3>Your Cost As a Clinic</h3>
           <p class="ttt-value-cost">Predictable, Success-Based Premium (5% Flat Fee)</p>
           <p class="mb-0">Posting listings and browsing offers is free. A transparent 5% platform fee is applied only when a contract offer is successfully accepted and communicated.</p>
         </div>
-        <p class="mb-0">We charge a max of $5,000 + HST/tax per transaction for large listings and a $300 + HST/tax minimum.</p>
       </div>
 
       <div class="ttt-panel ttt-panel-pop">
@@ -565,14 +604,19 @@
         </div>
       </div>
 
-      <div class="ttt-panel ttt-panel-pop">
-        <h3 class="h4 mb-2">The Safety Net</h3>
-        <p class="fst-italic mb-2">The Traveling Therapist is built on charging your facility $0 for the early steps.</p>
-        <ul class="ttt-safety-list">
-          <li>Post listings at no initial cost.</li>
-          <li>Log in and review local clinician offers and pricing.</li>
-          <li>If a temporary The Traveling Therapist clinician fits your clinic culture and you choose to hire them full-time, onboarding them is not charged with any fees.</li>
-        </ul>
+      <div class="ttt-panel ttt-panel-pop ttt-half-split">
+        <div>
+          <h3 class="h4 mb-2">The Safety Net</h3>
+          <p class="fst-italic mb-2">The Traveling Therapist is built on charging your facility $0 for the early steps.</p>
+          <ul class="ttt-safety-list">
+            <li>Post listings at no initial cost.</li>
+            <li>Log in and review local clinician offers and pricing.</li>
+            <li>If a temporary The Traveling Therapist clinician fits your clinic culture and you choose to hire them full-time, onboarding them is not charged with any fees.</li>
+          </ul>
+        </div>
+        <div class="ttt-side-image-wrap">
+          <img src="/media/images/pricing_page_clinic.png" alt="Facility pricing safety net" onerror="this.src='/media/images/default.jpg';">
+        </div>
       </div>
 
       <div class="ttt-panel ttt-panel-pop">

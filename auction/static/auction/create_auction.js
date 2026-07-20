@@ -157,6 +157,17 @@ const NON_REGULATED_TYPE_KEYWORDS = [
     'dental assistant',
 ];
 
+const NON_REGULATED_BASE_SKILLS = [
+    'Practice Insurance',
+    'First Aid/CPR/AED',
+    'Hospital/Long Term Care/Retirement Home Experience',
+    'Home care Experience',
+    'Orthopedics Experience',
+    'Geriatrics Experience',
+    'Sports Experience',
+    "Women's Health & Pelvic Health Experience",
+];
+
 function escapeHtml(value) {
     return String(value)
         .replace(/&/g, '&amp;')
@@ -256,10 +267,8 @@ function populateRequiredSkillsByClinicianType() {
 
     const skillKey = resolveClinicianSkillKey(typeLabel);
     let skillRows = REQUIRED_SKILLS_BY_TYPE[skillKey] || REQUIRED_SKILLS_BY_TYPE.default;
-    if (skillKey === 'default' && !shouldIncludeLicenseSkill(typeLabel)) {
-        skillRows = skillRows.filter(function (name) {
-            return name !== 'Canadian License to Practice';
-        });
+    if (!shouldIncludeLicenseSkill(typeLabel)) {
+        skillRows = NON_REGULATED_BASE_SKILLS;
     }
     const markup = skillRows.map(function (itemName, i) {
         return buildStandardSkillRow(itemName, i + 1);
@@ -485,12 +494,6 @@ function syncOfferGuidanceUI(selectedPaymentTypes) {
     if (!showTotalGuidance) {
         $('#id_desiredFlatFeeTotalContract').val('');
     }
-    else if ($('#id_desiredFlatFeeTotalContract').val() !== '') {
-        const totalValue = normalizeCurrencyValue($('#id_desiredFlatFeeTotalContract').val(), 1, null);
-        if (totalValue !== null) {
-            setCurrencyFieldValue('#id_desiredFlatFeeTotalContract', null, totalValue);
-        }
-    }
 }
 
 function normalizeCurrencyValue(rawValue, minValue, maxValue) {
@@ -646,10 +649,6 @@ $(document).ready(function () {
     $('#id_desiredFlatFeeTotalContract').on('input change', function () {
         if ($(this).val() === '') {
             return;
-        }
-        const value = normalizeCurrencyValue($(this).val(), 1, null);
-        if (value !== null) {
-            setCurrencyFieldValue('#id_desiredFlatFeeTotalContract', null, value);
         }
     });
 
@@ -997,7 +996,7 @@ $("#submitButton").click(function () {
     }
 
     if (getSelectedPaymentTypes().includes('Flat Fee') && getSelectedFlatFeeType() === 'total_contract' && desiredFlatFeeTotalContract !== '') {
-        setCurrencyFieldValue('#id_desiredFlatFeeTotalContract', null, desiredFlatFeeTotalContract);
+        // Intentionally no client-side clamping/rewriting for total contract guidance.
     }
 
     /* Deprecated fee split assessment/treatment validation retained in source for reference.

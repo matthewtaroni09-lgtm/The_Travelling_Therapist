@@ -94,6 +94,17 @@ class AuctionPaymentTypeFormTests(TestCase):
 		self.assertEqual(auction.desiredFlatFeeHourly, 90)
 		self.assertIsNone(auction.desiredFlatFeeTotalContract)
 
+	def test_total_contract_guidance_accepts_six_digit_values(self):
+		data = self._base_form_data()
+		data['paymentTypesSelection'] = ['Flat Fee']
+		data['flatFeeType'] = 'total_contract'
+		data['desiredFlatFeeTotalContract'] = '100000'
+		form = AuctionForm(data=data)
+
+		self.assertTrue(form.is_valid(), form.errors)
+		auction = form.save(commit=False)
+		self.assertEqual(str(auction.desiredFlatFeeTotalContract), '100000.00')
+
 	def test_restricted_user_type_cannot_select_fee_split(self):
 		data = self._base_form_data()
 		data['type'] = self.restricted_clinician_user_type.pk

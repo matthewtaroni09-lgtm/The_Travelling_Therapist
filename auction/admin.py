@@ -7,7 +7,7 @@ from django.contrib import messages
 from django.http import BadHeaderError, HttpResponse
 from django.shortcuts import redirect
 from django.urls import path, reverse
-from django.utils.html import format_html
+from django.utils.html import format_html, format_html_join
 from django.db import models as django_models
 from .models import Auction, Bid, Account, PayFrequency, PracticeArea, PracticeAreaType, ProMember, UserType, Demographic, DemographicType, ProMember, AdminSetting, Page, PopupMessage, MessageAcknowledgement, PaymentType, Number, Raffle, RaffleEntry, Referral, RaffleTicket
 from django.contrib.auth.models import User
@@ -66,7 +66,7 @@ class AuctionAdmin(admin.ModelAdmin):
             'fields': ('paymentTypes', 'paymentTypesSelection', 'flatFeeType', 'desiredFeeSplitPercentage', 'minimumCompensation', 'desiredFlatFeeHourly', 'desiredFlatFeeTotalContract', 'winner', 'winningPrice'),
         }),
         ('Skills and Perks', {
-            'fields': ('required_skills_display', 'negotiable_perks_display', 'requiredSkills', 'negotiablePerks'),
+            'fields': ('required_skills_display', 'negotiable_perks_display'),
         }),
         ('Nice to Know', {
             'fields': ('createdBy', 'modified', 'modifiedBy'),
@@ -160,7 +160,27 @@ class AuctionAdmin(admin.ModelAdmin):
         rows = obj.get_required_skill_rows()
         if len(rows) == 0:
             return 'None'
-        return '\n'.join([f"{row['name']} ({row['requirement']})" for row in rows])
+
+        required_items = [row['name'] for row in rows if str(row.get('requirement', '')).lower() == 'required']
+        preferred_items = [row['name'] for row in rows if str(row.get('requirement', '')).lower() != 'required']
+
+        required_html = format_html_join('', '<li>{}</li>', ((item,) for item in required_items)) if required_items else format_html('<li>-</li>')
+        preferred_html = format_html_join('', '<li>{}</li>', ((item,) for item in preferred_items)) if preferred_items else format_html('<li>-</li>')
+
+        return format_html(
+            '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:840px;">'
+            '<div style="border:1px solid #d7dce2;border-radius:6px;padding:8px;">'
+            '<p style="margin:0 0 6px;font-weight:600;">Required</p>'
+            '<ul style="margin:0;padding-left:18px;">{}</ul>'
+            '</div>'
+            '<div style="border:1px solid #d7dce2;border-radius:6px;padding:8px;">'
+            '<p style="margin:0 0 6px;font-weight:600;">Preferred</p>'
+            '<ul style="margin:0;padding-left:18px;">{}</ul>'
+            '</div>'
+            '</div>',
+            required_html,
+            preferred_html,
+        )
 
     required_skills_display.short_description = 'Required Skills Summary'
 
@@ -168,10 +188,38 @@ class AuctionAdmin(admin.ModelAdmin):
         rows = obj.get_private_perk_rows()
         if len(rows) == 0:
             return 'None'
-        return '\n'.join([
-            f"{row['name']} | Amount: ${row['amount']} | Details: {row['details'] or '-'}"
-            for row in rows
-        ])
+
+        row_tuples = []
+        for row in rows:
+            amount_text = f"${row['amount']}" if row.get('amount', 0) > 0 else 'N/A'
+            details_text = row.get('details') or '-'
+            row_tuples.append((row['name'], amount_text, details_text))
+
+        body_html = format_html_join(
+            '',
+            '<tr>'
+            '<td style="padding:6px 8px;border-top:1px solid #d7dce2;">{}</td>'
+            '<td style="padding:6px 8px;border-top:1px solid #d7dce2;">{}</td>'
+            '<td style="padding:6px 8px;border-top:1px solid #d7dce2;">{}</td>'
+            '</tr>',
+            row_tuples,
+        )
+
+        return format_html(
+            '<div style="overflow-x:auto;max-width:840px;">'
+            '<table style="width:100%;border:1px solid #d7dce2;border-radius:6px;border-collapse:separate;border-spacing:0;">'
+            '<thead>'
+            '<tr>'
+            '<th style="text-align:left;padding:7px 8px;">Perk</th>'
+            '<th style="text-align:left;padding:7px 8px;">Value</th>'
+            '<th style="text-align:left;padding:7px 8px;">Description</th>'
+            '</tr>'
+            '</thead>'
+            '<tbody>{}</tbody>'
+            '</table>'
+            '</div>',
+            body_html,
+        )
 
     negotiable_perks_display.short_description = 'Negotiable Perks Summary'
 
