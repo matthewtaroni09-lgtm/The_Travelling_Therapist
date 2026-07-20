@@ -1,4 +1,5 @@
 from asyncio.format_helpers import _format_args_and_kwargs
+from decimal import Decimal, InvalidOperation, ROUND_HALF_UP
 import re
 from unicodedata import category
 import uuid
@@ -114,7 +115,7 @@ CLINICIAN_SKILL_OPTIONS_BY_TYPE = {
     ],
 }
 
-DEFAULT_OTHER_CLINICIAN_SKILL_OPTIONS = [
+DEFAULT_REGULATED_CLINICIAN_SKILL_OPTIONS = [
     'Canadian License to Practice',
     'Practice Insurance',
     'First Aid/CPR/AED',
@@ -126,13 +127,25 @@ DEFAULT_OTHER_CLINICIAN_SKILL_OPTIONS = [
     "Women's Health & Pelvic Health Experience",
 ]
 
-DEFAULT_OTHER_CLINICIAN_SKILL_OPTIONS_LOWER = {name.lower() for name in DEFAULT_OTHER_CLINICIAN_SKILL_OPTIONS}
+DEFAULT_NON_REGULATED_CLINICIAN_SKILL_OPTIONS = [
+    'Practice Insurance',
+    'First Aid/CPR/AED',
+    'Hospital/Long Term Care/Retirement Home Experience',
+    'Homecare Experience',
+    'Orthopedics Experience',
+    'Geriatrics Experience',
+    'Sports Experience',
+    "Women's Health & Pelvic Health Experience",
+]
+
+DEFAULT_REGULATED_CLINICIAN_SKILL_OPTIONS_LOWER = {name.lower() for name in DEFAULT_REGULATED_CLINICIAN_SKILL_OPTIONS}
 
 NON_REGULATED_CLINICIAN_KEYWORDS = [
     'dietary aide',
     'pta',
     'ota',
     'rehab assistant',
+    'personal support worker',
     'psw',
     'recreation therapist',
     'dental assistant',
@@ -171,21 +184,24 @@ def include_license_skill_for_type(type_label):
 
 
 def get_clinician_skill_options_for_type(type_label):
+    if not include_license_skill_for_type(type_label):
+        return list(DEFAULT_NON_REGULATED_CLINICIAN_SKILL_OPTIONS)
+
     skill_key = resolve_clinician_skill_key(type_label)
     if skill_key in CLINICIAN_SKILL_OPTIONS_BY_TYPE:
         return list(CLINICIAN_SKILL_OPTIONS_BY_TYPE[skill_key])
 
-    options = list(DEFAULT_OTHER_CLINICIAN_SKILL_OPTIONS)
-    if not include_license_skill_for_type(type_label):
-        options = [name for name in options if name != 'Canadian License to Practice']
-    return options
+    return list(DEFAULT_REGULATED_CLINICIAN_SKILL_OPTIONS)
 
 
 def suppress_legacy_default_skill_for_type(type_label, skill_name):
+    if not include_license_skill_for_type(type_label) and _clean_text(skill_name).lower() == 'canadian license to practice':
+        return True
+
     skill_key = resolve_clinician_skill_key(type_label)
     if skill_key not in ('physio', 'pta', 'rmt'):
         return False
-    return _clean_text(skill_name).lower() in DEFAULT_OTHER_CLINICIAN_SKILL_OPTIONS_LOWER
+    return _clean_text(skill_name).lower() in DEFAULT_REGULATED_CLINICIAN_SKILL_OPTIONS_LOWER
 
 
 def parse_required_skills_payload(raw_payload):
@@ -843,6 +859,7 @@ def view_auction(request, auction_id):
 
                 grouped_offers[submission_key] = {
                     'hcp_initials': initials,
+                    'row_dom_id': re.sub(r'[^a-zA-Z0-9_-]', '-', submission_key),
                     'submitted_at': bid.created,
                     'fee_split_offer': None,
                     'fee_split_bid_id': None,
@@ -929,11 +946,23 @@ def view_auction(request, auction_id):
         current_lowest_bid_user = bids[0].user if len(bids) > 0 else None
         selected_offer_skills = parse_offer_selected_skills_payload(request.POST.get('offerSelectedSkillsPayload', '[]'))
 
-        if allow_flat_fee and flat_fee_raw:
+        def parse_offer_amount(raw_value):
+            if raw_value in (None, ''):
+                return None
             try:
-                flat_fee_amount = int(flat_fee_raw)
-                if flat_fee_amount <= 0:
-                    errors.append('Flat fee offers must be greater than $0.')
+                decimal_value = Decimal(str(raw_value))
+            except (InvalidOperation, ValueError, TypeError):
+                return 'invalid'
+            rounded_value = decimal_value.quantize(Decimal('1'), rounding=ROUND_HALF_UP)
+            return int(rounded_value)
+
+        if allow_flat_fee and flat_fee_raw:
+            flat_fee_amount = parse_offer_amount(flat_fee_raw)
+            if flat_fee_amount == 'invalid':
+                errors.append('Flat fee offers must be valid numbers.')
+            elif flat_fee_amount is not None and flat_fee_amount > 0:
+                if auction.flatFeeType == 'hourly' and (flat_fee_amount < 15 or flat_fee_amount > 1000):
+                    errors.append('Hourly flat fee offers must be between $15 and $1000.')
                 else:
                     bids_to_create.append(Bid(
                         auction=auction,
@@ -945,15 +974,13 @@ def view_auction(request, auction_id):
                         active=True,
                         createdBy=request.user,
                     ))
-            except ValueError:
-                errors.append('Flat fee offers must be whole numbers.')
 
         if allow_fee_split and fee_split_raw:
-            try:
-                fee_split_amount = int(fee_split_raw)
-                if fee_split_amount <= 0:
-                    errors.append('Fee split offers must be greater than 0%.')
-                elif fee_split_amount > 100:
+            fee_split_amount = parse_offer_amount(fee_split_raw)
+            if fee_split_amount == 'invalid':
+                errors.append('Fee split offers must be valid numbers.')
+            elif fee_split_amount is not None and fee_split_amount > 0:
+                if fee_split_amount > 100:
                     errors.append('Fee split offers must be less than or equal to 100%.')
                 else:
                     bids_to_create.append(Bid(
@@ -966,8 +993,6 @@ def view_auction(request, auction_id):
                         active=True,
                         createdBy=request.user,
                     ))
-            except ValueError:
-                errors.append('Fee split offers must be whole numbers.')
 
         if len(bids_to_create) == 0:
             errors.append('Please enter at least one offer before confirming.')

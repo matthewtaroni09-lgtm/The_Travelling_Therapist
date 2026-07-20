@@ -128,9 +128,9 @@ class AuctionForm(forms.ModelForm):
     desiredFlatFeeTotalContract = forms.DecimalField(
         label='Desired total contract flat fee (optional)',
         required=False,
-        min_value=1,
         max_digits=10,
-        decimal_places=4,
+        decimal_places=2,
+        min_value=0,
     )
 
     class Meta:
@@ -185,7 +185,7 @@ class AuctionForm(forms.ModelForm):
             'desiredFeeSplitPercentage': forms.NumberInput(attrs={'class': 'form-control', 'min': '1', 'max': '100', 'placeholder': 'e.g. 65'}),
             'minimumCompensation': forms.NumberInput(attrs={'class': 'form-control', 'min': '1', 'placeholder': 'e.g. 75'}),
             'desiredFlatFeeHourly': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'placeholder': 'e.g. 80.00'}),
-            'desiredFlatFeeTotalContract': forms.NumberInput(attrs={'class': 'form-control', 'min': '1', 'step': '0.01', 'placeholder': 'e.g. 5000.00'}),
+            'desiredFlatFeeTotalContract': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'placeholder': 'e.g. 5000.00'}),
             'comments': forms.Textarea(attrs={'placeholder': 'Tell us about your clinic...', 'rows': '4'})
         }
 
@@ -318,10 +318,10 @@ class AuctionForm(forms.ModelForm):
             cleaned_data['desiredFlatFeeTotalContract'] = Decimal(str(desired_flat_fee_total_contract)).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
 
         if desired_flat_fee_hourly is not None and ('Flat Fee' not in payment_types or flat_fee_type != 'hourly'):
-            error_list.append(ValidationError('Desired hourly flat fee guidance can only be set when Flat Fee (Hourly) is selected.'))
+            cleaned_data['desiredFlatFeeHourly'] = None
 
         if desired_flat_fee_total_contract is not None and ('Flat Fee' not in payment_types or flat_fee_type != 'total_contract'):
-            error_list.append(ValidationError('Desired total contract flat fee guidance can only be set when Flat Fee (Total Contract Price) is selected.'))
+            cleaned_data['desiredFlatFeeTotalContract'] = None
 
         if len(error_list) > 0:
             raise forms.ValidationError(error_list)

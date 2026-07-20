@@ -8,47 +8,63 @@
 <div class="container mt-3 mb-5">
   <h1 class="text-weight-bold">{{ auction.clinic.clinicName }}</h1>
   <h2 class="text-weight-light">{{ auction.type }}</h2>
-  <!-- Carousel -->
-  <!-- 350 x 280 -->
-  <div id="carouselExampleIndicators" class="carousel slide my-3 d-sm-none" data-bs-ride="carousel">
-    <div class="carousel-indicators">
-      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active"
-        aria-current="true" aria-label="Slide 1"></button>
-      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"
-        aria-label="Slide 2"></button>
-      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"
-        aria-label="Slide 3"></button>
-      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="3"
-        aria-label="Slide 4"></button>
-    </div>
+  <style>
+    .ttt-listing-carousel {
+      border: 1px solid #dce5ea;
+      border-radius: 14px;
+      background: #f8fafb;
+      overflow: hidden;
+    }
+    .ttt-listing-carousel .carousel-item img {
+      width: 100%;
+      height: clamp(280px, 52vw, 620px);
+      object-fit: contain;
+      background: #fff;
+    }
+  </style>
+
+  <div id="listingImageCarousel" class="carousel slide my-3 ttt-listing-carousel" data-bs-ride="false">
     <div class="carousel-inner">
       <div class="carousel-item active">
-        <img src="/media/{{ auction.clinic.imageOne }}" class="d-block w-100" alt="Clinic 1">
+        {% if auction.clinic.imageOne %}
+        <img src="/media/{{ auction.clinic.imageOne }}" alt="Clinic image 1" onerror="this.src='/media/images/no-image.jpg';">
+        {% else %}
+        <img src="/media/images/no-image.jpg" alt="Clinic image unavailable">
+        {% endif %}
       </div>
       <div class="carousel-item">
-        <img src="/media/{{ auction.clinic.imageTwo }}" class="d-block w-100" alt="Clinic 2">
+        {% if auction.clinic.imageTwo %}
+        <img src="/media/{{ auction.clinic.imageTwo }}" alt="Clinic image 2" onerror="this.src='/media/images/no-image.jpg';">
+        {% else %}
+        <img src="/media/images/no-image.jpg" alt="Clinic image unavailable">
+        {% endif %}
       </div>
       <div class="carousel-item">
-        <img src="/media/{{ auction.clinic.imageThree }}" class="d-block w-100" alt="Clinic 3">
+        {% if auction.clinic.imageThree %}
+        <img src="/media/{{ auction.clinic.imageThree }}" alt="Clinic image 3" onerror="this.src='/media/images/no-image.jpg';">
+        {% else %}
+        <img src="/media/images/no-image.jpg" alt="Clinic image unavailable">
+        {% endif %}
       </div>
       <div class="carousel-item">
-        <img src="/media/{{ auction.clinic.imageFour }}" class="d-block w-100" alt="Clinic 4">
+        {% if auction.clinic.imageFour %}
+        <img src="/media/{{ auction.clinic.imageFour }}" alt="Clinic image 4" onerror="this.src='/media/images/no-image.jpg';">
+        {% else %}
+        <img src="/media/images/no-image.jpg" alt="Clinic image unavailable">
+        {% endif %}
       </div>
     </div>
-    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
-      data-bs-slide="prev">
+    <button class="carousel-control-prev" type="button" data-bs-target="#listingImageCarousel" data-bs-slide="prev">
       <span class="carousel-control-prev-icon" aria-hidden="true"></span>
       <span class="visually-hidden">Previous</span>
     </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
-      data-bs-slide="next">
+    <button class="carousel-control-next" type="button" data-bs-target="#listingImageCarousel" data-bs-slide="next">
       <span class="carousel-control-next-icon" aria-hidden="true"></span>
       <span class="visually-hidden">Next</span>
     </button>
   </div>
-
-  <div class="d-flex">
-    <section class="d-inline-flex align-items-center text-white bg-dark py-2 px-3 me-3 rounded mb-4 mb-md-0">
+  <div class="d-flex align-items-start flex-wrap gap-2 mb-3">
+    <section class="d-inline-flex align-items-center text-white bg-dark py-2 px-3 me-3 rounded mb-0">
       {% if auction.is_effectively_closed %}
       {% if auction.get_winning_offer_symbol == '%' %}
       <span class="ttt-stat-coin ttt-stat-percent-circle me-2" style="top: 1px;">%</span>
@@ -338,13 +354,13 @@
                   </div>
                   <div class="col-12 col-lg-2 d-flex justify-content-lg-end align-items-center gap-2">
                     <div class="small text-muted text-nowrap">Required {{ row.skill_match.required_met|length }}/{{ row.skill_match.required_total }} Preferred {{ row.skill_match.preferred_met|length }}/{{ row.skill_match.preferred_total }}</div>
-                    <button class="btn btn-sm btn-light d-inline-flex align-items-center review-row-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#reviewRow{{ forloop.counter }}" aria-expanded="false" aria-controls="reviewRow{{ forloop.counter }}">
+                    <button class="btn btn-sm btn-light d-inline-flex align-items-center review-row-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#reviewRow{{ row.row_dom_id }}" aria-expanded="false" aria-controls="reviewRow{{ row.row_dom_id }}">
                       <span class="material-icons">chevron_right</span>
                     </button>
                   </div>
                 </div>
 
-                <div class="collapse mt-2" id="reviewRow{{ forloop.counter }}" data-bs-parent="#reviewOfferAccordion">
+                <div class="collapse mt-2" id="reviewRow{{ row.row_dom_id }}">
                   <div class="row g-2">
                     <div class="col-lg-7">
                       <div class="border rounded p-2 h-100">
@@ -410,29 +426,7 @@
 
   </div>
 
-  <!-- Static Images -->
-  <div class="row d-none d-sm-inline-flex my-3">
-    <div class="col-9">
-      {% if auction.clinic.imageOne %}
-      <img src="/media/{{ auction.clinic.imageOne }}" class="img-fluid pt-3" alt="Image of Clinic"
-        style="height: 600px;width: 990px;object-fit: contain;">
-      {% else %}
-      <img src="/media/images/no-image.jpg" class="card-img-top card-image" alt="Image of Clinic">
-      {% endif %}
-    </div>
-    <div class="col-3">
-      {% if auction.clinic.imageTwo %}
-      <img src="/media/{{ auction.clinic.imageTwo }}" class="img-fluid pt-3 side-image" alt="Image of Clinic">
-      {% endif %}
-      {% if auction.clinic.imageThree %}
-      <img src="/media/{{ auction.clinic.imageThree }}" class="img-fluid pt-3 side-image" alt="Image of Clinic">
-      {% endif %}
-      {% if auction.clinic.imageFour %}
-      <img src="/media/{{ auction.clinic.imageFour }}" class="img-fluid pt-3 side-image" alt="Image of Clinic">
-      {% endif %}
-    </div>
-  </div>
-  <!-- Image Section End -->
+
 
   <div class="row w-100 mx-auto">
     <p class="col-md-4 col-sm-6 text-weight-bold border mb-0 py-2 bg-light">Clinic Name</p>
@@ -557,7 +551,7 @@
   <p class="text-weight-light">{{ auction.comments|linebreaksbr }}</p>
 </div>
 
-<script src="{% static 'auction/bid-page.js' %}?v=20260719-flatfee-next-guard-v1"></script>
+<script src="{% static 'auction/bid-page.js' %}?v=20260719-confirm-click-fix-v4"></script>
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     const checklist = document.getElementById('finalizeSkillChecklist');

@@ -23,11 +23,29 @@
     box-shadow: 0 18px 50px rgba(15, 23, 42, 0.3);
     border: 1px solid #d6dde5;
     padding: 1.25rem;
+    position: relative;
   }
   .ttt-status-modal h3 {
     margin: 0 0 0.75rem;
     font-size: 1.1rem;
     font-weight: 700;
+  }
+  .ttt-status-close-x {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    border: 0;
+    background: transparent;
+    color: #475569;
+    font-size: 1.25rem;
+    line-height: 1;
+    padding: 2px 6px;
+    cursor: pointer;
+  }
+  .ttt-status-close-x:hover {
+    color: #0f172a;
+    background: #eef2f7;
+    border-radius: 6px;
   }
   .ttt-status-modal .actions {
     display: flex;
@@ -35,7 +53,6 @@
     gap: 0.5rem;
     margin-top: 1rem;
   }
-  .ttt-status-modal .actions .button,
   .ttt-status-modal .actions .default {
     min-width: 86px;
     height: 34px;
@@ -44,6 +61,9 @@
     justify-content: center;
     text-align: center;
     cursor: pointer;
+  }
+  .ttt-status-modal .actions .default:hover {
+    filter: brightness(0.93);
   }
   .ttt-status-open {
     font-size: inherit;
@@ -60,6 +80,7 @@
 
 <div id="tttStatusModalBackdrop" class="ttt-status-modal-backdrop" aria-hidden="true">
   <div class="ttt-status-modal" role="dialog" aria-modal="true" aria-labelledby="tttStatusModalTitle">
+    <button type="button" class="ttt-status-close-x" id="tttStatusCloseX" aria-label="Close">×</button>
     <h3 id="tttStatusModalTitle">Change Listing Status</h3>
     <form id="tttStatusForm" method="post" action="{% url 'admin:auction_auction_update_status' %}">
       {% csrf_token %}
@@ -74,7 +95,6 @@
         </select>
       </div>
       <div class="actions">
-        <button type="button" class="button" id="tttStatusCancelButton">Cancel</button>
         <button type="submit" class="default">Save</button>
       </div>
     </form>
@@ -87,7 +107,7 @@
   const form = document.getElementById('tttStatusForm');
   const auctionIdInput = document.getElementById('tttStatusAuctionId');
   const statusSelect = document.getElementById('tttStatusSelect');
-  const cancelButton = document.getElementById('tttStatusCancelButton');
+  const closeXButton = document.getElementById('tttStatusCloseX');
 
   function openModal(button) {
     auctionIdInput.value = button.getAttribute('data-auction-id') || '';
@@ -113,7 +133,7 @@
     }
   });
 
-  cancelButton.addEventListener('click', closeModal);
+  closeXButton.addEventListener('click', closeModal);
   document.addEventListener('keydown', function (event) {
     if (event.key === 'Escape') {
       closeModal();

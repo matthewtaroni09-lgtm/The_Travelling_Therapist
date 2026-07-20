@@ -19,20 +19,23 @@
     margin-right: 1rem;
   }
   .ttt-admin-collapsible {
-    border: 1px solid #d7dce2;
+    border: 1px solid var(--hairline-color, #d7dce2);
     border-radius: 6px;
     margin-bottom: 1rem;
-    background: #fff;
+    background: var(--darkened-bg, var(--body-bg, #fff));
+    color: var(--body-fg, inherit);
   }
   .ttt-admin-collapsible > summary {
     list-style: none;
     cursor: pointer;
     padding: 0.75rem 0.95rem;
     font-weight: 600;
-    border-bottom: 1px solid #d7dce2;
+    border-bottom: 1px solid var(--hairline-color, #d7dce2);
     display: flex;
     align-items: center;
     justify-content: space-between;
+    color: var(--body-fg, inherit);
+    background: var(--darkened-bg, var(--body-bg, #fff));
   }
   .ttt-admin-collapsible > summary::-webkit-details-marker {
     display: none;
@@ -46,12 +49,13 @@
     transform: rotate(90deg);
   }
   .ttt-admin-collapsible[open] > summary {
-    border-bottom-color: #e5e7eb;
+    border-bottom-color: var(--hairline-color, #e5e7eb);
   }
   .ttt-admin-collapsible .module {
     margin: 0;
     border: 0;
     border-radius: 0;
+    background: transparent;
   }
 </style>
 
