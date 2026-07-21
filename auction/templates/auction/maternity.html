@@ -1,0 +1,1578 @@
+{% extends 'auction/base.html' %}
+{% load static %}
+
+{% block meta %}
+  <title>The Traveling Therapist - Flexible Career Bridge for New Parents</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary-teal: #00b894;
+      --primary-teal-hover: #00a382;
+      --primary-dark: #0f172a;
+      --text-muted: #64748b;
+      --bg-light: #f8fafc;
+      --card-bg: #ffffff;
+      --border-color: #e2e8f0;
+      --accent-mint: #e6f7f4;
+      --accent-mint-dark: #0d9488;
+      --font-serif: 'Playfair Display', Georgia, serif;
+      --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      color: var(--primary-dark);
+      background-color: var(--bg-light);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    section {
+      padding: 80px 0;
+    }
+
+    /* Hover Shadow Effect */
+    .hover-shadow {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .hover-shadow:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.15) !important;
+    }
+
+    /* Section Labels / Badges */
+    .section-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent-mint-dark);
+      margin-bottom: 12px;
+      display: inline-block;
+    }
+
+    .section-title {
+      font-family: var(--font-serif);
+      font-size: 2.75rem;
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--primary-dark);
+      margin-bottom: 24px;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px 28px;
+      border-radius: 9999px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      border: 1px solid transparent;
+    }
+
+    .btn-primary {
+      background-color: var(--primary-teal);
+      color: #ffffff;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--primary-teal-hover);
+      color: #ffffff;
+    }
+
+    .btn-outline {
+      background-color: #ffffff;
+      border-color: #cbd5e1;
+      color: var(--primary-dark);
+    }
+
+    .btn-outline:hover {
+      background-color: #f1f5f9;
+    }
+
+    /* Badge Pills */
+    .badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      border-radius: 9999px;
+      background-color: var(--accent-mint);
+      color: var(--accent-mint-dark);
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .badge-pill .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background-color: var(--accent-mint-dark);
+    }
+
+    /* ----------------------------------
+       Section 1: Hero
+    ---------------------------------- */
+    .hero {
+      padding: 60px 0 80px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: center;
+    }
+
+    .hero-content h1 {
+      font-family: var(--font-serif);
+      font-size: 3.5rem;
+      font-weight: 700;
+      line-height: 1.15;
+      margin: 20px 0;
+    }
+
+    .hero-content h1 span.highlight {
+      position: relative;
+      display: inline-block;
+    }
+
+    .hero-content h1 span.highlight::after {
+      content: '';
+      position: absolute;
+      bottom: 4px;
+      left: 0;
+      width: 100%;
+      height: 6px;
+      background-color: var(--primary-teal);
+      opacity: 0.4;
+      border-radius: 3px;
+    }
+
+    .hero-subtitle {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      margin-bottom: 32px;
+      max-width: 520px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .hero-image {
+      width: 100%;
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .hero-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* ----------------------------------
+       Section 2: The Structural Trap
+    ---------------------------------- */
+    .structural-trap-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      margin-top: 40px;
+    }
+
+    .card-comparison {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 40px;
+      border: 1px solid var(--border-color);
+      position: relative;
+    }
+
+    .card-comparison.highlight-card {
+      border: 2px solid var(--primary-teal);
+    }
+
+    .card-comparison .card-badge {
+      position: absolute;
+      top: -14px;
+      left: 32px;
+      background-color: var(--accent-mint-dark);
+      color: #ffffff;
+      padding: 4px 14px;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    .card-header-flex {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .icon-circle {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+    }
+
+    .icon-circle.danger {
+      background-color: #f1f5f9;
+      color: #64748b;
+    }
+
+    .icon-circle.success {
+      background-color: var(--accent-mint);
+      color: var(--accent-mint-dark);
+    }
+
+    .card-header-flex h3 {
+      font-family: var(--font-serif);
+      font-size: 1.5rem;
+    }
+
+    .comparison-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .comparison-list li {
+      display: flex;
+      gap: 12px;
+      font-size: 0.95rem;
+      color: #334155;
+    }
+
+    .comparison-list li span.icon {
+      font-weight: bold;
+    }
+
+    /* ----------------------------------
+       Section 3: The Income Gap & Calculator
+    ---------------------------------- */
+    .income-gap-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.1fr;
+      gap: 48px;
+      align-items: start;
+    }
+
+    .income-gap-text p {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      margin-bottom: 32px;
+    }
+
+    .federal-caps-box {
+      background-color: #ffffff;
+      border-radius: 12px;
+      padding: 24px;
+      border: 1px solid var(--border-color);
+    }
+
+    .federal-caps-box .caps-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+      text-transform: uppercase;
+    }
+
+    .caps-flex {
+      display: flex;
+      gap: 48px;
+    }
+
+    .cap-item .val {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+    }
+
+    .cap-item .desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    /* Calculator Widget */
+    .calc-card {
+      background: #ffffff;
+      border-radius: 16px;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+      overflow: hidden;
+    }
+
+    .calc-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border-color);
+      background-color: #f8fafc;
+    }
+
+    .calc-header h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .calc-header p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .calc-body {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .calc-left {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--text-muted);
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      background-color: var(--accent-mint);
+      font-size: 0.9rem;
+      outline: none;
+    }
+
+    .salary-slider-container {
+      margin-top: 8px;
+    }
+
+    .salary-val-badge {
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-top: 12px;
+    }
+
+    input[type=range] {
+      width: 100%;
+      accent-color: var(--primary-dark);
+    }
+
+    .calc-right {
+      background-color: #00e6b8;
+      padding: 28px 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      color: var(--primary-dark);
+    }
+
+    .calc-stat {
+      margin-bottom: 16px;
+      text-align: center;
+    }
+
+    .calc-stat .stat-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .calc-stat .stat-val {
+      font-size: 1.5rem;
+      font-weight: 800;
+    }
+
+    .calc-stat.highlight-stat .stat-val {
+      font-size: 2.25rem;
+    }
+
+    /* ----------------------------------
+       Section 4: How TTT Works
+    ---------------------------------- */
+    .how-it-works-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 48px;
+      position: relative;
+    }
+
+    .step-card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 32px 24px;
+      border: 1px solid var(--border-color);
+      position: relative;
+      text-align: left;
+    }
+
+    .step-icon-badge {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background-color: var(--accent-mint);
+      color: var(--accent-mint-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      margin-bottom: 20px;
+      border: 2px solid var(--accent-mint-dark);
+    }
+
+    .step-num {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--accent-mint-dark);
+      letter-spacing: 0.05em;
+      margin-bottom: 8px;
+    }
+
+    .step-card h3 {
+      font-family: var(--font-serif);
+      font-size: 1.35rem;
+      margin-bottom: 12px;
+    }
+
+    .step-card p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .coming-soon-pill {
+      display: inline-block;
+      margin-top: 12px;
+      background: #e2e8f0;
+      color: #475569;
+      font-size: 0.7rem;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+
+    /* ----------------------------------
+       Section 5: Dual Persona / Built for Both Sides
+    ---------------------------------- */
+    .persona-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      margin-top: 40px;
+    }
+
+    .persona-card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 36px;
+      border: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .persona-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--accent-mint);
+      color: var(--accent-mint-dark);
+      padding: 4px 12px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .persona-card h3 {
+      font-family: var(--font-serif);
+      font-size: 1.6rem;
+      margin-bottom: 4px;
+    }
+
+    .persona-subtitle {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+
+    .persona-section-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-top: 16px;
+      margin-bottom: 6px;
+    }
+
+    .persona-card p {
+      font-size: 0.9rem;
+      color: #334155;
+    }
+
+    .solution-box {
+      background-color: var(--accent-mint);
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 24px;
+    }
+
+    .solution-box h4 {
+      color: var(--accent-mint-dark);
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .solution-box p {
+      font-size: 0.9rem;
+      color: #1e293b;
+    }
+
+    /* Market Survey Section */
+    .survey-banner {
+      background-color: #ffffff;
+      border-radius: 16px;
+      border: 1px solid var(--border-color);
+      padding: 32px 40px;
+      margin-top: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      position: relative;
+    }
+
+    .survey-content h3 {
+      font-family: var(--font-serif);
+      font-size: 1.6rem;
+      margin-top: 8px;
+      margin-bottom: 8px;
+    }
+
+    .survey-content p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    /* ----------------------------------
+       Case Studies Tabs & Panels
+    ---------------------------------- */
+    .case-studies-header {
+      margin-top: 80px;
+      margin-bottom: 32px;
+    }
+
+    .tabs-nav {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    .tab-pill {
+      padding: 10px 20px;
+      border-radius: 9999px;
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--primary-dark);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .tab-pill.active {
+      background: #000000;
+      color: #ffffff;
+      border-color: #000000;
+    }
+
+    .tab-pill span.region {
+      font-size: 0.75rem;
+      opacity: 0.7;
+      margin-left: 4px;
+      transition: color 0.2s ease, opacity 0.2s ease;
+    }
+    
+    /* Ensure the region text stays explicitly white when the tab is black */
+    .tab-pill.active span.region {
+      color: #ffffff;
+      opacity: 1;
+    }
+
+    .case-panel {
+      display: none;
+      margin-top: 24px;
+    }
+
+    .case-panel.active {
+      display: block;
+    }
+
+    .case-grid {
+      display: grid;
+      grid-template-columns: 380px 1fr;
+      gap: 40px;
+      background: #ffffff;
+      border-radius: 16px;
+      border: 1px solid var(--border-color);
+      padding: 32px;
+      align-items: start;
+    }
+
+    .case-image-col {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .case-img-wrapper {
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 20px;
+      height: 320px;
+    }
+
+    .case-img-wrapper img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .region-badge {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: #ffffff;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .case-meta .category-tag {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      color: var(--accent-mint-dark);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+      display: block;
+    }
+
+    .case-meta h3 {
+      font-family: var(--font-serif);
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+
+    .case-meta .case-role {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--primary-dark);
+      margin-bottom: 6px;
+    }
+
+    .case-meta .case-subtext {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .case-content-col {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .case-block-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .case-content-col p {
+      font-size: 0.95rem;
+      color: #334155;
+      line-height: 1.6;
+    }
+
+    .marketing-highlight-box {
+      background-color: #f1f5f9;
+      border-radius: 12px;
+      padding: 20px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      margin-top: 12px;
+    }
+
+    .marketing-highlight-box svg {
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .marketing-highlight-box .m-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .marketing-highlight-box p {
+      font-size: 0.85rem;
+      color: #334155;
+    }
+
+    /* ----------------------------------
+       CTA Banner Section 
+    ---------------------------------- */
+    .cta-banner {
+      background: linear-gradient(135deg, #022018, #073528);
+      border-radius: 20px;
+      padding: 60px 40px;
+      text-align: center;
+      margin: 80px 0;
+      color: #ffffff;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+    .cta-banner h2 {
+      font-family: var(--font-serif);
+      font-size: 3rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: #ffffff;
+    }
+    .cta-banner p {
+      font-size: 1.05rem;
+      color: #cbd5e1;
+      max-width: 750px;
+      margin: 0 auto 32px auto;
+      line-height: 1.6;
+    }
+    .cta-banner .cta-btn-wrapper {
+      margin-bottom: 16px;
+    }
+    .cta-banner .btn-cta {
+      background-color: var(--primary-teal);
+      color: var(--primary-dark);
+      font-weight: 600;
+      font-size: 1.05rem;
+      padding: 14px 32px;
+      border: none;
+    }
+    .cta-banner .btn-cta:hover {
+      background-color: var(--primary-teal-hover);
+      color: var(--primary-dark);
+    }
+    .cta-banner .cta-subtext {
+      font-size: 0.85rem;
+      color: #94a3b8;
+    }
+
+    /* ----------------------------------
+       Section 6: FAQ
+    ---------------------------------- */
+    .faq-section {
+      background-color: #f8fafc;
+      padding: 80px 0;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .faq-wrapper {
+      background-color: #f1f5f9;
+      border-radius: 16px;
+      padding: 40px;
+    }
+
+    .faq-notice-box {
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 20px 24px;
+      border: 1px solid var(--border-color);
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+
+    .faq-notice-box svg {
+      flex-shrink: 0;
+      margin-top: 2px;
+      color: var(--primary-dark);
+    }
+
+    .faq-notice-box p {
+      font-size: 0.85rem;
+      color: #334155;
+    }
+
+    /* ----------------------------------
+       Footer
+    ---------------------------------- */
+    footer {
+      background-color: #ffffff;
+      border-top: 1px solid var(--border-color);
+      padding: 60px 0;
+    }
+
+    .footer-grid {
+      display: grid;
+      /* Adjusted to give links more width and prevent cutoff */
+      grid-template-columns: 2fr 1.5fr 1.5fr; 
+      gap: 48px;
+    }
+
+    .footer-brand h3 {
+      font-family: var(--font-serif);
+      font-size: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .footer-brand h3 .dot-icon {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: var(--primary-teal);
+    }
+
+    .footer-brand p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      max-width: 320px;
+    }
+
+    .footer-col h4 {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      margin-top: 0; /* Ensures proper alignment */
+    }
+
+    .footer-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 0; /* Clear default list padding */
+      margin: 0;
+    }
+
+    .footer-links a {
+      font-size: 0.85rem;
+      color: var(--primary-dark);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s ease;
+    }
+
+    .footer-links a:hover {
+      color: var(--primary-teal);
+    }
+
+    .footer-disclaimer p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 900px) {
+      .hero-grid, .structural-trap-grid, .income-gap-grid, .how-it-works-grid, .persona-grid, .calc-body, .case-grid, .footer-grid {
+        grid-template-columns: 1fr;
+      }
+      .survey-banner {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .hero-content h1 {
+        font-size: 2.5rem;
+      }
+      .cta-banner h2 {
+        font-size: 2rem;
+      }
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <div class="container">
+
+    <!-- ==========================================
+         SECTION 1: HERO
+    =========================================== -->
+    <section class="hero">
+      <div class="hero-grid">
+        <div class="hero-content">
+          <div class="badge-pill">
+            <span class="dot"></span>
+            Built for Canadian clinicians on leave
+          </div>
+          <h1>You don't have to choose between being a great clinician and a <span class="highlight">great parent.</span></h1>
+          <p class="hero-subtitle">Easing back into practice post-leave shouldn't mean facing an immediate 40-hour burnout or sacrificing your hard-earned financial independence. Discover a flexible career bridge built for new parents.</p>
+          <div class="hero-actions">
+            <a href="#how-it-works" class="btn btn-primary">Explore Flexible Shifts &rarr;</a>
+            <a href="#calculator" class="btn btn-outline">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="16" y1="14" x2="16" y2="18"/><path d="M16 10h.01"/><path d="M12 10h.01"/><path d="M8 10h.01"/><path d="M12 14h.01"/><path d="M8 14h.01"/><path d="M12 18h.01"/><path d="M8 18h.01"/></svg>
+              Calculate Your Leave Payout
+            </a>
+          </div>
+        </div>
+        <div class="hero-image">
+          <img src="/media/images/maternity_1.jpg" alt="Male Healthcare Clinician" />
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         SECTION 2: THE STRUCTURAL TRAP
+    =========================================== -->
+    <section>
+      <span class="section-label">THE STRUCTURAL TRAP</span>
+      <h2 class="section-title">Two paths back to practice. Only one keeps everything you've earned.</h2>
+
+      <div class="structural-trap-grid">
+        <!-- Card 1 -->
+        <div class="card-comparison hover-shadow">
+          <div class="card-header-flex">
+            <div class="icon-circle danger">&times;</div>
+            <h3>The Traditional Return</h3>
+          </div>
+          <ul class="comparison-list">
+            <li>
+              <span class="icon">&bull;</span>
+              <span>Returning part-time to your existing employer officially terminates your provincial job-protected leave.</span>
+            </li>
+            <li>
+              <span class="icon">&bull;</span>
+              <span>Forces you into an "all-or-nothing" decision between immediate 40-hour weeks or severe financial strain.</span>
+            </li>
+            <li>
+              <span class="icon">&bull;</span>
+              <span>High risk of sudden burnout or intense childcare scheduling conflicts.</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="card-comparison highlight-card hover-shadow">
+          <div class="card-badge">The TTT Bridge</div>
+          <div class="card-header-flex">
+            <div class="icon-circle success">&#10003;</div>
+            <h3>The Traveling Therapist Bridge</h3>
+          </div>
+          <ul class="comparison-list">
+            <li>
+              <span class="icon" style="color: var(--accent-mint-dark);">&#10003;</span>
+              <span>Because you contract with completely separate clinics, your primary job protection remains untouched.</span>
+            </li>
+            <li>
+              <span class="icon" style="color: var(--accent-mint-dark);">&#10003;</span>
+              <span>Take complete control over your schedule and only send in offers on shifts that perfectly align with your routine.</span>
+            </li>
+            <li>
+              <span class="icon" style="color: var(--accent-mint-dark);">&#10003;</span>
+              <span>Keep 50 cents of your federal EI check for every single dollar you earn via Service Canada's "Working While on Claim" provisions.</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         SECTION 3: THE INCOME GAP & CALCULATOR
+    =========================================== -->
+    <section id="calculator">
+      <div class="income-gap-grid">
+        <div class="income-gap-text">
+          <span class="section-label">THE INCOME GAP</span>
+          <h2 class="section-title">Confronting the 'Financial Cliff' of standard leave.</h2>
+          <p>Under standard 2026 federal leave rules, income replacement is hard-capped at <strong>55% up to $729/week</strong>. For the average full-time clinician earning between $75,000 and $98,685, this means household income drops to cover only <strong>38%&ndash;49%</strong> of pre-leave earnings.</p>
+          <p>When benefits cease at the 12 or 18-month mark, the pressure to jump back into rigid schedules intensifies. TTT flips that pressure into a plan.</p>
+
+          <div class="federal-caps-box">
+            <div class="caps-label">2026 Federal Caps</div>
+            <div class="caps-flex">
+              <div class="cap-item">
+                <div class="val">$729</div>
+                <div class="desc">Standard weekly max</div>
+              </div>
+              <div class="cap-item">
+                <div class="val">$437</div>
+                <div class="desc">Extended weekly max</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Calculator Widget -->
+        <div class="calc-card hover-shadow">
+          <div class="calc-header">
+            <h3>The Canadian Clinician Leave & Income Gap Calculator</h3>
+            <p>Quantify your maternity or parental leave benefit structure in real-time.</p>
+          </div>
+          <div class="calc-body">
+            <div class="calc-left">
+              <div class="form-group">
+                <label>Select your province:</label>
+                <select id="provinceSelect" class="form-control">
+                  <option value="ROC">Rest of Canada (ON, BC, AB, etc.)</option>
+                  <option value="QC">Quebec (QPIP Framework)</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label>Select your Leave Timeline:</label>
+                <select id="timelineSelect" class="form-control">
+                  <option value="standard">Standard Leave (Up to 12 Months)</option>
+                  <option value="extended">Extended Leave (Up to 18 Months)</option>
+                </select>
+              </div>
+
+              <div class="form-group salary-slider-container">
+                <label>Select your gross annual salary:</label>
+                <input type="range" id="salaryRange" min="40000" max="150000" step="1000" value="50000">
+                <div class="salary-val-badge" id="salaryDisplay">$50,000</div>
+              </div>
+            </div>
+
+            <div class="calc-right">
+              <div class="calc-stat">
+                <div class="stat-label">Your Normal Pre-Leave Weekly Earnings</div>
+                <div class="stat-val" id="preLeaveVal">$ 961.54 / Week</div>
+              </div>
+
+              <div class="calc-stat">
+                <div class="stat-label">Your Estimated Weekly Government Leave Payout</div>
+                <div class="stat-val" id="payoutVal">$ 528.85 / Week</div>
+              </div>
+
+              <div class="calc-stat">
+                <div class="stat-label">The Weekly Financial Deficit</div>
+                <div class="stat-val" id="deficitVal">$ 432.69 / Week</div>
+              </div>
+
+              <div class="calc-stat highlight-stat">
+                <div class="stat-label">Your Household operates on</div>
+                <div class="stat-val" id="percentageVal">55%</div>
+                <div style="font-size: 0.75rem;">Of Your Regular Clinical Earnings</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         SECTION 4: HOW TTT WORKS
+    =========================================== -->
+    <section id="how-it-works">
+      <span class="section-label">HOW TTT WORKS</span>
+      <h2 class="section-title">Your transition, your terms.</h2>
+
+      <div class="how-it-works-grid">
+        <!-- Step 1 -->
+        <div class="step-card hover-shadow">
+          <div class="step-icon-badge">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          </div>
+          <div class="step-num">STEP 01</div>
+          <h3>Define Your Windows</h3>
+          <p>Set your own availability based off your childcare schedule, and only offer on listings within those timeframes while setting your desired rates.</p>
+          <div class="coming-soon-pill">Set your personal availability times on your account! <span>Coming Soon</span></div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="step-card hover-shadow">
+          <div class="step-icon-badge">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          </div>
+          <div class="step-num">STEP 02</div>
+          <h3>Review Open Coverage Offers</h3>
+          <p>Browse active clinic vacancies, coverages, and shift openings in your local area of practice. Secure premium contracts through TTT with zero long-term corporate commitments.</p>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="step-card hover-shadow">
+          <div class="step-icon-badge">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <div class="step-num">STEP 03</div>
+          <h3>Preserve Security & Earn</h3>
+          <p>Step seamlessly into shifts as an autonomous free agent. Earn competitive hourly contract rates, scale clinical stamina, and protect your primary career frameworks.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         SECTION 5: DUAL PERSONA & SURVEY
+    =========================================== -->
+    <section>
+      <span class="section-label">BUILT FOR BOTH SIDES</span>
+      <h2 class="section-title">Whether you're on payroll or on a fee-split &mdash; TTT fits your structure.</h2>
+
+      <div class="persona-grid">
+        <!-- Card A -->
+        <div class="persona-card hover-shadow">
+          <div>
+            <div class="persona-tag">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+              CARD A
+            </div>
+            <h3>The Hospital & Corporate Safety Mechanism</h3>
+            <div class="persona-subtitle">The Job-Protected Employee</div>
+
+            <div class="persona-section-title">TARGET</div>
+            <p>Salaried, hourly, or corporate institutional clinicians covered fully by provincial ESAs.</p>
+
+            <div class="persona-section-title">CORE PROBLEM</div>
+            <p>Returning early or picking up part-time shifts for your current employer immediately voids your legal job protection under the ESA return-to-work trap. Hospital casual rosters demand short-notice availability that makes childcare extremely difficult to manage.</p>
+          </div>
+
+          <div class="solution-box">
+            <h4>&rarr; THE TTT SOLUTION</h4>
+            <p>Work for a completely different employer on pre-scheduled contract dates. Your core job protection stays intact, while the federal "Working While on Claim" rule lets you keep 50 cents of your EI for every dollar earned up to a 90% income ceiling.</p>
+          </div>
+        </div>
+
+        <!-- Card B -->
+        <div class="persona-card hover-shadow">
+          <div>
+            <div class="persona-tag">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+              CARD B
+            </div>
+            <h3>The Independent Freelance Lifeline</h3>
+            <div class="persona-subtitle">The Fee-Split Independent Contractor</div>
+
+            <div class="persona-section-title">TARGET</div>
+            <p>Fee-split, fee-for-service, and private practice practitioners operating on percentage splits.</p>
+
+            <div class="persona-section-title">CORE PROBLEM</div>
+            <p>Independent contractors are excluded from provincial job protection laws. Other than self employed EI, income hits $0 on leave. E.g. clinic has 3 rooms, they schedule 4-5 shifts (Monday to Friday). For short term absences the clinic can temporarily shift patients or ask existing practitioners to pick up extra shifts. For longer leaves, a clinic's internal practitioners may already operate at max capacity. They can't leave a multi-month shift empty and often find a fill-in. Once the accommodation has been made, breaking that up for a returning parent who can only work casual or low commitment days is inefficient.</p>
+          </div>
+
+          <div class="solution-box">
+            <h4>&rarr; THE TTT SOLUTION</h4>
+            <p>Avoid long-term clinic negotiations entirely. Use TTT to safely monetize your skills, pick up contracts matching your child's unpredictable schedule, and independently rebuild your capital.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Survey Banner -->
+      <div class="survey-banner hover-shadow">
+        <div class="survey-content">
+          <div class="badge-pill">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            Clinician Maternity Leave Market Survey
+          </div>
+          <h3>Are you a clinician currently on or considering maternity/parental leave?</h3>
+          <p>Share anonymous feedback on contract leaves and EI usage to help us build a better platform. Complete this quick survey to earn <strong>3 raffle tickets</strong>.</p>
+        </div>
+        <div>
+          <!-- Changed to direct redirect linkage based on user requirements -->
+          <a href="{% url 'surveys' %}#clinicCollapseThree" id="surveyBtn" class="btn btn-primary" style="white-space: nowrap;">Take the 1-min Survey &rarr;</a>
+        </div>
+      </div>
+
+      <!-- Case Studies Header & Tabs -->
+      <div class="case-studies-header">
+        <span class="section-label">CASE STUDIES</span>
+        <h2 class="section-title">Real clinicians. Real re-entry paths.</h2>
+
+        <div class="tabs-nav">
+          <button class="tab-pill active" data-tab="emma">Emma <span class="region">ON</span></button>
+          <button class="tab-pill" data-tab="chloe">Chloe <span class="region">BC</span></button>
+          <button class="tab-pill" data-tab="sarah">Sarah <span class="region">AB</span></button>
+          <button class="tab-pill" data-tab="david">David & Jessica <span class="region">ON</span></button>
+          <button class="tab-pill" data-tab="manon">Manon <span class="region">QC</span></button>
+        </div>
+      </div>
+
+      <!-- Case Study 1: Emma -->
+      <div class="case-panel active" id="case-emma">
+        <div class="case-grid hover-shadow">
+          <div class="case-image-col">
+            <div class="case-img-wrapper">
+              <div class="region-badge">📍 ON</div>
+              <img src="/media/images/maternity_2.webp" alt="Emma" />
+            </div>
+            <div class="case-meta">
+              <span class="category-tag">THE GRADUAL CAREER RE-ENTRY</span>
+              <h3>Emma</h3>
+              <div class="case-role">Registered Physiotherapist</div>
+              <div class="case-subtext">Salaried, full-time hospital employee ($98,685/year).</div>
+            </div>
+          </div>
+          <div class="case-content-col">
+            <div>
+              <div class="case-block-label">THE PROBLEM</div>
+              <p>Hit the maximum federal EI ceiling of $729/week (dropping to 38% of her income). Returning to the hospital full-time required immediate, rigid 40-hour weeks, but childcare costs threatened to wipe out her net daily take-home earnings. She considered hospital casual rosters, but re-onboarding with her current employer would instantly void her active ESA job-protection status, and the availability openings were incompatible with infant care.</p>
+            </div>
+            <div class="solution-box">
+              <div class="case-block-label" style="color: var(--accent-mint-dark);">THE TTT SOLUTION</div>
+              <p>Emma used TTT to accept short-term coverage shifts at an external private clinic as a Sole Proprietor. Her primary hospital job-protected leave remained 100% legally intact under the Ontario ESA. She leveraged the "Working While on Claim" rule to safely combine part-time contract earnings with her federal EI checks, operating seamlessly under her own name.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Case Study 2: Chloe -->
+      <div class="case-panel" id="case-chloe">
+        <div class="case-grid hover-shadow">
+          <div class="case-image-col">
+            <div class="case-img-wrapper">
+              <div class="region-badge">📍 BC</div>
+              <img src="/media/images/maternity_3.jpg" alt="Chloe" />
+            </div>
+            <div class="case-meta">
+              <span class="category-tag">THE RISK MITIGATION</span>
+              <h3>Chloe</h3>
+              <div class="case-role">Registered Massage Therapist</div>
+              <div class="case-subtext">Salaried employee at a multi-location corporate rehabilitation chain in Vancouver.</div>
+            </div>
+          </div>
+          <div class="case-content-col">
+            <div>
+              <div class="case-block-label">THE PROBLEM</div>
+              <p>The hyper-inflated cost of living in Metro Vancouver made the federal $729/week EI cap completely unviable for her mortgage. Concurrently, her corporate employer underwent internal restructuring through legal employer arbitrage, threatening to eliminate her role or force a constructive dismissal by changing her return schedule to mandatory late-night and weekend shift lines.</p>
+            </div>
+            <div class="solution-box">
+              <div class="case-block-label" style="color: var(--accent-mint-dark);">THE TTT SOLUTION</div>
+              <p>Chloe used TTT to review and offer up flexible clinical coverages at her own rates. It allowed her to evaluate different clinic cultures with zero long-term strings attached. After an incredibly successful 4-week coverage contract at a highly supportive, community-focused clinic, Chloe utilized TTT's permanent pathway to smoothly transition into a flexible, full-time role that perfectly fits her new family schedule.</p>
+            </div>
+            <div class="marketing-highlight-box">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <div>
+                <div class="m-label">MARKETING HIGHLIGHT</div>
+                <p>If a temporary contract goes well and both parties choose to align permanently, full-time placement onboarding is 100% free on TTT.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Case Study 3: Sarah -->
+      <div class="case-panel" id="case-sarah">
+        <div class="case-grid hover-shadow">
+          <div class="case-image-col">
+            <div class="case-img-wrapper">
+              <div class="region-badge">📍 AB</div>
+              <img src="/media/images/maternity_4.png" alt="Sarah" />
+            </div>
+            <div class="case-meta">
+              <span class="category-tag">THE FREELANCE STRUCTURAL LIFELINE</span>
+              <h3>Sarah</h3>
+              <div class="case-role">Registered Physiotherapist (Private Practice)</div>
+              <div class="case-subtext">Independent fee-split contractor (60/40 split) in Calgary.</div>
+            </div>
+          </div>
+          <div class="case-content-col">
+            <div>
+              <div class="case-block-label">THE PROBLEM</div>
+              <p>Switched to a new clinic 60 days before conceiving. Because she was a contractor and hadn't crossed the Alberta ESC 90-day employee threshold, she had zero legal job protection. Because her pregnancy was unplanned, she missed the 12-month self-employed EI enrollment window. Her income dropped to absolute $0 the day she stopped treating patients, and her clinic had replaced her shift blocks with another practitioner.</p>
+            </div>
+            <div class="solution-box">
+              <div class="case-block-label" style="color: var(--accent-mint-dark);">THE TTT SOLUTION</div>
+              <p>With no job to return to, Sarah used TTT as an independent career lifeline. She avoided restrictive clinic contracts, accessed active clinics needing immediate short-term coverages, and successfully monetized her skills on her own terms — working 6 hours one week and 12 hours the next to match her child's unpredictable routine.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Case Study 4: David & Jessica -->
+      <div class="case-panel" id="case-david">
+        <div class="case-grid hover-shadow">
+          <div class="case-image-col">
+            <div class="case-img-wrapper">
+              <div class="region-badge">📍 ON</div>
+              <img src="/media/images/maternity_5.webp" alt="David & Jessica" />
+            </div>
+            <div class="case-meta">
+              <span class="category-tag">THE SHARED PATERNITY WINDOW</span>
+              <h3>David & Jessica</h3>
+              <div class="case-role">Physiotherapists (dual-clinician household)</div>
+              <div class="case-subtext">David is a full-time private practice clinician ($82,000/year).</div>
+            </div>
+          </div>
+          <div class="case-content-col">
+            <div>
+              <div class="case-block-label">THE PROBLEM</div>
+              <p>To maximize family income and co-parenting structures, David leveraged the federal Parental Sharing Benefit, claiming his 5 'use-it-or-lose-it' bonus weeks of paid leave. They needed a way to optimize this short window without creating friction in his job.</p>
+            </div>
+            <div class="solution-box">
+              <div class="case-block-label" style="color: var(--accent-mint-dark);">THE TTT SOLUTION</div>
+              <p>With David home managing full-time infant care at zero extra cost, Jessica used TTT to accept premium-rate, short-term contract coverages. Returning to her old clinic for just 5 weeks would have meant rigid scheduling blocks, pre-existing fee-split baselines, and permanent return expectations. TTT let her turn the 5-week block into a high-margin sprint with zero permanent commitments.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Case Study 5: Manon -->
+      <div class="case-panel" id="case-manon">
+        <div class="case-grid hover-shadow">
+          <div class="case-image-col">
+            <div class="case-img-wrapper">
+              <div class="region-badge">📍 QC</div>
+              <img src="/media/images/maternity_6.webp" alt="Manon" />
+            </div>
+            <div class="case-meta">
+              <span class="category-tag">THE PREMIUM CAPACITY OPTIMIZER</span>
+              <h3>Manon</h3>
+              <div class="case-role">Chiropractor</div>
+              <div class="case-subtext">Private practice clinician in Montreal.</div>
+            </div>
+          </div>
+          <div class="case-content-col">
+            <div>
+              <div class="case-block-label">THE PROBLEM</div>
+              <p>Under QPIP, Manon received a higher basic payout ($1,386.54/week) based on a $103,000 ceiling, avoiding a financial crisis. However, due to extreme commercial real estate pressures ($120–$150/day unabsorbed room overhead), her primary clinic had to give her room to a new associate, leaving zero casual or flexible hours for her to ease back in.</p>
+            </div>
+            <div class="solution-box">
+              <div class="case-block-label" style="color: var(--accent-mint-dark);">THE TTT SOLUTION</div>
+              <p>Under Quebec's LNT, secondary contracting during a leave is explicitly legal. Manon used TTT to accept high-paying, independent weekend corporate wellness events and short clinical coverages across Montreal. She kept her primary clinic relationships perfectly healthy, preserved her long-term position, and cleanly maximized her total annual income within Quebec's regulatory framework.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==========================================
+           NEW CTA SECTION 
+      =========================================== -->
+      <div class="cta-banner">
+        <h2>Re-enter clinical practice on your own terms.</h2>
+        <p>Join hundreds of Canadian clinicians utilizing TTT to maintain professional autonomy, replace lost income, and control their family schedules.</p>
+        <div class="cta-btn-wrapper">
+          <a href="{% url 'register' %}" class="btn btn-primary btn-cta">Get Started Free &rarr;</a>
+        </div>
+        <div class="cta-subtext">Free clinician account. No credit card required.</div>
+      </div>
+
+    </section>
+
+  </div>
+  <section class="faq-section">
+    <div class="container">
+      <div class="faq-wrapper">
+        <span class="section-label">FAQ</span>
+        <h2 class="section-title">Navigating leave & transition payouts.</h2>
+
+        <div class="faq-notice-box">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <p><strong>Important note:</strong> The following serves as an operational guide to platform positioning and public regulatory frameworks. The Traveling Therapist does not provide explicit personal legal or financial counsel. For leave planning, always cross-reference your specific profile details directly with Service Canada and your provincial Ministry of Labour.</p>
+        </div>
+
+        <!-- Converted to Bootstrap Accordion Format -->
+        <div class="accordion" id="maternityFaqAccordion">
+          
+          <!-- FAQ Item 1 -->
+          <div class="accordion-item border-0 mb-3 shadow-sm rounded">
+            <h2 class="accordion-header" id="faqHeadingOne">
+              <button class="accordion-button text-weight-normal collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#faqCollapseOne" aria-expanded="false" aria-controls="faqCollapseOne">
+                Does my province fund my maternity or parental leave payout?
+              </button>
+            </h2>
+            <div id="faqCollapseOne" class="accordion-collapse collapse" aria-labelledby="faqHeadingOne"
+              data-bs-parent="#maternityFaqAccordion">
+              <div class="accordion-body bg-white text-muted">
+                <p>In Canada (outside Quebec), parental and maternity leave payments are funded through the federal Employment Insurance (EI) program administered by Service Canada. In Quebec, payments are funded provincially via the Quebec Parental Insurance Plan (QPIP). Provincial employment standards acts (like Ontario's ESA) protect your job position while on leave, but do not directly pay out salary benefits.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- FAQ Item 2 -->
+          <div class="accordion-item border-0 mb-3 shadow-sm rounded">
+            <h2 class="accordion-header" id="faqHeadingTwo">
+              <button class="accordion-button text-weight-normal collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#faqCollapseTwo" aria-expanded="false" aria-controls="faqCollapseTwo">
+                Can parental leave benefits be shared or split between parents?
+              </button>
+            </h2>
+            <div id="faqCollapseTwo" class="accordion-collapse collapse" aria-labelledby="faqHeadingTwo"
+              data-bs-parent="#maternityFaqAccordion">
+              <div class="accordion-body bg-white text-muted">
+                <p>Yes. Standard and extended parental benefits can be shared between eligible parents. Under federal rules, sharing benefits unlocks additional "bonus" weeks (e.g., up to 5 additional weeks under standard leave or 8 weeks under extended leave) through the Parental Sharing Benefit.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- FAQ Item 3 -->
+          <div class="accordion-item border-0 mb-3 shadow-sm rounded">
+            <h2 class="accordion-header" id="faqHeadingThree">
+              <button class="accordion-button text-weight-normal collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#faqCollapseThree" aria-expanded="false" aria-controls="faqCollapseThree">
+                What is the "Financial Cliff" for healthcare professionals making over $68,900?
+              </button>
+            </h2>
+            <div id="faqCollapseThree" class="accordion-collapse collapse" aria-labelledby="faqHeadingThree"
+              data-bs-parent="#maternityFaqAccordion">
+              <div class="accordion-body bg-white text-muted">
+                <p>Federal EI replacement rate is calculated as 55% of your average insurable weekly earnings up to Maximum Insurable Earnings (MIE). Because earnings beyond $68,900/year are not covered by the calculation, high-earning healthcare professionals experience a steep percentage drop in household income during leave.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- FAQ Item 4 -->
+          <div class="accordion-item border-0 mb-3 shadow-sm rounded">
+            <h2 class="accordion-header" id="faqHeadingFour">
+              <button class="accordion-button text-weight-normal collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#faqCollapseFour" aria-expanded="false" aria-controls="faqCollapseFour">
+                Do I need a complex business license or incorporation to pick up shifts through TTT while on leave?
+              </button>
+            </h2>
+            <div id="faqCollapseFour" class="accordion-collapse collapse" aria-labelledby="faqHeadingFour"
+              data-bs-parent="#maternityFaqAccordion">
+              <div class="accordion-body bg-white text-muted">
+                <p>No. Most clinicians operate simply as Sole Proprietors operating under their own legal name. You do not need to register a complex corporation or business structure to undertake independent contractor shifts while on leave.</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    (function () {
+      const salaryRange = document.getElementById('salaryRange');
+      const salaryDisplay = document.getElementById('salaryDisplay');
+      const provinceSelect = document.getElementById('provinceSelect');
+      const timelineSelect = document.getElementById('timelineSelect');
+
+      const preLeaveVal = document.getElementById('preLeaveVal');
+      const payoutVal = document.getElementById('payoutVal');
+      const deficitVal = document.getElementById('deficitVal');
+      const percentageVal = document.getElementById('percentageVal');
+
+      function calculateIncomeGap() {
+        if (!salaryRange || !salaryDisplay || !provinceSelect || !timelineSelect || !preLeaveVal || !payoutVal || !deficitVal || !percentageVal) {
+          return;
+        }
+
+        const annualSalary = parseFloat(salaryRange.value);
+        const province = provinceSelect.value;
+        const timeline = timelineSelect.value;
+
+        salaryDisplay.textContent = `$${annualSalary.toLocaleString()}`;
+
+        const weeklyPreLeave = annualSalary / 52;
+        let weeklyPayout = 0;
+
+        if (province === 'QC') {
+          const mie = 103000;
+          const insurableEarnings = Math.min(annualSalary, mie);
+          weeklyPayout = (insurableEarnings * 0.70) / 52;
+        } else if (timeline === 'standard') {
+          weeklyPayout = Math.min(weeklyPreLeave * 0.55, 729);
+        } else {
+          weeklyPayout = Math.min(weeklyPreLeave * 0.33, 437);
+        }
+
+        const deficit = Math.max(0, weeklyPreLeave - weeklyPayout);
+        const percentage = weeklyPreLeave > 0 ? (weeklyPayout / weeklyPreLeave) * 100 : 0;
+
+        preLeaveVal.textContent = `$ ${weeklyPreLeave.toFixed(2)} / Week`;
+        payoutVal.textContent = `$ ${weeklyPayout.toFixed(2)} / Week`;
+        deficitVal.textContent = `$ ${deficit.toFixed(2)} / Week`;
+        percentageVal.textContent = `${Math.round(percentage)}%`;
+      }
+
+      if (salaryRange) {
+        salaryRange.addEventListener('input', calculateIncomeGap);
+      }
+      if (provinceSelect) {
+        provinceSelect.addEventListener('change', calculateIncomeGap);
+      }
+      if (timelineSelect) {
+        timelineSelect.addEventListener('change', calculateIncomeGap);
+      }
+      calculateIncomeGap();
+
+      const tabPills = document.querySelectorAll('.tab-pill');
+      const casePanels = document.querySelectorAll('.case-panel');
+
+      tabPills.forEach(function (pill) {
+        pill.addEventListener('click', function () {
+          const targetTab = pill.getAttribute('data-tab');
+          const targetPanel = document.getElementById(`case-${targetTab}`);
+          if (!targetPanel) {
+            return;
+          }
+
+          tabPills.forEach(function (node) {
+            node.classList.remove('active');
+          });
+          casePanels.forEach(function (panel) {
+            panel.classList.remove('active');
+          });
+
+          pill.classList.add('active');
+          targetPanel.classList.add('active');
+        });
+      });
+    })();
+  </script>
+
+{% endblock %}

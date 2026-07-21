@@ -21,47 +21,66 @@
       object-fit: contain;
       background: #fff;
     }
+    .ttt-listing-carousel .carousel-control-prev,
+    .ttt-listing-carousel .carousel-control-next {
+      width: auto;
+      opacity: 1;
+    }
+    .ttt-listing-carousel .ttt-carousel-arrow {
+      width: 44px;
+      height: 44px;
+      background: #fff;
+      border: 1px solid #d8dee3;
+      border-radius: 999px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .ttt-listing-carousel .carousel-control-prev-icon,
+    .ttt-listing-carousel .carousel-control-next-icon {
+      width: 1.25rem;
+      height: 1.25rem;
+      filter: brightness(0);
+    }
+    .ttt-listing-carousel .carousel-indicators {
+      margin-bottom: 0.25rem;
+    }
+    .ttt-listing-carousel .carousel-indicators [data-bs-target] {
+      background-color: #1f2933;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
   </style>
 
   <div id="listingImageCarousel" class="carousel slide my-3 ttt-listing-carousel" data-bs-ride="false">
     <div class="carousel-inner">
-      <div class="carousel-item active">
-        {% if auction.clinic.imageOne %}
-        <img src="/media/{{ auction.clinic.imageOne }}" alt="Clinic image 1" onerror="this.src='/media/images/no-image.jpg';">
-        {% else %}
-        <img src="/media/images/no-image.jpg" alt="Clinic image unavailable">
-        {% endif %}
+      {% for image_url in listing_images %}
+      <div class="carousel-item {% if forloop.first %}active{% endif %}">
+        <img src="{{ image_url }}" alt="Clinic image {{ forloop.counter }}" onerror="this.src='/media/images/no-image.jpg';">
       </div>
-      <div class="carousel-item">
-        {% if auction.clinic.imageTwo %}
-        <img src="/media/{{ auction.clinic.imageTwo }}" alt="Clinic image 2" onerror="this.src='/media/images/no-image.jpg';">
-        {% else %}
-        <img src="/media/images/no-image.jpg" alt="Clinic image unavailable">
-        {% endif %}
-      </div>
-      <div class="carousel-item">
-        {% if auction.clinic.imageThree %}
-        <img src="/media/{{ auction.clinic.imageThree }}" alt="Clinic image 3" onerror="this.src='/media/images/no-image.jpg';">
-        {% else %}
-        <img src="/media/images/no-image.jpg" alt="Clinic image unavailable">
-        {% endif %}
-      </div>
-      <div class="carousel-item">
-        {% if auction.clinic.imageFour %}
-        <img src="/media/{{ auction.clinic.imageFour }}" alt="Clinic image 4" onerror="this.src='/media/images/no-image.jpg';">
-        {% else %}
-        <img src="/media/images/no-image.jpg" alt="Clinic image unavailable">
-        {% endif %}
-      </div>
+      {% endfor %}
     </div>
+    {% if listing_image_count > 1 %}
     <button class="carousel-control-prev" type="button" data-bs-target="#listingImageCarousel" data-bs-slide="prev">
-      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="ttt-carousel-arrow">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      </span>
       <span class="visually-hidden">Previous</span>
     </button>
     <button class="carousel-control-next" type="button" data-bs-target="#listingImageCarousel" data-bs-slide="next">
-      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="ttt-carousel-arrow">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      </span>
       <span class="visually-hidden">Next</span>
     </button>
+    <div class="carousel-indicators">
+      {% for image_url in listing_images %}
+      <button type="button" data-bs-target="#listingImageCarousel" data-bs-slide-to="{{ forloop.counter0 }}" class="{% if forloop.first %}active{% endif %}" {% if forloop.first %}aria-current="true"{% endif %} aria-label="Slide {{ forloop.counter }}"></button>
+      {% endfor %}
+    </div>
+    {% endif %}
   </div>
   <div class="d-flex align-items-start flex-wrap gap-2 mb-3">
     <section class="d-inline-flex align-items-center text-white bg-dark py-2 px-3 me-3 rounded mb-0">
@@ -169,11 +188,11 @@
                     {% endif %}
                     {% if auction.flatFeeType == 'hourly' and auction.desiredFlatFeeHourly %}
                     <div class="ttt-offer-guidance-tab mb-3" role="note">
-                      <p class="mb-0 small"><strong>Clinic guidance:</strong> Suggested hourly flat fee is ${{ auction.desiredFlatFeeHourly }}/hr.</p>
+                      <p class="mb-0 small"><strong>Guidance:</strong> The healthcare facility suggests an hourly rate of ${{ auction.desiredFlatFeeHourly }}/hr.</p>
                     </div>
                     {% elif auction.flatFeeType == 'total_contract' and auction.desiredFlatFeeTotalContract %}
                     <div class="ttt-offer-guidance-tab mb-3" role="note">
-                      <p class="mb-0 small"><strong>Clinic guidance:</strong> Suggested total contract flat fee is ${{ auction.desiredFlatFeeTotalContract }}.</p>
+                      <p class="mb-0 small"><strong>Guidance:</strong> The healthcare facility suggests a total contract price of ${{ auction.desiredFlatFeeTotalContract }}.</p>
                     </div>
                     {% endif %}
                     {% if auction.flatFeeType == 'hourly' %}
@@ -213,7 +232,7 @@
                     <p class="mb-2">Current selected: <strong><span id="feeSplitValue">0</span>%</strong></p>
                     {% if auction.desiredFeeSplitPercentage %}
                     <div class="ttt-offer-guidance-tab mb-3" role="note">
-                      <p class="mb-0 small"><strong>Clinic guidance:</strong> Suggested fee split is {{ auction.desiredFeeSplitPercentage }}%.</p>
+                      <p class="mb-0 small"><strong>Guidance:</strong> Suggested fee split is {{ auction.desiredFeeSplitPercentage }}%.</p>
                     </div>
                     {% endif %}
                     {% if auction.minimumCompensation %}
@@ -225,7 +244,7 @@
                     </div>
                     {% endif %}
                     <div class="alert alert-light mb-0" role="alert">
-                      <p class="mb-0"><i>If you offer 60%, you are asking to receive 60% of the patient/client fee. The clinic would receive the remaining 40%.</i></p>
+                      <p class="mb-0"><i>If you offer 60%, the healthcare facility would receive 40%. You are asking to receive this percentage of the client fee.</i></p>
                     </div>
                   </div>
                 </div>

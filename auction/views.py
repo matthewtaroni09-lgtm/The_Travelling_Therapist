@@ -142,9 +142,7 @@ DEFAULT_REGULATED_CLINICIAN_SKILL_OPTIONS_LOWER = {name.lower() for name in DEFA
 
 NON_REGULATED_CLINICIAN_KEYWORDS = [
     'dietary aide',
-    'pta',
-    'ota',
-    'rehab assistant',
+    'pta/ota/rehab assistant',
     'personal support worker',
     'psw',
     'recreation therapist',
@@ -171,7 +169,7 @@ def resolve_clinician_skill_key(type_label):
     if (
         'rmt' in normalized
         or 'massage therapist' in normalized
-        or 'registered massage' in normalized
+        or 'registered massage therapist' in normalized
         or 'massage therapy' in normalized
     ):
         return 'rmt'
@@ -561,6 +559,9 @@ def healthcare_facility_guide(request):
 def clinician_guide(request):
     return render(request, 'auction/clinician_guide.html', {'path': 'clinician-guide'})
 
+def maternity(request):
+    return render(request, 'auction/maternity.html', {'path': 'maternity'})
+
 def non_traditional_hiring(request):
     return render(request, 'auction/non_traditional_hiring.html', {'path': 'non-traditional-hiring'})
 
@@ -827,6 +828,26 @@ def view_auction(request, auction_id):
     required_skill_rows = auction.get_required_skill_rows()
     public_perk_rows = auction.get_public_perk_rows()
     private_perk_rows = auction.get_private_perk_rows()
+    raw_listing_images = []
+    for image_field_name in ('imageOne', 'imageTwo', 'imageThree', 'imageFour'):
+        image_field_value = getattr(auction.clinic, image_field_name, None)
+        image_name = str(getattr(image_field_value, 'name', image_field_value) or '').strip()
+        if not image_name:
+            continue
+        if image_name.lower() in ('default.jpg', 'images/default.jpg'):
+            continue
+        raw_listing_images.append(image_name)
+
+    listing_images = []
+    for image_name in raw_listing_images:
+        image_url = image_name if image_name.startswith('/media/') else f"/media/{image_name}"
+        if image_url not in listing_images:
+            listing_images.append(image_url)
+
+    if len(listing_images) == 0:
+        listing_images = ['/media/images/no-image.jpg']
+
+    listing_image_count = len(listing_images)
     clinician_profile_skills = []
     finalize_skill_rows = []
 
@@ -1070,6 +1091,8 @@ def view_auction(request, auction_id):
                 'required_skill_rows': required_skill_rows,
                 'public_perk_rows': public_perk_rows,
                 'private_perk_rows': private_perk_rows,
+                'listing_images': listing_images,
+                'listing_image_count': listing_image_count,
                 'finalize_skill_rows': finalize_skill_rows,
                 'clinician_profile_skills': clinician_profile_skills,
             }
@@ -1094,6 +1117,8 @@ def view_auction(request, auction_id):
                 'required_skill_rows': required_skill_rows,
                 'public_perk_rows': public_perk_rows,
                 'private_perk_rows': private_perk_rows,
+                'listing_images': listing_images,
+                'listing_image_count': listing_image_count,
                 'finalize_skill_rows': finalize_skill_rows,
                 'clinician_profile_skills': clinician_profile_skills,
             }

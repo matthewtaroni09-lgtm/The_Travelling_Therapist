@@ -25,8 +25,16 @@
 
             <!-- Feature 2 -->
             <li class="mb-5">
-                <h4 class="fw-bold" style="color: #198754;">Skills and Requirements</h4>
-                <p class="fs-5 text-muted">Facilities can now add "Skills &amp; Requirements" to their job listings - a MUCH requested feature!</p>
+                <h4 class="fw-bold" style="color: #198754;">Skills, Requirements & Negotiable Perks</h4>
+                <p class="fs-5 text-muted">Facilities can now add Clinician Skills &amp; Requirements AND list negotiable perks like "relocation assistance" or "schedule flexibility" to their job listings - a MUCH requested feature!</p>
+                <a href="{% url 'create-auction' %}" class="btn btn-outline-primary rounded-pill px-4">Create a New Job Listing Now</a>
+            </li>
+
+            <!-- Feature 3 -->
+            <li class="mb-5">
+                <h4 class="fw-bold" style="color: #198754;">Offer History</h4>
+                <p class="fs-5 text-muted">Clinicians can now view their offer history on their profile, and see which listings they've offered on. Check it out here:</p>
+                <a href="{% url 'profile' %}" class="btn btn-outline-primary rounded-pill px-4">Offer History</a>
             </li>
 
             <!-- Feature 3 -->
@@ -49,10 +57,11 @@
                 <div class="d-flex flex-wrap gap-2 mt-2">
                     <a href="{% url 'pricing' %}" class="btn btn-outline-primary rounded-pill px-4">Pricing at The Traveling Therapist</a>
                     <a href="{% url 'agency-comparison' %}" class="btn btn-outline-primary rounded-pill px-4">Agency Comparison</a>
+                    <a href="{% url 'maternity' %}" class="btn btn-outline-primary rounded-pill px-4">Materinity & Paternity Leave</a>
                 </div>
             </li>
 
-            <!-- Feature 5 -->
+            <!-- Feature 6 -->
             <li class="mb-0">
                 <h4 class="fw-bold" style="color: #198754;">Platform Quality Improvements</h4>
                 <p class="fs-5 text-muted">Cleaned up some bugs and improved design consistency so everyone's experience on the platform is better!</p>

@@ -3,6 +3,7 @@
 
 {% block content %}
 <div class="container my-5">
+    <!-- Header Section -->
     <div class="row text-center mb-5">
         <div class="col-md-12">
             <h1 class="text-weight-bold mb-3">Surveys</h1>
@@ -17,12 +18,14 @@
             <div class="card shadow-sm border-0">
                 <div class="card-header bg-white p-4 border-0">
                     <div class="d-flex align-items-center">
-                        <img class="img-fluid me-3" src="/media/images/therapy.png" alt="Healthcare Professional as a cartoon" style="width: 60px; height: 60px; object-fit: contain;">
+                        <img class="img-fluid me-3" src="{% static 'images/therapy.png' %}" alt="Healthcare Professional" style="width: 60px; height: 60px; object-fit: contain;">
                         <h2 class="text-weight-bold mb-0">Clinician Surveys</h2>
                     </div>
                 </div>
                 <div class="card-body p-0">
                     <div class="accordion" id="clinicianSurveyAccordion">
+                        
+                        <!-- Survey 1: Pain Points -->
                         <div class="accordion-item border-0">
                             <h2 class="accordion-header" id="clinicianHeadingOne">
                                 <button class="accordion-button text-weight-normal" type="button" data-bs-toggle="collapse"
@@ -39,6 +42,26 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Future Surveys Placeholder -->
+                        <div class="accordion-item border-0">
+                            <h2 class="accordion-header" id="clinicianHeadingThree">
+                                <button class="accordion-button text-weight-normal collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#clinicianCollapseMaternity" aria-expanded="false" aria-controls="clinicianCollapseMaternity">
+                                    Maternity &amp; Parental Leave Survey
+                                </button>
+                            </h2>
+                            <div id="clinicianCollapseMaternity" class="accordion-collapse collapse" aria-labelledby="clinicianHeadingThree"
+                                data-bs-parent="#clinicianSurveyAccordion">
+                                <div class="accordion-body">
+                                    <div class="ratio ratio-4x3 shadow-sm rounded overflow-hidden">
+                                        <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSceazHeaqODXCurIjk4s3qVqMLzxK6zR_r2D2WL503j4Kui5Q/viewform?embedded=true" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Future Surveys Placeholder -->
                         <div class="accordion-item border-0">
                             <h2 class="accordion-header" id="clinicianHeadingTwo">
                                 <button class="accordion-button text-weight-normal collapsed" type="button" data-bs-toggle="collapse"
@@ -53,6 +76,7 @@
                                 </div>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -67,12 +91,14 @@
             <div class="card shadow-sm border-0">
                 <div class="card-header bg-white p-4 border-0">
                     <div class="d-flex align-items-center">
-                        <img class="img-fluid me-3" src="/media/images/clinic.png" alt="Clinic office as a cartoon" style="width: 60px; height: 60px; object-fit: contain;">
-                        <h2 class="text-weight-bold mb-0">Healthcare Facility Surveys</h2>
-                    </div>
+                    <img class="img-fluid me-3" src="/media/images/clinic.png" alt="Clinic Office" style="width: 60px; height: 60px; object-fit: contain;">
+                     <h2 class="text-weight-bold mb-0">Healthcare Facility Surveys</h2>
+                </div>
                 </div>
                 <div class="card-body p-0">
                     <div class="accordion" id="clinicSurveyAccordion">
+                        
+                        <!-- Survey 1: Hiring Holes -->
                         <div class="accordion-item border-0">
                             <h2 class="accordion-header" id="clinicHeadingOne">
                                 <button class="accordion-button text-weight-normal" type="button" data-bs-toggle="collapse"
@@ -89,6 +115,26 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Survey 2: Maternity Survey -->
+                        <div class="accordion-item border-0">
+                            <h2 class="accordion-header" id="clinicHeadingThree">
+                                <button class="accordion-button text-weight-normal collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#clinicCollapseThree" aria-expanded="false" aria-controls="clinicCollapseThree">
+                                    Facility Operations & Feedback
+                                </button>
+                            </h2>
+                            <div id="clinicCollapseThree" class="accordion-collapse collapse" aria-labelledby="clinicHeadingThree"
+                                data-bs-parent="#clinicSurveyAccordion">
+                                <div class="accordion-body">
+                                    <div class="ratio ratio-4x3 shadow-sm rounded overflow-hidden">
+                                        <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSceazHeaqODXCurIjk4s3qVqMLzxK6zR_r2D2WL503j4Kui5Q/viewform?embedded=true" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Future Surveys Placeholder -->
                         <div class="accordion-item border-0">
                             <h2 class="accordion-header" id="clinicHeadingTwo">
                                 <button class="accordion-button text-weight-normal collapsed" type="button" data-bs-toggle="collapse"
@@ -103,6 +149,7 @@
                                 </div>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -110,4 +157,54 @@
     </div>
     {% endif %}
 </div>
+
+<script>
+    (function () {
+        const params = new URLSearchParams(window.location.search);
+        const hashId = (window.location.hash || '').replace('#', '');
+
+        let targetId = hashId;
+        if (params.get('survey') === 'maternity' && !targetId) {
+            targetId = 'clinicianCollapseMaternity';
+        }
+
+        if (!targetId) {
+            return;
+        }
+
+        let target = document.getElementById(targetId);
+        if (!target && targetId === 'clinicianCollapseMaternity') {
+            target = document.getElementById('clinicCollapseThree');
+        }
+        if (!target) {
+            return;
+        }
+
+        const parentSelector = target.getAttribute('data-bs-parent');
+        if (parentSelector) {
+            const parent = document.querySelector(parentSelector);
+            if (parent) {
+                parent.querySelectorAll('.accordion-collapse.show').forEach(function (openNode) {
+                    if (openNode !== target) {
+                        const openInstance = bootstrap.Collapse.getOrCreateInstance(openNode, { toggle: false });
+                        openInstance.hide();
+                    }
+                });
+            }
+        }
+
+        const instance = bootstrap.Collapse.getOrCreateInstance(target, { toggle: false });
+        instance.show();
+
+        const trigger = document.querySelector('[data-bs-target="#' + target.id + '"]');
+        if (trigger) {
+            trigger.classList.remove('collapsed');
+            trigger.setAttribute('aria-expanded', 'true');
+        }
+
+        setTimeout(function () {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 120);
+    })();
+</script>
 {% endblock %}

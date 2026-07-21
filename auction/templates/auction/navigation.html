@@ -35,6 +35,7 @@
                         role="button" data-bs-toggle="dropdown" aria-expanded="false">For Clinicians</a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdownClinicians">
                         <li><a class="dropdown-item" href="{% url 'clinician-guide' %}">Clinician Hiring Guide</a></li>
+                        <li><a class="dropdown-item {% if path == 'maternity' %}active{% endif %}" href="{% url 'maternity' %}">Maternity &amp; Parental Leave Guide</a></li>
                         <li><a class="dropdown-item" href="{% url 'hiring-healthcare-worker' %}">Getting Hired With The
                                 Traveling Therapist</a></li>
                     </ul>
