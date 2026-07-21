@@ -343,7 +343,7 @@ function buildCustomGridRow(name, kind, index) {
 
 function serializeGridRows(containerId) {
     const rows = [];
-    $(`#${containerId} .ttt-grid-list > .ttt-grid-row`).each(function () {
+    $(`#${containerId} .ttt-grid-row`).each(function () {
         const $row = $(this);
         const itemName = ($row.attr('data-item-name') || '').trim();
         if (!itemName) {
@@ -440,8 +440,23 @@ function syncPerkDetailPanel($row, animate) {
 }
 
 function syncAllPerkDetailPanels() {
-    $('#negotiablePerksContainer .ttt-grid-list > .ttt-grid-row').each(function () {
+    $('#negotiablePerksContainer .ttt-grid-row').each(function () {
         syncPerkDetailPanel($(this), false);
+    });
+}
+
+function enforceNonNegativeNumericInput(inputSelector) {
+    $(document).on('keydown', inputSelector, function (event) {
+        if (event.key === '-' || event.key === 'Minus') {
+            event.preventDefault();
+        }
+    });
+
+    $(document).on('input', inputSelector, function () {
+        const current = String($(this).val() || '');
+        if (current.includes('-')) {
+            $(this).val(current.replace(/-/g, ''));
+        }
     });
 }
 
@@ -709,6 +724,8 @@ $(document).ready(function () {
     $(document).on('input', '.ttt-perk-amount, .ttt-perk-details', function () {
         syncNegotiablePayloads();
     });
+
+    enforceNonNegativeNumericInput('#id_desiredFeeSplitPercentage, #id_minimumCompensation, #id_desiredFlatFeeHourly, #id_desiredFlatFeeTotalContract');
 
     //Show assessment fields checkbox
     $('#assessmentCheckBox').change(function () {

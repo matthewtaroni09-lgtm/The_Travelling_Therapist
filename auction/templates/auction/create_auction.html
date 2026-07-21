@@ -565,12 +565,28 @@
               <div>Perk</div>
               <div>Included / Details</div>
             </div>
+            <div class="ttt-grid-row" data-item-name="Virtual Position">
+                <span class="ttt-grid-item-label">Virtual Position</span>
+                <div class="ttt-perk-switch-wrap">
+                  <div class="form-check form-switch">
+                    <input type="checkbox" class="form-check-input ttt-perk-switch" role="switch" aria-label="Virtual position included">
+                  </div>
+                </div>
+              </div>
+              <div class="ttt-perk-detail-panel d-none">
+                <div class="row g-2 align-items-start">
+                  <div class="col-12">
+                    <label class="form-label">Details</label>
+                    <textarea class="form-control form-control-sm ttt-perk-details" rows="3" placeholder="Clarify if position is fully virtual or partially virtual"></textarea>
+                  </div>
+                </div>
+              </div>
             <div class="ttt-grid-list" data-grid-kind="perk">
               <div class="ttt-grid-row" data-item-name="Relocation assistance">
                 <span class="ttt-grid-item-label">Relocation assistance</span>
                 <div class="ttt-perk-switch-wrap">
                   <div class="form-check form-switch">
-                    <input type="checkbox" class="form-check-input ttt-perk-switch" role="switch" aria-label="Relocation assistance included" checked>
+                    <input type="checkbox" class="form-check-input ttt-perk-switch" role="switch" aria-label="Relocation assistance included">
                   </div>
                 </div>
               </div>
@@ -726,7 +742,7 @@
   </div>
 </div>
 <!-- </div> -->
-<script src="{% static 'auction/create_auction.js' %}?v=20260719-total-contract-input-v3"></script>
+<script src="{% static 'auction/create_auction.js' %}?v=20260721-perks-carousel-fix-v1"></script>
 <script src="{% static 'auction/textarea.js' %}"></script>
 {% else %}
 <p>You must be logged in to access this page. Please <a href="{% url 'login' %}">login here</a>
