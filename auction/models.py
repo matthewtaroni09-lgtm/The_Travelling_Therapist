@@ -390,7 +390,7 @@ class Auction(models.Model):
             payment_type_labels.append('Fee Split')
         if self.is_flat_fee():
             if self.flatFeeType == 'hourly':
-                payment_type_labels.append('Flat Fee (hourly)')
+                payment_type_labels.append('Flat Fee (Hourly)')
             elif self.flatFeeType == 'total_contract':
                 payment_type_labels.append('Flat Fee (Total Contract Price)')
 

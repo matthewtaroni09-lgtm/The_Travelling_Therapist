@@ -66,6 +66,31 @@ function userTypeChange(userType) {
 }
 
 $(document).ready(function () {
+    const maxImageSizeBytes = 10 * 1024 * 1024;
+
+    function showImageSizeError(fieldLabel) {
+        Swal.fire({
+            title: 'Image too large',
+            text: fieldLabel + ' must be 10 MB or smaller. Please choose a smaller image.',
+            icon: 'error',
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#0f9972'
+        });
+    }
+
+    function validateImageFieldSize(inputId, fieldLabel) {
+        const input = document.getElementById(inputId);
+        if (!input || !input.files || input.files.length === 0) {
+            return true;
+        }
+        const file = input.files[0];
+        if (file.size > maxImageSizeBytes) {
+            input.value = '';
+            showImageSizeError(fieldLabel);
+            return false;
+        }
+        return true;
+    }
     const termsActionButton = $('#termsActionButton');
     let submitFromTermsModal = false;
     const registerForm = document.querySelector('form[method="post"]');
@@ -253,6 +278,22 @@ $(document).ready(function () {
             clearAndHideImageFour();
         }
     })
+
+    $('form[method="post"][enctype="multipart/form-data"]').on('submit', function (event) {
+        const imageFields = [
+            ['id_imageOne', 'Image 1'],
+            ['id_imageTwo', 'Image 2'],
+            ['id_imageThree', 'Image 3'],
+            ['id_imageFour', 'Image 4'],
+        ];
+
+        for (const [inputId, label] of imageFields) {
+            if (!validateImageFieldSize(inputId, label)) {
+                event.preventDefault();
+                return false;
+            }
+        }
+    });
 
     function clearAndHideImageTwo() {
         $('#id_imageTwo').val('');

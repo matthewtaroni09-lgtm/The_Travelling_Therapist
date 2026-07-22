@@ -4,7 +4,6 @@
 {% block meta %}
   <title>The Traveling Therapist - Flexible Career Bridge for New Parents</title>
 
-  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -48,7 +47,6 @@
       padding: 80px 0;
     }
 
-    /* Hover Shadow Effect */
     .hover-shadow {
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
@@ -57,7 +55,6 @@
       box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.15) !important;
     }
 
-    /* Section Labels / Badges */
     .section-label {
       font-size: 0.75rem;
       font-weight: 700;
@@ -77,7 +74,6 @@
       margin-bottom: 24px;
     }
 
-    /* Buttons */
     .btn {
       display: inline-flex;
       align-items: center;
@@ -113,7 +109,6 @@
       background-color: #f1f5f9;
     }
 
-    /* Badge Pills */
     .badge-pill {
       display: inline-flex;
       align-items: center;
@@ -133,9 +128,6 @@
       background-color: var(--accent-mint-dark);
     }
 
-    /* ----------------------------------
-       Section 1: Hero
-    ---------------------------------- */
     .hero {
       padding: 60px 0 80px;
     }
@@ -198,9 +190,6 @@
       display: block;
     }
 
-    /* ----------------------------------
-       Section 2: The Structural Trap
-    ---------------------------------- */
     .structural-trap-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -282,9 +271,6 @@
       font-weight: bold;
     }
 
-    /* ----------------------------------
-       Section 3: The Income Gap & Calculator
-    ---------------------------------- */
     .income-gap-grid {
       display: grid;
       grid-template-columns: 1fr 1.1fr;
@@ -330,7 +316,6 @@
       color: var(--text-muted);
     }
 
-    /* Calculator Widget */
     .calc-card {
       background: #ffffff;
       border-radius: 16px;
@@ -430,9 +415,6 @@
       font-size: 2.25rem;
     }
 
-    /* ----------------------------------
-       Section 4: How TTT Works
-    ---------------------------------- */
     .how-it-works-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -494,9 +476,6 @@
       font-weight: 600;
     }
 
-    /* ----------------------------------
-       Section 5: Dual Persona / Built for Both Sides
-    ---------------------------------- */
     .persona-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -573,7 +552,6 @@
       color: #1e293b;
     }
 
-    /* Market Survey Section */
     .survey-banner {
       background-color: #ffffff;
       border-radius: 16px;
@@ -599,9 +577,6 @@
       font-size: 0.95rem;
     }
 
-    /* ----------------------------------
-       Case Studies Tabs & Panels
-    ---------------------------------- */
     .case-studies-header {
       margin-top: 80px;
       margin-bottom: 32px;
@@ -639,7 +614,6 @@
       transition: color 0.2s ease, opacity 0.2s ease;
     }
     
-    /* Ensure the region text stays explicitly white when the tab is black */
     .tab-pill.active span.region {
       color: #ffffff;
       opacity: 1;
@@ -778,9 +752,6 @@
       color: #334155;
     }
 
-    /* ----------------------------------
-       CTA Banner Section 
-    ---------------------------------- */
     .cta-banner {
       background: linear-gradient(135deg, #022018, #073528);
       border-radius: 20px;
@@ -824,9 +795,6 @@
       color: #94a3b8;
     }
 
-    /* ----------------------------------
-       Section 6: FAQ
-    ---------------------------------- */
     .faq-section {
       background-color: #f8fafc;
       padding: 80px 0;
@@ -861,9 +829,6 @@
       color: #334155;
     }
 
-    /* ----------------------------------
-       Footer
-    ---------------------------------- */
     footer {
       background-color: #ffffff;
       border-top: 1px solid var(--border-color);
@@ -872,7 +837,6 @@
 
     .footer-grid {
       display: grid;
-      /* Adjusted to give links more width and prevent cutoff */
       grid-template-columns: 2fr 1.5fr 1.5fr; 
       gap: 48px;
     }
@@ -906,7 +870,7 @@
       color: var(--text-muted);
       text-transform: uppercase;
       margin-bottom: 16px;
-      margin-top: 0; /* Ensures proper alignment */
+      margin-top: 0; 
     }
 
     .footer-links {
@@ -914,7 +878,7 @@
       display: flex;
       flex-direction: column;
       gap: 12px;
-      padding: 0; /* Clear default list padding */
+      padding: 0; 
       margin: 0;
     }
 
@@ -936,7 +900,6 @@
       line-height: 1.5;
     }
 
-    /* Responsive adjustments */
     @media (max-width: 900px) {
       .hero-grid, .structural-trap-grid, .income-gap-grid, .how-it-works-grid, .persona-grid, .calc-body, .case-grid, .footer-grid {
         grid-template-columns: 1fr;
@@ -958,9 +921,6 @@
 {% block content %}
   <div class="container">
 
-    <!-- ==========================================
-         SECTION 1: HERO
-    =========================================== -->
     <section class="hero">
       <div class="hero-grid">
         <div class="hero-content">
@@ -984,15 +944,11 @@
       </div>
     </section>
 
-    <!-- ==========================================
-         SECTION 2: THE STRUCTURAL TRAP
-    =========================================== -->
     <section>
       <span class="section-label">THE STRUCTURAL TRAP</span>
       <h2 class="section-title">Two paths back to practice. Only one keeps everything you've earned.</h2>
 
       <div class="structural-trap-grid">
-        <!-- Card 1 -->
         <div class="card-comparison hover-shadow">
           <div class="card-header-flex">
             <div class="icon-circle danger">&times;</div>
@@ -1014,9 +970,8 @@
           </ul>
         </div>
 
-        <!-- Card 2 -->
         <div class="card-comparison highlight-card hover-shadow">
-          <div class="card-badge">The TTT Bridge</div>
+          <div class="card-badge">The Traveling Therapist Bridge</div>
           <div class="card-header-flex">
             <div class="icon-circle success">&#10003;</div>
             <h3>The Traveling Therapist Bridge</h3>
@@ -1039,16 +994,13 @@
       </div>
     </section>
 
-    <!-- ==========================================
-         SECTION 3: THE INCOME GAP & CALCULATOR
-    =========================================== -->
     <section id="calculator">
       <div class="income-gap-grid">
         <div class="income-gap-text">
           <span class="section-label">THE INCOME GAP</span>
           <h2 class="section-title">Confronting the 'Financial Cliff' of standard leave.</h2>
           <p>Under standard 2026 federal leave rules, income replacement is hard-capped at <strong>55% up to $729/week</strong>. For the average full-time clinician earning between $75,000 and $98,685, this means household income drops to cover only <strong>38%&ndash;49%</strong> of pre-leave earnings.</p>
-          <p>When benefits cease at the 12 or 18-month mark, the pressure to jump back into rigid schedules intensifies. TTT flips that pressure into a plan.</p>
+          <p>When benefits cease at the 12 or 18-month mark, the pressure to jump back into rigid schedules intensifies. The Traveling Therapist flips that pressure into a plan.</p>
 
           <div class="federal-caps-box">
             <div class="caps-label">2026 Federal Caps</div>
@@ -1065,7 +1017,6 @@
           </div>
         </div>
 
-        <!-- Calculator Widget -->
         <div class="calc-card hover-shadow">
           <div class="calc-header">
             <h3>The Canadian Clinician Leave & Income Gap Calculator</h3>
@@ -1093,6 +1044,7 @@
                 <label>Select your gross annual salary:</label>
                 <input type="range" id="salaryRange" min="40000" max="150000" step="1000" value="50000">
                 <div class="salary-val-badge" id="salaryDisplay">$50,000</div>
+                <div id="capAlert" style="display: none; background-color: #fee2e2; color: #991b1b; padding: 8px 12px; border-radius: 6px; font-size: 0.8rem; text-align: center; margin-top: 12px; font-weight: 600;">Maximum federal payout cap reached.</div>
               </div>
             </div>
 
@@ -1123,15 +1075,11 @@
       </div>
     </section>
 
-    <!-- ==========================================
-         SECTION 4: HOW TTT WORKS
-    =========================================== -->
     <section id="how-it-works">
-      <span class="section-label">HOW TTT WORKS</span>
+      <span class="section-label">HOW THE TRAVELING THERAPIST WORKS</span>
       <h2 class="section-title">Your transition, your terms.</h2>
 
       <div class="how-it-works-grid">
-        <!-- Step 1 -->
         <div class="step-card hover-shadow">
           <div class="step-icon-badge">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
@@ -1142,37 +1090,33 @@
           <div class="coming-soon-pill">Set your personal availability times on your account! <span>Coming Soon</span></div>
         </div>
 
-        <!-- Step 2 -->
         <div class="step-card hover-shadow">
           <div class="step-icon-badge">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
           </div>
           <div class="step-num">STEP 02</div>
           <h3>Review Open Coverage Offers</h3>
-          <p>Browse active clinic vacancies, coverages, and shift openings in your local area of practice. Secure premium contracts through TTT with zero long-term corporate commitments.</p>
+          <p>Browse active clinic vacancies, coverages, and shift openings in your local area of practice. Secure premium contracts through The Traveling Therapist with
+             zero long-term corporate commitments.</p>
         </div>
 
-        <!-- Step 3 -->
         <div class="step-card hover-shadow">
           <div class="step-icon-badge">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
           </div>
           <div class="step-num">STEP 03</div>
           <h3>Preserve Security & Earn</h3>
-          <p>Step seamlessly into shifts as an autonomous free agent. Earn competitive hourly contract rates, scale clinical stamina, and protect your primary career frameworks.</p>
+          <p>Step seamlessly into shifts as an autonomous free agent. Earn competitive hourly contract rates, scale clinical stamina, and protect your 
+            primary career frameworks.</p>
         </div>
       </div>
     </section>
 
-    <!-- ==========================================
-         SECTION 5: DUAL PERSONA & SURVEY
-    =========================================== -->
     <section>
       <span class="section-label">BUILT FOR BOTH SIDES</span>
-      <h2 class="section-title">Whether you're on payroll or on a fee-split &mdash; TTT fits your structure.</h2>
+      <h2 class="section-title">Whether you're on payroll or on a fee-split &mdash; The Traveling Therapist fits your structure.</h2>
 
       <div class="persona-grid">
-        <!-- Card A -->
         <div class="persona-card hover-shadow">
           <div>
             <div class="persona-tag">
@@ -1186,16 +1130,17 @@
             <p>Salaried, hourly, or corporate institutional clinicians covered fully by provincial ESAs.</p>
 
             <div class="persona-section-title">CORE PROBLEM</div>
-            <p>Returning early or picking up part-time shifts for your current employer immediately voids your legal job protection under the ESA return-to-work trap. Hospital casual rosters demand short-notice availability that makes childcare extremely difficult to manage.</p>
+            <p>Returning early or picking up part-time shifts for your current employer immediately voids your legal job protection under the 
+              ESA return-to-work trap. Hospital casual rosters demand short-notice availability that makes childcare extremely difficult to manage.</p>
           </div>
 
           <div class="solution-box">
-            <h4>&rarr; THE TTT SOLUTION</h4>
-            <p>Work for a completely different employer on pre-scheduled contract dates. Your core job protection stays intact, while the federal "Working While on Claim" rule lets you keep 50 cents of your EI for every dollar earned up to a 90% income ceiling.</p>
+            <h4>&rarr; THE TRAVELING THERAPIST SOLUTION</h4>
+            <p>Work for a completely different employer on pre-scheduled contract dates. Your core job protection stays intact, while the federal 
+              "Working While on Claim" rule lets you keep 50 cents of your EI for every dollar earned up to a 90% income ceiling.</p>
           </div>
         </div>
 
-        <!-- Card B -->
         <div class="persona-card hover-shadow">
           <div>
             <div class="persona-tag">
@@ -1213,13 +1158,12 @@
           </div>
 
           <div class="solution-box">
-            <h4>&rarr; THE TTT SOLUTION</h4>
-            <p>Avoid long-term clinic negotiations entirely. Use TTT to safely monetize your skills, pick up contracts matching your child's unpredictable schedule, and independently rebuild your capital.</p>
+            <h4>&rarr; THE TRAVELING THERAPIST SOLUTION</h4>
+            <p>Avoid long-term clinic negotiations entirely. Use The Traveling Therapist to safely monetize your skills, pick up contracts matching your child's unpredictable schedule, and independently rebuild your capital.</p>
           </div>
         </div>
       </div>
 
-      <!-- Survey Banner -->
       <div class="survey-banner hover-shadow">
         <div class="survey-content">
           <div class="badge-pill">
@@ -1230,12 +1174,10 @@
           <p>Share anonymous feedback on contract leaves and EI usage to help us build a better platform. Complete this quick survey to earn <strong>3 raffle tickets</strong>.</p>
         </div>
         <div>
-          <!-- Changed to direct redirect linkage based on user requirements -->
-          <a href="{% url 'surveys' %}#clinicCollapseThree" id="surveyBtn" class="btn btn-primary" style="white-space: nowrap;">Take the 1-min Survey &rarr;</a>
+          <a href="{% url 'surveys' %}?survey=maternity#clinicianCollapseMaternity" id="surveyBtn" class="btn btn-primary" style="white-space: nowrap;">Take the 1-min Survey &rarr;</a>
         </div>
       </div>
 
-      <!-- Case Studies Header & Tabs -->
       <div class="case-studies-header">
         <span class="section-label">CASE STUDIES</span>
         <h2 class="section-title">Real clinicians. Real re-entry paths.</h2>
@@ -1249,7 +1191,6 @@
         </div>
       </div>
 
-      <!-- Case Study 1: Emma -->
       <div class="case-panel active" id="case-emma">
         <div class="case-grid hover-shadow">
           <div class="case-image-col">
@@ -1270,14 +1211,13 @@
               <p>Hit the maximum federal EI ceiling of $729/week (dropping to 38% of her income). Returning to the hospital full-time required immediate, rigid 40-hour weeks, but childcare costs threatened to wipe out her net daily take-home earnings. She considered hospital casual rosters, but re-onboarding with her current employer would instantly void her active ESA job-protection status, and the availability openings were incompatible with infant care.</p>
             </div>
             <div class="solution-box">
-              <div class="case-block-label" style="color: var(--accent-mint-dark);">THE TTT SOLUTION</div>
-              <p>Emma used TTT to accept short-term coverage shifts at an external private clinic as a Sole Proprietor. Her primary hospital job-protected leave remained 100% legally intact under the Ontario ESA. She leveraged the "Working While on Claim" rule to safely combine part-time contract earnings with her federal EI checks, operating seamlessly under her own name.</p>
+              <div class="case-block-label" style="color: var(--accent-mint-dark);">THE The Traveling Therapist SOLUTION</div>
+              <p>Emma used The Traveling Therapist to accept short-term coverage shifts at an external private clinic as a Sole Proprietor. Her primary hospital job-protected leave remained 100% legally intact under the Ontario ESA. She leveraged the "Working While on Claim" rule to safely combine part-time contract earnings with her federal EI checks, operating seamlessly under her own name.</p>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Case Study 2: Chloe -->
       <div class="case-panel" id="case-chloe">
         <div class="case-grid hover-shadow">
           <div class="case-image-col">
@@ -1295,24 +1235,28 @@
           <div class="case-content-col">
             <div>
               <div class="case-block-label">THE PROBLEM</div>
-              <p>The hyper-inflated cost of living in Metro Vancouver made the federal $729/week EI cap completely unviable for her mortgage. Concurrently, her corporate employer underwent internal restructuring through legal employer arbitrage, threatening to eliminate her role or force a constructive dismissal by changing her return schedule to mandatory late-night and weekend shift lines.</p>
+              <p>The hyper-inflated cost of living in Metro Vancouver made the federal $729/week EI cap completely unviable for her mortgage.
+                 Concurrently, her corporate employer underwent internal restructuring through legal employer arbitrage, threatening to eliminate 
+                 her role or force a constructive dismissal by changing her return schedule to mandatory late-night and weekend shift lines.</p>
             </div>
             <div class="solution-box">
-              <div class="case-block-label" style="color: var(--accent-mint-dark);">THE TTT SOLUTION</div>
-              <p>Chloe used TTT to review and offer up flexible clinical coverages at her own rates. It allowed her to evaluate different clinic cultures with zero long-term strings attached. After an incredibly successful 4-week coverage contract at a highly supportive, community-focused clinic, Chloe utilized TTT's permanent pathway to smoothly transition into a flexible, full-time role that perfectly fits her new family schedule.</p>
+              <div class="case-block-label" style="color: var(--accent-mint-dark);">THE TRAVELING THERAPIST SOLUTION</div>
+              <p>Chloe used The Traveling Therapist to review and offer up flexible clinical coverages at her own rates. It allowed her to evaluate 
+                different clinic cultures with zero long-term strings attached. After an incredibly successful 4-week coverage contract at a highly 
+                supportive, community-focused clinic, Chloe utilized The Traveling Therapist's permanent pathway to smoothly transition into a flexible, 
+                full-time role that perfectly fits her new family schedule.</p>
             </div>
             <div class="marketing-highlight-box">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
               <div>
                 <div class="m-label">MARKETING HIGHLIGHT</div>
-                <p>If a temporary contract goes well and both parties choose to align permanently, full-time placement onboarding is 100% free on TTT.</p>
+                <p>If a temporary contract goes well and both parties choose to align permanently, full-time placement onboarding is 100% free on The Traveling Therapist.</p>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Case Study 3: Sarah -->
       <div class="case-panel" id="case-sarah">
         <div class="case-grid hover-shadow">
           <div class="case-image-col">
@@ -1330,17 +1274,19 @@
           <div class="case-content-col">
             <div>
               <div class="case-block-label">THE PROBLEM</div>
-              <p>Switched to a new clinic 60 days before conceiving. Because she was a contractor and hadn't crossed the Alberta ESC 90-day employee threshold, she had zero legal job protection. Because her pregnancy was unplanned, she missed the 12-month self-employed EI enrollment window. Her income dropped to absolute $0 the day she stopped treating patients, and her clinic had replaced her shift blocks with another practitioner.</p>
+              <p>Switched to a new clinic 60 days before conceiving. Because she was a contractor and hadn't crossed the Alberta ESC 90-day employee 
+                threshold, she had zero legal job protection. Because her pregnancy was unplanned, she missed the 12-month self-employed EI enrollment window. Her income dropped to absolute $0 the day she stopped treating patients, and her clinic had replaced her shift blocks with another practitioner.</p>
             </div>
             <div class="solution-box">
-              <div class="case-block-label" style="color: var(--accent-mint-dark);">THE TTT SOLUTION</div>
-              <p>With no job to return to, Sarah used TTT as an independent career lifeline. She avoided restrictive clinic contracts, accessed active clinics needing immediate short-term coverages, and successfully monetized her skills on her own terms — working 6 hours one week and 12 hours the next to match her child's unpredictable routine.</p>
+              <div class="case-block-label" style="color: var(--accent-mint-dark);">THE TRAVELING THERAPIST SOLUTION</div>
+              <p>With no job to return to, Sarah used The Traveling Therapist as an independent career lifeline. She avoided restrictive clinic contracts, 
+                accessed active clinics needing immediate short-term coverages, and successfully monetized her skills on her own terms — working 6 hours one 
+                week and 12 hours the next to match her child's unpredictable routine.</p>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Case Study 4: David & Jessica -->
       <div class="case-panel" id="case-david">
         <div class="case-grid hover-shadow">
           <div class="case-image-col">
@@ -1358,17 +1304,21 @@
           <div class="case-content-col">
             <div>
               <div class="case-block-label">THE PROBLEM</div>
-              <p>To maximize family income and co-parenting structures, David leveraged the federal Parental Sharing Benefit, claiming his 5 'use-it-or-lose-it' bonus weeks of paid leave. They needed a way to optimize this short window without creating friction in his job.</p>
+              <p>To maximize family income and co-parenting structures, David leveraged the federal Parental Sharing Benefit, claiming his 5 
+                'use-it-or-lose-it' bonus weeks of paid leave. They needed a way to optimize this short window without creating friction in his job.</p>
             </div>
             <div class="solution-box">
-              <div class="case-block-label" style="color: var(--accent-mint-dark);">THE TTT SOLUTION</div>
-              <p>With David home managing full-time infant care at zero extra cost, Jessica used TTT to accept premium-rate, short-term contract coverages. Returning to her old clinic for just 5 weeks would have meant rigid scheduling blocks, pre-existing fee-split baselines, and permanent return expectations. TTT let her turn the 5-week block into a high-margin sprint with zero permanent commitments.</p>
+              <div class="case-block-label" style="color: var(--accent-mint-dark);">THE TRAVELING THERAPIST SOLUTION</div>
+              <p>With David home managing full-time infant care at zero extra cost, Jessica used The Traveling Therapist to accept premium-rate, 
+                short-term contract coverages. Returning to her old clinic for just 5 weeks would have meant rigid scheduling blocks, pre-existing 
+                fee-split baselines, and permanent return expectations. The Traveling Therapist let her turn the 5-week block into a high-margin 
+                sprint with zero permanent 
+                commitments.</p>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Case Study 5: Manon -->
       <div class="case-panel" id="case-manon">
         <div class="case-grid hover-shadow">
           <div class="case-image-col">
@@ -1386,22 +1336,24 @@
           <div class="case-content-col">
             <div>
               <div class="case-block-label">THE PROBLEM</div>
-              <p>Under QPIP, Manon received a higher basic payout ($1,386.54/week) based on a $103,000 ceiling, avoiding a financial crisis. However, due to extreme commercial real estate pressures ($120–$150/day unabsorbed room overhead), her primary clinic had to give her room to a new associate, leaving zero casual or flexible hours for her to ease back in.</p>
+              <p>Under QPIP, Manon received a higher basic payout ($1,386.54/week) based on a $103,000 ceiling, avoiding a financial crisis. However, 
+                due to extreme commercial real estate pressures ($120–$150/day unabsorbed room overhead), her primary clinic had to give her room to a 
+                new associate, leaving zero casual or flexible hours for her to ease back in.</p>
             </div>
             <div class="solution-box">
-              <div class="case-block-label" style="color: var(--accent-mint-dark);">THE TTT SOLUTION</div>
-              <p>Under Quebec's LNT, secondary contracting during a leave is explicitly legal. Manon used TTT to accept high-paying, independent weekend corporate wellness events and short clinical coverages across Montreal. She kept her primary clinic relationships perfectly healthy, preserved her long-term position, and cleanly maximized her total annual income within Quebec's regulatory framework.</p>
+              <div class="case-block-label" style="color: var(--accent-mint-dark);">THE TRAVELING THERAPIST SOLUTION</div>
+              <p>Under Quebec's LNT, secondary contracting during a leave is explicitly legal. Manon used The Traveling Therapist to accept high-paying, 
+                independent weekend corporate wellness events and short clinical coverages across Montreal. She kept her primary clinic relationships 
+                perfectly healthy, preserved her long-term position, and cleanly maximized her total annual income within Quebec's regulatory framework.</p>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- ==========================================
-           NEW CTA SECTION 
-      =========================================== -->
       <div class="cta-banner">
         <h2>Re-enter clinical practice on your own terms.</h2>
-        <p>Join hundreds of Canadian clinicians utilizing TTT to maintain professional autonomy, replace lost income, and control their family schedules.</p>
+        <p>Join hundreds of Canadian clinicians utilizing The Traveling Therapist to maintain professional autonomy, replace lost income, and control 
+          their family schedules.</p>
         <div class="cta-btn-wrapper">
           <a href="{% url 'register' %}" class="btn btn-primary btn-cta">Get Started Free &rarr;</a>
         </div>
@@ -1422,10 +1374,8 @@
           <p><strong>Important note:</strong> The following serves as an operational guide to platform positioning and public regulatory frameworks. The Traveling Therapist does not provide explicit personal legal or financial counsel. For leave planning, always cross-reference your specific profile details directly with Service Canada and your provincial Ministry of Labour.</p>
         </div>
 
-        <!-- Converted to Bootstrap Accordion Format -->
         <div class="accordion" id="maternityFaqAccordion">
           
-          <!-- FAQ Item 1 -->
           <div class="accordion-item border-0 mb-3 shadow-sm rounded">
             <h2 class="accordion-header" id="faqHeadingOne">
               <button class="accordion-button text-weight-normal collapsed" type="button" data-bs-toggle="collapse"
@@ -1441,7 +1391,6 @@
             </div>
           </div>
 
-          <!-- FAQ Item 2 -->
           <div class="accordion-item border-0 mb-3 shadow-sm rounded">
             <h2 class="accordion-header" id="faqHeadingTwo">
               <button class="accordion-button text-weight-normal collapsed" type="button" data-bs-toggle="collapse"
@@ -1457,7 +1406,6 @@
             </div>
           </div>
 
-          <!-- FAQ Item 3 -->
           <div class="accordion-item border-0 mb-3 shadow-sm rounded">
             <h2 class="accordion-header" id="faqHeadingThree">
               <button class="accordion-button text-weight-normal collapsed" type="button" data-bs-toggle="collapse"
@@ -1473,12 +1421,11 @@
             </div>
           </div>
 
-          <!-- FAQ Item 4 -->
           <div class="accordion-item border-0 mb-3 shadow-sm rounded">
             <h2 class="accordion-header" id="faqHeadingFour">
               <button class="accordion-button text-weight-normal collapsed" type="button" data-bs-toggle="collapse"
                 data-bs-target="#faqCollapseFour" aria-expanded="false" aria-controls="faqCollapseFour">
-                Do I need a complex business license or incorporation to pick up shifts through TTT while on leave?
+                Do I need a complex business license or incorporation to pick up shifts through The Traveling Therapist while on leave?
               </button>
             </h2>
             <div id="faqCollapseFour" class="accordion-collapse collapse" aria-labelledby="faqHeadingFour"
@@ -1500,6 +1447,7 @@
       const salaryDisplay = document.getElementById('salaryDisplay');
       const provinceSelect = document.getElementById('provinceSelect');
       const timelineSelect = document.getElementById('timelineSelect');
+      const capAlert = document.getElementById('capAlert');
 
       const preLeaveVal = document.getElementById('preLeaveVal');
       const payoutVal = document.getElementById('payoutVal');
@@ -1519,15 +1467,23 @@
 
         const weeklyPreLeave = annualSalary / 52;
         let weeklyPayout = 0;
+        let capHit = false;
 
         if (province === 'QC') {
           const mie = 103000;
           const insurableEarnings = Math.min(annualSalary, mie);
           weeklyPayout = (insurableEarnings * 0.70) / 52;
+          if (annualSalary >= mie) capHit = true;
         } else if (timeline === 'standard') {
           weeklyPayout = Math.min(weeklyPreLeave * 0.55, 729);
+          if (weeklyPreLeave * 0.55 >= 729) capHit = true;
         } else {
           weeklyPayout = Math.min(weeklyPreLeave * 0.33, 437);
+          if (weeklyPreLeave * 0.33 >= 437) capHit = true;
+        }
+
+        if (capAlert) {
+          capAlert.style.display = capHit ? 'block' : 'none';
         }
 
         const deficit = Math.max(0, weeklyPreLeave - weeklyPayout);

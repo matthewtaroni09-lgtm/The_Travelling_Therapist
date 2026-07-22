@@ -4,87 +4,61 @@
 <!-- content -->
 <p id="pageTitle" class="d-none">Healthcare_Facility_Guide</p>
 <div class="container" style="background-color: rgba(0, 0, 0, 0);">
-    <div class=" row">
-        <div class="col-md-12">
-            <h1 class="text-center mb-5">Fill your gaps in days, not weeks</h1>
+    
+    <!-- Cleaned up Top/Hero Section -->
+    <div class="row justify-content-center text-center py-5" id="intro">
+        <div class="col-lg-10">
+            <h1 class="display-4 fw-bold text-dark mb-4">Fill your gaps in days, not weeks</h1>
+            <p class="lead fs-3 text-secondary mb-0">How healthcare facilities like you are ditching slow, costly hiring and keeping doors open at full capacity.</p>
         </div>
     </div>
-    <div class="row text-center" id="intro">
-        <h2>How healthcare facilities like you are ditching slow, costly hiring and keeping doors open at full
-            capacity</h2>
-    </div>
-    <br>
-    <div class="row">
-        <div class="col-lg-4 col-md-12"><img id="clinicOwnerGuideMainImage" src="/media/images/clinic_guide_main.png"
-                class="img-fluid" alt="healthcare facility staff"></div>
+
+    <!-- Improved spacing for "A Day in the Life" -->
+    <div class="row align-items-center mb-5 pb-3">
+        <div class="col-lg-4 col-md-12 text-center mb-4 mb-lg-0">
+            <img id="clinicOwnerGuideMainImage" src="/media/images/clinic_guide_main.png"
+                class="img-fluid rounded shadow-sm" alt="healthcare facility staff">
+        </div>
         <div class="col-lg-8 col-md-12">
-            <h2>A Day in the Life</h2>
-            <p>You open the healthcare facility with a full morning slate of patients, but within an hour you're pulled
-                into the
-                hiring
-                scramble: an agency call saying their temp can't cover tonight's shift, a job-board posting that
-                generated
-                dozens of irrelevant resumes, and half an inbox of messages from clinicians who either aren't available
-                or
-                expect different pay terms. As both practitioner and manager you must keep appointments full, handle
-                rent
-                and equipment issues, and cover unexpected gaps when contractors leave or go on parental leave. Hiring
-                turns
-                into a recurring operational emergency that steals clinical hours, reduces patient access, and adds
-                hidden
-                costs—time you should be spending growing the business and caring for patients. </p>
+            <h2 class="mb-3">A Day in the Life</h2>
+            <p class="text-muted lh-lg">You open the healthcare facility with a full morning slate of patients, but within an hour you're pulled
+                into the hiring scramble: an agency call saying their temp can't cover tonight's shift, a job-board posting that
+                generated dozens of irrelevant resumes, and half an inbox of messages from clinicians who either aren't available
+                or expect different pay terms. As both practitioner and manager you must keep appointments full, handle
+                rent and equipment issues, and cover unexpected gaps when contractors leave or go on parental leave. Hiring
+                turns into a recurring operational emergency that steals clinical hours, reduces patient access, and adds
+                hidden costs—time you should be spending growing the business and caring for patients. </p>
         </div>
     </div>
-    <div class="row text-center m-3">
-        <!-- If the user is authenticated and a clinic link them to the create an auctuion. If they are not a clinic don't show the link because they won't be able to create an auction. -->
-        {% if user.is_authenticated %}
-        {% if user.account.get_split_user_type == 'Clinic' %}
+
+    {% if not user.is_authenticated or user.account.get_split_user_type == 'Clinic' %}
+    <div class="row text-center mb-5">
         <div class="col-12 text-center">
-            <a class="btn btn-primary btn-lg guidePageButton" href="{% url 'create-auction' %}">Post Your First
-                Listing</a>
+            <a class="btn btn-primary btn-lg guidePageButton px-5 py-3 rounded-pill" href="{% url 'create-auction' %}">Post Your First Listing</a>
         </div>
-        {% endif %}
-        <!-- If the user is not logged in then go to the sign up page -->
-        {% else %}
-        <div class="col-12 text-center">
-            <a class="btn btn-primary btn-lg guidePageButton" href="{% url 'register' %}">Post Your First
-                Listing</a>
-        </div>
-        {% endif %}
     </div>
+    {% endif %}
+
     <div class="row text-center">
         <div id="quoteCarousel" class="carousel slide mt-4 mb-4" data-bs-ride="carousel" data-bs-interval="50000000">
             <div class="carousel-inner">
                 <div class="carousel-item active">
-                    <p class="carouselP"><i>You wear both hats—clinician and owner—so every last-minute contractor gap
-                            forces you to
-                            reshuffle patients and lose billable time.</i></p>
+                    <p class="carouselP"><i>You wear both hats—clinician and owner—so every last-minute contractor gap forces you to reshuffle patients and lose billable time.</i></p>
                     <p><b><i>Private Healthcare Facility</i></b></p>
                 </div>
                 <div class="carousel-item">
-                    <p class="carouselP"><i>66% of facilities we surveyed in November 2025 claimed that their biggest
-                            hiring problem was SPEED, citing a "slow hiring process" as a hurdle when hiring or filling
-                            positions.</i></p>
+                    <p class="carouselP"><i>66% of facilities we surveyed in November 2025 claimed that their biggest hiring problem was SPEED, citing a "slow hiring process" as a hurdle when hiring or filling positions.</i></p>
                 </div>
                 <div class="carousel-item">
-                    <p class="carouselP"><i>In an acute ward you juggle bed flow, emergent patient needs, and department
-                            staffing; when a
-                            contractor can't cover a shift you're forced into costly overtime, rapid redeployments, and
-                            interrupted care schedules. </i></p>
+                    <p class="carouselP"><i>In an acute ward you juggle bed flow, emergent patient needs, and department staffing; when a contractor can't cover a shift you're forced into costly overtime, rapid redeployments, and interrupted care schedules. </i></p>
                     <p><b><i>Hospital</i></b></p>
                 </div>
                 <div class="carousel-item">
-                    <p class="carouselP"><i>You're responsible for continuity of care across residents; last-minute
-                            clinician gaps or
-                            rotating agency staff create handoff risk, increased documentation load, and extra time
-                            spent stabilizing routines.</i></p>
+                    <p class="carouselP"><i>You're responsible for continuity of care across residents; last-minute clinician gaps or rotating agency staff create handoff risk, increased documentation load, and extra time spent stabilizing routines.</i></p>
                     <p><b><i>Long Term Care</i></b></p>
                 </div>
                 <div class="carousel-item">
-                    <p class="carouselP"><i>Your caseloads depend on consistent therapy blocks; when contract clinicians
-                            leave or take
-                            leave you scramble to protect discharge timelines, maintain program integrity, and keep
-                            billable appointments full.</i></p>
+                    <p class="carouselP"><i>Your caseloads depend on consistent therapy blocks; when contract clinicians leave or take leave you scramble to protect discharge timelines, maintain program integrity, and keep billable appointments full.</i></p>
                     <p><b><i>Rehab Facility</i></b></p>
                 </div>
             </div>
@@ -98,126 +72,88 @@
             </button>
         </div>
     </div>
-    <div class="row" id="hiringHole">
+
+    <div class="row mt-5" id="hiringHole">
         <div class="col-lg-12 col-md-12">
-            <h2>The Hiring Hole</h2>
-            <div class="container my-5">
+            <h2 class="text-center mb-4">The Hiring Hole</h2>
+            <div class="container mb-5">
                 <div class="row g-3">
                     <div class="col-12 col-md-4">
                         <blockquote class="quote-card quote-card-facility">
-                            <p>“We posted on job boards, screened 200 resumes, and still ended up short-staffed. Our HR
-                                staff spends a huge portion of their time spinning their wheels without traction.”</p>
+                            <p>“We posted on job boards, screened 200 resumes, and still ended up short-staffed. Our HR staff spends a huge portion of their time spinning their wheels without traction.”</p>
                             <footer>— Healthcare Facility Owner</footer>
                         </blockquote>
                     </div>
                     <div class="col-12 col-md-4">
                         <blockquote class="quote-card quote-card-facility">
-                            <p>“My local recruiter promised a pelvic physio in two weeks—turned out to be a no-show.”
-                            </p>
+                            <p>“My local recruiter promised a pelvic physio in two weeks—turned out to be a no-show.”</p>
                             <footer>— Healthcare Facility Manager</footer>
                         </blockquote>
                     </div>
                     <div class="col-12 col-md-4">
                         <blockquote class="quote-card quote-card-facility">
-                            <p>“Agencies ate up 30% of my budget — calls/emails took away clinical time I needed to care
-                                for patients!”</p>
+                            <p>“Agencies ate up 30% of my budget — calls/emails took away clinical time I needed to care for patients!”</p>
                             <footer>— Practice Owner</footer>
                         </blockquote>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- <div class="col-lg-4 col-md-12"><img id="clinicOwnerGuideMiddleImage"
-                src="/media/images/clinic_guide_middle.png" class="img-fluid" alt="Clinic staff"></div> -->
     </div>
-    <div class="mt-4 mb-4 p-4 survey-cta-box">
-        <h3 class="mb-2 text-weight-bold text-dark-colour">Help Us Understand Your
-            Hiring Gaps</h3>
-        <p class="mb-3 text-dark-colour">Tell us where your facility is short-staffed. As a thank-you,
-            get <strong class="survey-cta-text-primary">5% off your first invoice</strong> when you complete a hire.
-        </p>
-        <a href="https://forms.gle/UJzcTFQQnRzg9i1L7" target="_blank" class="btn btn-lg mb-3 survey-cta-button">
+
+    <div class="mt-4 mb-5 p-4 survey-cta-box rounded shadow-sm">
+        <h3 class="mb-2 text-weight-bold text-dark-colour">Help Us Understand Your Hiring Gaps</h3>
+        <p class="mb-3 text-dark-colour">Tell us where your facility is short-staffed. As a thank-you, get <strong class="survey-cta-text-primary">5% off your first invoice</strong> when you complete a hire.</p>
+        <a href="https://forms.gle/UJzcTFQQnRzg9i1L7" target="_blank" class="btn btn-lg mb-3 survey-cta-button px-4 py-2">
             Share your story, Earn a Discount &rarr;
         </a>
-        <div class="d-flex flex-wrap survey-cta-footer-text">
+        <div class="d-flex flex-wrap survey-cta-footer-text text-muted">
             <span class="me-3">&bull; 2&ndash;3 minute survey</span>
             <span class="me-3">&bull; No obligation</span>
             <span>&bull; Built for healthcare facilities</span>
-            <br>
         </div>
     </div>
 
-    <!-- Secondary Banner CTA -->
-    <!-- <div class="mt-4 mb-5 p-2 survey-cta-banner">
-        <div class="bg-white p-3 d-flex flex-wrap align-items-center justify-content-between survey-cta-banner-inner">
-            <div class="d-flex align-items-center mb-3 mb-md-0">
-                <span class="material-icons small survey-cta-icon-color">assignment</span>
-                <h4 class="m-0 text-weight-bold text-large">
-                    <span class="survey-cta-text-dark">Share Your Staffing Gaps</span>
-                    <span class="survey-cta-text-primary ms-1 me-1">&rarr;</span>
-                    <span class="survey-cta-text-primary">Get 5% Off Your First Hire</span>
-                </h4>
-            </div>
-            <a href="https://forms.gle/UJzcTFQQnRzg9i1L7" target="_blank"
-                class="btn btn-lg survey-cta-button survey-cta-button-sm text-nowrap">
-                Complete the Survey &rarr;
-            </a>
-        </div>
-    </div> -->
-    <div class="row text-center" id="exploringStaffingSolutions">
-        <h2>Explore Your Staffing Solutions</h2>
-        <p>Here's how each hiring method tackles (or fails) the staffing puzzle - and why The Traveling Therapist
-            outpaces them all.</p>
+    <div class="row text-center mt-5 mb-4" id="exploringStaffingSolutions">
+        <h2 class="display-6 fw-bold">Explore Your Staffing Solutions</h2>
+        <p class="lead text-muted">Here's how each hiring method tackles (or fails) the staffing puzzle - and why The Traveling Therapist outpaces them all.</p>
     </div>
 
     <!-- Navigation for Staffing Solutions Section -->
-    <nav class="navbar navbar-expand-xl navbar-light sub-nav shadow-sm rounded-4 mb-5 border-0"
-        style="background-color: #f8f9fa;">
+    <nav class="navbar navbar-expand-xl navbar-light sub-nav shadow-sm rounded-4 mb-5 border-0" style="background-color: #f8f9fa;">
         <div class="container-fluid">
-            <button class="navbar-toggler m-1" type="button" data-bs-toggle="collapse"
-                data-bs-target="#subNavbarToggler" aria-controls="subNavbarToggler" aria-expanded="false"
-                aria-label="Toggle navigation">
+            <button class="navbar-toggler m-1" type="button" data-bs-toggle="collapse" data-bs-target="#subNavbarToggler" aria-controls="subNavbarToggler" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="subNavbarToggler">
                 <ul class="navbar-nav w-100 justify-content-between mb-0 py-2">
                     <li class="nav-item">
-                        <a class="nav-link text-weight-bold d-flex align-items-center staffSolutionsNavLink"
-                            href="#JobBoard" style="color: #198754;">
-                            <img src="/media/images/job-board.png" alt="Hands shaking" class="me-2"
-                                style="height: 28px; width: auto;">
+                        <a class="nav-link text-weight-bold d-flex align-items-center staffSolutionsNavLink" href="#JobBoard" style="color: #198754;">
+                            <img src="/media/images/job-board.png" alt="Hands shaking" class="me-2" style="height: 28px; width: auto;">
                             Job Board
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-weight-bold d-flex align-items-center staffSolutionsNavLink"
-                            href="#DirectEmployerRecruitment" style="color: #198754;">
-                            <img src="/media/images/recruitment.png" alt="People icons" class="me-2"
-                                style="height: 28px; width: auto;">
+                        <a class="nav-link text-weight-bold d-flex align-items-center staffSolutionsNavLink" href="#DirectEmployerRecruitment" style="color: #198754;">
+                            <img src="/media/images/recruitment.png" alt="People icons" class="me-2" style="height: 28px; width: auto;">
                             Direct Recruitment
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-weight-bold d-flex align-items-center staffSolutionsNavLink"
-                            href="#HeadhunterRecruiter" style="color: #198754;">
-                            <img src="/media/images/headhunting.png" alt="Headhunter" class="me-2"
-                                style="height: 28px; width: auto;">
+                        <a class="nav-link text-weight-bold d-flex align-items-center staffSolutionsNavLink" href="#HeadhunterRecruiter" style="color: #198754;">
+                            <img src="/media/images/headhunting.png" alt="Headhunter" class="me-2" style="height: 28px; width: auto;">
                             Headhunter/Recruiter
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-weight-bold d-flex align-items-center staffSolutionsNavLink"
-                            href="#StaffingAgency" style="color: #198754;">
-                            <img src="/media/images/staffingagency.png" alt="Staffing Agency" class="me-2"
-                                style="height: 28px; width: auto;">
+                        <a class="nav-link text-weight-bold d-flex align-items-center staffSolutionsNavLink" href="#StaffingAgency" style="color: #198754;">
+                            <img src="/media/images/staffingagency.png" alt="Staffing Agency" class="me-2" style="height: 28px; width: auto;">
                             Staffing Agency
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-weight-bold d-flex align-items-center staffSolutionsNavLink"
-                            href="#TheTravelingTherapist" style="color: #198754;">
-                            <img src="/media/images/T_Logo_Final.png" alt="TTT Logo" class="me-2"
-                                style="height: 28px; width: auto;">
+                        <a class="nav-link text-weight-bold d-flex align-items-center staffSolutionsNavLink" href="#TheTravelingTherapist" style="color: #198754;">
+                            <img src="/media/images/T_Logo_Final.png" alt="TTT Logo" class="me-2" style="height: 28px; width: auto;">
                             The Traveling Therapist
                         </a>
                     </li>
@@ -227,46 +163,30 @@
     </nav>
 
     <!-- Job Board -->
-    <div class="row mb-5">
+    <div class="row pt-4">
         <div>
-            <h2 class="text-weight-bold mb-4 d-flex align-items-center" id="JobBoard"
-                style="color: #198754; scroll-margin-top: 170px;">
-                <img class="AccordionIcon me-3" src="/media/images/job-board.png" alt="Hands shaking"
-                    style="height: 48px; width: auto;">
+            <h2 class="text-weight-bold mb-4 d-flex align-items-center" id="JobBoard" style="color: #198754; scroll-margin-top: 170px;">
+                <img class="AccordionIcon me-3" src="/media/images/job-board.png" alt="Hands shaking" style="height: 48px; width: auto;">
                 Job Board
             </h2>
             <div>
                 <h4>Job Board Case Study</h4>
-                <p class="ps-3 pe-3"><i>“We posted a PT role on three major job boards and
-                        spent a week
-                        screening
-                        applicants—only
-                        to find most people applying weren't even physios! That's lost time for me as the healthcare
-                        facility
-                        manager, and We never ended up getting coverage for our Maternity leave physio, leaving
-                        our existing physios trying to cover for her, and my patients in the healthcare facility less
-                        often
-                        than they needed"
-                    </i></p>
+                <p class="ps-3 pe-3 text-muted"><i>“We posted a PT role on three major job boards and spent a week screening applicants—only to find most people applying weren't even physios! That's lost time for me as the healthcare facility manager, and We never ended up getting coverage for our Maternity leave physio, leaving our existing physios trying to cover for her, and my patients in the healthcare facility less often than they needed"</i></p>
                 <div class="row g-4 mt-2">
                     <div class="col-lg-4 col-md-12 staffingSolutionsSection">
                         <div class="bg-white rounded-4 shadow-sm p-4 h-100 border">
-                            <h4 class="ps-2">
-                                <span class="text-danger">☒</span> What Goes Wrong
-                            </h4>
-                            <ul class="accordionList mt-3">
-                                <li>High volume of unqualified resumes; screening steals healthcare facility admin time.
-                                </li>
+                            <h4 class="ps-2"><span class="text-danger">☒</span> What Goes Wrong</h4>
+                            <ul class="accordionList mt-3 text-muted">
+                                <li>High volume of unqualified resumes; screening steals healthcare facility admin time.</li>
                                 <li>Passive candidates rarely respond to generic postings.</li>
                                 <li>No built-in verification or credential gating; false positives are common.</li>
                             </ul>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-12 staffingSolutionsSection">
-                        <div class="bg-white rounded-4 shadow-sm p-4 h-100 border"
-                            style="background-color: #fcfcfc !important;">
+                        <div class="bg-white rounded-4 shadow-sm p-4 h-100 border" style="background-color: #fcfcfc !important;">
                             <h4><span class="impactThumbsDown">🖓</span> Impact</h4>
-                            <ul class="accordionList mt-3">
+                            <ul class="accordionList mt-3 text-muted">
                                 <li>Lost hours for staff</li>
                                 <li>Delayed fill times</li>
                                 <li>Patient cancellations</li>
@@ -274,117 +194,75 @@
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-12 staffingSolutionsSection">
-                        <div class="bg-white rounded-4 shadow-sm p-4 h-100 border"
-                            style="border-top: 4px solid #198754 !important;">
+                        <div class="bg-white rounded-4 shadow-sm p-4 h-100 border" style="border-top: 4px solid #198754 !important;">
                             <h4><span class="text-success">☑</span> How The Traveling Therapist Can Help</h4>
-                            <ul class="accordionList mt-3">
-                                <li>Post once on the The Traveling Therapist platform and receive clinician focused
-                                    offers
-                                    during a 14-day listing window.</li>
-                                <li>The Traveling Therapist reduces noise by attracting clinicians who actively place
-                                    offers
-                                    on roles, not passive applicants.</li>
-                                <li>Built-in match workflow cuts preliminary screening time and surfaces qualified
-                                    clinicians faster.</li>
+                            <ul class="accordionList mt-3 text-muted">
+                                <li>Post once on the The Traveling Therapist platform and receive clinician focused offers during a 14-day listing window.</li>
+                                <li>The Traveling Therapist reduces noise by attracting clinicians who actively place offers on roles, not passive applicants.</li>
+                                <li>Built-in match workflow cuts preliminary screening time and surfaces qualified clinicians faster.</li>
                             </ul>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- If the user is authenticated and a clinic link them to the create an auctuion. If they are not a clinic don't show the link because they won't be able to create an auction. -->
-            {% if user.is_authenticated %}
-            {% if user.account.get_split_user_type == 'Clinic' %}
-            <div class="col-12 text-center">
-                <a class="btn btn-primary btn-lg mb-3 text-center" href="{% url 'create-auction' %}">Post a
-                    targeted
-                    listing in under 10
-                    minutes and
-                    see offers within 14 days.</a>
-            </div>
-            {% endif %}
-            <!-- If the user is not logged in then go to the sign up page -->
-            {% else %}
-            <div class="col-12 text-center">
-                <a class="btn btn-primary btn-lg mb-3 text-center" href="{% url 'register' %}">Post a
-                    targeted
-                    listing in under 10
-                    minutes and
-                    see offers within 14 days.</a>
+            
+            {% if not user.is_authenticated or user.account.get_split_user_type == 'Clinic' %}
+            <div class="col-12 text-center mt-5 mb-5 pb-4">
+                <a class="btn btn-primary btn-lg px-5 py-3 rounded-pill shadow" href="{% url 'create-auction' %}">
+                    Post a targeted listing in under 10 minutes and see offers within 14 days.
+                </a>
             </div>
             {% endif %}
         </div>
     </div>
+
     <!-- Direct Employer Recruitment -->
-    <div class="row mb-5">
+    <div class="row pt-4">
         <div>
-            <h2 class="text-weight-bold mb-4 d-flex align-items-center" id="DirectEmployerRecruitment"
-                style="color: #198754; scroll-margin-top: 170px;">
-                <img class="AccordionIcon me-3" src="/media/images/recruitment.png"
-                    alt="People icons with magnfiying glass" style="height: 48px; width: auto;">
+            <h2 class="text-weight-bold mb-4 d-flex align-items-center" id="DirectEmployerRecruitment" style="color: #198754; scroll-margin-top: 170px;">
+                <img class="AccordionIcon me-3" src="/media/images/recruitment.png" alt="People icons with magnfiying glass" style="height: 48px; width: auto;">
                 Direct Employer Recruitment
             </h2>
             <div>
                 <h4>Direct Employer Recruitment Case Study</h4>
-                <p class="ps-3 pe-3"><i>“You emailed 25 local clinicians and messaged a few alumni
-                        groups in your network; three people replied and none were available in your needed
-                        timeframe."
-                    </i></p>
+                <p class="ps-3 pe-3 text-muted"><i>“You emailed 25 local clinicians and messaged a few alumni groups in your network; three people replied and none were available in your needed timeframe."</i></p>
                 <div class="row g-4 mt-2">
                     <div class="col-lg-4 col-md-12 staffingSolutionsSection">
                         <div class="bg-white rounded-4 shadow-sm p-4 h-100 border">
-                            <h4 class="ps-2">
-                                <span class="text-danger">☒</span> What Goes Wrong
-                            </h4>
-                            <ul class="accordionList mt-3">
+                            <h4 class="ps-2"><span class="text-danger">☒</span> What Goes Wrong</h4>
+                            <ul class="accordionList mt-3 text-muted">
                                 <li>Reliant on personal network reach;</li>
                                 <li>SLOW and reliant on your network to get back to you with potential options!</li>
-                                <li>Follow-up burden falls on healthcare facility staff and relies on you seeing the
-                                    messages trying to get you a clinician.</li>
+                                <li>Follow-up burden falls on healthcare facility staff and relies on you seeing the messages trying to get you a clinician.</li>
                                 <li>Negotiation on splits or rates often stalls without a neutral marketplace.</li>
                             </ul>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-12 staffingSolutionsSection">
-                        <div class="bg-white rounded-4 shadow-sm p-4 h-100 border"
-                            style="background-color: #fcfcfc !important;">
+                        <div class="bg-white rounded-4 shadow-sm p-4 h-100 border" style="background-color: #fcfcfc !important;">
                             <h4><span class="impactThumbsDown">🖓</span> Impact</h4>
-                            <ul class="accordionList mt-3">
-                                <li>Extended vacancy windows and continuous internal distraction from patient care.
-                                </li>
+                            <ul class="accordionList mt-3 text-muted">
+                                <li>Extended vacancy windows and continuous internal distraction from patient care.</li>
                             </ul>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-12 staffingSolutionsSection">
-                        <div class="bg-white rounded-4 shadow-sm p-4 h-100 border"
-                            style="border-top: 4px solid #198754 !important;">
+                        <div class="bg-white rounded-4 shadow-sm p-4 h-100 border" style="border-top: 4px solid #198754 !important;">
                             <h4><span class="text-success">☑</span> How The Traveling Therapist Can Help</h4>
-                            <ul class="accordionList mt-3">
-                                <li>Convert outreach effort into a single listing: set your schedule, budget ceiling,
-                                    and
-                                    whether you’ll offer a fee-split or full contract price.</li>
-                                <li>Clinicians place an offer directly, bringing negotiation into a transparent
-                                    marketplace
-                                    rather
-                                    than
-                                    one-on-one outreach.</li>
+                            <ul class="accordionList mt-3 text-muted">
+                                <li>Convert outreach effort into a single listing: set your schedule, budget ceiling, and whether you’ll offer a fee-split or full contract price.</li>
+                                <li>Clinicians place an offer directly, bringing negotiation into a transparent marketplace rather than one-on-one outreach.</li>
                                 <li>You only pay if a match is made, eliminating wasted outreach spend.</li>
                             </ul>
                         </div>
                     </div>
                 </div>
-                <!-- If the user is authenticated and a clinic link them to the create an auctuion. If they are not a clinic don't show the link because they won't be able to create an auction. -->
-                {% if user.is_authenticated %}
-                {% if user.account.get_split_user_type == 'Clinic' %}
-                <div class="col-12 text-center">
-                    <a class="btn btn-primary btn-lg mb-3 text-center" href="{% url 'create-auction' %}">Create a
-                        listing and stop cold-emailing clinicians—let them come to you.</a>
-                </div>
-                {% endif %}
-                <!-- If the user is not logged in then go to the sign up page -->
-                {% else %}
-                <div class="col-12 text-center">
-                    <a class="btn btn-primary btn-lg mb-3 text-center" href="{% url 'register' %}">Create a listing and
-                        stop cold-emailing clinicians—let them come to you.</a>
+                
+                {% if not user.is_authenticated or user.account.get_split_user_type == 'Clinic' %}
+                <div class="col-12 text-center mt-5 mb-5 pb-4">
+                    <a class="btn btn-primary btn-lg px-5 py-3 rounded-pill shadow" href="{% url 'create-auction' %}">
+                        Create a listing and stop cold-emailing clinicians—let them come to you.
+                    </a>
                 </div>
                 {% endif %}
             </div>
@@ -392,75 +270,53 @@
     </div>
 
     <!-- Headhunter/Recruiter -->
-    <div class="row mb-5">
+    <div class="row pt-4">
         <div>
-            <h2 class="text-weight-bold mb-4 d-flex align-items-center" id="HeadhunterRecruiter"
-                style="color: #198754; scroll-margin-top: 170px;">
-                <img class="AccordionIcon me-3" src="/media/images/headhunting.png" alt="Person icon with target"
-                    style="height: 48px; width: auto;">
+            <h2 class="text-weight-bold mb-4 d-flex align-items-center" id="HeadhunterRecruiter" style="color: #198754; scroll-margin-top: 170px;">
+                <img class="AccordionIcon me-3" src="/media/images/headhunting.png" alt="Person icon with target" style="height: 48px; width: auto;">
                 Headhunter/Recruiter
             </h2>
             <div>
                 <h4>Headhunter/Recruiter Case Study</h4>
-                <p class="ps-3 pe-3"><i>“You emailed 25 local clinicians and messaged a few alumni
-                        groups in your network; three people replied and none were available in your needed
-                        timeframe."
-                    </i></p>
+                <p class="ps-3 pe-3 text-muted"><i>“You signed with a specialized headhunter who promised top-tier talent in days. A month later, after endless back-and-forth
+                     phone calls and a quote for a 20% placement fee, they presented one candidate who wasn't even available in your required timeframe."</i></p>
                 <div class="row g-4 mt-2">
                     <div class="col-lg-4 col-md-12 staffingSolutionsSection">
                         <div class="bg-white rounded-4 shadow-sm p-4 h-100 border">
-                            <h4 class="ps-2">
-                                <span class="text-danger">☒</span> What Goes Wrong
-                            </h4>
-                            <ul class="accordionList mt-3">
+                            <h4 class="ps-2"><span class="text-danger">☒</span> What Goes Wrong</h4>
+                            <ul class="accordionList mt-3 text-muted">
                                 <li>Employer-paid placement models can be opaque and costly.</li>
-                                <li>Recruiters may prioritize employer relationships over long-term fit or retention.
-                                </li>
+                                <li>Recruiters may prioritize employer relationships over long-term fit or retention.</li>
                                 <li>Fees are typically a percentage of salary and reduce hiring transparency.</li>
                                 <li>Back and forth with a headhunter middleman via phone/email to get a candidate </li>
                             </ul>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-12 staffingSolutionsSection">
-                        <div class="bg-white rounded-4 shadow-sm p-4 h-100 border"
-                            style="background-color: #fcfcfc !important;">
+                        <div class="bg-white rounded-4 shadow-sm p-4 h-100 border" style="background-color: #fcfcfc !important;">
                             <h4><span class="impactThumbsDown">🖓</span> Impact</h4>
-                            <ul class="accordionList mt-3">
-                                <li>High placement costs with a slow human middleman that can often leave you
-                                    questioning
-                                    whether it was better to not get the coverage at all.</li>
+                            <ul class="accordionList mt-3 text-muted">
+                                <li>High placement costs with a slow human middleman that can often leave you questioning whether it was better to not get the coverage at all.</li>
                             </ul>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-12 staffingSolutionsSection">
-                        <div class="bg-white rounded-4 shadow-sm p-4 h-100 border"
-                            style="border-top: 4px solid #198754 !important;">
+                        <div class="bg-white rounded-4 shadow-sm p-4 h-100 border" style="border-top: 4px solid #198754 !important;">
                             <h4><span class="text-success">☑</span> How The Traveling Therapist Can Help</h4>
-                            <ul class="accordionList mt-3">
-                                <li>Transparent pricing model: listings let you control ceiling price and hiring terms;
-                                    The Traveling Therapist’s flat match fee starts at $300 and is only invoiced on a
-                                    successful match.</li>
-                                <li>Marketplace-driven offers surfaces clinicians who accept your terms without a human
-                                    middleman to slow the process.</li>
-                                <li>Faster turnaround (14-day matching cadence) reduces time-to-hire and the need for
-                                    expensive contingency placements.</li>
+                            <ul class="accordionList mt-3 text-muted">
+                                <li>Transparent pricing model: Listings let you control ceiling price and hiring terms; The Traveling Therapist’s flat match fee starts at $300 and is only invoiced on a successful match.</li>
+                                <li>Marketplace-driven offers surfaces clinicians who accept your terms without a human middleman to slow the process.</li>
+                                <li>Faster turnaround (14-day matching cadence) reduces time-to-hire and the need for expensive contingency placements.</li>
                             </ul>
                         </div>
                     </div>
                 </div>
-                <!-- If the user is authenticated and a clinic link them to the create an auctuion. If they are not a clinic don't show the link because they won't be able to create an auction. -->
-                {% if user.is_authenticated %}
-                {% if user.account.get_split_user_type == 'Clinic' %}
-                <div class="col-12 text-center">
-                    <a class="btn btn-primary btn-lg mb-3 text-center" href="{% url 'create-auction' %}">Compare
-                        recruiter costs to a flat-fee match and see the savings.</a>
-                </div>
-                {% endif %}
-                <!-- If the user is not logged in then go to the sign up page -->
-                {% else %}
-                <div class="col-12 text-center">
-                    <a class="btn btn-primary btn-lg mb-3 text-center" href="{% url 'register' %}">Compare recruiter
-                        costs to a flat-fee match and see the savings.</a>
+
+                {% if not user.is_authenticated or user.account.get_split_user_type == 'Clinic' %}
+                <div class="col-12 text-center mt-5 mb-5 pb-4">
+                    <a class="btn btn-primary btn-lg px-5 py-3 rounded-pill shadow" href="{% url 'create-auction' %}">
+                        Compare recruiter costs to a flat-fee match and see the savings.
+                    </a>
                 </div>
                 {% endif %}
             </div>
@@ -468,80 +324,51 @@
     </div>
 
     <!-- Staffing Agency -->
-    <div class="row mb-5">
+    <div class="row pt-4">
         <div>
-            <h2 class="text-weight-bold mb-4 d-flex align-items-center" id="StaffingAgency"
-                style="color: #198754; scroll-margin-top: 170px;">
-                <img class="AccordionIcon me-3" src="/media/images/staffingagency.png"
-                    alt="People icons with breifcase and gear" style="height: 48px; width: auto;">
+            <h2 class="text-weight-bold mb-4 d-flex align-items-center" id="StaffingAgency" style="color: #198754; scroll-margin-top: 170px;">
+                <img class="AccordionIcon me-3" src="/media/images/staffingagency.png" alt="People icons with breifcase and gear" style="height: 48px; width: auto;">
                 Staffing Agency
             </h2>
             <div>
                 <h4>Staffing Agency Case Study</h4>
-                <p class="ps-3 pe-3"><i>“You booked a temp clinician through an agency; they arrived on
-                        shift with no insurance and your healthcare facility absorbed the compliance headaches and ended
-                        up
-                        posting on a Job board anyways as a last resort."
-                    </i></p>
+                <p class="ps-3 pe-3 text-muted"><i>“You booked a temp clinician through an agency; they arrived on shift with no insurance and your healthcare facility absorbed the compliance headaches and ended up posting on a Job board anyways as a last resort."</i></p>
                 <div class="row g-4 mt-2">
                     <div class="col-lg-4 col-md-12 staffingSolutionsSection">
                         <div class="bg-white rounded-4 shadow-sm p-4 h-100 border">
-                            <h4 class="ps-2">
-                                <span class="text-danger">☒</span> What Goes Wrong
-                            </h4>
-                            <ul class="accordionList mt-3">
-                                <li>Agencies bundle payroll, insurance, and credentialing/background checks, but often
-                                    at
-                                    high markups and opaque margins.</li>
+                            <h4 class="ps-2"><span class="text-danger">☒</span> What Goes Wrong</h4>
+                            <ul class="accordionList mt-3 text-muted">
+                                <li>Agencies bundle payroll, insurance, and credentialing/background checks, but often at high markups and opaque margins.</li>
                                 <li>Administrative friction: constant back-and-forth with agency ops.</li>
-                                <li>Fee structures and clinician take-home pay are difficult to audit, especially in
-                                    fee-split scenarios. </li>
+                                <li>Fee structures and clinician take-home pay are difficult to audit, especially in fee-split scenarios. </li>
                             </ul>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-12 staffingSolutionsSection">
-                        <div class="bg-white rounded-4 shadow-sm p-4 h-100 border"
-                            style="background-color: #fcfcfc !important;">
+                        <div class="bg-white rounded-4 shadow-sm p-4 h-100 border" style="background-color: #fcfcfc !important;">
                             <h4><span class="impactThumbsDown">🖓</span> Impact</h4>
-                            <ul class="accordionList mt-3">
-                                <li>Higher per-hour staffing costs, compliance risk, and the clinic owner has to cover
-                                    for
-                                    agency's bricks and mortar business structure</li>
+                            <ul class="accordionList mt-3 text-muted">
+                                <li>Higher per-hour staffing costs, compliance risk, and the clinic owner has to cover for agency's bricks and mortar business structure</li>
                             </ul>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-12 staffingSolutionsSection">
-                        <div class="bg-white rounded-4 shadow-sm p-4 h-100 border"
-                            style="border-top: 4px solid #198754 !important;">
+                        <div class="bg-white rounded-4 shadow-sm p-4 h-100 border" style="border-top: 4px solid #198754 !important;">
                             <h4><span class="text-success">☑</span> How The Traveling Therapist Can Help</h4>
-                            <ul class="accordionList mt-3">
-                                <li>Eliminate the agency middleman: The Traveling Therapist's listing model lets
-                                    healthcare facilities set clear
-                                    terms and see clinician offers, reducing hidden margins and administrative overhead.
-                                </li>
-                                <li>Choose between full contract price or fee-split posting options so you control the
-                                    commercial model and budget.</li>
-                                <li>The Traveling Therapist handles matchmaking and lets you onboard clinicians faster,
-                                    with less
-                                    back-and-forth
-                                    than traditional agency workflows.</li>
+                            <ul class="accordionList mt-3 text-muted">
+                                <li>Eliminate the agency middleman: The Traveling Therapist's listing model lets healthcare facilities set clear terms and see clinician offers, reducing hidden margins and administrative overhead.</li>
+                                <li>Choose between full contract price or fee-split posting options so you control the commercial model and budget.</li>
+                                <li>The Traveling Therapist handles matchmaking and lets you onboard clinicians faster, with less back-and-forth than traditional agency workflows.</li>
                             </ul>
                         </div>
                     </div>
                 </div>
-                <!-- If the user is authenticated and a clinic link them to the create an auctuion. If they are not a clinic don't show the link because they won't be able to create an auction. -->
-                {% if user.is_authenticated %}
-                {% if user.account.get_split_user_type == 'Clinic' %}
-                <div class="col-12 text-center">
-                    <a class="btn btn-primary btn-lg mb-3 text-center" href="{% url 'create-auction' %}">Post a
-                        fee-split or contract listing and control your margins from day one.</a>
-                </div>
-                {% endif %}
-                <!-- If the user is not logged in then go to the sign up page -->
-                {% else %}
-                <div class="col-12 text-center">
-                    <a class="btn btn-primary btn-lg mb-3 text-center" href="{% url 'register' %}">Post a fee-split or
-                        contract listing and control your margins from day one.</a>
+
+                {% if not user.is_authenticated or user.account.get_split_user_type == 'Clinic' %}
+                <div class="col-12 text-center mt-5 mb-5 pb-4">
+                    <a class="btn btn-primary btn-lg px-5 py-3 rounded-pill shadow" href="{% url 'create-auction' %}">
+                        Post a fee-split or contract listing and control your margins from day one.
+                    </a>
                 </div>
                 {% endif %}
             </div>
@@ -549,98 +376,62 @@
     </div>
 
     <!-- The Traveling Therapist -->
-    <div class="row mb-5">
+    <div class="row pt-4">
         <div>
-            <h2 class="text-weight-bold mb-4 d-flex align-items-center" id="TheTravelingTherapist"
-                style="color: #198754; scroll-margin-top: 170px;">
-                <img class="AccordionIcon me-3" src="/media/images/T_Logo_Final.png" alt="The Traveling Therapist Logo"
-                    style="height: 48px; width: auto;">
+            <h2 class="text-weight-bold mb-4 d-flex align-items-center" id="TheTravelingTherapist" style="color: #198754; scroll-margin-top: 170px;">
+                <img class="AccordionIcon me-3" src="/media/images/T_Logo_Final.png" alt="The Traveling Therapist Logo" style="height: 48px; width: auto;">
                 The Traveling Therapist
             </h2>
             <div>
                 <h4>The Traveling Therapist Case Study</h4>
-                <p class="ps-3 pe-3"><i>“After two months of agency calls and no-shows, a healthcare facility owner
-                        posted a listing on The Traveling Therapist, was matched within 14 days, and booked a licensed
-                        clinician at
-                        a better rate than their last temp agency."
-                    </i></p>
+                <p class="ps-3 pe-3 text-muted"><i>“After two months of agency calls and no-shows, a healthcare facility owner posted a listing on The Traveling Therapist, was matched within 14 days, and booked a licensed clinician at a better rate than their last temp agency."</i></p>
                 <div class="row g-4 mt-2">
                     <div class="col-lg-6 col-md-12 staffingSolutionsSection">
-                        <div class="bg-white rounded-4 shadow-sm p-4 h-100 border"
-                            style="border-top: 4px solid #198754 !important;">
-                            <h4 class="ps-2">
-                                <span class="text-success">☑</span> What Goes Right
-                            </h4>
-                            <ul class="accordionList mt-3">
-                                <li>Fast: listings run for 14 days so you get a match quickly.</li>
-                                <li>Transparent: no hidden fees; prices start at $300 per match and you only pay on
-                                    successful matches.</li>
-                                <li>Customizable: post for full contract price or fee split and set ceiling prices to
-                                    stay
-                                    on budget.</li>
+                        <div class="bg-white rounded-4 shadow-sm p-4 h-100 border" style="border-top: 4px solid #198754 !important;">
+                            <h4 class="ps-2"><span class="text-success">☑</span> What Goes Right</h4>
+                            <ul class="accordionList mt-3 text-muted">
+                                <li>Fast: Listings run for 14 days so you get a match quickly.</li>
+                                <li>Transparent: No hidden fees; prices start at $300 per match and you only pay on successful matches.</li>
+                                <li>Customizable: Post for full contract price or fee split and set ceiling prices to stay on budget.</li>
                             </ul>
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-12 staffingSolutionsSection">
-                        <div class="bg-white rounded-4 shadow-sm p-4 h-100 border"
-                            style="border-top: 4px solid #198754 !important;">
+                        <div class="bg-white rounded-4 shadow-sm p-4 h-100 border" style="border-top: 4px solid #198754 !important;">
                             <h4><span class="text-success">☑</span> Hassle-free Admin</h4>
-                            <ul class="accordionList mt-3">
+                            <ul class="accordionList mt-3 text-muted">
                                 <li>Eliminates resume sifting</li>
-                                <li>Reduces back-and-forth with
-                                    potential
-                                    clinicians</li>
-                                <li>removes agency operational layers so your staff spends less time on
-                                    hiring
-                                    logistics</li>
+                                <li>Reduces back-and-forth with potential clinicians</li>
+                                <li>removes agency operational layers so your staff spends less time on hiring logistics</li>
                             </ul>
                         </div>
                     </div>
                 </div>
-                <!-- If the user is authenticated and a clinic link them to the create an auctuion. If they are not a clinic don't show the link because they won't be able to create an auction. -->
-                {% if user.is_authenticated %}
-                {% if user.account.get_split_user_type == 'Clinic' %}
-                <div class="col-12 text-center">
-                    <a class="btn btn-primary btn-lg mb-3 text-center" href="{% url 'create-auction' %}">Post your first
-                        listing now — pay nothing until you get a match.</a>
-                </div>
-                {% endif %}
-                <!-- If the user is not logged in then go to the sign up page -->
-                {% else %}
-                <div class="col-12 text-center">
-                    <a class="btn btn-primary btn-lg mb-3 text-center" href="{% url 'register' %}">Post your first
-                        listing now — pay nothing until you get a match.</a>
+
+                {% if not user.is_authenticated or user.account.get_split_user_type == 'Clinic' %}
+                <div class="col-12 text-center mt-5 mb-5 pb-4">
+                    <a class="btn btn-primary btn-lg px-5 py-3 rounded-pill shadow" href="{% url 'create-auction' %}">
+                        Post your first listing now — pay nothing until you get a match.
+                    </a>
                 </div>
                 {% endif %}
             </div>
         </div>
     </div>
 
-
-    <br>
-    <div class="row">
-        <p>You have seen how each route stacks up. Now turn frustration into freedom. Post your first listing in
-            under
-            10 minutes, compare offers in two weeks, and get back to what you do best - running a thriving healthcare
-            facility.
-        </p>
+    <div class="row mt-5 text-center justify-content-center">
+        <div class="col-lg-10">
+            <p class="lead text-muted">You have seen how each route stacks up. Now turn frustration into freedom. Post your first listing in under 10 minutes, compare offers in two weeks, and get back to what you do best - running a thriving healthcare facility.</p>
+        </div>
     </div>
-    <div class="row">
-        <!-- If the user is authenticated and a clinic link them to the create an auctuion. If they are not a clinic don't show the link because they won't be able to create an auction. -->
-        {% if user.is_authenticated %}
-        {% if user.account.get_split_user_type == 'Clinic' %}
-        <a id="startAuctionButton" class="btn btn-primary btn-lg guidePageButton"
-            href="{% url 'create-auction' %}">Start
-            Your First
-            Listing</a>
-        {% endif %}
-        <!-- If the user is not logged in then go to the sign up page -->
-        {% else %}
-        <a id="startAuctionButton" class="btn btn-primary btn-lg guidePageButton" href="{% url 'register' %}">Start
-            Your First
-            Listing</a>
-        {% endif %}
+    
+    {% if not user.is_authenticated or user.account.get_split_user_type == 'Clinic' %}
+    <div class="row text-center mt-4 mb-5 pb-5">
+        <div class="col-12">
+            <a id="startAuctionButton" class="btn btn-primary btn-lg guidePageButton px-5 py-3 rounded-pill" href="{% url 'create-auction' %}">Start Your First Listing</a>
+        </div>
     </div>
+    {% endif %}
 
 </div>
 <script src="{% static 'auction/user_guide_pages.js' %}"></script>
