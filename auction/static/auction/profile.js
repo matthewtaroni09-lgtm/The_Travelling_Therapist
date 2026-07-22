@@ -1,4 +1,31 @@
 $(document).ready(function () {
+    const maxImageSizeBytes = 10 * 1024 * 1024;
+    const defaultTabTargets = new Set(['#auction-history', '#auction-history-t']);
+
+    function showImageSizeError(fieldLabel) {
+        Swal.fire({
+            title: 'Image too large',
+            text: fieldLabel + ' must be 10 MB or smaller. Please choose a smaller image.',
+            icon: 'error',
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#0f9972'
+        });
+    }
+
+    function validateImageFieldSize(inputId, fieldLabel) {
+        const input = document.getElementById(inputId);
+        if (!input || !input.files || input.files.length === 0) {
+            return true;
+        }
+        const file = input.files[0];
+        if (file.size > maxImageSizeBytes) {
+            input.value = '';
+            showImageSizeError(fieldLabel);
+            return false;
+        }
+        return true;
+    }
+
     const tooltipEls = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
     tooltipEls.forEach(function (el) {
         bootstrap.Tooltip.getOrCreateInstance(el);
@@ -20,6 +47,33 @@ $(document).ready(function () {
         const collapseInstance = bootstrap.Collapse.getOrCreateInstance(challengeCollapse, { toggle: false });
         collapseInstance.show();
     };
+
+    const syncUrlHashToActiveTab = (tabTrigger) => {
+        if (!tabTrigger || !tabTrigger.getAttribute) {
+            return;
+        }
+
+        const target = tabTrigger.getAttribute('data-bs-target');
+        if (!target) {
+            return;
+        }
+
+        const nextUrl = new URL(window.location.href);
+        if (defaultTabTargets.has(target)) {
+            nextUrl.hash = '';
+        }
+        else {
+            nextUrl.hash = target;
+        }
+
+        window.history.replaceState({}, '', nextUrl.toString());
+    };
+
+    document.querySelectorAll('.nav-link[data-bs-toggle="tab"]').forEach(function (tabTrigger) {
+        tabTrigger.addEventListener('shown.bs.tab', function (event) {
+            syncUrlHashToActiveTab(event.target);
+        });
+    });
 
     if ($('.alert-block').css("display") === "block") {
         showTab('#profile-tab');
@@ -276,6 +330,27 @@ $(document).ready(function () {
             feedback.fadeIn();
             setTimeout(() => feedback.fadeOut(), 2000);
         });
+    });
+
+    $('form[method="post"][enctype="multipart/form-data"]').on('submit', function (event) {
+        const isClinicProfileForm = !!document.getElementById('div_id_imageOne') || !!document.getElementById('id_imageOne');
+        if (!isClinicProfileForm) {
+            return;
+        }
+
+        const imageFields = [
+            ['id_imageOne', 'Image 1'],
+            ['id_imageTwo', 'Image 2'],
+            ['id_imageThree', 'Image 3'],
+            ['id_imageFour', 'Image 4'],
+        ];
+
+        for (const [inputId, label] of imageFields) {
+            if (!validateImageFieldSize(inputId, label)) {
+                event.preventDefault();
+                return false;
+            }
+        }
     });
 });
 

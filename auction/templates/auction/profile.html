@@ -6,38 +6,72 @@
 {% if user.is_authenticated %}
 <p id="pageTitle" class="d-none">Profile</p>
 <style>
-  .ttt-inline-info-dot {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 16px;
-    height: 16px;
-    margin-left: 6px;
-    border: 1px solid #6c757d;
-    border-radius: 999px;
-    color: #6c757d;
-    font-size: 12px;
-    line-height: 1;
-    padding: 0;
-    background: transparent;
-    cursor: pointer;
-    vertical-align: middle;
-  }
+        .ttt-info-dot-sm {
+        width: 16px;
+        height: 16px;
+        border-radius: 999px;
+        border: 1px solid #8896a5;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        line-height: 1;
+        padding: 0;
+        background: #fff;
+        color: #6d7986;
+      }
 
-  .ttt-profile-carousel {
-    border: 1px solid #dbe4ea;
-    border-radius: 12px;
-    background: #f7fafb;
-    overflow: hidden;
-  }
+    .ttt-listing-carousel {
+      border: 1px solid #dce5ea;
+      border-radius: 14px;
+      background: #f8fafb;
+      overflow: hidden;
+    }
+    .ttt-listing-carousel .carousel-item img {
+      width: 100%;
+      height: clamp(280px, 52vw, 620px);
+      object-fit: contain;
+      background: #fff;
+    }
+    .ttt-listing-carousel .carousel-control-prev,
+    .ttt-listing-carousel .carousel-control-next {
+      width: auto;
+      opacity: 1;
+      top: 50%;
+      transform: translateY(-50%);
+      bottom: auto;
+    }
+    .ttt-listing-carousel .carousel-control-prev { left: 0.9rem; }
+    .ttt-listing-carousel .carousel-control-next { right: 0.9rem; }
+    .ttt-listing-carousel .ttt-carousel-arrow {
+      width: 44px;
+      height: 44px;
+      background: #fff;
+      border: 1px solid #d8dee3;
+      border-radius: 999px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .ttt-listing-carousel .carousel-control-prev-icon,
+    .ttt-listing-carousel .carousel-control-next-icon {
+      width: 1.25rem;
+      height: 1.25rem;
+      filter: brightness(0);
+    }
+    .ttt-listing-carousel .carousel-indicators {
+      margin-bottom: 0.25rem;
+    }
+    .ttt-listing-carousel .carousel-indicators [data-bs-target] {
+      background-color: #1f2933;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+  </style>
 
-  .ttt-profile-carousel .carousel-item img {
-    width: 100%;
-    height: clamp(220px, 40vw, 420px);
-    object-fit: contain;
-    background: #ffffff;
-  }
-</style>
+
 
 {% if user.account.get_split_user_type == 'Clinic' %}
 <!-- START CLINIC SECTION -->
@@ -85,45 +119,33 @@
       <div class="tab-pane fade" id="profile" role="tabpanel">
         <div class="p-3">
           <h2 class="mb-4">Update Profile</h2>
-          <div id="clinicProfileImageCarousel" class="carousel slide mb-3 ttt-profile-carousel" data-bs-ride="false">
+          <div id="clinicProfileImageCarousel" class="carousel slide mb-3 ttt-listing-carousel" data-bs-ride="false">
             <div class="carousel-inner">
-              <div class="carousel-item active">
-                {% if user.account.imageOne %}
-                <img src="/media/{{ user.account.imageOne }}" alt="Clinic image 1" onerror="this.src='/media/images/no-image.jpg';">
-                {% else %}
-                <img src="/media/images/no-image.jpg" alt="Clinic image unavailable">
-                {% endif %}
+              {% for image_url in profile_images %}
+              <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                <img src="{{ image_url }}" alt="Clinic image {{ forloop.counter }}" onerror="this.src='/media/images/no-image.jpg';">
               </div>
-              <div class="carousel-item">
-                {% if user.account.imageTwo %}
-                <img src="/media/{{ user.account.imageTwo }}" alt="Clinic image 2" onerror="this.src='/media/images/no-image.jpg';">
-                {% else %}
-                <img src="/media/images/no-image.jpg" alt="Clinic image unavailable">
-                {% endif %}
-              </div>
-              <div class="carousel-item">
-                {% if user.account.imageThree %}
-                <img src="/media/{{ user.account.imageThree }}" alt="Clinic image 3" onerror="this.src='/media/images/no-image.jpg';">
-                {% else %}
-                <img src="/media/images/no-image.jpg" alt="Clinic image unavailable">
-                {% endif %}
-              </div>
-              <div class="carousel-item">
-                {% if user.account.imageFour %}
-                <img src="/media/{{ user.account.imageFour }}" alt="Clinic image 4" onerror="this.src='/media/images/no-image.jpg';">
-                {% else %}
-                <img src="/media/images/no-image.jpg" alt="Clinic image unavailable">
-                {% endif %}
-              </div>
+              {% endfor %}
             </div>
+            {% if profile_image_count > 1 %}
             <button class="carousel-control-prev" type="button" data-bs-target="#clinicProfileImageCarousel" data-bs-slide="prev">
-              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="ttt-carousel-arrow">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              </span>
               <span class="visually-hidden">Previous</span>
             </button>
             <button class="carousel-control-next" type="button" data-bs-target="#clinicProfileImageCarousel" data-bs-slide="next">
-              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="ttt-carousel-arrow">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              </span>
               <span class="visually-hidden">Next</span>
             </button>
+            <div class="carousel-indicators">
+              {% for image_url in profile_images %}
+              <button type="button" data-bs-target="#clinicProfileImageCarousel" data-bs-slide-to="{{ forloop.counter0 }}" class="{% if forloop.first %}active{% endif %}" {% if forloop.first %}aria-current="true"{% endif %} aria-label="Slide {{ forloop.counter }}"></button>
+              {% endfor %}
+            </div>
+            {% endif %}
           </div>
           <div class="row">
             <h5>User Type: {{user.account.userType}}</h5>
@@ -138,7 +160,8 @@
                 <div class="mb-3">{{ profile_clinic_form.clinicWebsite | as_crispy_field }}</div>
               </div>
               <div class="row">
-                <div class="mb-3">{{ profile_clinic_form.imageOne | as_crispy_field }}</div>
+                <div class="mb-3">{{ profile_clinic_form.imageOne | as_crispy_field }} <button type="button" class="ttt-info-dot-sm" data-bs-toggle="tooltip" data-bs-placement="top" 
+                      title="Image one is the primary image that will show on your listings">i</button></label></div>
                 <div class="mb-3">{{ profile_clinic_form.imageTwo | as_crispy_field }}</div>
                 <div class="mb-3">{{ profile_clinic_form.imageThree | as_crispy_field }}</div>
                 <div class="mb-3">{{ profile_clinic_form.imageFour | as_crispy_field }}</div>

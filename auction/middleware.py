@@ -39,8 +39,19 @@ class WeeklyTicketRewardMiddleware:
 
         response = self.get_response(request)
 
-        # If the flag is set in the session, add the message now
-        if request.user.is_authenticated and request.session.get('show_weekly_ticket_message'):
+        # Only consume the flag on full HTML page requests so AJAX calls do not swallow the popup.
+        accepts = request.headers.get('Accept', '')
+        is_html_request = 'text/html' in accepts
+        is_ajax_request = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+        is_auth_page = request.path in ['/login', '/register']
+
+        if (
+            request.user.is_authenticated
+            and request.session.get('show_weekly_ticket_message')
+            and is_html_request
+            and not is_ajax_request
+            and not is_auth_page
+        ):
             messages.success(request, "You've earned 1 ticket for your weekly visit!", extra_tags='ticket_earned')
             del request.session['show_weekly_ticket_message']
             print(f"Middleware: Message injected for {request.user.username}.")

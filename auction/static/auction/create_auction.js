@@ -460,6 +460,18 @@ function enforceNonNegativeNumericInput(inputSelector) {
     });
 }
 
+function enforceWholeDollarValue($input) {
+    const rawValue = String($input.val() || '');
+    if (rawValue === '') {
+        return;
+    }
+
+    const normalized = rawValue.replace(/[^0-9]/g, '');
+    if (normalized !== rawValue) {
+        $input.val(normalized);
+    }
+}
+
 function addCustomGridItem(containerId) {
     const $container = $(`#${containerId}`);
     const $input = $(`[data-custom-input="${containerId}"]`);
@@ -662,9 +674,7 @@ $(document).ready(function () {
     });
 
     $('#id_desiredFlatFeeTotalContract').on('input change', function () {
-        if ($(this).val() === '') {
-            return;
-        }
+        enforceWholeDollarValue($(this));
     });
 
     $('.ttt-add-trigger').on('click', function () {
@@ -1013,7 +1023,13 @@ $("#submitButton").click(function () {
     }
 
     if (getSelectedPaymentTypes().includes('Flat Fee') && getSelectedFlatFeeType() === 'total_contract' && desiredFlatFeeTotalContract !== '') {
-        // Intentionally no client-side clamping/rewriting for total contract guidance.
+        const suggestedTotalContract = parseInt(desiredFlatFeeTotalContract, 10);
+        if (!Number.isFinite(suggestedTotalContract) || suggestedTotalContract < 1) {
+            errorList += '<li>Suggested total contract price must be at least $1.</li>';
+        }
+        if (String(suggestedTotalContract) !== String(desiredFlatFeeTotalContract).trim()) {
+            errorList += '<li>Suggested total contract price must be a whole number.</li>';
+        }
     }
 
     /* Deprecated fee split assessment/treatment validation retained in source for reference.

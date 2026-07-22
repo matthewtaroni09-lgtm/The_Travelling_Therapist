@@ -25,7 +25,12 @@
     .ttt-listing-carousel .carousel-control-next {
       width: auto;
       opacity: 1;
+      top: 50%;
+      transform: translateY(-50%);
+      bottom: auto;
     }
+    .ttt-listing-carousel .carousel-control-prev { left: 0.9rem; }
+    .ttt-listing-carousel .carousel-control-next { right: 0.9rem; }
     .ttt-listing-carousel .ttt-carousel-arrow {
       width: 44px;
       height: 44px;
@@ -183,7 +188,7 @@
                     {% else %}
                     <div class="input-group input-group-lg mb-3">
                       <span class="input-group-text">$</span>
-                      <input id="flatFeeAmount" name="flatFeeAmount" type="number" step="0.01" class="form-control" placeholder="Enter your offer amount">
+                      <input id="flatFeeAmount" name="flatFeeAmount" type="number" min="1" step="1" inputmode="numeric" class="form-control" placeholder="Enter your offer amount">
                     </div>
                     {% endif %}
                     {% if auction.flatFeeType == 'hourly' and auction.desiredFlatFeeHourly %}
@@ -204,7 +209,7 @@
                 </div>
                 {% endif %}
 
-                {% if allow_fee_split %}
+{% if allow_fee_split %}
                 <div class="tab-pane fade {% if not allow_flat_fee %}show active{% endif %} ttt-offer-pane" id="offer-fee-split" role="tabpanel" aria-labelledby="offer-fee-split-tab">
                   <div class="ttt-offer-panel-header mb-4">
                     <p class="mb-1 fw-semibold">Fee Split Offer</p>
@@ -229,12 +234,18 @@
                       </div>
                     </div>
 
-                    <p class="mb-2">Current selected: <strong><span id="feeSplitValue">0</span>%</strong></p>
+                    <div class="mb-4 d-flex align-items-center gap-2">
+                    <p class="mb-0">Current selected: <strong><span id="feeSplitValue">0</span>%</strong></p>
+                    <button type="button" class="ttt-info-dot" data-bs-toggle="tooltip" data-bs-placement="top" title="You are asking to 
+                    receive this percentage of the client fee.">i</button>
+                    </div>
+
                     {% if auction.desiredFeeSplitPercentage %}
                     <div class="ttt-offer-guidance-tab mb-3" role="note">
-                      <p class="mb-0 small"><strong>Guidance:</strong> Suggested fee split is {{ auction.desiredFeeSplitPercentage }}%.</p>
+                      <p class="mb-0 small"><strong>Guidance:</strong> The healthcare facility suggests a fee split percentage of {{ auction.desiredFeeSplitPercentage }}%.</p>
                     </div>
                     {% endif %}
+
                     {% if auction.minimumCompensation %}
                     <div class="ttt-offer-guidance-tab ttt-offer-guidance-tab-warning mb-3" role="note">
                       <p class="mb-0 small d-flex align-items-center flex-wrap gap-1">
@@ -243,9 +254,6 @@
                       </p>
                     </div>
                     {% endif %}
-                    <div class="alert alert-light mb-0" role="alert">
-                      <p class="mb-0"><i>If you offer 60%, the healthcare facility would receive 40%. You are asking to receive this percentage of the client fee.</i></p>
-                    </div>
                   </div>
                 </div>
                 {% endif %}
@@ -570,9 +578,15 @@
   <p class="text-weight-light">{{ auction.comments|linebreaksbr }}</p>
 </div>
 
-<script src="{% static 'auction/bid-page.js' %}?v=20260719-confirm-click-fix-v4"></script>
+<script src="{% static 'auction/bid-page.js' %}?v=20260722-live-timer-total-contract-v1"></script>
 <script>
   document.addEventListener('DOMContentLoaded', function () {
+    const listingCarousel = document.getElementById('listingImageCarousel');
+    const statsBar = document.querySelector('.d-flex.align-items-start.flex-wrap.gap-2.mb-3');
+    if (listingCarousel && statsBar && listingCarousel.parentElement === statsBar.parentElement) {
+      listingCarousel.parentElement.insertBefore(statsBar, listingCarousel);
+    }
+
     const checklist = document.getElementById('finalizeSkillChecklist');
     const payloadInput = document.getElementById('offerSelectedSkillsPayloadInput');
 

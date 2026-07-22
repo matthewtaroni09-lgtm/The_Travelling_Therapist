@@ -6,6 +6,7 @@ let paymentType = '';
 let minBidIncrement = 0;
 let reservePrice = null;
 let paymentTypes = [];
+let flatFeeType = '';
 let currentOfferTabIndex = 0;
 let isAuctionActive = false;
 
@@ -62,6 +63,9 @@ $(document).ready(function () {
         const value = parseFloat($('#flatFeeAmount').val() || '0');
         if ($('#flatFeeHourlySlider').length) {
             return value >= 15 && value <= 1000;
+        }
+        if (flatFeeType === 'total_contract') {
+            return Number.isInteger(value) && value >= 1;
         }
         return value > 0;
     }
@@ -286,6 +290,10 @@ $(document).ready(function () {
     });
 
     $('#flatFeeAmount').on('input change', function () {
+        if (flatFeeType === 'total_contract') {
+            const normalized = String($(this).val() || '').replace(/[^0-9]/g, '');
+            $(this).val(normalized);
+        }
         if ($('#flatFeeHourlySlider').length && $(this).val() !== '') {
             const typedValue = parseFloat($(this).val());
             if (!Number.isNaN(typedValue) && typedValue >= 15 && typedValue <= 1000) {
@@ -322,8 +330,15 @@ $(document).ready(function () {
             reservePrice = response.reservePrice;
             paymentType = response.paymentType;
             paymentTypes = response.paymentTypes || [];
+            flatFeeType = response.flatFeeType || '';
             minBidIncrement = response.minimumBidIncrement;
             isAuctionActive = !!response.active;
+
+            const timerNode = document.getElementById('auctionTimer-' + auctionID);
+            if (timerNode && auctionEnd instanceof Date && !Number.isNaN(auctionEnd.getTime()) && isAuctionActive && timerNode.dataset.countdownStarted !== 'true') {
+                timerNode.dataset.countdownStarted = 'true';
+                countDown(auctionEnd.toISOString(), auctionID);
+            }
 
             if (isAuctionActive) {
                 const currentTime = new Date().getTime();
@@ -368,7 +383,9 @@ const getAuction = () => {
             auctionStartDateTime = response.data.auctionStart;
             auctionEndDateTime = response.data.auctionEnd;
             currentLowBid = response.data.currentLowBid;
-            if (isAuctionActive) {
+            const timerNode = document.getElementById('auctionTimer-' + auctionID);
+            if (isAuctionActive && timerNode && timerNode.dataset.countdownStarted !== 'true') {
+                timerNode.dataset.countdownStarted = 'true';
                 countDown(auctionEndDateTime, auctionID);
             }
 

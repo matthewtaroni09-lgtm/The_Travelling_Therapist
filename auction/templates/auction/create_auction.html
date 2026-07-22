@@ -355,7 +355,8 @@
               <div class="col-lg-6">
                 <div class="d-flex align-items-center gap-2 mb-2">
                   <label for="id_desiredFeeSplitPercentage" class="form-label mb-0">Enter a suggested fee split percentage: <span class="ttt-optional-note">(optional)</span></label>
-                  <button type="button" class="ttt-info-dot" data-bs-toggle="tooltip" data-bs-placement="top" title="This is a suggestion of an approximate value to guide clinicians. Clinicians are not bound by this value and may submit ANY offer.">i</button>
+                  <button type="button" class="ttt-info-dot" data-bs-toggle="tooltip" data-bs-placement="top" title="This is a suggestion of an approximate 
+                  value to guide clinicians. Clinicians are not bound by this value and may submit ANY offer.">i</button>
                 </div>
                 <div class="input-group input-group-sm" style="max-width: 280px;">
                   {{ form.desiredFeeSplitPercentage }}
@@ -365,7 +366,8 @@
               <div class="col-lg-6">
                 <div class="d-flex align-items-center gap-2 mb-2">
                   <label for="id_minimumCompensation" class="form-label mb-0">Add a minimum hourly compensation: <span class="ttt-optional-note">(optional)</span></label>
-                  <button type="button" class="ttt-info-dot" data-bs-toggle="tooltip" data-bs-placement="top" title="Set a minimum hourly rate you are willing to guarantee to clinicians who place fee split offers if building a caseload and/or number of patients is low">i</button>
+                  <button type="button" class="ttt-info-dot" data-bs-toggle="tooltip" data-bs-placement="top" title="Set a minimum hourly rate
+                   you are willing to guarantee to clinicians who place fee split offers if building a caseload and/or number of patients is low">i</button>
                 </div>
                 <div class="input-group input-group-sm" style="max-width: 280px;">
                   <span class="input-group-text">$</span>
@@ -432,7 +434,8 @@
             <div id="desiredFlatFeeHourlyContainer" class="d-none mb-2">
               <div class="d-flex align-items-center gap-2 mb-2">
                 <label for="id_desiredFlatFeeHourly" class="form-label mb-0">Enter a suggested hourly rate: <span class="ttt-optional-note">(optional)</span></label>
-                <button type="button" class="ttt-info-dot" data-bs-toggle="tooltip" data-bs-placement="top" title="This is a suggestion of an approximate value to guide clinicians. Clinicians are not bound by this value and may submit ANY offer.">i</button>
+                <button type="button" class="ttt-info-dot" data-bs-toggle="tooltip" data-bs-placement="top" title="This is a suggestion of an approximate 
+                value to guide clinicians. Clinicians are not bound by this value and may submit ANY offer.">i</button>
               </div>
               <div class="input-group input-group-sm" style="max-width: 320px;">
                 <span class="input-group-text">$</span>
@@ -443,7 +446,8 @@
             <div id="desiredFlatFeeTotalContainer" class="d-none">
               <div class="d-flex align-items-center gap-2 mb-2">
                 <label for="id_desiredFlatFeeTotalContract" class="form-label mb-0">Enter a suggested total contract price: <span class="ttt-optional-note">(optional)</span></label>
-                <button type="button" class="ttt-info-dot" data-bs-toggle="tooltip" data-bs-placement="top" title="This is a suggestion of an approximate value to guide clinicians. Clinicians are not bound by this value and may submit ANY offer.">i</button>
+                <button type="button" class="ttt-info-dot" data-bs-toggle="tooltip" data-bs-placement="top" title="This is a suggestion of an approximate 
+                value to guide clinicians. Clinicians are not bound by this value and may submit ANY offer.">i</button>
               </div>
               <div class="input-group input-group-sm" style="max-width: 320px;">
                 <span class="input-group-text">$</span>
@@ -558,7 +562,9 @@
           <div class="ttt-create-grid-card" id="negotiablePerksContainer">
             <div class="ttt-card-header-row mb-1">
               <h4 class="text-weight-normal mb-0">Negotiable Job Perks</h4>
-              <button type="button" class="ttt-info-dot" data-bs-toggle="tooltip" data-bs-placement="top" title="You can give clinicians additional information about the kind of 'perks' they could receive if they are matched with you for your listing. These amounts are shown to clinicians as negotiable, so it is up to you to negotiate these amounts privately with your candidate after the match!">i</button>
+              <button type="button" class="ttt-info-dot" data-bs-toggle="tooltip" data-bs-placement="top" title="You can give clinicians additional
+               information about the kind of 'perks' they could receive if they are matched with you for your listing. These amounts are shown to
+               clinicians as negotiable, so it is up to you to negotiate these amounts privately with your candidate after the match!">i</button>
             </div>
             <p class="ttt-card-subtitle">Add perks clinicians can ask to negotiate before final match.</p>
             <div class="ttt-grid-head">
@@ -616,7 +622,8 @@
               <div class="ttt-perk-detail-panel d-none">
                 <div class="row g-2 align-items-start">
                   <div class="col-md-4">
-                    <label class="form-label ttt-perk-amount-label">Amount <button type="button" class="ttt-info-dot-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="This amount will only be shown to clinicians when they go to place an offer, it will not be seen on the listing page">i</button></label>
+                    <label class="form-label ttt-perk-amount-label">Amount <button type="button" class="ttt-info-dot-sm" data-bs-toggle="tooltip" data-bs-placement="top" 
+                      title="This amount will only be shown to clinicians when they go to place an offer, it will not be seen on the listing page">i</button></label>
                     <div class="input-group input-group-sm">
                       <span class="input-group-text">$</span>
                       <input type="number" min="0" class="form-control ttt-perk-amount" placeholder="Optional amount">
@@ -742,7 +749,7 @@
   </div>
 </div>
 <!-- </div> -->
-<script src="{% static 'auction/create_auction.js' %}?v=20260721-perks-carousel-fix-v1"></script>
+<script src="{% static 'auction/create_auction.js' %}?v=20260722-total-contract-validation-v1"></script>
 <script src="{% static 'auction/textarea.js' %}"></script>
 {% else %}
 <p>You must be logged in to access this page. Please <a href="{% url 'login' %}">login here</a>

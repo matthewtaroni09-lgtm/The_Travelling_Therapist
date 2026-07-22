@@ -202,6 +202,29 @@ def suppress_legacy_default_skill_for_type(type_label, skill_name):
     return _clean_text(skill_name).lower() in DEFAULT_REGULATED_CLINICIAN_SKILL_OPTIONS_LOWER
 
 
+def get_account_profile_image_urls(account):
+    raw_images = []
+    for image_field_name in ('imageOne', 'imageTwo', 'imageThree', 'imageFour'):
+        image_field_value = getattr(account, image_field_name, None)
+        image_name = str(getattr(image_field_value, 'name', image_field_value) or '').strip()
+        if not image_name:
+            continue
+        if image_name.lower() in ('default.jpg', 'images/default.jpg'):
+            continue
+        raw_images.append(image_name)
+
+    image_urls = []
+    for image_name in raw_images:
+        image_url = image_name if image_name.startswith('/media/') else f"/media/{image_name}"
+        if image_url not in image_urls:
+            image_urls.append(image_url)
+
+    if len(image_urls) == 0:
+        image_urls = ['/media/images/no-image.jpg']
+
+    return image_urls
+
+
 def parse_required_skills_payload(raw_payload):
     try:
         payload = json.loads(raw_payload) if raw_payload else []
@@ -419,7 +442,7 @@ def auction_search(request):
     city = request.POST.get('citySelect')
     payment_type_select = request.POST.get('paymentTypeSelect')
     status_select = request.POST.get('statusSelect')
-    clinic_input = request.POST.get('clinicInput')
+    clinic_input = (request.POST.get('clinicInput') or '').strip()
     search_all_checkbox = request.POST.get('searchAllCheckbox')
 
     city_fitler = ''
@@ -472,8 +495,20 @@ def auction_search(request):
     filter = city_fitler & payment_type_fitler & status_select_fitler & clinic_fitler & type_filter
     # filter = city_fitler & payment_type_fitler & status_select_fitler & clinic_fitler
     print(filter)
-    auctions = Auction.objects.filter(filter, deleted=False)
-    auctions = sorted(auctions, key=_effective_auction_sort_key)
+    auctions_queryset = Auction.objects.filter(filter, deleted=False)
+    if clinic_input:
+        normalized_search = clinic_input.lower()
+        auctions = sorted(
+            auctions_queryset,
+            key=lambda auction: (
+                0 if (auction.clinic.clinicName or '').strip().lower() == normalized_search else
+                1 if (auction.clinic.clinicName or '').strip().lower().startswith(normalized_search) else
+                2,
+                _effective_auction_sort_key(auction),
+            ),
+        )
+    else:
+        auctions = sorted(auctions_queryset, key=_effective_auction_sort_key)
     return render(request, 'auction/partials/auction_list.html', {'auction': auctions, 'length': len(auctions), 'auction_search': True})
 
 def index(request):
@@ -504,7 +539,7 @@ def index(request):
             statuses.append(status)
 
     ordered_payment_type_options = []
-    for payment_type in ['Fee Split', 'Flat Fee (hourly)', 'Flat Fee (Total Contract Price)']:
+    for payment_type in ['Fee Split', 'Flat Fee (Hourly)', 'Flat Fee (Total Contract Price)']:
         if payment_type in payment_type_options:
             ordered_payment_type_options.append(payment_type)
 
@@ -590,6 +625,11 @@ def profile(request):
     show_form = False
     user = request.user
     account = user.account
+    profile_images = get_account_profile_image_urls(account)
+    parameter.update({
+        'profile_images': profile_images,
+        'profile_image_count': len(profile_images),
+    })
     
     # Trigger referral verification check
     account.check_and_award_referral()
@@ -967,20 +1007,31 @@ def view_auction(request, auction_id):
         current_lowest_bid_user = bids[0].user if len(bids) > 0 else None
         selected_offer_skills = parse_offer_selected_skills_payload(request.POST.get('offerSelectedSkillsPayload', '[]'))
 
-        def parse_offer_amount(raw_value):
+        def parse_offer_amount(raw_value, offer_type):
             if raw_value in (None, ''):
                 return None
             try:
                 decimal_value = Decimal(str(raw_value))
             except (InvalidOperation, ValueError, TypeError):
                 return 'invalid'
+
+            if offer_type == 'Flat Fee' and auction.flatFeeType == 'total_contract':
+                if decimal_value < Decimal('1'):
+                    return 'invalid-total-contract-minimum'
+                if decimal_value != decimal_value.to_integral_value(rounding=ROUND_HALF_UP):
+                    return 'invalid-total-contract-integer'
+
             rounded_value = decimal_value.quantize(Decimal('1'), rounding=ROUND_HALF_UP)
             return int(rounded_value)
 
         if allow_flat_fee and flat_fee_raw:
-            flat_fee_amount = parse_offer_amount(flat_fee_raw)
+            flat_fee_amount = parse_offer_amount(flat_fee_raw, 'Flat Fee')
             if flat_fee_amount == 'invalid':
                 errors.append('Flat fee offers must be valid numbers.')
+            elif flat_fee_amount == 'invalid-total-contract-minimum':
+                errors.append('Total contract flat fee offers must be at least $1.')
+            elif flat_fee_amount == 'invalid-total-contract-integer':
+                errors.append('Total contract flat fee offers must be whole-dollar amounts.')
             elif flat_fee_amount is not None and flat_fee_amount > 0:
                 if auction.flatFeeType == 'hourly' and (flat_fee_amount < 15 or flat_fee_amount > 1000):
                     errors.append('Hourly flat fee offers must be between $15 and $1000.')
@@ -997,7 +1048,7 @@ def view_auction(request, auction_id):
                     ))
 
         if allow_fee_split and fee_split_raw:
-            fee_split_amount = parse_offer_amount(fee_split_raw)
+            fee_split_amount = parse_offer_amount(fee_split_raw, 'Fee Split')
             if fee_split_amount == 'invalid':
                 errors.append('Fee split offers must be valid numbers.')
             elif fee_split_amount is not None and fee_split_amount > 0:

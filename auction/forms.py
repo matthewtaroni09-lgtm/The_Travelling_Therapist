@@ -10,6 +10,7 @@ from .models import PROVINCES, Auction, Bid, Account, Demographic, DemographicTy
 from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
 import random
 from django.core.exceptions import ValidationError
+from django.core.validators import URLValidator
 import os
 from django.forms import inlineformset_factory
 from django.utils import timezone
@@ -90,6 +91,18 @@ def validate_file_extension(value, image_name):
     return error_list
 
 
+def normalize_website_url(raw_value):
+    value = str(raw_value or '').strip()
+    if value == '':
+        return ''
+    if '://' not in value:
+        value = f'https://{value}'
+
+    validator = URLValidator(schemes=['http', 'https'])
+    validator(value)
+    return value
+
+
 class AuctionForm(forms.ModelForm):
     paymentTypesSelection = forms.MultipleChoiceField(
         label='I would like to receive offers for',
@@ -129,8 +142,8 @@ class AuctionForm(forms.ModelForm):
         label='Desired total contract flat fee (optional)',
         required=False,
         max_digits=10,
-        decimal_places=2,
-        min_value=0,
+        decimal_places=0,
+        min_value=1,
     )
 
     class Meta:
@@ -185,7 +198,7 @@ class AuctionForm(forms.ModelForm):
             'desiredFeeSplitPercentage': forms.NumberInput(attrs={'class': 'form-control', 'min': '1', 'max': '100', 'placeholder': 'e.g. 65'}),
             'minimumCompensation': forms.NumberInput(attrs={'class': 'form-control', 'min': '1', 'placeholder': 'e.g. 75'}),
             'desiredFlatFeeHourly': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'placeholder': 'e.g. 80.00'}),
-            'desiredFlatFeeTotalContract': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'placeholder': 'e.g. 5000.00'}),
+            'desiredFlatFeeTotalContract': forms.NumberInput(attrs={'class': 'form-control', 'step': '1', 'min': '1', 'placeholder': 'e.g. 5000'}),
             'comments': forms.Textarea(attrs={'placeholder': 'Tell us about your clinic...', 'rows': '4'})
         }
 
@@ -315,7 +328,12 @@ class AuctionForm(forms.ModelForm):
                 error_list.append(ValidationError('Desired hourly flat fee must be between $15 and $1000.'))
 
         if desired_flat_fee_total_contract is not None and 'Flat Fee' in payment_types and flat_fee_type == 'total_contract':
-            cleaned_data['desiredFlatFeeTotalContract'] = Decimal(str(desired_flat_fee_total_contract)).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+            total_contract_decimal = Decimal(str(desired_flat_fee_total_contract))
+            if total_contract_decimal < Decimal('1'):
+                error_list.append(ValidationError('Suggested total contract price must be at least $1.'))
+            if total_contract_decimal != total_contract_decimal.to_integral_value(rounding=ROUND_HALF_UP):
+                error_list.append(ValidationError('Suggested total contract price must be a whole number.'))
+            cleaned_data['desiredFlatFeeTotalContract'] = total_contract_decimal.quantize(Decimal('1'), rounding=ROUND_HALF_UP)
 
         if desired_flat_fee_hourly is not None and ('Flat Fee' not in payment_types or flat_fee_type != 'hourly'):
             cleaned_data['desiredFlatFeeHourly'] = None
@@ -343,7 +361,7 @@ class AuctionForm(forms.ModelForm):
         elif 'Flat Fee' in payment_types and auction.flatFeeType == 'total_contract':
             auction.desiredFlatFeeHourly = None
             desired_flat_fee_total_contract = self.cleaned_data.get('desiredFlatFeeTotalContract')
-            auction.desiredFlatFeeTotalContract = desired_flat_fee_total_contract.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP) if desired_flat_fee_total_contract is not None else None
+            auction.desiredFlatFeeTotalContract = desired_flat_fee_total_contract.quantize(Decimal('1'), rounding=ROUND_HALF_UP) if desired_flat_fee_total_contract is not None else None
         else:
             auction.desiredFlatFeeHourly = None
             auction.desiredFlatFeeTotalContract = None
@@ -463,7 +481,7 @@ class RegisterAcount(UserCreationForm):
     clinicName = forms.CharField(required=False, label='Healthcare facility Name')
     city = forms.CharField(required=False)
     about = forms.CharField(required=False, label='About the healthcare facility', widget=forms.Textarea)
-    clinicWebsite = forms.URLField(required=False, label='Website URL')
+    clinicWebsite = forms.CharField(required=False, label='Website URL')
     province = forms.ChoiceField(choices=PROVINCES, required=False)
     username = forms.CharField(label='Email')
     user_type = forms.ModelChoiceField(queryset=UserType.objects.all())
@@ -483,6 +501,7 @@ class RegisterAcount(UserCreationForm):
         clinicName = self.cleaned_data.get('clinicName')
         city = self.cleaned_data.get('city')
         about = self.cleaned_data.get('about')
+        clinicWebsite = self.cleaned_data.get('clinicWebsite')
         province = self.cleaned_data.get('province')
         username = self.cleaned_data.get('username')
         email = self.cleaned_data.get('email')
@@ -519,6 +538,11 @@ class RegisterAcount(UserCreationForm):
             errors = validate_clinic_fields(clinicName, city, province, username)
             if errors is not None:
                 error_list.extend(errors)
+
+            try:
+                self.cleaned_data['clinicWebsite'] = normalize_website_url(clinicWebsite)
+            except ValidationError:
+                error_list.append(ValidationError('Please enter a valid website URL.'))
 
             if len(clinicName) <= 4:
                 error_list.append(ValidationError("Please enter a healthcare facility name that is greater than 4 characters."))
@@ -670,6 +694,11 @@ class ProfileUpdateClinic(forms.ModelForm):
         errors = validate_clinic_fields(clinicName, city, province, username)
         if errors is not None:
             error_list.extend(errors)
+
+        try:
+            self.cleaned_data['clinicWebsite'] = normalize_website_url(clinicWebsite)
+        except ValidationError:
+            error_list.append(ValidationError('Please enter a valid website URL.'))
     
         if len(error_list) > 0:
             raise forms.ValidationError(error_list)
