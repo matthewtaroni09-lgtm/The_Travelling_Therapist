@@ -90,7 +90,7 @@
   <div class="d-flex align-items-start flex-wrap gap-2 mb-3">
     <section class="d-inline-flex align-items-center text-white bg-dark py-2 px-3 me-3 rounded mb-0">
       {% if auction.is_effectively_closed %}
-      {% if auction.get_winning_offer_symbol == '%' %}
+      {% if auction.has_winning_offer and auction.get_winning_offer_symbol == '%' %}
       <span class="ttt-stat-coin ttt-stat-percent-circle me-2" style="top: 1px;">%</span>
       {% else %}
       <span class="material-icons small text-white ttt-stat-coin me-2">paid</span>
@@ -415,7 +415,12 @@
               </div>
               {% endfor %}
             </div>
-            <div class="d-flex justify-content-end mt-3">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mt-3">
+              <div>
+                {% if decline_all_offers_option %}
+                <button type="button" class="btn btn-link text-secondary p-0 small text-decoration-none decline-offers-trigger">I would not like to accept any offer</button>
+                {% endif %}
+              </div>
               <button id="reviewOffersConfirmButton" type="button" class="btn btn-primary" disabled>Accept</button>
             </div>
             {% else %}
@@ -443,6 +448,29 @@
               {% csrf_token %}
               <input type="hidden" name="acceptOfferAction" value="1">
               <input type="hidden" id="selectedOfferBidIdInput" name="selectedOfferBidId" value="">
+              <button type="submit" class="btn btn-primary">Confirm</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="declineAllOffersModal" tabindex="-1" aria-labelledby="declineAllOffersModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="declineAllOffersModalLabel">I Would Not Like to Accept Any Offer</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <p class="mb-2">Are you sure you want to decline all of the offers received?</p>
+            <p class="mb-0">You will receive a flat invoice of $50 and may relist this placement for free</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+            <form method="post" class="m-0" id="declineAllOffersForm">
+              {% csrf_token %}
+              <input type="hidden" name="declineAllOffersAction" value="1">
               <button type="submit" class="btn btn-primary">Confirm</button>
             </form>
           </div>
@@ -648,7 +676,11 @@
     const confirmText = document.getElementById('confirmOfferAcceptanceText');
     const selectedOfferBidIdInput = document.getElementById('selectedOfferBidIdInput');
     const confirmModalEl = document.getElementById('confirmOfferAcceptanceModal');
+    const declineModalEl = document.getElementById('declineAllOffersModal');
+    const declineForm = document.getElementById('declineAllOffersForm');
     const reviewModalEl = document.getElementById('reviewOffersModal');
+    let declineFormSubmitted = false;
+    let openDeclineModalAfterHide = false;
 
     if (!confirmButton || !confirmText || !selectedOfferBidIdInput || !confirmModalEl || !reviewModalEl || reviewOfferChoices.length === 0) {
       return;
@@ -656,6 +688,7 @@
 
     const confirmModal = bootstrap.Modal.getOrCreateInstance(confirmModalEl);
     const reviewModal = bootstrap.Modal.getOrCreateInstance(reviewModalEl);
+    const declineModal = declineModalEl ? bootstrap.Modal.getOrCreateInstance(declineModalEl) : null;
 
     function syncConfirmAvailability() {
       const selectedChoice = reviewOfferChoices.find(function (choice) {
@@ -696,6 +729,33 @@
         reviewModal.show();
       }
     });
+
+    if (declineModalEl && declineModal && declineForm) {
+      Array.from(document.querySelectorAll('.decline-offers-trigger')).forEach(function (trigger) {
+        trigger.addEventListener('click', function () {
+          openDeclineModalAfterHide = true;
+          reviewModal.hide();
+        });
+      });
+
+      declineForm.addEventListener('submit', function () {
+        declineFormSubmitted = true;
+      });
+
+      reviewModalEl.addEventListener('hidden.bs.modal', function () {
+        if (openDeclineModalAfterHide) {
+          openDeclineModalAfterHide = false;
+          declineModal.show();
+        }
+      });
+
+      declineModalEl.addEventListener('hidden.bs.modal', function () {
+        if (!declineFormSubmitted) {
+          reviewModal.show();
+        }
+        declineFormSubmitted = false;
+      });
+    }
   });
 </script>
 {% endif %}

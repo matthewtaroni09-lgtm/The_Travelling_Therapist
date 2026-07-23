@@ -161,7 +161,7 @@
                                     style="max-height: 150px;">
                             </div>
                             <p class="small text-muted mb-0 mt-1"><strong>Note:</strong> Maximum image size is
-                                <strong>1MB</strong>. Images must be in jpg, jpeg, or png format.</p>
+                                <strong>5MB</strong>. Images must be in jpg, jpeg, or png format.</p>
                         </div>
                     </div>
                 </form>
@@ -227,8 +227,14 @@
         const container = document.getElementById('imagePreviewContainer');
 
         if (file) {
-            if (file.size > 10 * 1024 * 1024) { // 10MB
-                Swal.fire('File Too Large', 'Maximum image size is 10MB. Please select a smaller file.', 'error');
+            if (file.size > 5 * 1024 * 1024) {
+                Swal.fire({
+            title: 'Image size too large',
+            text: 'Please select an image less than 5mb',
+            icon: 'error',
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#0f9972'
+        });
                 input.value = '';
                 container.classList.add('d-none');
                 return;

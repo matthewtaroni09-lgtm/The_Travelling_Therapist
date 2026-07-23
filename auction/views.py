@@ -478,7 +478,7 @@ def auction_search(request):
         if status_select == 'Active':
             status_select_fitler = Q(active=True, closed=False, auctionEnd__gt=now)
         elif status_select == 'Closed':
-            status_select_fitler = Q(closed=True) | Q(auctionEnd__lte=now)
+            status_select_fitler = Q(closed=True) | Q(waitingCloseout=True) | Q(auctionEnd__lte=now)
         else:
             status_select_fitler = Q()
     # Filter clinic search
@@ -865,8 +865,9 @@ def view_auction(request, auction_id):
         request.user.is_authenticated
         and hasattr(request.user, 'account')
         and request.user.account == auction.clinic
-        and is_effectively_active
+        and (is_effectively_active or auction.is_closed_waiting() or auction.is_in_clinic_review_window())
     )
+    decline_all_offers_option = bool(can_review_offers and (auction.is_closed_waiting() or auction.is_in_clinic_review_window()))
     clinic_offer_rows = []
     required_skill_rows = auction.get_required_skill_rows()
     public_perk_rows = auction.get_public_perk_rows()
@@ -972,6 +973,21 @@ def view_auction(request, auction_id):
 
     if request.method == 'POST':
         print('post')
+        if can_review_offers and request.POST.get('declineAllOffersAction') == '1':
+            auction.winner = None
+            auction.winningPrice = None
+            auction.currentLowBid = None
+            auction.active = False
+            auction.closed = True
+            auction.modified = timezone.now()
+            auction.modifiedBy = request.user
+            auction.save()
+
+            Bid.objects.filter(auction=auction, active=True).update(active=False)
+
+            messages.success(request, 'Listing closed without accepting an offer. A flat invoice of $50 will be issued and you may relist this placement for free.')
+            return HttpResponseRedirect('/auction/' + str(auction.auctionID))
+
         if can_review_offers and request.POST.get('acceptOfferAction') == '1':
             selected_bid_id = (request.POST.get('selectedOfferBidId') or '').strip()
 
@@ -1149,6 +1165,7 @@ def view_auction(request, auction_id):
                 'listing_image_count': listing_image_count,
                 'finalize_skill_rows': finalize_skill_rows,
                 'clinician_profile_skills': clinician_profile_skills,
+                'decline_all_offers_option': decline_all_offers_option,
             }
             return render(request, 'auction/view_auction.html', context)
     else:
@@ -1175,6 +1192,7 @@ def view_auction(request, auction_id):
                 'listing_image_count': listing_image_count,
                 'finalize_skill_rows': finalize_skill_rows,
                 'clinician_profile_skills': clinician_profile_skills,
+                'decline_all_offers_option': decline_all_offers_option,
             }
         return render(request, 'auction/view_auction.html', context)
     
@@ -2127,9 +2145,9 @@ def admin_raffle_api(request):
             # Handle Image Upload if present in request.FILES
             if 'image' in request.FILES:
                 image_file = request.FILES['image']
-                # Server-side size validation (10MB)
-                if image_file.size > 10 * 1024 * 1024:
-                    return JsonResponse({'status': 'error', 'message': 'Image file exceeds 10MB limit.'})
+                # Server-side size validation (5MB)
+                if image_file.size > 5 * 1024 * 1024:
+                    return JsonResponse({'status': 'error', 'message': 'Image size too large - please select an image less than 5mb'})
                 raffle.image = image_file
 
             raffle.save()

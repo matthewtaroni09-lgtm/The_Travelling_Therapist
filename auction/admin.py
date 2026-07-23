@@ -16,6 +16,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 from . import emails
 from .forms import AuctionForm, AuctionAdminForm
+from . import scheduled_tasks
 from The_Travelling_Therapist.settings import ENVIRONMENT, DEV_LINK, PROD_LINK
 from datetime import datetime, timedelta
 import time
@@ -33,10 +34,6 @@ class AuctionAdmin(admin.ModelAdmin):
     changelist_template = 'admin/auction/auction/change_list.html'
     change_form_template = 'admin/auction/auction/change_form.html'
     save_on_top = True
-    formfield_overrides = {
-        django_models.DateTimeField: {'widget': forms.DateTimeInput(attrs={'type': 'datetime-local'})},
-        django_models.TimeField: {'widget': forms.TimeInput(attrs={'type': 'time'})},
-    }
     readonly_fields = ('auctionID', 'cronID', 'required_skills_display', 'negotiable_perks_display', 'created', 'modified')
     list_display = ('auction_number_admin', 'listing_view_link', 'status_display', 'clinic_display', 'payment_type_label', 'desired_offer_guidance', 'minimum_compensation_display', 'required_skills_count', 'negotiable_perks_count', 'auctionStart', 'auctionEnd', 'placementStart', 'placementEnd', 'winner', 'winning_offer_display_admin')
     list_display_links = ('auction_number_admin',)
@@ -96,6 +93,12 @@ class AuctionAdmin(admin.ModelAdmin):
         if obj.deleted:
             return format_html(
                 '<button type="button" class="ttt-status-open" style="color:#111827;font-weight:600;text-decoration:underline;" data-auction-id="{}" data-current-status="deleted" data-current-status-label="Deleted" data-change-url="{}">Deleted</button>',
+                obj.pk,
+                change_url,
+            )
+        if getattr(obj, 'waitingCloseout', False) and not obj.closed:
+            return format_html(
+                '<button type="button" class="ttt-status-open" style="color:#f0ad4e;font-weight:600;text-decoration:underline;" data-auction-id="{}" data-current-status="waiting" data-current-status-label="Closed (Waiting)" data-change-url="{}">Closed (Waiting)</button>',
                 obj.pk,
                 change_url,
             )
@@ -227,20 +230,35 @@ class AuctionAdmin(admin.ModelAdmin):
         listing_status = form.cleaned_data.get('listing_status') if hasattr(form, 'cleaned_data') else ''
         if listing_status == 'deleted':
             obj.active = False
+            obj.waitingCloseout = False
             obj.closed = False
             obj.deleted = True
+        elif listing_status == 'waiting':
+            obj.active = False
+            obj.waitingCloseout = True
+            obj.closed = False
+            obj.deleted = False
         elif listing_status == 'closed':
             obj.active = False
+            obj.waitingCloseout = False
             obj.closed = True
             obj.deleted = False
         elif listing_status == 'active':
             obj.active = True
+            obj.waitingCloseout = False
             obj.closed = False
             obj.deleted = False
         else:
             obj.active = False
+            obj.waitingCloseout = False
             obj.closed = False
             obj.deleted = False
+
+        waiting_closeout_job_id = f'{obj.auctionID}_waiting_closeout'
+        if listing_status == 'waiting' and obj.auctionEnd is not None:
+            scheduled_tasks.schedule_waiting_closeout(obj.auctionID, obj.auctionEnd + timedelta(days=7))
+        else:
+            scheduled_tasks.remove_cron_job(waiting_closeout_job_id)
 
         admin = AdminSetting.objects.first()
         auction = Auction.objects.filter(pk=obj.auctionID).first()

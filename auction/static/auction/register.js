@@ -66,12 +66,11 @@ function userTypeChange(userType) {
 }
 
 $(document).ready(function () {
-    const maxImageSizeBytes = 10 * 1024 * 1024;
+    const maxImageSizeBytes = 5 * 1024 * 1024;
 
     function showImageSizeError(fieldLabel) {
         Swal.fire({
-            title: 'Image too large',
-            text: fieldLabel + ' must be 10 MB or smaller. Please choose a smaller image.',
+            title: 'Image size too large - please select an image less than 5mb',
             icon: 'error',
             confirmButtonText: 'OK',
             confirmButtonColor: '#0f9972'
@@ -91,6 +90,19 @@ $(document).ready(function () {
         }
         return true;
     }
+
+    const imageFieldLabels = {
+        id_imageOne: 'Image 1',
+        id_imageTwo: 'Image 2',
+        id_imageThree: 'Image 3',
+        id_imageFour: 'Image 4',
+    };
+
+    Object.keys(imageFieldLabels).forEach(function (inputId) {
+        $('#' + inputId).on('change', function () {
+            validateImageFieldSize(inputId, imageFieldLabels[inputId]);
+        });
+    });
     const termsActionButton = $('#termsActionButton');
     let submitFromTermsModal = false;
     const registerForm = document.querySelector('form[method="post"]');
