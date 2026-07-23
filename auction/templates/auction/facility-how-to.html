@@ -1,0 +1,1210 @@
+{% extends 'auction/base.html' %}
+{% load static %}
+
+{% block content %}
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00D2A0;
+            --primary-dark: #00B88C;
+            --black: #0B0F19;
+            --dark-gray: #1A1D24;
+            --gray: #6B7280;
+            --light-gray: #F3F4F6;
+            --white: #FFFFFF;
+            --border: #E5E7EB;
+            --border-dark: #D1D5DB;
+            --font: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .facility-how-to-page * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        .facility-how-to-page {
+            font-family: var(--font);
+            color: var(--black);
+            line-height: 1.6;
+            background-color: #FAFAFA;
+            padding-top: 48px; /* Added breathing room at the top */
+        }
+
+        .facility-how-to-page .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .facility-how-to-page h1, .facility-how-to-page h2, .facility-how-to-page h3, .facility-how-to-page h4 {
+            line-height: 1.2;
+            margin-bottom: 16px;
+        }
+
+        /* Section Dividers */
+        .section-divider {
+            border: none;
+            height: 1px;
+            background-color: var(--border-dark);
+            margin: 60px 0;
+            opacity: 0.6;
+        }
+
+        .facility-how-to-page .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px 28px;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+            border: none;
+        }
+
+        .facility-how-to-page .btn-black {
+            background-color: var(--black);
+            color: var(--white);
+        }
+
+        .facility-how-to-page .btn-black:hover {
+            background-color: var(--dark-gray);
+        }
+
+        .facility-how-to-page .btn-outline {
+            background-color: var(--white);
+            color: var(--black);
+            border: 1px solid var(--border-dark);
+        }
+
+        .facility-how-to-page .btn-outline:hover {
+            border-color: var(--black);
+        }
+
+        .facility-how-to-page .btn-primary {
+            background-color: var(--primary);
+            color: var(--black);
+        }
+
+        .facility-how-to-page .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        /* <!-- Section 1: Hero --> */
+        .hero {
+            padding: 60px 0 100px 0;
+            display: flex;
+            align-items: center;
+            gap: 64px;
+            position: relative;
+        }
+
+        .hero-content {
+            flex: 1.1;
+        }
+
+        .hero-sub {
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--black);
+            background-color: var(--white);
+            padding: 8px 16px;
+            border-radius: 8px;
+            display: inline-block;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+            border: 1px solid var(--border);
+        }
+
+        .hero h1 {
+            font-size: 52px;
+            font-weight: 500;
+            letter-spacing: -1.5px;
+            margin-bottom: 24px;
+        }
+
+        .hero h1 span {
+            color: #9CA3AF;
+        }
+
+        .hero p {
+            font-size: 17px;
+            color: var(--gray);
+            margin-bottom: 36px;
+            max-width: 95%;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 16px;
+        }
+
+        .hero-visual {
+            flex: 0.9;
+            position: relative;
+            padding-bottom: 30px; 
+        }
+
+        .dashboard-mockup {
+            background: var(--white);
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+            padding: 32px;
+            border: 1px solid var(--border);
+        }
+
+        .dash-header {
+            margin-bottom: 24px;
+        }
+
+        .dash-header p {
+            font-size: 12px;
+            text-transform: uppercase;
+            color: var(--gray);
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+
+        .dash-header h3 {
+            font-size: 20px;
+            margin: 0;
+            color: var(--black);
+        }
+
+        .dash-row {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            border: 1px solid var(--light-gray);
+            border-radius: 12px;
+            margin-bottom: 12px;
+            font-size: 14px;
+            color: var(--black);
+        }
+
+        .dash-row.active {
+            background-color: var(--primary);
+            border-color: var(--primary);
+            color: var(--black);
+            font-weight: 600;
+            justify-content: space-between;
+        }
+
+        .time {
+            font-weight: 600;
+            width: 60px;
+            color: var(--gray);
+        }
+
+        .dash-row.active .time {
+            color: var(--black);
+        }
+
+        .badge-filled {
+            background: var(--black);
+            color: var(--primary);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+
+        .floating-badge {
+            position: absolute;
+            bottom: -10px;
+            left: -30px;
+            background: var(--black);
+            padding: 16px 24px;
+            border-radius: 16px;
+            color: var(--white);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.1);
+            z-index: 2;
+        }
+        
+        .floating-badge p {
+            font-size: 10px;
+            text-transform: uppercase;
+            color: #9CA3AF !important;
+            margin-bottom: 4px;
+            letter-spacing: 0.5px;
+        }
+
+        .floating-badge h4 {
+            color: var(--primary) !important;
+            font-size: 24px;
+            margin: 0;
+            font-weight: 700;
+        }
+
+        /* <!-- Section 2: Tier Selector --> */
+        .tier-selector {
+            padding: 40px 0 80px 0;
+        }
+        
+        .tier-selector h2 {
+            font-size: 36px;
+            text-align: center;
+            margin-bottom: 48px;
+            color: var(--black);
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            background: var(--white);
+            border-radius: 20px;
+            border: 1px solid var(--border-dark);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.03);
+            overflow: hidden;
+        }
+
+        .tier-card {
+            background: transparent;
+            border-right: 1px solid var(--border-dark);
+            padding: 40px 24px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 280px;
+        }
+
+        .tier-card:last-child {
+            border-right: none;
+        }
+
+        .tier-card:hover {
+            background: #FAFAFA;
+            box-shadow: inset 0 -4px 0 var(--primary);
+        }
+
+        .tier-num {
+            font-size: 36px;
+            font-weight: 300;
+            color: #9CA3AF;
+            text-align: left;
+            margin-bottom: 16px;
+        }
+
+        .tier-card:hover .tier-num {
+            color: var(--primary-dark);
+        }
+
+        .tier-card h3 {
+            font-size: 18px;
+            margin-bottom: 8px;
+            color: var(--black);
+        }
+        
+        .tier-timeline {
+            display: inline-block;
+            background: #E6FBF5;
+            color: var(--primary-dark);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+
+        .tier-card p {
+            font-size: 14px;
+            color: var(--gray);
+            margin-bottom: 16px;
+        }
+
+        .tier-badge {
+            background: var(--black);
+            color: var(--white);
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+        }
+        
+        .tier-badge span {
+            color: var(--primary);
+            font-size: 14px;
+            margin-left: 4px;
+        }
+
+        .tier-card:hover .tier-badge {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* <!-- Section 3: Deep-Dives & Case Studies --> */
+        .deep-dive {
+            padding: 40px 0;
+        }
+
+        .tier-section {
+            display: flex;
+            gap: 64px;
+            margin-bottom: 100px;
+            align-items: center;
+            scroll-margin-top: 40px;
+        }
+        
+        /* Alternating Layout Class */
+        .tier-section.reverse {
+            flex-direction: row-reverse;
+        }
+
+        .tier-content {
+            flex: 1;
+        }
+
+        .tier-header {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 32px;
+        }
+        
+        .tier-header span {
+            font-size: 56px;
+            font-weight: 300;
+            color: #D1D5DB;
+            margin-right: 16px;
+            line-height: 0.8;
+        }
+        
+        .tier-title-wrap {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .tier-title-wrap p {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: #9CA3AF;
+            letter-spacing: 1.5px;
+            margin-bottom: 4px;
+            font-weight: 600;
+        }
+
+        .tier-title-wrap h2 {
+            font-size: 36px;
+            margin: 0;
+            color: var(--black);
+            line-height: 1.1;
+        }
+
+        .focus-timeline {
+            display: flex;
+            gap: 40px;
+            margin-bottom: 32px;
+        }
+
+        .focus-timeline div h4 {
+            font-size: 12px;
+            text-transform: uppercase;
+            color: var(--gray);
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .focus-timeline div p {
+            font-size: 14px;
+            color: var(--black);
+        }
+
+        .business-metric {
+            background: #E6FBF5;
+            padding: 16px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            color: var(--primary-dark);
+            margin-bottom: 40px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        /* Custom Icons to replace Emojis */
+        .icon-svg {
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .icon-metric { color: var(--primary-dark); width: 20px; height: 20px; }
+        .icon-alert { color: var(--gray); width: 16px; height: 16px; margin-right: 6px; }
+        .icon-check { color: var(--black); width: 16px; height: 16px; margin-right: 6px; }
+
+        /* Dark Box / Case Study Strict White Text Overrides */
+        .case-study {
+            flex: 1;
+            background: var(--dark-gray);
+            border-radius: 24px;
+            padding: 48px;
+            color: var(--white) !important;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 12px 32px rgba(0,0,0,0.12);
+        }
+
+        .cs-tag {
+            background: var(--primary);
+            color: var(--black) !important;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            display: inline-block;
+            margin-bottom: 32px;
+        }
+
+        .cs-clinic {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .cs-clinic-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+        }
+
+        .cs-clinic div h4 {
+            margin: 0;
+            font-size: 16px;
+            color: #FFFFFF !important;
+        }
+
+        .cs-clinic div p {
+            margin: 0;
+            font-size: 12px;
+            color: #9CA3AF !important;
+        }
+
+        .case-study h3 {
+            font-size: 24px;
+            margin-bottom: 24px;
+            color: #FFFFFF !important;
+        }
+
+        .cs-text {
+            font-size: 15px;
+            color: #E5E7EB !important;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        
+        .cs-text strong {
+            color: #FFFFFF !important;
+        }
+
+        .cs-result {
+            border-left: 3px solid var(--primary);
+            padding-left: 16px;
+            margin-top: 24px;
+            margin-bottom: 40px;
+        }
+
+        .cs-metric {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            border-top: 1px solid rgba(255,255,255,0.15);
+            padding-top: 24px;
+        }
+
+        .cs-metric span {
+            font-size: 12px;
+            color: #9CA3AF !important;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .cs-metric strong {
+            font-size: 32px;
+            color: var(--primary) !important;
+            line-height: 1;
+        }
+
+        /* Specific Visual Elements */
+        .bar-chart { margin-top: 24px; }
+        .bar-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 14px; font-weight: 500; color: var(--black); }
+        .bar { height: 12px; border-radius: 6px; margin-bottom: 20px; }
+        .bar.dark { background: var(--black); width: 100%; }
+        .bar.light { background: var(--border-dark); width: 35%; }
+        .bar.teal { background: var(--primary); width: 65%; }
+
+        .comparison-cards { display: flex; gap: 16px; }
+        .comp-card { flex: 1; border: 1px solid var(--border-dark); border-radius: 12px; padding: 24px; background: var(--white); }
+        .comp-card.success { border-color: var(--primary); background: #FAFFFD; }
+        .comp-card h5 { display: flex; align-items: center; font-size: 12px; text-transform: uppercase; margin-bottom: 16px; color: var(--gray); }
+        .comp-card.success h5 { color: var(--black); }
+        .comp-card p { font-size: 14px; margin-bottom: 12px; color: var(--black); }
+
+        .fee-compare { display: flex; gap: 16px; }
+        .fee-box { flex: 1; padding: 24px; border-radius: 12px; border: 1px solid var(--border-dark); background: var(--white); }
+        .fee-box h5 { font-size: 12px; color: var(--gray); text-transform: uppercase; margin-bottom: 16px; }
+        .fee-box.black { background: var(--black); color: var(--white) !important; border: none; }
+        .fee-box.black h5 { color: #9CA3AF !important; }
+        .fee-box h2 { font-size: 32px; margin-bottom: 4px; color: var(--black); }
+        .fee-box.black h2 { color: var(--primary) !important; }
+        .fee-box p { font-size: 13px; color: var(--gray); }
+        .fee-box.black p { color: #E5E7EB !important; }
+
+        .math-examples { margin-top: 32px; font-size: 13px; color: var(--gray); }
+        .math-examples ul { list-style: none; padding: 0; margin: 16px 0; }
+        .math-examples li { padding: 8px 0; border-bottom: 1px solid var(--border-dark); display: flex; justify-content: space-between; color: var(--black); }
+
+        /* <!-- Section 4: Enhanced Table --> */
+        .table-section {
+            padding: 60px 0;
+        }
+
+        .table-section h2 {
+            text-align: center;
+            font-size: 36px;
+            margin-bottom: 48px;
+            color: var(--black);
+        }
+
+        .pricing-table {
+            display: grid;
+            grid-template-columns: 250px 1fr 1fr 1fr;
+            background: var(--white);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            overflow: hidden;
+            border: 1px solid var(--border-dark);
+        }
+
+        .pt-cell {
+            padding: 32px 24px;
+            border-right: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .pt-cell:last-child { border-right: none; }
+        
+        .pt-header {
+            background: #FFFFFF;
+            font-weight: 700;
+            text-align: center;
+            text-transform: uppercase;
+            font-size: 14px;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--black);
+        }
+
+        .pt-header.ttt-col {
+            background: var(--primary);
+            color: var(--black);
+            font-size: 16px;
+        }
+
+        .row-header {
+            background: #F9FAFB;
+            font-weight: 600;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .row-header span { font-size: 13px; font-weight: 400; color: var(--gray); margin-top: 8px; }
+
+        .pt-content { font-size: 14px; color: var(--black); }
+        .pt-content ul, .pt-content ol { padding-left: 20px; margin-top: 8px; color: var(--gray); }
+        .pt-content li { margin-bottom: 16px; line-height: 1.5; font-size: 13px;}
+        .pt-content strong { color: var(--black); }
+        
+        .pt-content.ttt-col {
+            background: #FAFFFD;
+            border-left: 2px solid var(--primary);
+            border-right: 2px solid var(--primary);
+        }
+
+        /* <!-- Section 5: CTA --> */
+        .cta-section {
+            background: var(--black);
+            color: var(--white) !important;
+            text-align: center;
+            padding: 80px 40px;
+            border-radius: 24px;
+            max-width: 1000px;
+            margin: 80px auto;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .cta-section h2 {
+            font-size: clamp(42px, 4.4vw, 62px);
+            margin-bottom: 20px;
+            font-weight: 500;
+            color: #FFFFFF !important;
+            letter-spacing: -0.02em;
+            line-height: 1.05;
+        }
+
+        .cta-section p {
+            font-size: 16px;
+            color: #D1D5DB !important;
+            max-width: 650px;
+            margin: 0 auto 36px auto;
+        }
+
+        .cta-section .btn-primary {
+            background: var(--primary);
+            color: var(--black);
+            border-radius: 999px;
+            padding: 16px 36px;
+            font-weight: 700;
+            box-shadow: 0 10px 26px rgba(0, 210, 160, 0.22);
+        }
+
+        .cta-section .btn-primary:hover {
+            background: #10e8b4;
+            color: var(--black);
+            transform: translateY(-1px);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .hero { flex-direction: column; text-align: center; }
+            .hero p { margin: 0 auto 40px auto; }
+            .hero-actions { justify-content: center; }
+            .floating-badge { position: relative; bottom: 0; left: 0; margin-top: -20px; display: inline-block; }
+            .grid-4 { grid-template-columns: repeat(2, 1fr); }
+            .tier-card { border-bottom: 1px solid var(--border-dark); }
+            .tier-card:nth-child(2n) { border-right: none; }
+            .tier-card:nth-child(3), .tier-card:nth-child(4) { border-bottom: none; }
+            /* Reset alternating layout strictly to standard column layout on mobile/tablet */
+            .tier-section, .tier-section.reverse { flex-direction: column; }
+            .pricing-table { display: flex; flex-direction: column; }
+            .row-header { display: none; }
+            .cta-section { margin: 40px 24px; }
+        }
+
+        @media (max-width: 768px) {
+            .grid-4 { grid-template-columns: 1fr; }
+            .tier-card { border-right: none; border-bottom: 1px solid var(--border-dark); }
+            .tier-card:last-child { border-bottom: none; }
+            .focus-timeline { flex-direction: column; gap: 16px; }
+            .hero h1 { font-size: 40px; }
+            .fee-compare, .comparison-cards { flex-direction: column; }
+        }
+    </style>
+
+    <div class="facility-how-to-page">
+
+    <!-- Section 1: Above-the-Fold Hero Section -->
+    <section class="hero container">
+        <div class="hero-content">
+            <span class="hero-sub">Marketplace Staffing Built for Clinic Economics</span>
+            <h1>Protect Your Revenue.<br><span>Prevent Team Burnout.</span><br>Provide Efficient Care.</h1>
+            <p>Running a clinic is a balancing act. When your shift blocks sit empty, you lose revenue and risk patient leakage. When your 
+                staff is overloaded, you risk losing them to burnout. The Traveling Therapist is a platform that gives you on-demand access to 
+                clinicians under four strategic operational tiers—designed to keep your clinic optimized, efficient, and prepared.</p>
+            <div class="hero-actions">
+                <a href="{% url 'create-auction' %}" class="btn btn-black">Post a Listing ↗</a>
+                <a href="{% url 'how-it-works' %}" class="btn btn-outline">▶ View how it works</a>
+            </div>
+        </div>
+        <div class="hero-visual">
+            <div class="dashboard-mockup">
+                <div class="dash-header">
+                    <p>Clinic Schedule</p>
+                    <h3>Tuesday • Bay 3</h3>
+                </div>
+                <div class="dash-row">
+                    <span class="time">08:00</span>
+                    <span>Initial Assessment — R. Chen</span>
+                </div>
+                <div class="dash-row">
+                    <span class="time">09:00</span>
+                    <span>Post-Op Rehab — M. Okafor</span>
+                </div>
+                <div class="dash-row active">
+                    <div>
+                        <span class="time">10:00</span>
+                        <span>TTT Shift Covered</span>
+                    </div>
+                    <span class="badge-filled">✓ Filled</span>
+                </div>
+                <div class="dash-row">
+                    <span class="time">13:00</span>
+                    <span>Manual Therapy — L. Dubois</span>
+                </div>
+                <div class="dash-row">
+                    <span class="time">14:00</span>
+                    <span>Gait Analysis — S. Patel</span>
+                </div>
+            </div>
+            <div class="floating-badge">
+                <p>Billing Protected</p>
+                <h4>+$1,680</h4>
+            </div>
+        </div>
+    </section>
+
+    <!-- Divider 1 -->
+    <div class="container"><hr class="section-divider"></div>
+
+    <!-- Section 2: Interactive Tier Selector -->
+    <section class="tier-selector container">
+        <h2>Coverage engineered around your clinic economics.</h2>
+        <div class="grid-4">
+            <!-- Tier 1 -->
+            <div class="tier-card" onclick="document.getElementById('tier-1').scrollIntoView({ behavior: 'smooth' });">
+                <div>
+                    <div class="tier-num">01 ↗</div>
+                    <h3>Rapid Response</h3>
+                    <div class="tier-timeline">&lt; 1 Week</div>
+                    <p>Save Daily Billings</p>
+                </div>
+                <div class="tier-badge">NET REVENUE SAVED <span>60%+</span></div>
+            </div>
+            <!-- Tier 2 -->
+            <div class="tier-card" onclick="document.getElementById('tier-2').scrollIntoView({ behavior: 'smooth' });">
+                <div>
+                    <div class="tier-num">02 ↗</div>
+                    <h3>Operational Continuity</h3>
+                    <div class="tier-timeline">1 - 3 Weeks</div>
+                    <p>Prevent Team Burnout</p>
+                </div>
+                <div class="tier-badge">TEAM WORKLOAD <span>Balanced</span></div>
+            </div>
+            <!-- Tier 3 -->
+            <div class="tier-card" onclick="document.getElementById('tier-3').scrollIntoView({ behavior: 'smooth' });">
+                <div>
+                    <div class="tier-num">03 ↗</div>
+                    <h3>Risk-Free Recruitment</h3>
+                    <div class="tier-timeline">Flexible</div>
+                    <p>Test Fit with $0 Buyout Fees</p>
+                </div>
+                <div class="tier-badge">PLACEMENT FEES <span>$0</span></div>
+            </div>
+            <!-- Tier 4 -->
+            <div class="tier-card" onclick="document.getElementById('tier-4').scrollIntoView({ behavior: 'smooth' });">
+                <div>
+                    <div class="tier-num">04 ↗</div>
+                    <h3>Caseload Preservation</h3>
+                    <div class="tier-timeline">3 - 12+ Months</div>
+                    <p>Lock Down Your Patient Base</p>
+                </div>
+                <div class="tier-badge">PATIENT RETENTION <span>87%</span></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Divider 2 -->
+    <div class="container"><hr class="section-divider"></div>
+
+    <!-- Section 3: Deep-Dive Tier Breakdowns & Case Studies -->
+    <section class="deep-dive container">
+        
+        <!-- Tier 1 Breakdown -->
+        <div class="tier-section" id="tier-1">
+            <div class="tier-content">
+                <div class="tier-header">
+                    <span>01</span>
+                    <div class="tier-title-wrap">
+                        <p>Ultra Short-Term Emergency</p>
+                        <h2>Rapid Response</h2>
+                    </div>
+                </div>
+                <div class="focus-timeline">
+                    <div>
+                        <h4>Operational Focus</h4>
+                        <p>Sick leave, family emergencies, or unexpected clinician callouts.</p>
+                    </div>
+                    <div>
+                        <h4>Target Timeline</h4>
+                        <p>Single-shift coverage up to &lt; 1 week.</p>
+                    </div>
+                </div>
+                <div class="business-metric">
+                    <svg class="icon-svg icon-metric" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                    Business Metric — Protecting Daily Patient Billing.
+                </div>
+                
+                <div class="bar-chart">
+                    <div class="bar-row">
+                        <span>Avg. Outpatient PT daily billing</span>
+                        <span>$1,200–$1,800</span>
+                    </div>
+                    <div class="bar dark"></div>
+                    
+                    <div class="bar-row">
+                        <span style="color: var(--gray)">Cost of TTT coverage</span>
+                        <span style="color: var(--gray)">-30-40%</span>
+                    </div>
+                    <div class="bar light"></div>
+                    
+                    <div class="bar-row">
+                        <span style="color: var(--primary-dark); font-weight: 700;">Net revenue saved with TTT</span>
+                        <span style="color: var(--primary-dark); font-weight: 700;">60%+</span>
+                    </div>
+                    <div class="bar teal"></div>
+                </div>
+            </div>
+            <div class="case-study">
+                <div class="cs-tag">CASE STUDY</div>
+                <div class="cs-clinic">
+                    <div class="cs-clinic-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect><path d="M9 22v-4h6v4"></path><path d="M8 6h.01"></path><path d="M16 6h.01"></path><path d="M12 6h.01"></path><path d="M12 10h.01"></path><path d="M12 14h.01"></path><path d="M16 10h.01"></path><path d="M16 14h.01"></path><path d="M8 10h.01"></path><path d="M8 14h.01"></path></svg>
+                    </div>
+                    <div>
+                        <h4>Tom Orthopedics</h4>
+                        <p>Busy private multidisciplinary clinic</p>
+                    </div>
+                </div>
+                <h3>The Tuesday Morning Callout</h3>
+                <p class="cs-text"><strong>Scenario —</strong> On a packed Tuesday morning, their lead orthopedic clinician woke up with a severe stomach flu. Rescheduling up to 11 high-value patients would have caused immediate revenue loss and severe patient frustration.</p>
+                <p class="cs-text"><strong>TTT Action —</strong> Tom posted an emergency 1-day listing on TTT and connected with a licensed, experienced local orthopedic clinician who offered to work the shift for the day.</p>
+                <div class="cs-result">
+                    <p class="cs-text" style="margin:0;"><strong>Result —</strong> The day’s patient volume was fully treated. The clinic protected $1,680 in billing and maintained seamless patient trust through The Traveling Therapist.</p>
+                </div>
+                <div class="cs-metric">
+                    <span>Billing Protected In One Day</span>
+                    <strong>$1,680</strong>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tier 2 Breakdown -->
+        <div class="tier-section reverse" id="tier-2">
+            <div class="tier-content">
+                <div class="tier-header">
+                    <span>02</span>
+                    <div class="tier-title-wrap">
+                        <p>Short-Term Coverage</p>
+                        <h2>Operational Continuity</h2>
+                    </div>
+                </div>
+                <div class="focus-timeline">
+                    <div>
+                        <h4>Operational Focus</h4>
+                        <p>Planned staff vacation blocks, scheduled surgeries, or short-term medical leaves.</p>
+                    </div>
+                    <div>
+                        <h4>Target Timeline</h4>
+                        <p>1 week to 3 weeks.</p>
+                    </div>
+                </div>
+                <div class="business-metric">
+                    <svg class="icon-svg icon-metric" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                    Business Metric — Preventing Core Team Burnout.
+                </div>
+                
+                <div class="comparison-cards">
+                    <div class="comp-card">
+                        <h5>
+                            <svg class="icon-svg icon-alert" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                            Without TTT
+                        </h5>
+                        <p>Overloaded schedules</p>
+                        <p>Rushed 15-min double-bookings</p>
+                        <p>Stressed, friction-heavy staff</p>
+                    </div>
+                    <div class="comp-card success">
+                        <h5>
+                            <svg class="icon-svg icon-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                            With TTT
+                        </h5>
+                        <p>Clean, balanced schedules</p>
+                        <p>Full appointment durations</p>
+                        <p>Happy, retained team</p>
+                    </div>
+                </div>
+            </div>
+            <div class="case-study">
+                <div class="cs-tag">CASE STUDY</div>
+                <div class="cs-clinic">
+                    <div class="cs-clinic-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"></path><path d="M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16"></path><path d="M12 10v4"></path><path d="M10 12h4"></path></svg>
+                    </div>
+                    <div>
+                        <h4>Sarah’s Physiotherapy & Wellness</h4>
+                        <p>Boutique physiotherapy clinic</p>
+                    </div>
+                </div>
+                <h3>The Planned Summer Vacation</h3>
+                <p class="cs-text"><strong>Scenario —</strong> A senior physiotherapist scheduled a 2-week summer vacation. Historically, the clinic forced their remaining two PTs to absorb the caseload — triple-bookings, patient complaints, and staff friction.</p>
+                <p class="cs-text"><strong>TTT Action —</strong> Sarah posted a listing weeks in advance. Many clinicians offered to cover the 10-shift block, and she selected coverage based on years of experience to match the senior position.</p>
+                <div class="cs-result">
+                    <p class="cs-text" style="margin:0;"><strong>Result —</strong> TTT managed the vacationing clinician's caseload and permanent staff kept their normal hours — preventing operational burnout entirely.</p>
+                </div>
+                <div class="cs-metric">
+                    <span>Covered Without Overloading Staff</span>
+                    <strong>10 shifts</strong>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tier 3 Breakdown -->
+        <div class="tier-section" id="tier-3">
+            <div class="tier-content">
+                <div class="tier-header">
+                    <span>03</span>
+                    <div class="tier-title-wrap">
+                        <p>Contract-To-Hire Trial</p>
+                        <h2>Risk-Free Recruitment</h2>
+                    </div>
+                </div>
+                <div class="focus-timeline">
+                    <div>
+                        <h4>Operational Focus</h4>
+                        <p>Strategic team growth and "try-before-you-buy" recruitment.</p>
+                    </div>
+                    <div>
+                        <h4>Target Timeline</h4>
+                        <p>Flexible (determined by the initial contract block).</p>
+                    </div>
+                </div>
+                <div class="business-metric">
+                    <svg class="icon-svg icon-metric" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                    Business Metric — $0 Placement & Buyout Fees.
+                </div>
+                
+                <div class="fee-compare">
+                    <div class="fee-box">
+                        <h5>Traditional Agencies</h5>
+                        <h2>$12,000+</h2>
+                        <p>15-20% salary buyout fee</p>
+                    </div>
+                    <div class="fee-box black">
+                        <h5>The Traveling Therapist</h5>
+                        <h2>$0</h2>
+                        <p>No buyout, no placement fee</p>
+                    </div>
+                </div>
+
+                <div class="math-examples">
+                    <p>Traditional agencies charge 15% to 25% of annualized salary, or flat penalties of $7,500–$15,000 for early conversion. For a standard outpatient PT/RN ($75k-$90k/year):</p>
+                    <ul>
+                        <li><span>15% of $80,000 annual salary</span> <strong>= $12,000</strong></li>
+                        <li><span>20% of $80,000 annual salary</span> <strong>= $16,000</strong></li>
+                        <li><span>15% of $90,000 annual salary</span> <strong>= $13,500</strong></li>
+                    </ul>
+                    <p>TTT’s $0 buyout saves the clinic $12,000+.</p>
+                </div>
+            </div>
+            <div class="case-study">
+                <div class="cs-tag">CASE STUDY</div>
+                <div class="cs-clinic">
+                    <div class="cs-clinic-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="M12 8v8"></path><path d="M8 12h8"></path></svg>
+                    </div>
+                    <div>
+                        <h4>Dave’s Clinic</h4>
+                        <p>Growing private practice</p>
+                    </div>
+                </div>
+                <h3>The Post-Grad Growth Pivot</h3>
+                <p class="cs-text"><strong>Scenario —</strong> The clinic was ready to expand but wary of bad hires who looked great on paper yet couldn't keep up with the pace of private practice.</p>
+                <p class="cs-text"><strong>TTT Action —</strong> Dave posted a 1-month contract block (Tuesdays & Thursdays) to evaluate a prospective PTA in real-world clinical conditions.</p>
+                <div class="cs-result">
+                    <p class="cs-text" style="margin:0;"><strong>Result —</strong> Over 4 weeks they assessed clinical speed, documentation accuracy, and patient rapport. Recognizing a perfect cultural fit, they hired the PTA off-platform. TTT charged $0 in buyout fees — saving over $8,000 versus traditional agencies.</p>
+                </div>
+                <div class="cs-metric">
+                    <span>Saved vs. Traditional Placement</span>
+                    <strong>$8,000+</strong>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tier 4 Breakdown -->
+        <div class="tier-section reverse" id="tier-4">
+            <div class="tier-content">
+                <div class="tier-header">
+                    <span>04</span>
+                    <div class="tier-title-wrap">
+                        <p>Long-Term Placements</p>
+                        <h2>Caseload Preservation</h2>
+                    </div>
+                </div>
+                <div class="focus-timeline">
+                    <div>
+                        <h4>Operational Focus</h4>
+                        <p>12-month maternity/parental leaves, extended medical absences, or prolonged rural staffing vacancies.</p>
+                    </div>
+                    <div>
+                        <h4>Target Timeline</h4>
+                        <p>3 to 12+ months.</p>
+                    </div>
+                </div>
+                <div class="business-metric">
+                    <svg class="icon-svg icon-metric" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                    Business Metric — Protecting Historical Caseload Value.
+                </div>
+                
+                <div class="comparison-cards">
+                    <div class="comp-card">
+                        <h5>
+                            <svg class="icon-svg icon-alert" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                            Without TTT
+                        </h5>
+                        <p>Patients transferred to competitors</p>
+                        <p>Disrupted care plans</p>
+                        <p>Loss of lifetime patient value</p>
+                    </div>
+                    <div class="comp-card success">
+                        <h5>
+                            <svg class="icon-svg icon-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                            With TTT
+                        </h5>
+                        <p>Continuity of care maintained</p>
+                        <p>Patients stay in-house</p>
+                        <p>Protected clinic reputation</p>
+                    </div>
+                </div>
+            </div>
+            <div class="case-study">
+                <div class="cs-tag">CASE STUDY</div>
+                <div class="cs-clinic">
+                    <div class="cs-clinic-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                    </div>
+                    <div>
+                        <h4>Olivia Pelvic Health & Ortho</h4>
+                        <p>Specialized pelvic health clinic</p>
+                    </div>
+                </div>
+                <h3>The Maternity Leave Preservation</h3>
+                <p class="cs-text"><strong>Scenario —</strong> The clinic’s specialized pelvic health therapist announced a 12-month maternity leave. Because pelvic health is highly specialized, patients would migrate to competitors — permanently destroying the value of that caseload.</p>
+                <p class="cs-text"><strong>TTT Action —</strong> Olivia accepted a highly specialized pelvic health clinician on a structured 9-month contract block via TTT.</p>
+                <div class="cs-result">
+                    <p class="cs-text" style="margin:0;"><strong>Result —</strong> The incoming TTT therapist maintained the specialized clinic hours. Over 87% of patients were retained throughout the leave — preserving a $120,000 caseload that would have otherwise leaked to local clinics.</p>
+                </div>
+                <div class="cs-metric">
+                    <span>Caseload Value Preserved</span>
+                    <strong>$120,000</strong>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Divider 3 -->
+    <div class="container"><hr class="section-divider"></div>
+
+    <!-- Section 4: Enhanced Table -->
+    <section class="table-section container">
+        <h2>The TTT Advantage</h2>
+        <div class="pricing-table">
+            <!-- Headers -->
+            <div class="pt-cell pt-header" style="background: transparent;"></div>
+            <div class="pt-cell pt-header" style="background: transparent;">AGENCY</div>
+            <div class="pt-cell pt-header" style="background: transparent;">HEALTHCARE JOB BOARDS</div>
+            <div class="pt-cell pt-header ttt-col" style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                THE TRAVELING THERAPIST
+            </div>
+            
+            <!-- Row 1 -->
+            <div class="pt-cell row-header">
+                <strong style="color: var(--black); font-size: 14px; text-transform: uppercase;">SPEED & CONVENIENCE</strong>
+                <span>What is the time required and process needed to hire a healthcare worker?</span>
+            </div>
+            <div class="pt-cell pt-content">
+                <div style="text-align: center; font-weight: 700; margin-bottom: 16px; color: var(--black);">VERY SLOW</div>
+                <ol>
+                    <li>Research potential agencies</li>
+                    <li>Hire an Agency</li>
+                    <li>Call them & wait</li>
+                    <li>Hope they have a candidate interested in your job</li>
+                    <li>WAIT again</li>
+                    <li>Back & forth communication to coordinate with <strong>waiting between each step</strong></li>
+                </ol>
+            </div>
+            <div class="pt-cell pt-content">
+                <div style="text-align: center; font-weight: 700; margin-bottom: 16px; color: var(--black);">SLOW</div>
+                <ol>
+                    <li>Which association or job board services will you use?</li>
+                    <li>Membership required to post a job?</li>
+                    <li>Sometimes healthcare facilities can post a job, otherwise the association has to do it for you.</li>
+                    <li>Post your ad, hope someone relevant and qualified applies</li>
+                    <li>Screen resumes, conduct interviews, etc. adding time you don't have as a healthcare facilities owner</li>
+                </ol>
+            </div>
+            <div class="pt-cell pt-content ttt-col">
+                <div style="text-align: center; font-weight: 700; margin-bottom: 16px; color: var(--black);">FAST</div>
+                <ol>
+                    <li><a href="#" style="color: #008766; text-decoration: underline;">Signup</a> for FREE, no membership fees for healthcare facilities to post a job</li>
+                    <li>Create a job posting in &lt; 10 min</li>
+                    <li>Login to create new job postings anytime.</li>
+                    <li>Job postings show immediately to the relevant clinicians so they can make you an offer!</li>
+                    <li>At the end of an listing, you are matched to the <span style="text-decoration: underline;">lowest bidder</span> within 48 hours</li>
+                </ol>
+            </div>
+            
+            <!-- Row 2 -->
+            <div class="pt-cell row-header">
+                <strong style="color: var(--black); font-size: 14px; text-transform: uppercase;">COSTS</strong>
+                <span>What are the upfront and & hidden costs to onboard that worker?</span>
+            </div>
+            <div class="pt-cell pt-content">
+                <ul>
+                    <li>Fee per match and/or a % spread between the cost to you and what the clinician receives</li>
+                    <li>Healthcare facilities may be blind to how much the clinician is paid</li>
+                    <li>Healthcare facilities support the overhead costs of the people & operations of the agency</li>
+                    <li>Agency middleman makes back and forth communication time & resource intensive for healthcare facilities</li>
+                </ul>
+            </div>
+            <div class="pt-cell pt-content">
+                <ul>
+                    <li>Pay fees to be a member & post + <em>$600 OR MORE</em> per job posting!</li>
+                    <li>Healthcare facilities lose time & money posting their job, waiting for applicants, screening resumes, interviewing candidates, etc.</li>
+                    <li>Does the new hire stay on your team?</li>
+                    <li>If not, post another job for another $600+ & repeat!</li>
+                    <li>Manage the complexity of posting for your different clinician types on different job boards, resulting in MORE lost time, money, & complexity</li>
+                </ul>
+            </div>
+            <div class="pt-cell pt-content ttt-col">
+                <ul>
+                    <li><strong>Transparent:</strong> as low as $300/match with No hidden fees. See our <a href="#" style="color: #008766; text-decoration: underline;">FAQ Page</a> for more details</li>
+                    <li><strong>Low Commitment:</strong> We match you to a clinician in 14 days or re-post your ad for free</li>
+                    <li><strong>Bottom Line Efficiency:</strong> We keep your staffing costs down by matching you to the lowest bidder at the end of your listing.</li>
+                    <li>Online service = lower overhead costs. We pass the savings on to you!</li>
+                </ul>
+            </div>
+
+            <!-- Result Row -->
+            <div class="pt-cell" style="background: transparent; display: flex; align-items: center; justify-content: center; font-weight: 700; border-bottom: none;">RESULT</div>
+            <div class="pt-cell pt-content" style="text-align:center; font-weight:700; border-bottom: none; display: flex; align-items: center; justify-content: center; background: #F9FAFB; color: var(--black);">SLOW & EXPENSIVE</div>
+            <div class="pt-cell pt-content" style="text-align:center; font-weight:700; border-bottom: none; display: flex; align-items: center; justify-content: center; background: #F9FAFB; color: var(--black);">CUMBERSOME & RESOURCE INTENSIVE</div>
+            
+            <!-- Result Box -->
+            <div class="pt-cell pt-content ttt-col" style="text-align:center; font-weight:700; border: none; display: flex; align-items: center; justify-content: center; background: var(--primary); color: var(--black); border-radius: 0 0 16px 0;">
+                FAST, TRANSPARENT & FLEXIBLE SOLUTION FOR YOUR HEALTHCARE STAFFING NEEDS
+            </div>
+        </div>
+    </section>
+
+    <!-- Divider 4 -->
+    <div class="container"><hr class="section-divider"></div>
+
+    <!-- Section 5: CTA -->
+    <section class="cta-section">
+        <div>
+            <h2>Ready to protect your clinic's bottom line?</h2>
+            <p>Join hundreds of Canadian healthcare facilities using TTT to stabilize their schedules. No sign-up fees, no listing costs—just pure operational peace of mind.</p>
+            <a href="{% url 'register' %}" class="btn btn-primary">Create Your Free Facility Account &rarr;</a>
+        </div>
+    </section>
+
+    </div>
+
+{% endblock %}
