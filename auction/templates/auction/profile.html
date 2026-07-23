@@ -19,6 +19,8 @@
         padding: 0;
         background: #fff;
         color: #6d7986;
+        text-align: center !important;
+        align-items: center !important;
       }
 
     .ttt-listing-carousel {
@@ -79,19 +81,19 @@
   <div class="col-12">
     <ul class="nav nav-tabs" id="clinicProfile" role="tablist">
       <li class="nav-item" role="presentation">
-        <button class="btn-lg nav-link active" id="auction-tab" data-bs-toggle="tab" data-bs-target="#auction-history"
-          type="button" role="tab" aria-selected="true">Listing History</button>
+        <button class="btn-lg nav-link active" id="auction-tab" data-bs-toggle="tab" data-bs-target="#auction-history" type="button" role="tab" aria-selected="true">Listing History</button>
       </li>
       <li class="nav-item" role="presentation">
-        <button class="btn-lg nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button"
-          role="tab" aria-selected="false">Update Profile</button>
+        <button class="btn-lg nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-selected="false">Update Profile</button>
       </li>
       <li class="nav-item" role="presentation">
-        <button class="btn-lg nav-link" id="raffles-tab" data-bs-toggle="tab" data-bs-target="#raffles" type="button"
-          role="tab" aria-selected="false">Raffles</button>
+        <button class="btn-lg nav-link" id="raffles-tab" data-bs-toggle="tab" data-bs-target="#raffles" type="button" role="tab" aria-selected="false">Raffles</button>
       </li>
     </ul>
+    
     <div class="tab-content" id="clinicProfileContent">
+    
+      <!-- TAB 1: LISTING HISTORY -->
       <div class="tab-pane fade show active p-3" id="auction-history" role="tabpanel">
         {% if num_pending > 0 %}
         <h2 class="mb-4">Listings Pending Approval</h2>
@@ -116,6 +118,8 @@
           {% endfor %}
         </div>
       </div>
+      
+      <!-- TAB 2: UPDATE PROFILE -->
       <div class="tab-pane fade" id="profile" role="tabpanel">
         <div class="p-3">
           <h2 class="mb-4">Update Profile</h2>
@@ -147,32 +151,65 @@
             </div>
             {% endif %}
           </div>
+          
           <div class="row">
             <h5>User Type: {{user.account.userType}}</h5>
             <form method="post" enctype="multipart/form-data" class="d-flex flex-column gap-3">
               {% csrf_token %}
               {{ user_clinic_form | crispy }}
+              
               <div class="row">
                 <div class="mb-3 col-md-4">{{ profile_clinic_form.clinicName | as_crispy_field }}</div>
                 <div class="mb-3 col-md-4">{{ profile_clinic_form.city | as_crispy_field }}</div>
                 <div class="mb-3 col-md-4">{{ profile_clinic_form.province | as_crispy_field }}</div>
                 <div class="mb-3">{{ profile_clinic_form.about | as_crispy_field }}</div>
-                <div class="mb-3">{{ profile_clinic_form.clinicWebsite | as_crispy_field }}</div>
+                
+                <div class="mb-3">
+                  {{ profile_clinic_form.clinicWebsite | as_crispy_field }}
+                  <div class="d-flex align-items-center gap-2 mt-1">
+                    <button type="button" class="ttt-info-dot-sm" data-bs-toggle="tooltip" data-bs-placement="top" 
+                            title="You can put your social media account here or another link of your choice if you prefer">i</button>
+                    <small class="text-muted">This field is optional. Adding a website may give more traction to your listing - your website will be linked in your listings.</small>
+                  </div>
+                </div>
               </div>
+
               <div class="row">
-                <div class="mb-3">{{ profile_clinic_form.imageOne | as_crispy_field }} <button type="button" class="ttt-info-dot-sm" data-bs-toggle="tooltip" data-bs-placement="top" 
-                      title="Image one is the primary image that will show on your listings">i</button></label></div>
-                <div class="mb-3">{{ profile_clinic_form.imageTwo | as_crispy_field }}</div>
-                <div class="mb-3">{{ profile_clinic_form.imageThree | as_crispy_field }}</div>
-                <div class="mb-3">{{ profile_clinic_form.imageFour | as_crispy_field }}</div>
+                <div class="mb-3">
+                  <div class="d-flex align-items-center gap-2 mb-1">
+                    <label class="form-label fw-semibold mb-0">Clinic Image One</label>
+                    <button type="button" class="ttt-info-dot-sm" data-bs-toggle="tooltip" data-bs-placement="top" 
+                            title="Image One is the primary image that will show on your listings">i</button>
+                  </div>
+                  {{ profile_clinic_form.imageOne | as_crispy_field }}
+                </div>
+                <div class="mb-3">
+                  <label class="form-label fw-semibold mb-1">Clinic Image Two</label>
+                  {{ profile_clinic_form.imageTwo | as_crispy_field }}
+                </div>
+                <div class="mb-3">
+                  <label class="form-label fw-semibold mb-1">Clinic Image Three</label>
+                  {{ profile_clinic_form.imageThree | as_crispy_field }}
+                </div>
+                <div class="mb-3">
+                  <label class="form-label fw-semibold mb-1">Clinic Image Four</label>
+                  {{ profile_clinic_form.imageFour | as_crispy_field }}
+                </div>
+                <p class="small text-muted mb-0 mt-1">
+                  <strong>Note:</strong> Maximum image size is <strong>5MB</strong>. Images must be in jpg, jpeg, or png format.
+                </p>
               </div>
+
               <button type="submit" class="btn btn-primary">Update</button>
             </form>
+            
             <hr>
             <a href="{% url 'change-password' %}" class="btn btn-primary">Change Password</a>
           </div>
-        </div>
-      </div>
+        </div> 
+      </div> 
+
+      <!-- TAB 3: RAFFLES -->
       <div class="tab-pane fade" id="raffles" role="tabpanel">
         <div class="p-3">
           <div class="row">
@@ -181,8 +218,7 @@
               <div class="card mb-4 shadow-sm border-0 bg-light">
                 <div class="card-body d-flex align-items-center">
                   <div class="me-3">
-                    <img src="/media/images/raffle_ticket.png" alt="Tickets" class="rounded-circle shadow-sm"
-                      style="width: 65px; height: 65px; object-fit: cover;">
+                    <img src="/media/images/raffle_ticket.png" alt="Tickets" class="rounded-circle shadow-sm" style="width: 65px; height: 65px; object-fit: cover;">
                   </div>
                   <div>
                     <h5 class="mb-0">Available Tickets</h5>
@@ -190,11 +226,12 @@
                   </div>
                 </div>
               </div>
+              
               <div class="accordion accordion-flush mb-4" id="raffleAccordion">
+                
                 <div class="accordion-item border-0 mb-3 shadow-sm rounded-4 overflow-hidden">
                   <h2 class="accordion-header">
-                    <button class="accordion-button collapsed fw-bold py-3" type="button" data-bs-toggle="collapse"
-                      data-bs-target="#collapseChallenges">
+                    <button class="accordion-button collapsed fw-bold py-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseChallenges">
                       <span class="material-icons me-2" style="color: #0f9972;">emoji_events</span> Challenges
                     </button>
                   </h2>
@@ -205,27 +242,22 @@
                         <div class="col-12">
                           <div class="card border-0 shadow-sm rounded-4">
                             <div class="card-body d-flex align-items-center p-3">
-                              <div class="flex-shrink-0 rounded-circle p-3 me-3"
-                                style="background-color: rgba(15, 153, 114, 0.1);">
-                                <span class="material-icons"
-                                  style="color: #0f9972; font-size: 2rem;">calendar_today</span>
+                              <div class="flex-shrink-0 rounded-circle p-3 me-3" style="background-color: rgba(15, 153, 114, 0.1);">
+                                <span class="material-icons" style="color: #0f9972; font-size: 2rem;">calendar_today</span>
                               </div>
                               <div class="flex-grow-1">
                                 <h6 class="mb-0 fw-bold">Weekly Visit Reward</h6>
                                 <p class="small text-muted mb-0">Claim 1 ticket every 7 days.</p>
-                                <span class="badge rounded-pill text-success mt-1"
-                                  style="background-color: rgba(15, 153, 114, 0.1);">Reward: 1 Ticket</span>
+                                <span class="badge rounded-pill text-success mt-1" style="background-color: rgba(15, 153, 114, 0.1);">Reward: 1 Ticket</span>
                               </div>
                               <div class="text-end ms-2">
-                                <div class="badge rounded-pill bg-white border text-dark px-3 py-2 fw-bold"
-                                  id="weekly-timer">--:--:--</div>
+                                <div class="badge rounded-pill bg-white border text-dark px-3 py-2 fw-bold" id="weekly-timer">--:--:--</div>
                               </div>
                             </div>
                           </div>
                         </div>
                         <div class="col-12">
-                          <div class="card border-0 shadow-sm rounded-4"
-                            style="background: linear-gradient(135deg, #ffffff 0%, #f0fff4 100%);">
+                          <div class="card border-0 shadow-sm rounded-4" style="background: linear-gradient(135deg, #ffffff 0%, #f0fff4 100%);">
                             <div class="card-body p-4">
                               <div class="mb-3">
                                 <div class="d-flex align-items-center mb-1">
@@ -236,10 +268,8 @@
                               </div>
                               <p class="small text-muted mb-3">Earn 10 tickets for every facility that signs up!</p>
                               <div class="input-group">
-                                <input type="text" class="form-control bg-white border-end-0" readonly
-                                  value="{{ referral_link }}" id="challengeReferralLink">
-                                <button class="btn btn-ttt-pill px-4" type="button" id="copyChallengeLink">Copy
-                                  Link</button>
+                                <input type="text" class="form-control bg-white border-end-0" readonly value="{{ referral_link }}" id="challengeReferralLink">
+                                <button class="btn btn-ttt-pill px-4" type="button" id="copyChallengeLink">Copy Link</button>
                               </div>
                               <small id="copyChallengeFeedback" class="text-success mt-2 d-none fw-bold">Copied!</small>
                             </div>
@@ -249,9 +279,7 @@
                           <div class="card border-0 shadow-sm rounded-4 h-100">
                             <div class="card-body p-4 d-flex flex-column">
                               <h6 class="fw-bold mb-0">Voice Your Opinion</h6>
-                              <span class="badge rounded-pill text-success mb-2"
-                                style="background-color: rgba(15, 153, 114, 0.1); width: fit-content;">Reward:
-                                Tickets</span>
+                              <span class="badge rounded-pill text-success mb-2" style="background-color: rgba(15, 153, 114, 0.1); width: fit-content;">Reward: Tickets</span>
                               <p class="small text-muted flex-grow-1">Complete surveys for extra tickets.</p>
                               <a href="{% url 'surveys' %}" class="btn btn-ttt-pill btn-sm mt-3">Go to Surveys</a>
                             </div>
@@ -261,12 +289,9 @@
                           <div class="card border-0 shadow-sm rounded-4 h-100">
                             <div class="card-body p-4 d-flex flex-column">
                               <h6 class="fw-bold mb-0">Fill a Position</h6>
-                              <span class="badge rounded-pill text-success mb-2"
-                                style="background-color: rgba(15, 153, 114, 0.1); width: fit-content;">Reward: 5
-                                Tickets</span>
+                              <span class="badge rounded-pill text-success mb-2" style="background-color: rgba(15, 153, 114, 0.1); width: fit-content;">Reward: 5 Tickets</span>
                               <p class="small text-muted flex-grow-1">Create a new listing for bonus tickets.</p>
-                              <a href="{% url 'create-auction' %}" class="btn btn-ttt-pill btn-sm mt-3">Create
-                                Listing</a>
+                              <a href="{% url 'create-auction' %}" class="btn btn-ttt-pill btn-sm mt-3">Create Listing</a>
                             </div>
                           </div>
                         </div>
@@ -274,16 +299,14 @@
                     </div>
                   </div>
                 </div>
+                
                 <div class="accordion-item border-0 mb-3 shadow-sm rounded-4 overflow-hidden">
                   <h2 class="accordion-header">
-                    <button class="accordion-button fw-bold py-3" type="button" data-bs-toggle="collapse"
-                      data-bs-target="#collapseParticipating">
-                      <span class="material-icons me-2" style="color: #0f9972;">local_activity</span> Participating
-                      Raffles
+                    <button class="accordion-button fw-bold py-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseParticipating">
+                      <span class="material-icons me-2" style="color: #0f9972;">local_activity</span> Participating Raffles
                     </button>
                   </h2>
-                  <div id="collapseParticipating" class="accordion-collapse collapse show"
-                    data-bs-parent="#raffleAccordion">
+                  <div id="collapseParticipating" class="accordion-collapse collapse show" data-bs-parent="#raffleAccordion">
                     <div class="accordion-body bg-light">
                       {% if joined_raffles %}
                       <div class="row">
@@ -294,24 +317,30 @@
                               <div>
                                 <h6 class="mb-1">{{ entry.raffle.title }}</h6>
                                 <small class="text-muted d-block">Tickets: {{ entry.tickets_added }} ({{ entry.entries_count }} Entries)</small>
-                                {% if entry.raffle.endDate %}<small class="text-danger fw-bold"><span
-                                    class="material-icons fs-6 align-middle">timer</span> Ends: {{ entry.raffle.endDate|date:"M j, Y" }}</small>{% endif %}
+                                {% if entry.raffle.endDate %}
+                                <small class="text-danger fw-bold">
+                                  <span class="material-icons fs-6 align-middle">timer</span> Ends: {{ entry.raffle.endDate|date:"M j, Y" }}
+                                </small>
+                                {% endif %}
                               </div>
-                              <span class="badge rounded-pill"
-                                style="background-color: {% if entry.raffle.active %}#198754{% else %}#0f9972{% endif %};">{% if entry.raffle.active %}Active{% else %}Ended{% endif %}</span>
+                              <span class="badge rounded-pill" style="background-color: {% if entry.raffle.active %}#198754{% else %}#0f9972{% endif %};">
+                                {% if entry.raffle.active %}Active{% else %}Ended{% endif %}
+                              </span>
                             </div>
                           </div>
                         </div>
                         {% endfor %}
                       </div>
-                      {% else %}<p class="text-muted text-center p-3 small">No entries yet.</p>{% endif %}
+                      {% else %}
+                      <p class="text-muted text-center p-3 small">No entries yet.</p>
+                      {% endif %}
                     </div>
                   </div>
                 </div>
+                
                 <div class="accordion-item border-0 shadow-sm rounded-4 overflow-hidden">
                   <h2 class="accordion-header">
-                    <button class="accordion-button collapsed fw-bold py-3" type="button" data-bs-toggle="collapse"
-                      data-bs-target="#collapseHistory">
+                    <button class="accordion-button collapsed fw-bold py-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseHistory">
                       <span class="material-icons me-2" style="color: #0f9972;">history</span> Tickets History
                     </button>
                   </h2>
@@ -325,51 +354,59 @@
                             <tr class="border-bottom">
                               <td class="py-2 small">{{ log.created_at|date:"M j" }}</td>
                               <td class="py-2 text-truncate small" style="max-width:150px;">{{ log.reason }}</td>
-                              <td
-                                class="py-2 text-end fw-bold small {% if log.amount > 0 %}text-success{% else %}text-danger{% endif %}">
-                                {% if log.amount > 0 %}+{% endif %}{{ log.amount }}</td>
+                              <td class="py-2 text-end fw-bold small {% if log.amount > 0 %}text-success{% else %}text-danger{% endif %}">
+                                {% if log.amount > 0 %}+{% endif %}{{ log.amount }}
+                              </td>
                             </tr>
                             {% endfor %}
                           </tbody>
                         </table>
                       </div>
-                      {% if ticket_history.count > 5 %}<div class="text-center mt-3"><button
-                          class="btn btn-link btn-sm text-decoration-none" data-bs-toggle="modal"
-                          data-bs-target="#allTicketsModal">View Full Ticket History</button></div>{% endif %}
-                      {% else %}<p class="text-muted text-center p-3 small">No history found. {% if user.is_staff %}(Debug: {{ ticket_history.count }}){% endif %}</p>{% endif %}
+                      {% if ticket_history.count > 5 %}
+                      <div class="text-center mt-3">
+                        <button class="btn btn-link btn-sm text-decoration-none" data-bs-toggle="modal" data-bs-target="#allTicketsModal">View Full Ticket History</button>
                       </div>
-                      </div>
-                      </div>
-                      </div>
-                      </div>
-                      <div class="col-md-5">
-                      <div class="raffle-scroll-container"
-                      style="max-height: 600px; overflow-y: auto; padding: 10px; border: 1px solid #eee; border-radius: 10px; background-color: rgba(255,255,255,0.5);">
-                      <h5 class="text-center mb-3 text-muted">Featured Raffles</h5>
-                      {% for raffle in active_raffles %}
-                      <div class="card mb-3 shadow-sm text-center p-3">
-                      <div class="bg-light d-flex align-items-center justify-content-center mb-2" style="height: 100px;">
-                      {% if raffle.image %}<img src="{{ raffle.image.url }}" alt="{{ raffle.title }}"
-                      style="max-height: 100%; max-width: 100%; object-fit: contain;">
-                      {% else %}<span class="material-icons" style="font-size: 3rem; color: #ccc;">{{ raffle.image_icon }}</span>{% endif %}
-                      </div>
-                      <h5 class="card-title">{{ raffle.title }}</h5>
-                      <p class="small mb-1">Min Tickets: {{ raffle.tickets_required }}</p>
-                      <button class="btn btn-ttt-pill btn-sm w-100 raffle-details-btn" data-bs-toggle="modal"
-                      data-bs-target="#raffleModal" data-title="{{ raffle.title }}"
-                      data-description="{{ raffle.description }}" data-tickets="{{ raffle.tickets_required }}"
-                      data-end-date="{{ raffle.endDate|date:'M j, Y' }}">Details</button>
-                      </div>
-                      {% empty %}<p class="text-center text-muted">No featured raffles.</p>{% endfor %}
-                      </div>
-                      </div>
-                      </div>
-                      </div>
-                      </div>
-                      </div>
-                      </div>
-                      </div>
-                      <!-- END CLINIC SECTION -->
+                      {% endif %}
+                      {% else %}
+                      <p class="text-muted text-center p-3 small">No history found. {% if user.is_staff %}(Debug: {{ ticket_history.count }}){% endif %}</p>
+                      {% endif %}
+                    </div>
+                  </div>
+                </div>
+                
+              </div>
+            </div>
+            
+            <div class="col-md-5">
+              <div class="raffle-scroll-container" style="max-height: 600px; overflow-y: auto; padding: 10px; border: 1px solid #eee; border-radius: 10px; background-color: rgba(255,255,255,0.5);">
+                <h5 class="text-center mb-3 text-muted">Featured Raffles</h5>
+                {% for raffle in active_raffles %}
+                <div class="card mb-3 shadow-sm text-center p-3">
+                  <div class="bg-light d-flex align-items-center justify-content-center mb-2" style="height: 100px;">
+                    {% if raffle.image %}
+                    <img src="{{ raffle.image.url }}" alt="{{ raffle.title }}" style="max-height: 100%; max-width: 100%; object-fit: contain;">
+                    {% else %}
+                    <span class="material-icons" style="font-size: 3rem; color: #ccc;">{{ raffle.image_icon }}</span>
+                    {% endif %}
+                  </div>
+                  <h5 class="card-title">{{ raffle.title }}</h5>
+                  <p class="small mb-1">Min Tickets: {{ raffle.tickets_required }}</p>
+                  <button class="btn btn-ttt-pill btn-sm w-100 raffle-details-btn" data-bs-toggle="modal" data-bs-target="#raffleModal" data-title="{{ raffle.title }}" data-description="{{ raffle.description }}" data-tickets="{{ raffle.tickets_required }}" data-end-date="{{ raffle.endDate|date:'M j, Y' }}">Details</button>
+                </div>
+                {% empty %}
+                <p class="text-center text-muted">No featured raffles.</p>
+                {% endfor %}
+              </div>
+            </div>
+            
+          </div>
+        </div> 
+      </div>
+      
+    </div>
+  </div>
+</div>
+<!-- END CLINIC SECTION -->
 
                       {% else %}
 
@@ -653,7 +690,7 @@
 
 {% include 'auction/modal_raffle_details.html' with id='raffleModal' %}
 {% include 'auction/modal_referral_link.html' %}
-<script src="{% static 'auction/profile.js' %}?v=20260716-raffles-challenges-hash-fix"></script>
+<script src="{% static 'auction/profile.js' %}?v=20260723-image-5mb-popup-v1"></script>
 <script src="{% static 'auction/create_auction.js' %}?v=20260714-perk-details-v3"></script>
 <script>
   document.addEventListener('DOMContentLoaded', function () {

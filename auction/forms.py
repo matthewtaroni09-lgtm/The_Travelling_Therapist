@@ -13,6 +13,7 @@ from django.core.exceptions import ValidationError
 from django.core.validators import URLValidator
 import os
 from django.forms import inlineformset_factory
+from django.conf import settings
 from django.utils import timezone
 from django.utils.safestring import mark_safe
 
@@ -82,8 +83,8 @@ def validate_file_extension(value, image_name):
             error_list.append(ValidationError(u'Unsupported file extension for ' + str(image_name) + '. Valid file types are' + ', '.join(valid_extensions) + '.'))
 
         try:
-            if value.size > 10485760:
-                error_list.append(ValidationError(u'Max file size exceeded for ' + str(image_name) + ', images must be less than 10 MB.'))
+            if value.size > settings.MAX_IMAGE_UPLOAD_SIZE:
+                error_list.append(ValidationError(u'Image size too large - please select an image less than 5mb'))
         except (FileNotFoundError, OSError, ValueError):
             # Existing file references can be missing on disk; do not block unrelated updates.
             pass
@@ -104,6 +105,8 @@ def normalize_website_url(raw_value):
 
 
 class AuctionForm(forms.ModelForm):
+    allow_past_placement_start = False
+
     paymentTypesSelection = forms.MultipleChoiceField(
         label='I would like to receive offers for',
         choices=(('Fee Split', 'Fee Split'), ('Flat Fee', 'Flat Fee')),
@@ -259,7 +262,7 @@ class AuctionForm(forms.ModelForm):
         today = timezone.localdate()
         tomorrow = today + timedelta(days=1)
 
-        if placementStart and placementStart < tomorrow:
+        if placementStart and placementStart < tomorrow and not self.allow_past_placement_start:
             error_list.append(ValidationError("The clinician start date must be tomorrow or later."))
 
         if placementStart and placementStart > today + timedelta(days=365):
@@ -392,6 +395,7 @@ class AuctionAdminForm(AuctionForm):
         choices=(
             ('pending', 'Pending'),
             ('active', 'Active'),
+            ('waiting', 'Closed (Waiting)'),
             ('closed', 'Closed'),
             ('deleted', 'Deleted'),
         ),
@@ -437,6 +441,8 @@ class AuctionAdminForm(AuctionForm):
         if self.instance and self.instance.pk:
             if self.instance.deleted:
                 self.initial.setdefault('listing_status', 'deleted')
+            elif getattr(self.instance, 'waitingCloseout', False):
+                self.initial.setdefault('listing_status', 'waiting')
             elif self.instance.closed or self.instance.is_effectively_closed():
                 self.initial.setdefault('listing_status', 'closed')
             elif self.instance.active:
@@ -542,7 +548,7 @@ class RegisterAcount(UserCreationForm):
             try:
                 self.cleaned_data['clinicWebsite'] = normalize_website_url(clinicWebsite)
             except ValidationError:
-                error_list.append(ValidationError('Please enter a valid website URL.'))
+                error_list.append(ValidationError('Please enter a valid website URL starting with http:// or https://'))
 
             if len(clinicName) <= 4:
                 error_list.append(ValidationError("Please enter a healthcare facility name that is greater than 4 characters."))
@@ -647,15 +653,17 @@ class ProfileUpdateClinic(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        info_text = 'You can put your social media account here or another link of your choice if you prefer.'
         self.fields['clinicWebsite'].help_text = mark_safe(
-            'This field is optional. Adding a website may give more traction to your listing - your website will be linked in your listings. '
-            '<button type="button" class="ttt-inline-info-dot" data-bs-toggle="tooltip" data-bs-placement="top" title="' + info_text + '">i</button>'
+            ''
         )
 
         for image_field in ('imageOne', 'imageTwo', 'imageThree', 'imageFour'):
             self.fields[image_field].widget = ProfileImageInput()
-            self.fields[image_field].help_text = 'Upload an image (optional).'
+            self.fields[image_field].help_text = '.'
+            self.fields['imageOne'].label = ''
+            self.fields['imageTwo'].label = ''
+            self.fields['imageThree'].label = ''
+            self.fields['imageFour'].label = ''
 
     def clean(self):
         clinicName = self.cleaned_data.get('clinicName')
@@ -698,7 +706,7 @@ class ProfileUpdateClinic(forms.ModelForm):
         try:
             self.cleaned_data['clinicWebsite'] = normalize_website_url(clinicWebsite)
         except ValidationError:
-            error_list.append(ValidationError('Please enter a valid website URL.'))
+            error_list.append(ValidationError('Please enter a valid website URL starting with http:// or https://'))
     
         if len(error_list) > 0:
             raise forms.ValidationError(error_list)

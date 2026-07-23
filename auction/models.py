@@ -324,6 +324,7 @@ class Auction(models.Model):
     cardioResp = models.IntegerField(verbose_name='CardioResp', blank=True, null=True)
     comments = models.TextField(verbose_name='Information about the healthcare facility', blank=True, null=True)
     active = models.BooleanField(verbose_name='Active Listing')
+    waitingCloseout = models.BooleanField(verbose_name='Closed Waiting Listing', default=False)
     closed = models.BooleanField(verbose_name='Closed Listing')
     deleted = models.BooleanField(verbose_name='Deleted Listing')
     cronID = models.TextField(verbose_name='Cron Job Timer ID')
@@ -491,8 +492,20 @@ class Auction(models.Model):
     def has_winning_offer(self):
         return self.winner_id is not None and self.winningPrice is not None
 
+    def is_in_clinic_review_window(self):
+        if not self.waitingCloseout or self.closed or self.deleted or self.auctionEnd is None:
+            return False
+        now = django_timezone.now()
+        review_deadline = self.auctionEnd + datetime.timedelta(days=7)
+        return self.auctionEnd <= now < review_deadline
+
+    def is_closed_waiting(self):
+        return self.waitingCloseout and not self.closed and not self.deleted
+
     def is_effectively_closed(self):
         if self.closed and not self.active:
+            return True
+        if self.is_closed_waiting():
             return True
         if self.active and self.auctionEnd is not None and self.auctionEnd <= django_timezone.now():
             return True
@@ -502,9 +515,20 @@ class Auction(models.Model):
         return self.active and not self.is_effectively_closed()
 
     def get_completed_card_title(self):
-        if self.get_num_bids() == 0:
+        if not self.has_winning_offer():
             return 'Completed'
         return 'Winning Offer:'
+
+    def get_listing_status_label(self):
+        if self.deleted:
+            return 'Deleted'
+        if self.is_closed_waiting():
+            return 'Closed (Waiting)'
+        if self.closed or self.is_effectively_closed():
+            return 'Closed'
+        if self.active:
+            return 'Active'
+        return 'Pending'
 
     def get_winning_offer_display(self):
         if self.winningPrice is None:
@@ -532,8 +556,6 @@ class Auction(models.Model):
 
     def get_winning_offer_symbol(self):
         if self.winningPrice is None:
-            if self.is_fee_split() and not self.is_flat_fee():
-                return '%'
             return '$'
 
         winning_bid = Bid.objects.filter(
@@ -779,7 +801,7 @@ class Raffle(models.Model):
     image_icon = models.CharField(max_length=50, default='confirmation_number', help_text='Material icon name')
     value_text = models.CharField(max_length=100, blank=True, null=True, help_text='e.g., $50 Value')
     target_audience = models.CharField(max_length=20, choices=AUDIENCE_CHOICES, default='Both', help_text='Who can see and enter this raffle?')
-    image = models.ImageField(upload_to='raffle_images/', null=True, blank=True, help_text='Upload an image less than 1MB. If not provided, the Material Icon will be used.')
+    image = models.ImageField(upload_to='raffle_images/', null=True, blank=True, help_text='Upload an image less than 5MB. If not provided, the Material Icon will be used.')
     active = models.BooleanField(default=True)
     startDate = models.DateTimeField(null=True, blank=True)
     endDate = models.DateTimeField(null=True, blank=True)

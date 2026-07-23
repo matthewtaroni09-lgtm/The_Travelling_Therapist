@@ -90,7 +90,7 @@
   </div>
 
   <!-- Search Start -->
-  <form method="POST">
+  <form id="auctionSearchForm" method="POST" hx-post="{% url 'auction-search' %}" hx-target="#auctionListDiv" hx-trigger="submit">
     <div class="row">
       {% csrf_token %}
       <!-- Clinic Name -->
@@ -141,8 +141,7 @@
     {% endif %}
     <div class="row">
       <div class="col-3">
-        <button id="search" type="button" class="btn btn-primary mt-2" hx-post="{% url 'auction-search' %}"
-          hx-include="closest form" hx-target='#auctionListDiv' hx-trigger="click">Search</button>
+        <button id="search" type="submit" class="btn btn-primary mt-2">Search</button>
       </div>
     </div>
   </form>
@@ -161,5 +160,5 @@
   <!-- End of auction loops -->
 
   <!-- Content End -->
-  <script src="{% static 'auction/index.js' %}"></script>
+  <script src="{% static 'auction/index.js' %}?v=20260723-enter-search-fix-v1"></script>
   {% endblock %}

@@ -717,10 +717,17 @@
             <p>Running a clinic is a balancing act. When your shift blocks sit empty, you lose revenue and risk patient leakage. When your 
                 staff is overloaded, you risk losing them to burnout. The Traveling Therapist is a platform that gives you on-demand access to 
                 clinicians under four strategic operational tiers—designed to keep your clinic optimized, efficient, and prepared.</p>
+                {% if user.account.get_split_user_type == 'Clinic' %}
             <div class="hero-actions">
                 <a href="{% url 'create-auction' %}" class="btn btn-black">Post a Listing ↗</a>
                 <a href="{% url 'how-it-works' %}" class="btn btn-outline">▶ View how it works</a>
             </div>
+            {% endif %}
+            {% if user.account.get_split_user_type != 'Clinic' %}
+            <div class="hero-actions">
+                <a href="{% url 'how-it-works' %}" class="btn btn-outline">▶ View how it works</a>
+            </div>
+            {% endif %}
         </div>
         <div class="hero-visual">
             <div class="dashboard-mockup">
@@ -1201,7 +1208,15 @@
         <div>
             <h2>Ready to protect your clinic's bottom line?</h2>
             <p>Join hundreds of Canadian healthcare facilities using TTT to stabilize their schedules. No sign-up fees, no listing costs—just pure operational peace of mind.</p>
+
+            <!-- Existing Clinics should not be told to create an account -->
+            {% if user.account.get_split_user_type == 'Clinic' %}
+            <a href="{% url 'create-auction' %}" class="btn btn-primary">Create a Listing for Your Facility Now &rarr;</a>
+            {% endif %}
+
+            {% if user.account.get_split_user_type != 'Clinic' %}
             <a href="{% url 'register' %}" class="btn btn-primary">Create Your Free Facility Account &rarr;</a>
+            {% endif %}
         </div>
     </section>
 
