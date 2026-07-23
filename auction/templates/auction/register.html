@@ -2,6 +2,33 @@
 {% load static %}
 {% load crispy_forms_tags %}
 {% block content %}
+
+<style>
+      .ttt-info-dot-sm {
+        width: 16px;
+        height: 16px;
+        border-radius: 999px;
+        border: 1px solid #8896a5;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        line-height: 1;
+        padding: 0;
+        background: #fff;
+        color: #6d7986;
+      }
+
+      .ttt-perk-help {
+        font-size: 0.77rem;
+        color: #637180;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+      }
+
+</style>
+
 <script>
   //global grecaptcha
   grecaptcha.ready(function () {
@@ -24,13 +51,13 @@
       <div class="row  align-items-center">
         <div class="col-sm-1"></div>
         <a href="#" id="clinicButton" class="col-sm-4 selection-boxes d-flex flex-column align-items-center gap-2 p-4">
-          <img class="img-fluid" src="/media/images/clinic.png" alt="Clinic office as a cartoon">
+          <img class="img-fluid" src="/media/images/clinic.png" alt="Clinic office as a cartoon" width="100" height="100">
           <h4>Healthcare Facility</h4>
         </a>
         <div class="col-sm-2"></div>
         <a href="#" id="therapistButton"
           class="col-sm-4 selection-boxes d-flex flex-column align-items-center gap-2 p-3">
-          <img class="img-fluid" src="/media/images/therapy.png" alt="Healthcare Professional as a cartoon">
+          <img class="img-fluid" src="/media/images/therapy.png" alt="Healthcare Professional as a cartoon" width="100" height="100">
           <h5>Healthcare Professional</h5>
         </a>
         <div class="col-sm-1"></div>
@@ -43,7 +70,8 @@
       <span class="clinicField">{{ form.province | as_crispy_field }}</span>
       <span class="clinicField">{{ form.about | as_crispy_field }}</span>
       <span class="clinicField">{{ form.clinicWebsite | as_crispy_field }}</span>
-      <span class="clinicField">{{ form.imageOne | as_crispy_field }}</span>
+      <span class="clinicField">{{ form.imageOne | as_crispy_field }} <button type="button" class="ttt-info-dot-sm" data-bs-toggle="tooltip" data-bs-placement="top" 
+                      title="Image one is the primary image that will show on your listings">i</button></label></span> 
       <span class="clinicField">{{ form.imageTwo | as_crispy_field }}</span>
       <span class="clinicField">{{ form.imageThree | as_crispy_field }}</span>
       <span class="clinicField">{{ form.imageFour | as_crispy_field }}</span>

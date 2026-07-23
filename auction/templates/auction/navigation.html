@@ -44,6 +44,9 @@
                     <a class="nav-link dropdown-toggle text-weight-normal" href="#" id="navbarDropdownFacilities"
                         role="button" data-bs-toggle="dropdown" aria-expanded="false">For Healthcare Facilities</a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdownFacilities">
+                        <li><a class="dropdown-item text-weight-light {% if path == 'facility-how-to' %}active{% endif %}"
+                                href="{% url 'facility-how-to' %}">How Can Clinics Use The Traveling Therapist</a></li>
+                        <li><hr class="dropdown-divider"></li>
                         <li class="dropdown-submenu">
                             <a class="dropdown-item dropdown-toggle text-weight-normal" href="#">Hire Clinicians Now</a>
                             <ul class="dropdown-menu">

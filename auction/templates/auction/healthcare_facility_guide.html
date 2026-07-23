@@ -103,14 +103,19 @@
 
     <div class="mt-4 mb-5 p-4 survey-cta-box rounded shadow-sm">
         <h3 class="mb-2 text-weight-bold text-dark-colour">Help Us Understand Your Hiring Gaps</h3>
-        <p class="mb-3 text-dark-colour">Tell us where your facility is short-staffed. As a thank-you, get <strong class="survey-cta-text-primary">5% off your first invoice</strong> when you complete a hire.</p>
-        <a href="https://forms.gle/UJzcTFQQnRzg9i1L7" target="_blank" class="btn btn-lg mb-3 survey-cta-button px-4 py-2">
-            Share your story, Earn a Discount &rarr;
+        <p class="mb-3 text-dark-colour">Tell us where your facility is short-staffed. As a thank-you, get <strong class="survey-cta-text-primary">
+            raffle tickets towards a discount on your next invoice</strong> when you complete a hire.</p>
+        <a href="{% url 'surveys' %}" target="_blank" class="btn btn-lg mb-3 survey-cta-button px-4 py-2">
+            Share your story, Earn Raffle Tickets &rarr;
         </a>
-        <div class="d-flex flex-wrap survey-cta-footer-text text-muted">
+        <div class="d-flex flex-wrap survey-cta-footer-text text-muted">      
             <span class="me-3">&bull; 2&ndash;3 minute survey</span>
             <span class="me-3">&bull; No obligation</span>
             <span>&bull; Built for healthcare facilities</span>
+        </div>
+        <div class="d-flex flex-wrap survey-cta-footer-text text-muted mt-3">
+            <span>Learn more about raffles <a href="{% url 'what-are-raffles' %}">here</a></span>
+        </div>
         </div>
     </div>
 
