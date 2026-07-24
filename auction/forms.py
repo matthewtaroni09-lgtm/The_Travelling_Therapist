@@ -83,7 +83,8 @@ def validate_file_extension(value, image_name):
             error_list.append(ValidationError(u'Unsupported file extension for ' + str(image_name) + '. Valid file types are' + ', '.join(valid_extensions) + '.'))
 
         try:
-            if value.size > settings.MAX_IMAGE_UPLOAD_SIZE:
+            max_image_upload_size = getattr(settings, 'MAX_IMAGE_UPLOAD_SIZE', 5 * 1024 * 1024)
+            if value.size > max_image_upload_size:
                 error_list.append(ValidationError(u'Image size too large - please select an image less than 5mb'))
         except (FileNotFoundError, OSError, ValueError):
             # Existing file references can be missing on disk; do not block unrelated updates.
