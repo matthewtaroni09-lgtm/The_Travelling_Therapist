@@ -21,10 +21,11 @@
         background: #fff;
     }
 
+    /* Subtler pop effect */
     .data-card:hover,
     .comparison-container:hover {
-        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15) !important;
-        transform: translateY(-10px) scale(1.01) !important;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1) !important;
+        transform: translateY(-4px) !important;
     }
 
     .btn {
@@ -146,6 +147,11 @@
     /* Carousel Specific Styles */
     #supportingDataCarousel {
         padding: 0 60px;
+    }
+
+    /* Padding added so card hover transform doesn't get clipped by slider overflow */
+    #supportingDataCarousel .carousel-inner {
+        padding: 15px 0;
     }
 
     #supportingDataCarousel .carousel-control-prev,
@@ -333,7 +339,7 @@
                         needed a stronger way to re-book clinicians we knew rather than posting fresh every time.</p>
                 </div>
             </div>
-            <div class="row justify-content-center mt-4">
+            <div class="data-card p-4">
                 <p class="mb-0 fs-5">Posting works differently than with an agency — with The Traveling Therapist, there is 
                     <strong>finally a clear pricing and offer process</strong>, and it's faster to review offers and confirm coverage across
                     multiple days compared to how other platforms manage hiring</p>
@@ -507,12 +513,13 @@
 
     <!-- SECTION 6 — HOW THE TRAVELING THERAPIST IS DIFFERENT (COMPARISON & CTA) -->
     <section class="py-5">
-        <h2 class="text-center fw-bold mb-5">How The Traveling Therapist Is Different</h2>
+        <h2 class="text-center fw-bold mb-3">How The Traveling Therapist Is Different</h2>
+        <p class="fs-5 mb-5 text-center">The Traveling Therapist is not a staffing agency like the examples above</p>
 
         <div class="row align-items-center mb-5">
+            <!-- Left Column: Text -->
             <div class="col-lg-6 mb-4 mb-lg-0">
-                <p class="fs-5">The Traveling Therapist is not a staffing agency like the examples above.</p>
-                <p class="fw-bold mb-2">It does not :</p>
+                <p class="fw-bold mb-2">It does not:</p>
                 <ul class="mb-4">
                     <li>Employ clinicians</li>
                     <li>Mark up hourly rates</li>
@@ -532,51 +539,51 @@
                         — the best of both worlds.</p>
                 </div>
             </div>
-        </div>
 
-        <div class="col-lg-6">
-            <div class="comparison-container p-4 shadow-sm">
-                <h3 class="mb-4 text-center fw-bold">Where The Traveling Therapist Stands Apart</h3>
-                <div class="table-responsive">
-                    <table class="table table-hover comparison-table m-0">
-                        <thead>
-                            <tr>
-                                <th class="text-center" style="width: 50%; border-top: none;">Agency Experience</th>
-                                <th class="ttt-col-highlight text-center" style="width: 50%; border-top: none;">
-                                    The Traveling Therapist Experience
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <ul class="list-unstyled mb-0">
-                                        <li class="mb-2">• Slow communication = slow placements</li>
-                                        <li class="mb-2">• Established networks</li>
-                                        <li>• Agency control</li>
-                                    </ul>
-                                </td>
-                                <td class="ttt-col-highlight">
-                                    <ul class="list-unstyled mb-0">
-                                        <li class="mb-2">• Transparent pricing</li>
-                                        <li class="mb-2">• Clinicians across Canada</li>
-                                        <li>• Direct clinic-clinician control</li>
-                                    </ul>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+            <!-- Right Column: Comparison Table -->
+            <div class="col-lg-6">
+                <div class="comparison-container p-4 shadow-sm">
+                    <h3 class="mb-4 text-center fw-bold">Where The Traveling Therapist Stands Apart</h3>
+                    <div class="table-responsive">
+                        <table class="table table-hover comparison-table m-0">
+                            <thead>
+                                <tr>
+                                    <th class="text-center" style="width: 50%; border-top: none;">Agency Experience</th>
+                                    <th class="ttt-col-highlight text-center" style="width: 50%; border-top: none;">
+                                        The Traveling Therapist Experience
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <ul class="list-unstyled mb-0">
+                                            <li class="mb-2">• Slow communication = slow placements</li>
+                                            <li class="mb-2">• Established networks</li>
+                                            <li>• Agency control</li>
+                                        </ul>
+                                    </td>
+                                    <td class="ttt-col-highlight">
+                                        <ul class="list-unstyled mb-0">
+                                            <li class="mb-2">• Transparent pricing</li>
+                                            <li class="mb-2">• Clinicians across Canada</li>
+                                            <li>• Direct clinic-clinician control</li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
-</div>
-</section>
+    </section>
 
-<section class="cta-box shadow mt-2">
-    <h2 class="text-weight-bold mb-3">See How Direct Hiring Works in Practice</h2>
-    <p class="fs-5 mb-4">Post a role and view real clinician availability — with no upfront cost or commitment.</p>
-    <a href="{% url 'register' %}" class="btn btn-light text-primary btn-lg px-5 py-3 fw-bold">Post a Role</a>
-</section>
+    <section class="cta-box shadow mt-2">
+        <h2 class="text-weight-bold mb-3">See How Direct Hiring Works in Practice</h2>
+        <p class="fs-5 mb-4">Post a role and view real clinician availability — with no upfront cost or commitment.</p>
+        <a href="{% url 'register' %}" class="btn btn-light text-primary btn-lg px-5 py-3 fw-bold">Post a Role</a>
+    </section>
 
 </div>
 {% endblock %}

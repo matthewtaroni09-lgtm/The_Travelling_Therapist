@@ -4,11 +4,8 @@
 {% block content %}
 {% if user.is_authenticated %}
 <p id="pageTitle" class="d-none">Create_Auction</p>
-<!-- <div class="container my-3"> -->
 <div class="tab-pane fade show" id="create-auction" role="tabpanel" aria-labelledby="create-auction-tab">
   <div class="tab-pane" id="create-auction" role="tabpanel" aria-labelledby="create-auction-tab">
-    <!-- <div class="tab-pane fade show active bg-light p-3" id="create-auction" role="tabpanel"
-      aria-labelledby="create-auction-tab"> -->
     <p>{{showForm}}</p>
     {% if show_form %}
     <!-- Message Alert -->
@@ -313,7 +310,6 @@
       }
     </style>
     <form method="post" class="p-2">
-      <!-- <form method="post" class="p-md-5"> -->
       <input id="AOPPopulated" name="AOPPopulated" class="d-none" value="No">
       <h1 class="text-large text-weight-normal mb-5">Create New Listing</h1>
       {% csrf_token %}
@@ -354,9 +350,8 @@
             <div class="row g-3 align-items-start">
               <div class="col-lg-6">
                 <div class="d-flex align-items-center gap-2 mb-2">
-                  <label for="id_desiredFeeSplitPercentage" class="form-label mb-0">Enter a suggested fee split percentage: <span class="ttt-optional-note">(optional)</span></label>
-                  <button type="button" class="ttt-info-dot" data-bs-toggle="tooltip" data-bs-placement="top" title="This is a suggestion of an approximate 
-                  value to guide clinicians. Clinicians are not bound by this value and may submit ANY offer.">i</button>
+                  <label for="id_desiredFeeSplitPercentage" class="form-label mb-0">Enter a suggested fee split percentage for Clinicians: <span class="ttt-optional-note">(optional)</span></label>
+                  <button type="button" class="ttt-info-dot" data-bs-toggle="tooltip" data-bs-placement="top" title="This is a suggestion of an approximate value to guide clinicians. Clinicians are not bound by this value and may submit any offer.">i</button>
                 </div>
                 <div class="input-group input-group-sm" style="max-width: 280px;">
                   {{ form.desiredFeeSplitPercentage }}
@@ -366,8 +361,7 @@
               <div class="col-lg-6">
                 <div class="d-flex align-items-center gap-2 mb-2">
                   <label for="id_minimumCompensation" class="form-label mb-0">Add a minimum hourly compensation: <span class="ttt-optional-note">(optional)</span></label>
-                  <button type="button" class="ttt-info-dot" data-bs-toggle="tooltip" data-bs-placement="top" title="Set a minimum hourly rate
-                   you are willing to guarantee to clinicians who place fee split offers if building a caseload and/or number of patients is low">i</button>
+                  <button type="button" class="ttt-info-dot" data-bs-toggle="tooltip" data-bs-placement="top" title="Set a minimum hourly rate you are willing to guarantee to clinicians who place fee split offers if building a caseload and/or number of patients is low">i</button>
                 </div>
                 <div class="input-group input-group-sm" style="max-width: 280px;">
                   <span class="input-group-text">$</span>
@@ -377,43 +371,6 @@
               </div>
             </div>
           </div>
-
-          <!--
-          <div id="assessmentCheckBoxDiv" class="d-none mb-2 ms-4">
-            <input id="assessmentCheckBox" name="sliderCheckBox" type="checkbox">
-            <label class="form-label small mb-0">Include a minimum number of daily assessments?</label>
-          </div>
-          <div class="row ms-2">
-            <div class="mb-2 col-md-6 col-sm-12 assessmentField d-none">
-              {{ form.assessmentMin|as_crispy_field }}
-            </div>
-            <div class="mb-2 col-md-6 col-sm-12 assessmentField d-none">
-              {{ form.assessmentCost|as_crispy_field }}
-            </div>
-          </div>
-
-          <div id="treatmentCheckBoxDiv" class="d-none mb-2 ms-4">
-            <input id="treatmentCheckBox" name="sliderCheckBox" type="checkbox">
-            <label class="form-label small mb-0">Include a minimum number of daily treatments?</label>
-          </div>
-          <div class="row ms-2">
-            <div class="mb-2 col-md-6 col-sm-12 treatmentField d-none">
-              {{ form.treatmentMin|as_crispy_field }}
-            </div>
-            <div class="mb-2 col-md-6 col-sm-12 treatmentField d-none">
-              {{ form.treatmentCost|as_crispy_field }}
-            </div>
-          </div>
-
-          <div class="row ms-2">
-            <div id="assessmentTreatmentInfoDiv" class="mb-2 col-md-7 d-none">
-              <img id="assessmentTreatmentInfoIcon" src="/media/images/info.svg" alt="Traveling Therapist Logo">
-              <p id="assessmentTreatmentInfo" class="infoMessage">These fields are optional. Fill out these fields if you're
-                guaranteeing a minimum number of daily assessments or treatments that you will compensate them for. <a
-                  href="{% url 'about' %}#headingL" target="_blank"><b><i>Learn more</i></b></a></p>
-            </div>
-          </div>
-          -->
 
           <div class="row ms-2">
             <div class="mb-2 col-md-6 feeSplitCalcFields d-none">
@@ -434,8 +391,7 @@
             <div id="desiredFlatFeeHourlyContainer" class="d-none mb-2">
               <div class="d-flex align-items-center gap-2 mb-2">
                 <label for="id_desiredFlatFeeHourly" class="form-label mb-0">Enter a suggested hourly rate: <span class="ttt-optional-note">(optional)</span></label>
-                <button type="button" class="ttt-info-dot" data-bs-toggle="tooltip" data-bs-placement="top" title="This is a suggestion of an approximate 
-                value to guide clinicians. Clinicians are not bound by this value and may submit ANY offer.">i</button>
+                <button type="button" class="ttt-info-dot" data-bs-toggle="tooltip" data-bs-placement="top" title="This is a suggestion of an approximate value to guide clinicians. Clinicians are not bound by this value and may submit any offer.">i</button>
               </div>
               <div class="input-group input-group-sm" style="max-width: 320px;">
                 <span class="input-group-text">$</span>
@@ -446,8 +402,7 @@
             <div id="desiredFlatFeeTotalContainer" class="d-none">
               <div class="d-flex align-items-center gap-2 mb-2">
                 <label for="id_desiredFlatFeeTotalContract" class="form-label mb-0">Enter a suggested total contract price: <span class="ttt-optional-note">(optional)</span></label>
-                <button type="button" class="ttt-info-dot" data-bs-toggle="tooltip" data-bs-placement="top" title="This is a suggestion of an approximate 
-                value to guide clinicians. Clinicians are not bound by this value and may submit ANY offer.">i</button>
+                <button type="button" class="ttt-info-dot" data-bs-toggle="tooltip" data-bs-placement="top" title="This is a suggestion of an approximate value to guide clinicians. Clinicians are not bound by this value and may submit any offer.">i</button>
               </div>
               <div class="input-group input-group-sm" style="max-width: 320px;">
                 <span class="input-group-text">$</span>
@@ -473,8 +428,7 @@
       <!-- Schedule -->
       <div id="scheduleTableDiv" class="mb-3">
         <div class="ttt-section-divider"></div>
-        <h3 class="fs-5 my-3 text-weight-normal">Schedule <span class="text-weight-thin fs-6">*Leave day
-            blank to indicate days the clinician will not be working</span>
+        <h3 class="fs-5 my-3 text-weight-normal">Schedule <span class="text-weight-thin fs-6">*Leave day blank to indicate days the clinician will not be working</span>
         </h3>
 
         <div id="mondaySchedule" class="input-group mb-3 align-items-center">
@@ -547,8 +501,7 @@
               <div>Requirement Type</div>
             </div>
             <div id="requiredSkillsTypePrompt" class="ttt-empty-state">Please select a clinician type to view skills and qualifications.</div>
-            <div class="ttt-grid-list d-none" data-grid-kind="skill">
-            </div>
+            <div class="ttt-grid-list d-none" data-grid-kind="skill"></div>
             <div class="ttt-add-row d-none">
               <button type="button" class="ttt-add-trigger" data-grid-target="requiredSkillsContainer">+ Add Custom Requirement</button>
               <div class="d-flex gap-2 mt-2">
@@ -559,131 +512,217 @@
         </div>
 
         <div class="col-lg-6">
-          <div class="ttt-create-grid-card" id="negotiablePerksContainer">
-            <div class="ttt-card-header-row mb-1">
-              <h4 class="text-weight-normal mb-0">Negotiable Job Perks</h4>
-              <button type="button" class="ttt-info-dot" data-bs-toggle="tooltip" data-bs-placement="top" title="You can give clinicians additional
-               information about the kind of 'perks' they could receive if they are matched with you for your listing. These amounts are shown to
-               clinicians as negotiable, so it is up to you to negotiate these amounts privately with your candidate after the match!">i</button>
-            </div>
-            <p class="ttt-card-subtitle">Add perks clinicians can ask to negotiate before final match.</p>
-            <div class="ttt-grid-head">
-              <div>Perk</div>
-              <div>Included / Details</div>
-            </div>
-            <div class="ttt-grid-row" data-item-name="Virtual Position">
-                <span class="ttt-grid-item-label">Virtual Position</span>
-                <div class="ttt-perk-switch-wrap">
-                  <div class="form-check form-switch">
-                    <input type="checkbox" class="form-check-input ttt-perk-switch" role="switch" aria-label="Virtual position included">
-                  </div>
-                </div>
-              </div>
-              <div class="ttt-perk-detail-panel d-none">
-                <div class="row g-2 align-items-start">
-                  <div class="col-12">
-                    <label class="form-label">Details</label>
-                    <textarea class="form-control form-control-sm ttt-perk-details" rows="3" placeholder="Clarify if position is fully virtual or partially virtual"></textarea>
-                  </div>
-                </div>
-              </div>
-            <div class="ttt-grid-list" data-grid-kind="perk">
-              <div class="ttt-grid-row" data-item-name="Relocation assistance">
-                <span class="ttt-grid-item-label">Relocation assistance</span>
-                <div class="ttt-perk-switch-wrap">
-                  <div class="form-check form-switch">
-                    <input type="checkbox" class="form-check-input ttt-perk-switch" role="switch" aria-label="Relocation assistance included">
-                  </div>
-                </div>
-              </div>
-              <div class="ttt-perk-detail-panel">
-                <div class="row g-2 align-items-start">
-                  <div class="col-md-4">
-                    <label class="form-label ttt-perk-amount-label">Amount <button type="button" class="ttt-info-dot-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="This amount will only be shown to clinicians when they go to place an offer, it will not be seen on the listing page">i</button></label>
-                    <div class="input-group input-group-sm">
-                      <span class="input-group-text">$</span>
-                      <input type="number" min="0" class="form-control ttt-perk-amount" placeholder="Optional amount">
-                    </div>
-                  </div>
-                  <div class="col-md-8">
-                    <label class="form-label">Details</label>
-                    <textarea class="form-control form-control-sm ttt-perk-details" rows="2" placeholder="Add relocation details"></textarea>
-                  </div>
-                </div>
-              </div>
-              <div class="ttt-grid-row" data-item-name="Housing/accommodation">
-                <span class="ttt-grid-item-label">Housing/accommodation</span>
-                <div class="ttt-perk-switch-wrap">
-                  <div class="form-check form-switch">
-                    <input type="checkbox" class="form-check-input ttt-perk-switch" role="switch" aria-label="Housing or accommodation included">
-                  </div>
-                </div>
-              </div>
-              <div class="ttt-perk-detail-panel d-none">
-                <div class="row g-2 align-items-start">
-                  <div class="col-md-4">
-                    <label class="form-label ttt-perk-amount-label">Amount <button type="button" class="ttt-info-dot-sm" data-bs-toggle="tooltip" data-bs-placement="top" 
-                      title="This amount will only be shown to clinicians when they go to place an offer, it will not be seen on the listing page">i</button></label>
-                    <div class="input-group input-group-sm">
-                      <span class="input-group-text">$</span>
-                      <input type="number" min="0" class="form-control ttt-perk-amount" placeholder="Optional amount">
-                    </div>
-                  </div>
-                  <div class="col-md-8">
-                    <label class="form-label">Details</label>
-                    <textarea class="form-control form-control-sm ttt-perk-details" rows="2" placeholder="Add housing or accommodation details"></textarea>
-                  </div>
-                </div>
-              </div>
-              <div class="ttt-grid-row" data-item-name="Signing bonus">
-                <span class="ttt-grid-item-label">Signing bonus</span>
-                <div class="ttt-perk-switch-wrap">
-                  <div class="form-check form-switch">
-                    <input type="checkbox" class="form-check-input ttt-perk-switch" role="switch" aria-label="Signing bonus included">
-                  </div>
-                </div>
-              </div>
-              <div class="ttt-perk-detail-panel d-none">
-                <div class="row g-2 align-items-start">
-                  <div class="col-md-4">
-                    <label class="form-label ttt-perk-amount-label">Amount <button type="button" class="ttt-info-dot-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="This amount will only be shown to clinicians when they go to place an offer, it will not be seen on the listing page">i</button></label>
-                    <div class="input-group input-group-sm">
-                      <span class="input-group-text">$</span>
-                      <input type="number" min="0" class="form-control ttt-perk-amount" placeholder="Optional amount">
-                    </div>
-                  </div>
-                  <div class="col-md-8">
-                    <label class="form-label">Details</label>
-                    <textarea class="form-control form-control-sm ttt-perk-details" rows="2" placeholder="Add signing bonus details"></textarea>
-                  </div>
-                </div>
-              </div>
-              <div class="ttt-grid-row" data-item-name="Flexible schedule">
-                <span class="ttt-grid-item-label">Flexible schedule</span>
-                <div class="ttt-perk-switch-wrap">
-                  <div class="form-check form-switch">
-                    <input type="checkbox" class="form-check-input ttt-perk-switch" role="switch" aria-label="Flexible schedule included">
-                  </div>
-                </div>
-              </div>
-              <div class="ttt-perk-detail-panel d-none">
-                <div class="row g-2 align-items-start">
-                  <div class="col-12">
-                    <label class="form-label">Details</label>
-                    <textarea class="form-control form-control-sm ttt-perk-details" rows="3" placeholder="Describe the scheduling flexibility"></textarea>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="ttt-add-row">
-              <button type="button" class="ttt-add-trigger" data-grid-target="negotiablePerksContainer">+ Add Custom Perk</button>
-              <div class="d-flex gap-2 mt-2">
-                <input type="text" class="form-control form-control-sm ttt-custom-input" placeholder="Input custom perk" data-custom-input="negotiablePerksContainer">
-              </div>
-            </div>
+  <div class="ttt-create-grid-card" id="negotiablePerksContainer">
+    <div class="ttt-card-header-row mb-1">
+      <h4 class="text-weight-normal mb-0">Negotiable Job Perks</h4>
+      <button type="button" class="ttt-info-dot" data-bs-toggle="tooltip" data-bs-placement="top" title="You can give clinicians additional information about the kind of 'perks' they could receive if they are matched with you for your listing. These amounts are shown to clinicians as negotiable, so it is up to you to negotiate these amounts privately with your candidate after the match!">i</button>
+    </div>
+    <p class="ttt-card-subtitle">Add perks clinicians can ask to negotiate before final match.</p>
+    
+    <div class="ttt-grid-head">
+      <div>Perk</div>
+      <div>Included / Details</div>
+    </div>
+
+    <!-- ======================================================== -->
+    <!-- PERK 1: Virtual Position START                           -->
+    <!-- ======================================================== -->
+    <div class="ttt-grid-row" data-item-name="Virtual Position">
+      <span class="ttt-grid-item-label">Virtual Position</span>
+      <div class="ttt-perk-switch-wrap">
+        <div class="form-check form-switch">
+          <input type="checkbox" class="form-check-input ttt-perk-switch" role="switch" aria-label="Virtual position included">
+        </div>
+      </div>
+    </div>
+    <div class="ttt-perk-detail-panel d-none">
+      <div class="row g-2 align-items-start">
+        <div class="col-12">
+          <label class="form-label">Details</label>
+          <textarea class="form-control form-control-sm ttt-perk-details" rows="3" placeholder="Clarify if position is fully virtual or partially virtual"></textarea>
+        </div>
+      </div>
+    </div>
+    <!-- PERK 1: Virtual Position END =========================== -->
+
+
+    <!-- ======================================================== -->
+    <!-- PERK 2: Parking on Site START                            -->
+    <!-- ======================================================== -->
+    <div class="ttt-grid-row" data-item-name="Parking on Site">
+      <span class="ttt-grid-item-label">Parking on Site</span>
+      <div class="ttt-perk-switch-wrap">
+        <div class="form-check form-switch">
+          <input type="checkbox" class="form-check-input ttt-perk-switch" role="switch" aria-label="Parking on site included">
+        </div>
+      </div>
+    </div>
+    <div class="ttt-perk-detail-panel d-none">
+      <div class="row g-2 align-items-start">
+        <div class="col-12">
+          <label class="form-label">Details</label>
+          <textarea class="form-control form-control-sm ttt-perk-details" rows="3" placeholder="Clarify if parking is free or paid"></textarea>
+        </div>
+      </div>
+    </div>
+    <!-- PERK 2: Parking on Site END ============================ -->
+
+
+    <!-- Dynamic/Grid List Container for remaining perks -->
+    <div class="ttt-grid-list" data-grid-kind="perk">
+
+      <!-- ====================================================== -->
+      <!-- PERK 3: Relocation Assistance START                    -->
+      <!-- ====================================================== -->
+      <div class="ttt-grid-row" data-item-name="Relocation assistance">
+        <span class="ttt-grid-item-label">Relocation assistance</span>
+        <div class="ttt-perk-switch-wrap">
+          <div class="form-check form-switch">
+            <input type="checkbox" class="form-check-input ttt-perk-switch" role="switch" aria-label="Relocation assistance included">
           </div>
         </div>
       </div>
+      <div class="ttt-perk-detail-panel">
+        <div class="row g-2 align-items-start">
+          <div class="col-md-4">
+            <label class="form-label ttt-perk-amount-label">Amount <button type="button" class="ttt-info-dot-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="This amount will only be shown to clinicians when they go to place an offer, it will not be seen on the listing page">i</button></label>
+            <div class="input-group input-group-sm">
+              <span class="input-group-text">$</span>
+              <input type="number" min="0" class="form-control ttt-perk-amount" placeholder="Optional amount">
+            </div>
+          </div>
+          <div class="col-md-8">
+            <label class="form-label">Details</label>
+            <textarea class="form-control form-control-sm ttt-perk-details" rows="2" placeholder="Add relocation details"></textarea>
+          </div>
+        </div>
+      </div>
+      <!-- PERK 3: Relocation Assistance END ==================== -->
+
+      <!-- ====================================================== -->
+      <!-- PERK 3: Relocation Assistance START                    -->
+      <!-- ====================================================== -->
+      <div class="ttt-grid-row" data-item-name="Relocation assistance">
+        <span class="ttt-grid-item-label">Free Cheeseburgers</span>
+        <div class="ttt-perk-switch-wrap">
+          <div class="form-check form-switch">
+            <input type="checkbox" class="form-check-input ttt-perk-switch" role="switch" aria-label="Free Cheeseburger included">
+          </div>
+        </div>
+      </div>
+      <div class="ttt-perk-detail-panel">
+        <div class="row g-2 align-items-start">
+          <div class="col-md-4">
+            <label class="form-label ttt-perk-amount-label">Amount <button type="button" class="ttt-info-dot-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="This amount will only be shown to clinicians when they go to place an offer, it will not be seen on the listing page">i</button></label>
+            <div class="input-group input-group-sm">
+              <span class="input-group-text">$</span>
+              <input type="number" min="0" class="form-control ttt-perk-amount" placeholder="Optional amount">
+            </div>
+          </div>
+          <div class="col-md-8">
+            <label class="form-label">Details</label>
+            <textarea class="form-control form-control-sm ttt-perk-details" rows="2" placeholder="Add relocation details"></textarea>
+          </div>
+        </div>
+      </div>
+      <!-- PERK 3: Relocation Assistance END ==================== -->
+
+
+      <!-- ====================================================== -->
+      <!-- PERK 4: Housing / Accommodation START                  -->
+      <!-- ====================================================== -->
+      <div class="ttt-grid-row" data-item-name="Housing/accommodation">
+        <span class="ttt-grid-item-label">Housing/accommodation</span>
+        <div class="ttt-perk-switch-wrap">
+          <div class="form-check form-switch">
+            <input type="checkbox" class="form-check-input ttt-perk-switch" role="switch" aria-label="Housing or accommodation included">
+          </div>
+        </div>
+      </div>
+      <div class="ttt-perk-detail-panel d-none">
+        <div class="row g-2 align-items-start">
+          <div class="col-md-4">
+            <label class="form-label ttt-perk-amount-label">Amount <button type="button" class="ttt-info-dot-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="This amount will only be shown to clinicians when they go to place an offer, it will not be seen on the listing page">i</button></label>
+            <div class="input-group input-group-sm">
+              <span class="input-group-text">$</span>
+              <input type="number" min="0" class="form-control ttt-perk-amount" placeholder="Optional amount">
+            </div>
+          </div>
+          <div class="col-md-8">
+            <label class="form-label">Details</label>
+            <textarea class="form-control form-control-sm ttt-perk-details" rows="2" placeholder="Add housing or accommodation details"></textarea>
+          </div>
+        </div>
+      </div>
+      <!-- PERK 4: Housing / Accommodation END ================== -->
+
+
+      <!-- ====================================================== -->
+      <!-- PERK 5: Signing Bonus START                            -->
+      <!-- ====================================================== -->
+      <div class="ttt-grid-row" data-item-name="Signing bonus">
+        <span class="ttt-grid-item-label">Signing bonus</span>
+        <div class="ttt-perk-switch-wrap">
+          <div class="form-check form-switch">
+            <input type="checkbox" class="form-check-input ttt-perk-switch" role="switch" aria-label="Signing bonus included">
+          </div>
+        </div>
+      </div>
+      <div class="ttt-perk-detail-panel d-none">
+        <div class="row g-2 align-items-start">
+          <div class="col-md-4">
+            <label class="form-label ttt-perk-amount-label">Amount <button type="button" class="ttt-info-dot-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="This amount will only be shown to clinicians when they go to place an offer, it will not be seen on the listing page">i</button></label>
+            <div class="input-group input-group-sm">
+              <span class="input-group-text">$</span>
+              <input type="number" min="0" class="form-control ttt-perk-amount" placeholder="Optional amount">
+            </div>
+          </div>
+          <div class="col-md-8">
+            <label class="form-label">Details</label>
+            <textarea class="form-control form-control-sm ttt-perk-details" rows="2" placeholder="Add signing bonus details"></textarea>
+          </div>
+        </div>
+      </div>
+      <!-- PERK 5: Signing Bonus END ============================ -->
+
+
+      <!-- ====================================================== -->
+      <!-- PERK 6: Flexible Schedule START                        -->
+      <!-- ====================================================== -->
+      <div class="ttt-grid-row" data-item-name="Flexible schedule">
+        <span class="ttt-grid-item-label">Flexible schedule</span>
+        <div class="ttt-perk-switch-wrap">
+          <div class="form-check form-switch">
+            <input type="checkbox" class="form-check-input ttt-perk-switch" role="switch" aria-label="Flexible schedule included">
+          </div>
+        </div>
+      </div>
+      <div class="ttt-perk-detail-panel d-none">
+        <div class="row g-2 align-items-start">
+          <div class="col-12">
+            <label class="form-label">Details</label>
+            <textarea class="form-control form-control-sm ttt-perk-details" rows="3" placeholder="Describe the scheduling flexibility"></textarea>
+          </div>
+        </div>
+      </div>
+      <!-- PERK 6: Flexible Schedule END ======================== -->
+
+    </div><!-- /.ttt-grid-list -->
+
+
+    <!-- ======================================================== -->
+    <!-- ADD CUSTOM PERK SECTION START                            -->
+    <!-- ======================================================== -->
+    <div class="ttt-add-row">
+      <button type="button" class="ttt-add-trigger" data-grid-target="negotiablePerksContainer">+ Add Custom Perk</button>
+      <div class="d-flex gap-2 mt-2">
+        <input type="text" class="form-control form-control-sm ttt-custom-input" placeholder="Input custom perk" data-custom-input="negotiablePerksContainer">
+      </div>
+    </div>
+    <!-- ADD CUSTOM PERK SECTION END ============================ -->
+
+  </div><!-- /#negotiablePerksContainer -->
+</div>
       <input type="hidden" id="id_requiredSkillsPayload" name="requiredSkillsPayload" value="[]">
       <input type="hidden" id="id_negotiablePerksPayload" name="negotiablePerksPayload" value="[]">
 
@@ -702,10 +741,8 @@
       <div class="ttt-section-divider"></div>
       <h3 class="fs-5 my-3 text-weight-normal">Areas of Practice</h3>
       <div id="practiceAreaCheckBoxDiv" class="mb-3 d-none">
-        <input type="checkbox" id="practiceAreaCheckBox" hx-post="{% url 'get-practice-types' %}"
-          hx-target='#practiceAreaDiv' hx-trigger="click" hx-include="[name='type']">
-        <label id="practiceAreaCheckBoxLabel" class="form-label">Would you like to provide Practice Area
-          Information?</label>
+        <input type="checkbox" id="practiceAreaCheckBox" hx-post="{% url 'get-practice-types' %}" hx-target='#practiceAreaDiv' hx-trigger="click" hx-include="[name='type']">
+        <label id="practiceAreaCheckBoxLabel" class="form-label">Would you like to provide Practice Area Information?</label>
       </div>
       <p id="optionsMessage">Practice Area options will de displayed once the listing type is selected.</p>
       <div id="practiceAreaDiv" class="mb-3 row">
@@ -716,61 +753,91 @@
       <div class="mb-3">
         {{ form.comments|as_crispy_field }}
       </div>
+      <button id="submitButton" type="submit" class="btn btn-primary">Create Listing</button>
+    </form>
+    {% else %}
+    <p>Only {{ max_forms }} active listings are allowed at a time. Contact info@travelingtherapist.ca for more information on our Pro plan.</p>
+    {% endif %}
   </div>
-  <button id="submitButton" type="submit" class="btn btn-primary">Create Listing</button>
 </div>
-</div>
-</div>
-</form>
-{% else %}
-<p>Only {{ max_forms }} active listings are allowed at a time. Contact info@travelingtherapist.ca for more
-  information on our Pro plan.</p>
-{% endif %}
-</div>
-<!-- The Modal -->
+
+<!-- Modal -->
 <div class="modal" id="costModal">
   <div class="modal-dialog">
     <div class="modal-content">
-      <!-- Modal Header -->
       <div class="modal-header">
         <h4 class="modal-title">Contract Price</h4>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
-      <!-- Modal body -->
       <div class="modal-body">
         This represents the price that would be paid if the listing was a match.
       </div>
-      <!-- Modal footer -->
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
       </div>
-
     </div>
   </div>
 </div>
-<!-- </div> -->
+
 <script src="{% static 'auction/create_auction.js' %}?v=20260722-total-contract-validation-v1"></script>
 <script src="{% static 'auction/textarea.js' %}"></script>
-{% else %}
-<p>You must be logged in to access this page. Please <a href="{% url 'login' %}">login here</a>
-</p>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  // Select demographic and practice area sections
+  // 1. Prevent invalid character keypresses on number inputs
   const sections = document.querySelectorAll('.aop, .input-group');
-
-  sections.forEach(section => {
+  sections.forEach(function(section) {
     section.addEventListener('keydown', function(e) {
       if (e.target.tagName === 'INPUT' && e.target.type === 'number') {
-        // Prevent -, +, e, E keypresses
         if (['-', 'e', 'E', '+'].includes(e.key)) {
           e.preventDefault();
         }
       }
     });
   });
+
+  // 2. Strict Date Picker Enforcement (Placement Start & Placement End)
+  const dateInputs = document.querySelectorAll('#id_placementStart, #id_placementEnd');
+  const today = new Date().toISOString().split('T')[0];
+  const maxAllowedDate = '2099-12-31';
+
+  dateInputs.forEach(function(input) {
+    if (!input) return;
+
+    // Constrain picker to max 4-digit years
+    input.setAttribute('min', today);
+    input.setAttribute('max', maxAllowedDate);
+
+    // BLOCK DIRECT KEYBOARD TYPING ENTIRELY (Allows Tab for accessibility)
+    input.addEventListener('keydown', function(e) {
+      if (e.key !== 'Tab') {
+        e.preventDefault();
+      }
+    });
+
+    // Open calendar picker when clicking anywhere inside the box
+    input.addEventListener('click', function() {
+      if (typeof this.showPicker === 'function') {
+        try {
+          this.showPicker();
+        } catch (err) {}
+      }
+    });
+
+    // Clear field if an invalid year length is pasted or somehow inputted
+    input.addEventListener('input', function() {
+      if (this.value) {
+        const year = this.value.split('-')[0];
+        if (year && (year.length > 4 || parseInt(year, 10) > 2099)) {
+          this.value = '';
+        }
+      }
+    });
+  });
 });
 </script>
+
+{% else %}
+<p>You must be logged in to access this page. Please <a href="{% url 'login' %}">login here</a></p>
 {% endif %}
 {% endblock %}

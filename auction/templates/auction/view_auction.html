@@ -209,7 +209,7 @@
                 </div>
                 {% endif %}
 
-{% if allow_fee_split %}
+                {% if allow_fee_split %}
                 <div class="tab-pane fade {% if not allow_flat_fee %}show active{% endif %} ttt-offer-pane" id="offer-fee-split" role="tabpanel" aria-labelledby="offer-fee-split-tab">
                   <div class="ttt-offer-panel-header mb-4">
                     <p class="mb-1 fw-semibold">Fee Split Offer</p>
@@ -228,7 +228,14 @@
                       <div style="min-width: 160px;">
                         <label for="feeSplitAmountTyped" class="form-label mb-1">Type your fee split</label>
                         <div class="input-group">
-                          <input id="feeSplitAmountTyped" type="number" min="0" max="99" class="form-control" placeholder="e.g. 60" value="0">
+                          <input id="feeSplitAmountTyped" 
+                          type="number" 
+                          min="0" 
+                          max="99" 
+                          class="form-control" 
+                          placeholder="e.g. 60" 
+                          value="0" 
+                          oninput="if(parseInt(this.value, 10) > 99) this.value = 99;">
                           <span class="input-group-text">%</span>
                         </div>
                       </div>
@@ -236,8 +243,7 @@
 
                     <div class="mb-4 d-flex align-items-center gap-2">
                     <p class="mb-0">Current selected: <strong><span id="feeSplitValue">0</span>%</strong></p>
-                    <button type="button" class="ttt-info-dot" data-bs-toggle="tooltip" data-bs-placement="top" title="You are asking to 
-                    receive this percentage of the client fee.">i</button>
+                    <button type="button" class="ttt-info-dot" data-bs-toggle="tooltip" data-bs-placement="top" title="You are asking to receive this percentage of the client fee.">i</button>
                     </div>
 
                     {% if auction.desiredFeeSplitPercentage %}
@@ -418,7 +424,10 @@
             <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mt-3">
               <div>
                 {% if decline_all_offers_option %}
-                <button type="button" class="btn btn-link text-secondary p-0 small text-decoration-none decline-offers-trigger">I would not like to accept any offer</button>
+                <div class="d-flex align-items-center">
+                  <input class="form-check-input me-2" type="radio" id="declineAllOffersRadio" name="selectedReviewOfferOption">
+                  <button type="button" id="declineOffersBtn" class="btn btn-link text-secondary p-0 small text-decoration-none decline-offers-trigger" disabled style="pointer-events: none; opacity: 0.6;">I would not like to accept any offer</button>
+                </div>
                 {% endif %}
               </div>
               <button id="reviewOffersConfirmButton" type="button" class="btn btn-primary" disabled>Accept</button>
@@ -480,8 +489,6 @@
     {% endif %}
 
   </div>
-
-
 
   <div class="row w-100 mx-auto">
     <p class="col-md-4 col-sm-6 text-weight-bold border mb-0 py-2 bg-light">Clinic Name</p>
@@ -679,6 +686,8 @@
     const declineModalEl = document.getElementById('declineAllOffersModal');
     const declineForm = document.getElementById('declineAllOffersForm');
     const reviewModalEl = document.getElementById('reviewOffersModal');
+    const declineRadio = document.getElementById('declineAllOffersRadio');
+    const declineBtn = document.getElementById('declineOffersBtn');
     let declineFormSubmitted = false;
     let openDeclineModalAfterHide = false;
 
@@ -697,11 +706,51 @@
       confirmButton.disabled = !selectedChoice;
     }
 
+    function updateDeclineState() {
+      if (!declineRadio || !declineBtn) {
+        return;
+      }
+      if (declineRadio.checked) {
+        declineBtn.disabled = false;
+        declineBtn.classList.remove('text-secondary');
+        declineBtn.classList.add('text-dark');
+        declineBtn.style.pointerEvents = 'auto';
+        declineBtn.style.opacity = '1';
+      } else {
+        declineBtn.disabled = true;
+        declineBtn.classList.remove('text-dark');
+        declineBtn.classList.add('text-secondary');
+        declineBtn.style.pointerEvents = 'none';
+        declineBtn.style.opacity = '0.6';
+      }
+    }
+
+    if (declineRadio) {
+      declineRadio.addEventListener('change', function () {
+        if (declineRadio.checked) {
+          reviewOfferChoices.forEach(function (choice) {
+            choice.checked = false;
+          });
+          syncConfirmAvailability();
+        }
+        updateDeclineState();
+      });
+    }
+
     reviewOfferChoices.forEach(function (choice) {
-      choice.addEventListener('change', syncConfirmAvailability);
-      choice.addEventListener('click', syncConfirmAvailability);
+      function handleChoiceChange() {
+        if (choice.checked && declineRadio) {
+          declineRadio.checked = false;
+          updateDeclineState();
+        }
+        syncConfirmAvailability();
+      }
+      choice.addEventListener('change', handleChoiceChange);
+      choice.addEventListener('click', handleChoiceChange);
     });
+
     syncConfirmAvailability();
+    updateDeclineState();
 
     confirmButton.addEventListener('click', function () {
       const selectedChoice = reviewOfferChoices.find(function (choice) {
@@ -732,7 +781,11 @@
 
     if (declineModalEl && declineModal && declineForm) {
       Array.from(document.querySelectorAll('.decline-offers-trigger')).forEach(function (trigger) {
-        trigger.addEventListener('click', function () {
+        trigger.addEventListener('click', function (e) {
+          if (trigger.disabled || (declineRadio && !declineRadio.checked)) {
+            e.preventDefault();
+            return;
+          }
           openDeclineModalAfterHide = true;
           reviewModal.hide();
         });
