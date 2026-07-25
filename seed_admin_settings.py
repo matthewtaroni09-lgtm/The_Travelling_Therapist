@@ -15,6 +15,7 @@ def create_admin_settings():
             'sendEmails': True,
             'numAllowedAuctions': 1,
             'defaultAuctionLength': 3600,
+            'defaultClosedWaitingPeriodLength': 604800,
             'endAuctionEmailBatchSize': 50  # Defaulting to 50 if not specified
         }
     )
@@ -23,6 +24,8 @@ def create_admin_settings():
         admin_setting.sendEmails = True
         admin_setting.numAllowedAuctions = 1
         admin_setting.defaultAuctionLength = 3600
+        if admin_setting.defaultClosedWaitingPeriodLength is None:
+            admin_setting.defaultClosedWaitingPeriodLength = 604800
         # If we update it, we should keep the existing batch size or set a default if it was null
         if admin_setting.endAuctionEmailBatchSize is None:
              admin_setting.endAuctionEmailBatchSize = 50

@@ -254,13 +254,14 @@ class AuctionAdmin(admin.ModelAdmin):
             obj.closed = False
             obj.deleted = False
 
+        admin = AdminSetting.objects.first()
         waiting_closeout_job_id = f'{obj.auctionID}_waiting_closeout'
         if listing_status == 'waiting' and obj.auctionEnd is not None:
-            scheduled_tasks.schedule_waiting_closeout(obj.auctionID, obj.auctionEnd + timedelta(days=7))
+            waiting_seconds = admin.defaultClosedWaitingPeriodLength if admin is not None else 604800
+            scheduled_tasks.schedule_waiting_closeout(obj.auctionID, obj.auctionEnd + timedelta(seconds=waiting_seconds))
         else:
             scheduled_tasks.remove_cron_job(waiting_closeout_job_id)
 
-        admin = AdminSetting.objects.first()
         auction = Auction.objects.filter(pk=obj.auctionID).first()
         previous_active = auction.active if auction is not None else False
         print("auction = " + str(previous_active))

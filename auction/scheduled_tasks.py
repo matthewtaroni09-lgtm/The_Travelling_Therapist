@@ -24,6 +24,13 @@ register_events(scheduler)
 _raffle_check_registered = False
 
 
+def get_default_closed_waiting_period_seconds():
+    admin_settings = AdminSetting.objects.first()
+    if admin_settings is None:
+        return 604800
+    return admin_settings.defaultClosedWaitingPeriodLength
+
+
 def _ensure_scheduler_started():
     global _raffle_check_registered
 
@@ -249,7 +256,7 @@ def auction_closed(id):
     logger.warning(bids.count())
     auction.save()
 
-    finalize_run_date = auction.auctionEnd + timedelta(days=7)
+    finalize_run_date = auction.auctionEnd + timedelta(seconds=get_default_closed_waiting_period_seconds())
     schedule_waiting_closeout(auction.auctionID, finalize_run_date)
     logger.warning('!!!!END!!!!')
     return JsonResponse({'data': "success"})

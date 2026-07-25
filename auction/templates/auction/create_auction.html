@@ -754,5 +754,23 @@
 {% else %}
 <p>You must be logged in to access this page. Please <a href="{% url 'login' %}">login here</a>
 </p>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Select demographic and practice area sections
+  const sections = document.querySelectorAll('.aop, .input-group');
+
+  sections.forEach(section => {
+    section.addEventListener('keydown', function(e) {
+      if (e.target.tagName === 'INPUT' && e.target.type === 'number') {
+        // Prevent -, +, e, E keypresses
+        if (['-', 'e', 'E', '+'].includes(e.key)) {
+          e.preventDefault();
+        }
+      }
+    });
+  });
+});
+</script>
 {% endif %}
 {% endblock %}

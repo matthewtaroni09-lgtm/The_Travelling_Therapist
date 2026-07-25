@@ -17,6 +17,8 @@ from django.conf import settings
 from django.utils import timezone
 from django.utils.safestring import mark_safe
 
+WEBSITE_URL_ERROR_MESSAGE = 'Please enter a URL starting with http:// or https://'
+
 
 class ProfileImageInput(forms.ClearableFileInput):
     """Hide the default placeholder file from clearable widget metadata."""
@@ -549,7 +551,7 @@ class RegisterAcount(UserCreationForm):
             try:
                 self.cleaned_data['clinicWebsite'] = normalize_website_url(clinicWebsite)
             except ValidationError:
-                error_list.append(ValidationError('Please enter a valid website URL starting with http:// or https://'))
+                error_list.append(ValidationError(WEBSITE_URL_ERROR_MESSAGE))
 
             if len(clinicName) <= 4:
                 error_list.append(ValidationError("Please enter a healthcare facility name that is greater than 4 characters."))
@@ -654,9 +656,11 @@ class ProfileUpdateClinic(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields['clinicWebsite'].widget = forms.TextInput(attrs={'type': 'text'})
         self.fields['clinicWebsite'].help_text = mark_safe(
             ''
         )
+        self.fields['clinicWebsite'].error_messages['invalid'] = WEBSITE_URL_ERROR_MESSAGE
 
         for image_field in ('imageOne', 'imageTwo', 'imageThree', 'imageFour'):
             self.fields[image_field].widget = ProfileImageInput()
@@ -707,7 +711,7 @@ class ProfileUpdateClinic(forms.ModelForm):
         try:
             self.cleaned_data['clinicWebsite'] = normalize_website_url(clinicWebsite)
         except ValidationError:
-            error_list.append(ValidationError('Please enter a valid website URL starting with http:// or https://'))
+            error_list.append(ValidationError(WEBSITE_URL_ERROR_MESSAGE))
     
         if len(error_list) > 0:
             raise forms.ValidationError(error_list)
