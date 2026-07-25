@@ -496,7 +496,9 @@ class Auction(models.Model):
         if not self.waitingCloseout or self.closed or self.deleted or self.auctionEnd is None:
             return False
         now = django_timezone.now()
-        review_deadline = self.auctionEnd + datetime.timedelta(days=7)
+        admin_settings = AdminSetting.objects.first()
+        waiting_seconds = admin_settings.defaultClosedWaitingPeriodLength if admin_settings is not None else 604800
+        review_deadline = self.auctionEnd + datetime.timedelta(seconds=waiting_seconds)
         return self.auctionEnd <= now < review_deadline
 
     def is_closed_waiting(self):
@@ -751,6 +753,7 @@ class AdminSetting(models.Model):
     sendEmails = models.BooleanField(verbose_name='Send Emails', help_text='Turns on and off emails. If checked emails will send.')
     numAllowedAuctions = models.IntegerField(verbose_name='# Allowed Listing', help_text='Global setting for max number of active listing')
     defaultAuctionLength = models.IntegerField(verbose_name='Default Listing Length in Seconds', help_text='Listing will be set to this length, in seconds.')
+    defaultClosedWaitingPeriodLength = models.IntegerField(verbose_name='Default Closed Waiting Period in Seconds', help_text='Closed (Waiting) listings will remain in that state for this many seconds before fully closing.', default=604800)
     endAuctionEmailBatchSize = models.IntegerField(verbose_name='End of Listing Email Batch Size', help_text='At the end of an listing emails will be sent to user with the same type as the listing. To avoid spamming email batches are limited to this number.')
 
     def __str__(self):
