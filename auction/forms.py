@@ -17,7 +17,7 @@ from django.conf import settings
 from django.utils import timezone
 from django.utils.safestring import mark_safe
 
-WEBSITE_URL_ERROR_MESSAGE = 'Please enter a URL starting with http:// or https://'
+WEBSITE_URL_ERROR_MESSAGE = 'Please enter a valid URL starting with http:// or https://'
 
 
 class ProfileImageInput(forms.ClearableFileInput):
@@ -724,6 +724,15 @@ class PasswordChangingForm(PasswordChangeForm):
     class Meta:
         model = User
         fields = ('old_password', 'new_password1', 'new_password2')
+
+class ClinicProfileForm(forms.ModelForm):
+    clinicWebsite = forms.URLField(
+        required=False,
+        widget=forms.TextInput(attrs={
+            'placeholder': 'https://yourclinic.com',
+            'oninput': "this.value = this.value.replace(/@/g, '')",
+        })
+    )
 
 class ContactForm(forms.Form):
     first_name = forms.CharField(max_length = 50)

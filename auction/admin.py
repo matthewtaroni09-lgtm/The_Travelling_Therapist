@@ -19,6 +19,7 @@ from .forms import AuctionForm, AuctionAdminForm
 from . import scheduled_tasks
 from The_Travelling_Therapist.settings import ENVIRONMENT, DEV_LINK, PROD_LINK
 from datetime import datetime, timedelta
+from django.utils import timezone as django_timezone
 import time
 
 class BidInline(admin.TabularInline):
@@ -258,7 +259,7 @@ class AuctionAdmin(admin.ModelAdmin):
         waiting_closeout_job_id = f'{obj.auctionID}_waiting_closeout'
         if listing_status == 'waiting' and obj.auctionEnd is not None:
             waiting_seconds = admin.defaultClosedWaitingPeriodLength if admin is not None else 604800
-            scheduled_tasks.schedule_waiting_closeout(obj.auctionID, obj.auctionEnd + timedelta(seconds=waiting_seconds))
+            scheduled_tasks.schedule_waiting_closeout(obj.auctionID, django_timezone.now() + timedelta(seconds=waiting_seconds))
         else:
             scheduled_tasks.remove_cron_job(waiting_closeout_job_id)
 

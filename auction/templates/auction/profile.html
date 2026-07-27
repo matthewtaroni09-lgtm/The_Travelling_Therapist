@@ -6,7 +6,7 @@
 {% if user.is_authenticated %}
 <p id="pageTitle" class="d-none">Profile</p>
 <style>
-        .ttt-info-dot-sm {
+    .ttt-info-dot-sm {
         width: 16px;
         height: 16px;
         border-radius: 999px;
@@ -21,59 +21,57 @@
         color: #6d7986;
         text-align: center !important;
         align-items: center !important;
-      }
+    }
 
     .ttt-listing-carousel {
-      border: 1px solid #dce5ea;
-      border-radius: 14px;
-      background: #f8fafb;
-      overflow: hidden;
+        border: 1px solid #dce5ea;
+        border-radius: 14px;
+        background: #f8fafb;
+        overflow: hidden;
     }
     .ttt-listing-carousel .carousel-item img {
-      width: 100%;
-      height: clamp(280px, 52vw, 620px);
-      object-fit: contain;
-      background: #fff;
+        width: 100%;
+        height: clamp(280px, 52vw, 620px);
+        object-fit: contain;
+        background: #fff;
     }
     .ttt-listing-carousel .carousel-control-prev,
     .ttt-listing-carousel .carousel-control-next {
-      width: auto;
-      opacity: 1;
-      top: 50%;
-      transform: translateY(-50%);
-      bottom: auto;
+        width: auto;
+        opacity: 1;
+        top: 50%;
+        transform: translateY(-50%);
+        bottom: auto;
     }
     .ttt-listing-carousel .carousel-control-prev { left: 0.9rem; }
     .ttt-listing-carousel .carousel-control-next { right: 0.9rem; }
     .ttt-listing-carousel .ttt-carousel-arrow {
-      width: 44px;
-      height: 44px;
-      background: #fff;
-      border: 1px solid #d8dee3;
-      border-radius: 999px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-      display: flex;
-      align-items: center;
-      justify-content: center;
+        width: 44px;
+        height: 44px;
+        background: #fff;
+        border: 1px solid #d8dee3;
+        border-radius: 999px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
     .ttt-listing-carousel .carousel-control-prev-icon,
     .ttt-listing-carousel .carousel-control-next-icon {
-      width: 1.25rem;
-      height: 1.25rem;
-      filter: brightness(0);
+        width: 1.25rem;
+        height: 1.25rem;
+        filter: brightness(0);
     }
     .ttt-listing-carousel .carousel-indicators {
-      margin-bottom: 0.25rem;
+        margin-bottom: 0.25rem;
     }
     .ttt-listing-carousel .carousel-indicators [data-bs-target] {
-      background-color: #1f2933;
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
+        background-color: #1f2933;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
     }
-  </style>
-
-
+</style>
 
 {% if user.account.get_split_user_type == 'Clinic' %}
 <!-- START CLINIC SECTION -->
@@ -408,171 +406,140 @@
 </div>
 <!-- END CLINIC SECTION -->
 
-                      {% else %}
+{% else %}
 
-                      <!-- START THERAPIST SECTION -->
-                      <div class="row">
-                      <div class="col-12">
-                      <ul class="nav nav-tabs" id="therapistProfile" role="tablist">
-                      <li class="nav-item" role="presentation"><button class="btn-lg nav-link active" id="auction-tab-t"
-                      data-bs-toggle="tab" data-bs-target="#auction-history-t" type="button" role="tab">Offer History</button>
-                      </li>
-                      <li class="nav-item" role="presentation"><button class="btn-lg nav-link" id="profile-tab-t" data-bs-toggle="tab"
-                      data-bs-target="#profile-t" type="button" role="tab">Update Profile</button></li>
-                      <li class="nav-item" role="presentation"><button class="btn-lg nav-link" id="raffles-tab-t" data-bs-toggle="tab"
-                      data-bs-target="#raffles-t" type="button" role="tab">Raffles</button></li>
-                      </ul>
-                      <div class="tab-content" id="therapistProfileContent">
-                      <div class="tab-pane fade show active p-3" id="auction-history-t" role="tabpanel">
-                      <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
-                      <h2 class="mb-0">Listings You've Offered On:</h2>
-                      <button type="button" class="btn btn-primary btn-lg" id="viewFullOfferHistoryBtn" data-bs-toggle="modal" data-bs-target="#fullOfferHistoryModal">View Full Offer History</button>
-                      </div>
-                      <div class="row mb-5">{% for auction in active_auctions_list %}{% include 'auction/card_active_auction.html' with auction=auction %}{% endfor %}</div>
-                      </div>
-                      <div class="tab-pane fade" id="profile-t" role="tabpanel">
-                      <div class="p-3">
-                      <form method="post" class="d-flex flex-column gap-3">
-                      <h2 class="mb-4">Update Profile</h2>
-                      <h5>User Type: {{user.account.userType}}</h5>
-                      {% csrf_token %}{{ user_therapist_form | crispy }}
-                      <div class="card border-0 shadow-sm">
-                        <div class="card-body">
-                          <h6 class="mb-2">Skills and Qualifications</h6>
-                          <p class="text-muted small mb-3">These are used to help clinics compare your profile against listing requirements.</p>
-                          <div id="clinicianSkillsContainer" class="d-flex flex-column gap-2">
-                            {% for skill_name in skill_options %}
-                            <div class="ttt-clinician-skill-row form-check d-flex justify-content-between align-items-center" data-skill-name="{{ skill_name }}" data-custom="false">
-                              <label class="form-check-label">
-                                <input class="form-check-input me-2" type="checkbox" {% if skill_name in selected_profile_skill_names %}checked{% endif %}>
-                                {{ skill_name }}
-                              </label>
-                            </div>
-                            {% endfor %}
-                            {% for skill_name in custom_profile_skills %}
-                            <div class="ttt-clinician-skill-row form-check d-flex justify-content-between align-items-center" data-skill-name="{{ skill_name }}" data-custom="true">
-                              <label class="form-check-label">
-                                <input class="form-check-input me-2" type="checkbox" checked>
-                                {{ skill_name }}
-                              </label>
-                              <button type="button" class="btn btn-link btn-sm p-0 ttt-clinician-skill-remove">Remove</button>
-                            </div>
-                            {% endfor %}
-                          </div>
-                          <div class="input-group input-group-sm mt-2" style="max-width: 460px;">
-                            <input type="text" id="clinicianCustomSkillInput" class="form-control" placeholder="Add custom skill or qualification">
-                            <button type="button" id="addClinicianCustomSkill" class="btn btn-outline-secondary">Add</button>
-                          </div>
-                          <input type="hidden" name="clinicianSkillsPayload" id="id_clinicianSkillsPayload" value="{{ clinician_skills_payload_json|escapejs }}">
-                        </div>
-                      </div>
-                      <button type="submit" class="btn btn-primary">Update</button>
-                      </form>
-                      <hr><a href="{% url 'change-password' %}" class="btn btn-primary">Change Password</a>
-                      </div>
-                      </div>
-                      <div class="tab-pane fade" id="raffles-t" role="tabpanel">
-                      <div class="p-3">
-                      <div class="row">
-                      <div class="col-md-7">
-                      <h2 class="mb-4">Your Raffle Overview</h2>
-                      <div class="card mb-4 shadow-sm border-0 bg-light">
-                      <div class="card-body d-flex align-items-center">
-                      <div class="me-3"><img src="/media/images/raffle_ticket.png" alt="Tickets"
-                      class="rounded-circle shadow-sm" style="width: 65px; height: 65px; object-fit: cover;"></div>
-                      <div>
-                      <h5 class="mb-0">Available Tickets</h5>
-                      <h2 class="mb-0" style="color: #0f9972;">{{ tickets }}</h2>
-                      </div>
-                      </div>
-                      </div>
-                      <div class="accordion accordion-flush mb-4" id="raffleAccordionT">
-                      <div class="accordion-item border-0 mb-3 shadow-sm rounded-4 overflow-hidden">
-                      <h2 class="accordion-header"><button class="accordion-button collapsed fw-bold py-3" type="button"
-                      data-bs-toggle="collapse" data-bs-target="#collapseChallengesT"><span class="material-icons me-2"
-                        style="color: #0f9972;">emoji_events</span> Challenges</button></h2>
-                      <div id="collapseChallengesT" class="accordion-collapse collapse" data-bs-parent="#raffleAccordionT">
-                      <div class="accordion-body bg-light p-4">
+<!-- START THERAPIST SECTION -->
+<div class="row">
+  <div class="col-12">
+    <ul class="nav nav-tabs" id="therapistProfile" role="tablist">
+      <li class="nav-item" role="presentation"><button class="btn-lg nav-link active" id="auction-tab-t" data-bs-toggle="tab" data-bs-target="#auction-history-t" type="button" role="tab">Offer History</button></li>
+      <li class="nav-item" role="presentation"><button class="btn-lg nav-link" id="profile-tab-t" data-bs-toggle="tab" data-bs-target="#profile-t" type="button" role="tab">Update Profile</button></li>
+      <li class="nav-item" role="presentation"><button class="btn-lg nav-link" id="raffles-tab-t" data-bs-toggle="tab" data-bs-target="#raffles-t" type="button" role="tab">Raffles</button></li>
+    </ul>
+    <div class="tab-content" id="therapistProfileContent">
+      <div class="tab-pane fade show active p-3" id="auction-history-t" role="tabpanel">
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
+          <h2 class="mb-0">Listings You've Offered On:</h2>
+          <button type="button" class="btn btn-primary btn-lg" id="viewFullOfferHistoryBtn" data-bs-toggle="modal" data-bs-target="#fullOfferHistoryModal">View Full Offer History</button>
+        </div>
+        <div class="row mb-5">{% for auction in active_auctions_list %}{% include 'auction/card_active_auction.html' with auction=auction %}{% endfor %}</div>
+      </div>
+      <div class="tab-pane fade" id="profile-t" role="tabpanel">
+        <div class="p-3">
+          <form method="post" class="d-flex flex-column gap-3">
+            <h2 class="mb-4">Update Profile</h2>
+            <h5>User Type: {{user.account.userType}}</h5>
+            {% csrf_token %}{{ user_therapist_form | crispy }}
+            <div class="card border-0 shadow-sm">
+              <div class="card-body">
+                <h6 class="mb-2">Skills and Qualifications</h6>
+                <p class="text-muted small mb-3">These are used to help clinics compare your profile against listing requirements.</p>
+                <div id="clinicianSkillsContainer" class="d-flex flex-column gap-2">
+                  {% for skill_name in skill_options %}
+                  <div class="ttt-clinician-skill-row form-check d-flex justify-content-between align-items-center" data-skill-name="{{ skill_name }}" data-custom="false">
+                    <label class="form-check-label">
+                      <input class="form-check-input me-2" type="checkbox" {% if skill_name in selected_profile_skill_names %}checked{% endif %}>
+                      {{ skill_name }}
+                    </label>
+                  </div>
+                  {% endfor %}
+                  {% for skill_name in custom_profile_skills %}
+                  <div class="ttt-clinician-skill-row form-check d-flex justify-content-between align-items-center" data-skill-name="{{ skill_name }}" data-custom="true">
+                    <label class="form-check-label">
+                      <input class="form-check-input me-2" type="checkbox" checked>
+                      {{ skill_name }}
+                    </label>
+                    <button type="button" class="btn btn-link btn-sm p-0 ttt-clinician-skill-remove">Remove</button>
+                  </div>
+                  {% endfor %}
+                </div>
+                <div class="input-group input-group-sm mt-2" style="max-width: 460px;">
+                  <input type="text" id="clinicianCustomSkillInput" class="form-control" placeholder="Add custom skill or qualification">
+                  <button type="button" id="addClinicianCustomSkill" class="btn btn-outline-secondary">Add</button>
+                </div>
+                <input type="hidden" name="clinicianSkillsPayload" id="id_clinicianSkillsPayload" value="{{ clinician_skills_payload_json|escapejs }}">
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Update</button>
+          </form>
+          <hr><a href="{% url 'change-password' %}" class="btn btn-primary">Change Password</a>
+        </div>
+      </div>
+      <div class="tab-pane fade" id="raffles-t" role="tabpanel">
+        <div class="p-3">
+          <div class="row">
+            <div class="col-md-7">
+              <h2 class="mb-4">Your Raffle Overview</h2>
+              <div class="card mb-4 shadow-sm border-0 bg-light">
+                <div class="card-body d-flex align-items-center">
+                  <div class="me-3"><img src="/media/images/raffle_ticket.png" alt="Tickets" class="rounded-circle shadow-sm" style="width: 65px; height: 65px; object-fit: cover;"></div>
+                  <div>
+                    <h5 class="mb-0">Available Tickets</h5>
+                    <h2 class="mb-0" style="color: #0f9972;">{{ tickets }}</h2>
+                  </div>
+                </div>
+              </div>
+              <div class="accordion accordion-flush mb-4" id="raffleAccordionT">
+                <div class="accordion-item border-0 mb-3 shadow-sm rounded-4 overflow-hidden">
+                  <h2 class="accordion-header"><button class="accordion-button collapsed fw-bold py-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseChallengesT"><span class="material-icons me-2" style="color: #0f9972;">emoji_events</span> Challenges</button></h2>
+                  <div id="collapseChallengesT" class="accordion-collapse collapse" data-bs-parent="#raffleAccordionT">
+                    <div class="accordion-body bg-light p-4">
                       <input type="hidden" id="next-award-date-t" value="{{ next_award_date }}">
                       <div class="row g-4">
                         <div class="col-12">
                           <div class="card border-0 shadow-sm rounded-4">
                             <div class="card-body d-flex align-items-center p-3">
-                              <div class="flex-shrink-0 rounded-circle p-3 me-3"
-                                style="background-color: rgba(15, 153, 114, 0.1);"><span class="material-icons"
-                                  style="color: #0f9972; font-size: 2rem;">calendar_today</span></div>
+                              <div class="flex-shrink-0 rounded-circle p-3 me-3" style="background-color: rgba(15, 153, 114, 0.1);"><span class="material-icons" style="color: #0f9972; font-size: 2rem;">calendar_today</span></div>
                               <div class="flex-grow-1">
                                 <h6 class="mb-0 fw-bold">Weekly Visit Reward</h6>
-                                <p class="small text-muted mb-0">Claim 1 ticket every 7 days just by visiting.</p><span
-                                  class="badge rounded-pill text-success mt-1"
-                                  style="background-color: rgba(15, 153, 114, 0.1);">Reward: 1 Ticket</span>
+                                <p class="small text-muted mb-0">Claim 1 ticket every 7 days just by visiting.</p><span class="badge rounded-pill text-success mt-1" style="background-color: rgba(15, 153, 114, 0.1);">Reward: 1 Ticket</span>
                               </div>
                               <div class="text-end ms-2">
-                                <div class="badge rounded-pill bg-white border text-dark px-3 py-2 fw-bold"
-                                  id="weekly-timer-t">--:--:--</div>
+                                <div class="badge rounded-pill bg-white border text-dark px-3 py-2 fw-bold" id="weekly-timer-t">--:--:--</div>
                               </div>
                             </div>
                           </div>
                         </div>
                         <div class="col-12">
-                          <div class="card border-0 shadow-sm rounded-4"
-                            style="background: linear-gradient(135deg, #ffffff 0%, #f0fff4 100%);">
+                          <div class="card border-0 shadow-sm rounded-4" style="background: linear-gradient(135deg, #ffffff 0%, #f0fff4 100%);">
                             <div class="card-body p-4">
                               <div class="mb-3">
                                 <div class="d-flex align-items-center mb-1">
                                   <span class="material-icons me-2" style="color: #0f9972;">group_add</span>
                                   <h6 class="mb-0 fw-bold">Invite a Colleague</h6>
                                 </div>
-                                <span class="badge rounded-pill text-success mb-2"
-                                  style="background-color: rgba(15, 153, 114, 0.1); width: fit-content;">Reward: 10
-                                  Tickets</span>
+                                <span class="badge rounded-pill text-success mb-2" style="background-color: rgba(15, 153, 114, 0.1); width: fit-content;">Reward: 10 Tickets</span>
                               </div>
                               <p class="small text-muted mb-3">Earn 10 tickets per referral!</p>
-                              <div class="input-group"><input type="text" class="form-control bg-white border-end-0"
-                                  readonly value="{{ referral_link }}" id="challengeReferralLinkT"><button
-                                  class="btn btn-ttt-pill px-4" type="button" id="copyChallengeLinkT">Copy Link</button>
-                              </div><small id="copyChallengeFeedbackT"
-                                class="text-success mt-2 d-none fw-bold">Copied!</small>
+                              <div class="input-group"><input type="text" class="form-control bg-white border-end-0" readonly value="{{ referral_link }}" id="challengeReferralLinkT"><button class="btn btn-ttt-pill px-4" type="button" id="copyChallengeLinkT">Copy Link</button></div>
+                              <small id="copyChallengeFeedbackT" class="text-success mt-2 d-none fw-bold">Copied!</small>
                             </div>
                           </div>
                         </div>
                         <div class="col-md-6">
                           <div class="card border-0 shadow-sm rounded-4 h-100">
                             <div class="card-body p-4 d-flex flex-column">
-                              <h6 class="fw-bold mb-0">Voice Your Opinion</h6><span
-                                class="badge rounded-pill text-success mb-2"
-                                style="background-color: rgba(15, 153, 114, 0.1); width: fit-content;">Reward: 3
-                                Tickets</span>
-                              <p class="small text-muted flex-grow-1">Complete surveys for extra tickets.</p><a
-                                href="{% url 'surveys' %}" class="btn btn-ttt-pill btn-sm mt-3">Go to Surveys</a>
+                              <h6 class="fw-bold mb-0">Voice Your Opinion</h6><span class="badge rounded-pill text-success mb-2" style="background-color: rgba(15, 153, 114, 0.1); width: fit-content;">Reward: 3 Tickets</span>
+                              <p class="small text-muted flex-grow-1">Complete surveys for extra tickets.</p><a href="{% url 'surveys' %}" class="btn btn-ttt-pill btn-sm mt-3">Go to Surveys</a>
                             </div>
                           </div>
                         </div>
                         <div class="col-md-6">
                           <div class="card border-0 shadow-sm rounded-4 h-100">
                             <div class="card-body p-4 d-flex flex-column">
-                              <h6 class="fw-bold mb-0">Place an Offer</h6><span
-                                class="badge rounded-pill text-success mb-2"
-                                style="background-color: rgba(15, 153, 114, 0.1); width: fit-content;">Reward: 5
-                                Tickets</span>
-                              <p class="small text-muted flex-grow-1">Apply for a contract position and earn bonus
-                                tickets.</p><a href="{% url 'index' %}" class="btn btn-ttt-pill btn-sm mt-3">View
-                                Listings</a>
+                              <h6 class="fw-bold mb-0">Place an Offer</h6><span class="badge rounded-pill text-success mb-2" style="background-color: rgba(15, 153, 114, 0.1); width: fit-content;">Reward: 5 Tickets</span>
+                              <p class="small text-muted flex-grow-1">Apply for a contract position and earn bonus tickets.</p><a href="{% url 'index' %}" class="btn btn-ttt-pill btn-sm mt-3">View Listings</a>
                             </div>
                           </div>
                         </div>
                       </div>
-                      </div>
-                      </div>
-                      </div>
-                      <div class="accordion-item border-0 mb-3 shadow-sm rounded-4 overflow-hidden">
-                      <h2 class="accordion-header"><button class="accordion-button fw-bold py-3" type="button"
-                      data-bs-toggle="collapse" data-bs-target="#collapseParticipatingT"><span
-                        class="material-icons me-2" style="color: #0f9972;">local_activity</span> Participating
-                      Raffles</button></h2>
-                      <div id="collapseParticipatingT" class="accordion-collapse collapse show"
-                      data-bs-parent="#raffleAccordionT">
-                      <div class="accordion-body bg-light">
+                    </div>
+                  </div>
+                </div>
+                <div class="accordion-item border-0 mb-3 shadow-sm rounded-4 overflow-hidden">
+                  <h2 class="accordion-header"><button class="accordion-button fw-bold py-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseParticipatingT"><span class="material-icons me-2" style="color: #0f9972;">local_activity</span> Participating Raffles</button></h2>
+                  <div id="collapseParticipatingT" class="accordion-collapse collapse show" data-bs-parent="#raffleAccordionT">
+                    <div class="accordion-body bg-light">
                       {% if joined_raffles %}
                       <div class="row">
                         {% for entry in joined_raffles %}
@@ -582,26 +549,22 @@
                               <div>
                                 <h6 class="mb-1">{{ entry.raffle.title }}</h6>
                                 <small class="text-muted d-block">Tickets Spent: {{ entry.tickets_added }} ({{ entry.entries_count }} Entries)</small>
-                                {% if entry.raffle.endDate %}<small class="text-danger fw-bold"><span
-                                    class="material-icons fs-6 align-middle">timer</span> Ends: {{ entry.raffle.endDate|date:"M j, Y" }}</small>{% endif %}
+                                {% if entry.raffle.endDate %}<small class="text-danger fw-bold"><span class="material-icons fs-6 align-middle">timer</span> Ends: {{ entry.raffle.endDate|date:"M j, Y" }}</small>{% endif %}
                               </div>
-                              <span class="badge rounded-pill"
-                                style="background-color: {% if entry.raffle.active %}#198754{% else %}#0f9972{% endif %};">{% if entry.raffle.active %}Active{% else %}Ended{% endif %}</span>
+                              <span class="badge rounded-pill" style="background-color: {% if entry.raffle.active %}#198754{% else %}#0f9972{% endif %};">{% if entry.raffle.active %}Active{% else %}Ended{% endif %}</span>
                             </div>
                           </div>
                         </div>
                         {% endfor %}
                       </div>
                       {% else %}<p class="text-muted text-center p-3 small">You haven't entered any raffles yet.</p>{% endif %}
-                      </div>
-                      </div>
-                      </div>
-                      <div class="accordion-item border-0 shadow-sm rounded-4 overflow-hidden">
-                      <h2 class="accordion-header"><button class="accordion-button collapsed fw-bold py-3" type="button"
-                      data-bs-toggle="collapse" data-bs-target="#collapseHistoryT"><span class="material-icons me-2"
-                        style="color: #0f9972;">history</span> Tickets History</button></h2>
-                      <div id="collapseHistoryT" class="accordion-collapse collapse" data-bs-parent="#raffleAccordionT">
-                      <div class="accordion-body bg-light p-3">
+                    </div>
+                  </div>
+                </div>
+                <div class="accordion-item border-0 shadow-sm rounded-4 overflow-hidden">
+                  <h2 class="accordion-header"><button class="accordion-button collapsed fw-bold py-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseHistoryT"><span class="material-icons me-2" style="color: #0f9972;">history</span> Tickets History</button></h2>
+                  <div id="collapseHistoryT" class="accordion-collapse collapse" data-bs-parent="#raffleAccordionT">
+                    <div class="accordion-body bg-light p-3">
                       {% if ticket_history.exists %}
                       <div class="table-responsive">
                         <table class="table table-sm table-borderless mb-0">
@@ -610,59 +573,49 @@
                             <tr class="border-bottom">
                               <td class="py-2 small">{{ log.created_at|date:"M j" }}</td>
                               <td class="py-2 text-truncate small" style="max-width:150px;">{{ log.reason }}</td>
-                              <td
-                                class="py-2 text-end fw-bold small {% if log.amount > 0 %}text-success{% else %}text-danger{% endif %}">
-                                {% if log.amount > 0 %}+{% endif %}{{ log.amount }}</td>
+                              <td class="py-2 text-end fw-bold small {% if log.amount > 0 %}text-success{% else %}text-danger{% endif %}">{% if log.amount > 0 %}+{% endif %}{{ log.amount }}</td>
                             </tr>
                             {% endfor %}
                           </tbody>
                         </table>
                       </div>
-                      {% if ticket_history.count > 5 %}<div class="text-center mt-3"><button
-                          class="btn btn-link btn-sm text-decoration-none" data-bs-toggle="modal"
-                          data-bs-target="#allTicketsModal">View Full Ticket History</button></div>{% endif %}
+                      {% if ticket_history.count > 5 %}<div class="text-center mt-3"><button class="btn btn-link btn-sm text-decoration-none" data-bs-toggle="modal" data-bs-target="#allTicketsModal">View Full Ticket History</button></div>{% endif %}
                       {% else %}<p class="text-muted text-center p-3 small">No transaction history found. {% if user.is_staff %}(Debug: {{ ticket_history.count }}){% endif %}</p>{% endif %}
-                      </div>
-                      </div>
-                      </div>
-                      </div>
-                      </div>
-                      <div class="col-md-5">
-                      <div class="raffle-scroll-container"
-                      style="max-height: 600px; overflow-y: auto; padding: 10px; border: 1px solid #eee; border-radius: 10px; background-color: rgba(255,255,255,0.5);">
-                      <h5 class="text-center mb-3 text-muted">Featured Raffles</h5>
-                      {% for raffle in active_raffles %}
-                      <div class="card mb-3 shadow-sm text-center p-3">
-                      <div class="bg-light d-flex align-items-center justify-content-center mb-2" style="height: 100px;">
-                      {% if raffle.image %}<img src="{{ raffle.image.url }}" alt="{{ raffle.title }}"
-                      style="max-height: 100%; max-width: 100%; object-fit: contain;">
-                      {% else %}<span class="material-icons" style="font-size: 3rem; color: #ccc;">{{ raffle.image_icon }}</span>{% endif %}
-                      </div>
-                      <h5 class="card-title">{{ raffle.title }}</h5>
-                      <p class="small mb-1">Min Tickets: {{ raffle.tickets_required }}</p>
-                      <button class="btn btn-ttt-pill btn-sm w-100 raffle-details-btn" data-bs-toggle="modal"
-                      data-bs-target="#raffleModal" data-title="{{ raffle.title }}"
-                      data-description="{{ raffle.description }}" data-tickets="{{ raffle.tickets_required }}"
-                      data-end-date="{{ raffle.endDate|date:'M j, Y' }}">Details</button>
-                      </div>
-                      {% empty %}<p class="text-center text-muted">No featured raffles.</p>{% endfor %}
-                      </div>
-                      </div>
-                      </div>
-                      </div>
-                      </div>
-                      </div>
-                      </div>
-                      </div>
-                      <!-- END THERAPIST SECTION -->
-                      {% endif %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-5">
+              <div class="raffle-scroll-container" style="max-height: 600px; overflow-y: auto; padding: 10px; border: 1px solid #eee; border-radius: 10px; background-color: rgba(255,255,255,0.5);">
+                <h5 class="text-center mb-3 text-muted">Featured Raffles</h5>
+                {% for raffle in active_raffles %}
+                <div class="card mb-3 shadow-sm text-center p-3">
+                  <div class="bg-light d-flex align-items-center justify-content-center mb-2" style="height: 100px;">
+                    {% if raffle.image %}<img src="{{ raffle.image.url }}" alt="{{ raffle.title }}" style="max-height: 100%; max-width: 100%; object-fit: contain;">
+                    {% else %}<span class="material-icons" style="font-size: 3rem; color: #ccc;">{{ raffle.image_icon }}</span>{% endif %}
+                  </div>
+                  <h5 class="card-title">{{ raffle.title }}</h5>
+                  <p class="small mb-1">Min Tickets: {{ raffle.tickets_required }}</p>
+                  <button class="btn btn-ttt-pill btn-sm w-100 raffle-details-btn" data-bs-toggle="modal" data-bs-target="#raffleModal" data-title="{{ raffle.title }}" data-description="{{ raffle.description }}" data-tickets="{{ raffle.tickets_required }}" data-end-date="{{ raffle.endDate|date:'M j, Y' }}">Details</button>
+                </div>
+                {% empty %}<p class="text-center text-muted">No featured raffles.</p>{% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- END THERAPIST SECTION -->
+{% endif %}
 
 <div class="modal fade" id="allTicketsModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content border-0 rounded-4 shadow">
       <div class="modal-header border-bottom-0">
-        <h5 class="modal-title fw-bold">Full Ticket History</h5><button type="button" class="btn-close"
-          data-bs-dismiss="modal" aria-label="Close"></button>
+        <h5 class="modal-title fw-bold">Full Ticket History</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body p-4">
         <div class="table-responsive">
@@ -682,8 +635,7 @@
           </table>
         </div>
       </div>
-      <div class="modal-footer border-top-0"><button type="button" class="btn btn-light rounded-pill px-4"
-          data-bs-dismiss="modal">Close</button></div>
+      <div class="modal-footer border-top-0"><button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Close</button></div>
     </div>
   </div>
 </div>
@@ -692,8 +644,53 @@
 {% include 'auction/modal_referral_link.html' %}
 <script src="{% static 'auction/profile.js' %}?v=20260723-image-5mb-popup-v1"></script>
 <script src="{% static 'auction/create_auction.js' %}?v=20260714-perk-details-v3"></script>
+
 <script>
   document.addEventListener('DOMContentLoaded', function () {
+    // ----------------------------------------------------
+    // 1. AUTO-SWITCH TAB & SCROLL TO FORM ON ERROR/SUCCESS
+    // ----------------------------------------------------
+    const clinicFormErrors = document.querySelector('#profile .is-invalid, #profile .errorlist, #profile .alert-danger');
+    const therapistFormErrors = document.querySelector('#profile-t .is-invalid, #profile-t .errorlist, #profile-t .alert-danger');
+    
+    if (clinicFormErrors) {
+      const profileTab = document.getElementById('profile-tab');
+      if (profileTab && typeof bootstrap !== 'undefined') {
+        const tab = bootstrap.Tab.getOrCreateInstance(profileTab);
+        tab.show();
+      }
+      setTimeout(() => {
+        const target = clinicFormErrors.closest('.mb-3, form') || clinicFormErrors;
+        target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 200);
+    } else if (therapistFormErrors) {
+      const profileTabT = document.getElementById('profile-tab-t');
+      if (profileTabT && typeof bootstrap !== 'undefined') {
+        const tab = bootstrap.Tab.getOrCreateInstance(profileTabT);
+        tab.show();
+      }
+      setTimeout(() => {
+        const target = therapistFormErrors.closest('.mb-3, form') || therapistFormErrors;
+        target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 200);
+    }
+
+    // ----------------------------------------------------
+    // 2. CLIENT-SIDE @ SANITIZATION FOR USERNAME/HANDLE
+    // ----------------------------------------------------
+    const usernameFields = document.querySelectorAll('input[name*="username"], input[name*="handle"]');
+    usernameFields.forEach(function(input) {
+      input.addEventListener('input', function() {
+        if (this.value.includes('@')) {
+          this.value = this.value.replace(/@/g, '');
+          alert("Please do not enter the '@' symbol in this field. Use the email address field below for your email.");
+        }
+      });
+    });
+
+    // ----------------------------------------------------
+    // 3. SKILLS PAYLOAD SCRIPT
+    // ----------------------------------------------------
     const container = document.getElementById('clinicianSkillsContainer');
     const payloadInput = document.getElementById('id_clinicianSkillsPayload');
     const addButton = document.getElementById('addClinicianCustomSkill');

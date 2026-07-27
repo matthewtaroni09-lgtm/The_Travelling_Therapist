@@ -256,7 +256,7 @@ def auction_closed(id):
     logger.warning(bids.count())
     auction.save()
 
-    finalize_run_date = auction.auctionEnd + timedelta(seconds=get_default_closed_waiting_period_seconds())
+    finalize_run_date = timezone.now() + timedelta(seconds=get_default_closed_waiting_period_seconds())
     schedule_waiting_closeout(auction.auctionID, finalize_run_date)
     logger.warning('!!!!END!!!!')
     return JsonResponse({'data': "success"})
