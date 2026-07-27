@@ -5,6 +5,11 @@ class AuctionConfig(AppConfig):
     name = 'auction'
     def ready(self):
         import auction.signals
+        try:
+            from auction import scheduled_tasks
+            scheduled_tasks._ensure_scheduler_started()
+        except Exception:
+            pass
         
         # Fix for Python 3.12 SMTP starttls issue with Django 4.0.4
         import smtplib

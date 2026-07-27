@@ -341,7 +341,7 @@
             </div>
             <div class="data-card p-4">
                 <p class="mb-0 fs-5">Posting works differently than with an agency — with The Traveling Therapist, there is 
-                    <strong>finally a clear pricing and offer process</strong>, and it's faster to review offers and confirm coverage across
+                    <a href="{% url 'pricing' %}"><strong>finally a clear pricing and offer process</strong></a>, and it's faster to review offers and confirm coverage across
                     multiple days compared to how other platforms manage hiring</p>
             </div>
         </div>
@@ -375,8 +375,10 @@
                         <span class="badge bg-light text-dark border p-2">Staffy</span>
                         <span class="badge bg-light text-dark border p-2">Helping Hands Healthcare Staffing</span>
                     </div>
-                    <p class="mt-4 mb-0 fw-bold">More <span class="badge bg-secondary text-dark">Coming Soon</span>
-                        about the Common Canadian agency-style providers, stay tunned!</p>
+                    <div class="mt-3 text-center">
+                        <p class="mt-4 mb-2 fw-bold small center">More about the Common Canadian agency-style providers, stay tunned!</p>
+                        <button type="button" class="btn btn-secondary rounded-pill px-4 py-2 fw-bold" disabled>Full Case Study Coming Soon</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -454,10 +456,10 @@
         </div>
     </section>
 
-    <!-- SECTION 5 — CASE STUDY: TEMPSTARS (CANADA) -->
+    <!-- SECTION 5 — CASE STUDY: TEMPSTARS -->
     <section class="py-5">
         <div class="comparison-container p-5 shadow-sm" style="border-top: 5px solid #0f9972 !important;">
-            <h2 class="fw-bold mb-4">Case Study: TempStars (Canada)</h2>
+            <h2 class="fw-bold mb-4">Case Study: TempStars</h2>
             <div class="row">
                 <div class="col-md-12 mb-4">
                     <h5 class="fw-bold">Model Overview:</h5>
@@ -582,7 +584,11 @@
     <section class="cta-box shadow mt-2">
         <h2 class="text-weight-bold mb-3">See How Direct Hiring Works in Practice</h2>
         <p class="fs-5 mb-4">Post a role and view real clinician availability — with no upfront cost or commitment.</p>
-        <a href="{% url 'register' %}" class="btn btn-light text-primary btn-lg px-5 py-3 fw-bold">Post a Role</a>
+        {% if user.account.get_split_user_type == 'Clinic' %}
+        <a href="{% url 'create-auction' %}" class="btn btn-light text-primary btn-lg px-5 py-3 fw-bold">Post a Role</a>
+        {% else %}
+        <a href="{% url 'register' %}" class="btn btn-light text-primary btn-lg px-5 py-3 fw-bold">Create Clinic Account</a>
+        {% endif %}
     </section>
 
 </div>
