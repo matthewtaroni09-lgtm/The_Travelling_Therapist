@@ -1,0 +1,882 @@
+{% extends 'auction/base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    /* 
+      TTT Page Scoped Styles 
+    */
+    
+    /* CRITICAL FIX: Forces padding and borders to be included in the element's total width */
+    *, *::before, *::after {
+        box-sizing: border-box;
+    }
+
+    :root {
+        --ttt-teal: #00e59b;
+        --ttt-black: #0f0f0f;
+        --ttt-gray: #f8f8f8;
+        --ttt-border: #e0e0e0;
+        --ttt-text-dark: #222;
+        --ttt-text-light: #555;
+        --font-serif: 'Playfair Display', Georgia, serif;
+        --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    .ttt-page {
+        font-family: var(--font-sans);
+        color: var(--ttt-text-dark);
+        line-height: 1.6;
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 2rem;
+        background-color: #ffffff;
+        overflow-x: hidden; /* CRITICAL FIX: Prevents horizontal scrolling */
+    }
+
+    .ttt-page h1, .ttt-page h2, .ttt-page h3, .ttt-page h4, .ttt-page .serif {
+        font-family: var(--font-serif);
+        font-weight: normal;
+        margin: 0;
+    }
+
+    .ttt-text-teal { color: var(--ttt-teal); }
+    .ttt-bg-black { background-color: var(--ttt-black); color: white; }
+    
+    .ttt-overline {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--ttt-text-light);
+        margin-bottom: 1rem;
+        display: block;
+    }
+
+    /* Section 1: Hero & Strategic Positioning */
+    .ttt-hero {
+        padding: 4rem 0;
+    }
+    .ttt-hero-title {
+        /* CRITICAL FIX: Fluid typography scales gracefully on mobile */
+        font-size: clamp(2.5rem, 6vw, 5rem);
+        line-height: 1.1;
+        margin-bottom: 3rem;
+        letter-spacing: -0.02em;
+    }
+    .ttt-hero-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4rem;
+        margin-bottom: 5rem;
+    }
+    .ttt-hero-img-placeholder {
+        background-color: #e5f5f0;
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        background-image: url('{% static "images/manual-therapy.jpg" %}');
+        background-size: cover;
+        background-position: center;
+        display: flex;
+        align-items: flex-end;
+        padding: 1.5rem;
+        color: white;
+        font-size: 0.8rem;
+        letter-spacing: 0.05em;
+    }
+    .ttt-hero-content h3 {
+        font-size: clamp(1.5rem, 3vw, 2.2rem);
+        margin-bottom: 2rem;
+        line-height: 1.2;
+    }
+    .ttt-btn-group {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+        margin-bottom: 4rem;
+        flex-wrap: wrap;
+    }
+    .ttt-btn-primary {
+        background-color: var(--ttt-teal);
+        color: var(--ttt-black);
+        padding: 1rem 2rem;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 0.8rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: opacity 0.2s ease;
+    }
+    .ttt-btn-primary:hover {
+        opacity: 0.8;
+    }
+    .ttt-btn-link {
+        color: var(--ttt-text-light);
+        text-decoration: none;
+        font-size: 0.8rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+    .ttt-stats-row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2rem;
+        border-top: 1px solid var(--ttt-border);
+        padding-top: 2rem;
+    }
+    .ttt-stat-item h4 {
+        font-size: clamp(1.5rem, 3vw, 2rem);
+        font-family: var(--font-sans);
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+    .ttt-stat-item p {
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--ttt-text-light);
+        margin: 0;
+    }
+
+    .ttt-strategy-split {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4rem;
+        border-top: 1px solid var(--ttt-border);
+        padding-top: 4rem;
+    }
+    .ttt-strategy-left h2 {
+        font-size: clamp(2.5rem, 4vw, 3.5rem);
+        margin-bottom: 2rem;
+    }
+    .ttt-strategy-right {
+        border-left: 1px dashed var(--ttt-border);
+        padding-left: 3rem;
+    }
+    .ttt-strategy-right h4 {
+        font-family: var(--font-sans);
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        margin-bottom: 1.5rem;
+        color: var(--ttt-text-light);
+    }
+    .ttt-thesis-item {
+        margin-bottom: 2rem;
+    }
+
+    /* Section 2: Data Insights */
+    .ttt-data-section {
+        background-color: var(--ttt-black);
+        color: white;
+        padding: 5rem 4rem;
+        margin: 4rem 0;
+    }
+    .ttt-data-header h2 {
+        font-size: clamp(2.5rem, 5vw, 4rem);
+        margin-bottom: 3rem;
+        border-bottom: 1px solid #333;
+        padding-bottom: 2rem;
+    }
+    .ttt-data-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4rem;
+    }
+    .ttt-panel {
+        padding-right: 2rem;
+    }
+    .ttt-panel-a {
+        border-right: 1px solid #333;
+    }
+    .ttt-panel-overline {
+        color: var(--ttt-teal);
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        margin-bottom: 2rem;
+        display: block;
+    }
+    .ttt-big-numbers {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        margin-bottom: 2rem;
+    }
+    .ttt-big-numbers span {
+        font-size: clamp(2.5rem, 4vw, 4rem);
+        font-family: var(--font-serif);
+        color: var(--ttt-teal);
+        line-height: 1;
+    }
+    .ttt-panel p {
+        font-size: 0.9rem;
+        color: #ccc;
+        margin-bottom: 1rem;
+    }
+    .ttt-panel-b h3 {
+        font-size: clamp(1.5rem, 3vw, 2rem);
+        margin-bottom: 2rem;
+        line-height: 1.3;
+    }
+    .ttt-panel-b .ttt-highlight {
+        color: var(--ttt-teal);
+        font-style: italic;
+    }
+    .ttt-sources {
+        font-size: 0.7rem;
+        color: #aaa;
+        margin-top: 2rem;
+    }
+
+    /* Section 3: The Friction Table */
+    .ttt-friction-section {
+        padding: 4rem 0;
+    }
+    .ttt-friction-header {
+        display: flex;
+        align-items: baseline;
+        gap: 1.5rem;
+        margin-bottom: 4rem;
+        flex-wrap: wrap; /* Allows wrapping on tiny screens */
+    }
+    .ttt-friction-header .num {
+        color: var(--ttt-teal);
+        font-size: clamp(2rem, 4vw, 3rem);
+        font-family: var(--font-sans);
+        font-weight: 300;
+    }
+    .ttt-friction-header h2 {
+        font-size: clamp(2.2rem, 4vw, 3.5rem);
+    }
+    
+    .ttt-table {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed; /* Helps prevent blowout */
+    }
+    .ttt-table th {
+        text-align: left;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        padding: 1rem 0;
+        border-top: 1px solid var(--ttt-black);
+        border-bottom: 1px solid var(--ttt-border);
+        color: var(--ttt-text-light);
+    }
+    .ttt-table td {
+        padding: 3rem 1rem 3rem 0;
+        border-bottom: 1px solid var(--ttt-border);
+        vertical-align: top;
+        font-size: 0.9rem;
+    }
+    .ttt-table tr td:first-child {
+        font-family: var(--font-serif);
+        font-size: clamp(1.5rem, 3vw, 2rem);
+        color: var(--ttt-text-dark);
+        width: 20%;
+    }
+    .ttt-table tr td:nth-child(2), .ttt-table tr td:nth-child(3) {
+        width: 25%;
+        color: var(--ttt-text-light);
+    }
+    .ttt-countermeasure-text {
+        background-color: var(--ttt-black);
+        color: var(--ttt-teal);
+        padding: 0.3rem 0.6rem;
+        line-height: 1.8;
+        font-weight: 500;
+        display: inline-block; /* Helps with bounding box on mobile */
+    }
+
+    /* Section 4: Target Protocol */
+    .ttt-target-section {
+        padding: 4rem 0;
+    }
+    .ttt-target-cols {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4rem;
+        margin-top: 2rem;
+    }
+    .ttt-target-col {
+        border-top: 1px solid var(--ttt-black);
+        padding-top: 1.5rem;
+    }
+    .ttt-target-col-header {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        margin-bottom: 2rem;
+    }
+    .ttt-target-col-header span.letter {
+        color: var(--ttt-teal);
+        font-size: 1rem;
+        font-family: var(--font-serif);
+    }
+    .ttt-target-content {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+    }
+    .ttt-target-img {
+        background-color: #e5f5f0;
+        aspect-ratio: 1;
+        width: 100%;
+        max-width: 100%;
+        object-fit: cover;
+    }
+    .ttt-target-text h3 {
+        font-size: clamp(1.5rem, 3vw, 2rem);
+        line-height: 1.1;
+        margin-bottom: 1rem;
+    }
+    .ttt-target-text p {
+        font-size: 0.85rem;
+        color: var(--ttt-text-light);
+    }
+
+    /* Section: Expanding Supply */
+    .ttt-expanding-section {
+        background-color: var(--ttt-gray);
+        padding: 4rem;
+        margin: 4rem 0;
+        border-left: 4px solid var(--ttt-teal);
+    }
+    .ttt-expanding-section h2 {
+        font-size: clamp(2rem, 3vw, 2.5rem);
+        margin-bottom: 1.5rem;
+    }
+    .ttt-expanding-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 3rem;
+    }
+    .ttt-expanding-grid p {
+        font-size: 0.95rem;
+        color: var(--ttt-text-light);
+    }
+
+    /* Section 5: Discovery Survey Link */
+    .ttt-survey-section {
+        background-color: var(--ttt-gray);
+        padding: 5rem 4rem;
+        margin: 4rem 0;
+        text-align: center;
+        border: 1px solid var(--ttt-border);
+    }
+    .ttt-survey-header h2 {
+        font-size: clamp(2.2rem, 4vw, 3.5rem);
+        margin-bottom: 1rem;
+    }
+    .ttt-survey-header p {
+        color: var(--ttt-text-light);
+        margin-bottom: 2rem;
+        font-size: 1.1rem;
+    }
+
+    /* Section 6: Case Studies */
+    .ttt-cases-section {
+        padding: 4rem 0;
+    }
+    .ttt-cases-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 3rem;
+        margin-bottom: 4rem;
+    }
+    .ttt-case-card {
+        display: flex;
+        flex-direction: column;
+    }
+    .ttt-case-img {
+        width: 100%;
+        aspect-ratio: 4/3;
+        background-color: var(--ttt-gray);
+        object-fit: cover;
+        margin-bottom: 1.5rem;
+    }
+    .ttt-case-section-title {
+        font-size: 0.65rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: #999;
+        margin: 1.5rem 0 0.5rem 0;
+        display: block;
+    }
+    .ttt-case-card p {
+        font-size: 0.85rem;
+        margin: 0;
+        color: var(--ttt-text-dark);
+    }
+    .ttt-case-card .ttt-alternative {
+        font-style: italic;
+        color: var(--ttt-text-light);
+    }
+    .ttt-case-card .ttt-angle {
+        border-top: 1px solid var(--ttt-teal);
+        padding-top: 1rem;
+        margin-top: 1rem;
+        font-weight: 500;
+    }
+
+    .ttt-use-cases-wrapper {
+        background-color: var(--ttt-gray);
+        padding: 3rem;
+        margin-top: 3rem;
+    }
+    .ttt-use-cases-wrapper h3 {
+        font-size: clamp(1.5rem, 3vw, 2rem);
+        margin-bottom: 1rem;
+    }
+    .ttt-use-case-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        margin-top: 2rem;
+    }
+    .ttt-use-case-item h4 {
+        font-family: var(--font-sans);
+        font-size: 1rem;
+        color: var(--ttt-teal);
+        margin-bottom: 0.5rem;
+    }
+    .ttt-use-case-item p {
+        font-size: 0.85rem;
+        color: var(--ttt-text-light);
+    }
+
+    /* Section 7: Final CTA */
+    .ttt-cta-section {
+        background-color: var(--ttt-black);
+        color: white;
+        padding: 6rem 4rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+    }
+    .ttt-cta-section h2 {
+        font-size: clamp(2.5rem, 6vw, 5rem);
+        line-height: 1.1;
+        max-width: 60%;
+    }
+    .ttt-cta-link {
+        color: var(--ttt-teal);
+        text-decoration: none;
+        font-size: 1rem;
+        font-weight: 600;
+        border-bottom: 2px solid var(--ttt-teal);
+        padding-bottom: 0.2rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    /* ==========================================================================
+       MOBILE RESPONSIVENESS - CRITICAL FIXES APPLIED HERE
+       ========================================================================== */
+    @media (max-width: 992px) {
+        /* General layout adjustments */
+        .ttt-page { padding: 0 1rem; }
+        .ttt-hero-grid, .ttt-strategy-split, .ttt-data-grid, .ttt-target-cols, .ttt-expanding-grid, .ttt-use-case-grid {
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+        
+        /* The specific nested grid causing issues */
+        .ttt-target-content {
+            display: flex;
+            flex-direction: column; /* Stacks image and text neatly */
+            gap: 1.5rem;
+        }
+
+        .ttt-strategy-right {
+            border-left: none;
+            border-top: 1px dashed var(--ttt-border);
+            padding-left: 0;
+            padding-top: 3rem;
+        }
+        
+        /* Data section padding fixes */
+        .ttt-data-section { padding: 3rem 1.5rem; }
+        .ttt-panel-a {
+            border-right: none;
+            border-bottom: 1px solid #333;
+            padding-right: 0;
+            padding-bottom: 3rem;
+        }
+        .ttt-panel { padding-right: 0; }
+        
+        /* THE TABLE FIX: Force everything to block level to prevent horizontal overflow */
+        .ttt-table, .ttt-table thead, .ttt-table tbody, .ttt-table tr, .ttt-table th, .ttt-table td {
+            display: block;
+            width: 100%; 
+        }
+        .ttt-table thead { 
+            display: none; /* Hide headers on mobile for cleaner card layout */
+        }
+        .ttt-table tr {
+            padding: 2rem 0;
+            border-bottom: 1px solid var(--ttt-border);
+        }
+        .ttt-table td {
+            border-bottom: none;
+            padding: 0 0 1rem 0;
+            text-align: left;
+        }
+        .ttt-table tr td:first-child { margin-bottom: 1rem; }
+        .ttt-table tr td:nth-child(2)::before { content: "For HCP Parents: "; font-weight: bold; color: var(--ttt-text-dark); display: block; margin-bottom: 0.2rem; }
+        .ttt-table tr td:nth-child(3)::before { content: "For Pre-Retirees: "; font-weight: bold; color: var(--ttt-text-dark); display: block; margin-bottom: 0.2rem; }
+        .ttt-table tr td:nth-child(4) { padding-bottom: 0; }
+        
+        /* Expanding Section Padding */
+        .ttt-expanding-section, .ttt-survey-section, .ttt-use-cases-wrapper {
+            padding: 2rem 1.5rem;
+        }
+
+        /* Final CTA Fix */
+        .ttt-cta-section {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 2rem;
+            padding: 3rem 1.5rem;
+        }
+        .ttt-cta-section h2 { max-width: 100%; }
+    }
+</style>
+
+<div class="ttt-page">
+
+    <!-- Section 1: Executive Summary & Strategic Positioning -->
+    <section class="ttt-hero">
+        <span class="ttt-overline">— The Non-Customer Supply Architecture</span>
+        <h1 class="ttt-hero-title">Keep your <em>license</em> active,<br>not your <strong class="ttt-text-teal">burnout</strong>.</h1>
+        
+        <div class="ttt-hero-grid">
+            <div class="ttt-hero-img-placeholder">
+                FIG. 001 &nbsp;&nbsp;&nbsp;&nbsp; MANUAL THERAPY • CASELOAD OPTIONAL
+            </div>
+            <div class="ttt-hero-content">
+                <h3>A platform for regulated Canadian clinicians who left full-time — and refuse to leave their profession.</h3>
+                
+                <div class="ttt-btn-group">
+                    <a href="#" class="ttt-btn-primary">Make an account with us &rarr;</a>
+                    <a href="#" class="ttt-btn-link">Read the manifesto &darr;</a>
+                </div>
+
+                <div class="ttt-stats-row">
+                    <div class="ttt-stat-item">
+                        <h4>70.7%</h4>
+                        <p>Female PT Workforce</p>
+                    </div>
+                    <div class="ttt-stat-item">
+                        <h4>1,200</h4>
+                        <p>CPO Hours / 5 Yrs</p>
+                    </div>
+                    <div class="ttt-stat-item">
+                        <h4>13.5K+</h4>
+                        <p>Active-Window PTs</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="ttt-strategy-split">
+            <div class="ttt-strategy-left">
+                <h2>The Demographic<br>Reality</h2>
+                <p style="color: var(--ttt-text-light); font-size: 1.1rem; max-width: 90%;">
+                    To scale practitioner supply without increasing client acquisition costs, TTT must capture “non-customers” like specifically regulated healthcare professionals (HCPs) who have exited full-time employment but want or need to maintain active registration.
+                </p>
+                <br>
+                <p style="color: var(--ttt-text-light); font-size: 0.95rem; max-width: 90%;">
+                    <strong>The Bachelor-Era Cohort & Late-Career Dilemma:</strong> Clinicians in the 40+ demographic entered the profession when a Bachelors was the standard entry-to-practice credential. While they avoided the delayed clinical entry of a graduate degree, they are now navigating a different phase: late-career fatigue. Late-career practitioners looking to ease into retirement face a similar dilemma: they want to scale back hours but don't want to lose their professional identities or hard-earned credentials.
+                </p>
+            </div>
+            <div class="ttt-strategy-right">
+                <h4>Core Thesis</h4>
+                
+                <div class="ttt-thesis-item">
+                    <p><strong>Demographic reality</strong> — female-dense, graduate-trained cohorts pulled from 40-hour weeks by early-mid career family transitions. Graduate-level education timelines push clinical entry into their mid-to-late 20s, directly colliding with family building.</p>
+                </div>
+                
+                <div class="ttt-thesis-item">
+                    <p><strong>Late-career dilemma</strong> — retirees want fewer hours, not the loss of identity or credentials.</p>
+                </div>
+                
+                <div class="ttt-thesis-item">
+                    <p><strong>TTT</strong> is the platform that bridges this exact gap.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 2: Data Insights & Regulatory Risk Metrics -->
+    <section class="ttt-data-section">
+        <div class="ttt-data-header">
+            <h2>The math behind the bridge.</h2>
+        </div>
+        <div class="ttt-data-grid">
+            <div class="ttt-panel ttt-panel-a">
+                <span class="ttt-panel-overline">Panel A — Demographic Realities (CIHI)</span>
+                <div class="ttt-big-numbers">
+                    <span>70.7%</span>
+                    <span>62.7%</span>
+                    <span>30,776</span>
+                    <span>13,500+</span>
+                </div>
+                <p>Approximately <strong>70.7%</strong> of all licensed physiotherapists (PTs) in Canada are female.</p>
+                <p>Close to two-thirds (<strong>62.7%</strong>) of the entire Canadian PT workforce is younger than 45. This explicitly proves the overwhelming majority is actively navigating primary family-building and early-parenting years.</p>
+                <p>Out of a national supply of <strong>30,776</strong> licensed PTs, this represents an active cohort of roughly <strong>13,500+</strong> female practitioners sitting right in the demographic window where balancing career with family demands casual contract work.</p>
+            </div>
+            <div class="ttt-panel ttt-panel-b">
+                <span class="ttt-panel-overline">Panel B — Licensing for Retirees & Parents</span>
+                <h3>Most provincial regulatory bodies enforce a strict <span class="ttt-highlight">Competency Practice Hour Minimum</span> to maintain an active independent license.</h3>
+                <div style="display: flex; align-items: baseline; gap: 1rem; margin-bottom: 1.5rem;">
+                    <span style="font-size: clamp(2.5rem, 5vw, 4rem); font-family: var(--font-serif); color: var(--ttt-teal); line-height: 1;">1,200</span>
+                    <span style="font-size: 0.8rem; letter-spacing: 0.1em; color: #aaa;">HOURS / 5 YRS</span>
+                </div>
+                <p style="font-size: 0.85rem;">The College of Physiotherapists of Ontario (CPO) and most Canadian provinces strictly mandate a minimum of 1,200 practice hours within the previous five years to renew or maintain a PT license.</p>
+                <p style="font-size: 0.85rem;">If a clinician on parental leave or transitioning into retirement falls below this threshold, they lose their license. Re-entry requires working hundreds of hours under strict direct supervision alongside an on-site clinical practice assessment.</p>
+                
+                <div class="ttt-sources">
+                    Sources: CHCPBC, College of Physiotherapists of Alberta, SCPT, College of Physiotherapists of Ontario, OPPQ, Nova Scotia College of Physiotherapists.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 3: The Friction -->
+    <section class="ttt-friction-section">
+        <div class="ttt-friction-header">
+            <span class="num">03</span>
+            <h2>Structural barriers vs.<br><em>countermeasures.</em></h2>
+        </div>
+        
+        <table class="ttt-table">
+            <thead>
+                <tr>
+                    <th>Structural Barrier</th>
+                    <th>For HCP Parents</th>
+                    <th>For Pre-Retirees</th>
+                    <th style="color: var(--ttt-teal);">TTT Countermeasure</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>01 Schedule<br>Rigidity</td>
+                    <td>Traditional job boards post permanent, 3-to-5 days a week clinic openings. Moms cannot commit to recurring weekly schedules without complex childcare friction.</td>
+                    <td>Clinics hiring permanently expect long-term caseload commitments — the opposite of a retiree's lifestyle goals.</td>
+                    <td><span class="ttt-countermeasure-text">Active Listings & Direct Offers: TTT bypasses fixed-schedule job boards by allowing clinicians to send offers directly to clinics based on their exact windows of availability and the rates they are looking for.</span></td>
+                </tr>
+                <tr>
+                    <td>02 Administrative<br>Fatigue</td>
+                    <td>Setting up independent practice, managing tax invoicing, and marketing oneself is a high administrative hurdle for someone trying to raise a family.</td>
+                    <td>Finding one-off contracts and applying to clinics looking for clinicians within their timeframes and rates is unappealing for late-career practitioners.</td>
+                    <td><span class="ttt-countermeasure-text">TTT reduces this core barrier by providing instant access to active clinic listings, turning complex freelance job searching into a simple click-to-offer platform.</span></td>
+                </tr>
+                <tr>
+                    <td>03 The Safety &<br>Trust Gap</td>
+                    <td>High protectionism around their credentials makes them wary of untrusted third-party or independent listings.</td>
+                    <td>Reluctance to use over-complicated style platforms that lack human touch or professional validation. Often default to remaining inactive.</td>
+                    <td><span class="ttt-countermeasure-text">TTT builds trust with a non-tech-native generation by using simple offer-your-own-rate methods, at your own timing. Manual approval of listings contributes to professional credibility.</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- Section 4: Target People & Value Propositions -->
+    <section class="ttt-target-section">
+        <div class="ttt-friction-header">
+            <span class="num">04</span>
+            <h2>Two people. <em>Same</em> platform.</h2>
+        </div>
+
+        <div class="ttt-target-cols">
+            <!-- Column 1 -->
+            <div class="ttt-target-col">
+                <div class="ttt-target-col-header">
+                    <span>For Parents</span>
+                    <span class="letter">A</span>
+                </div>
+                <div class="ttt-target-content">
+                    <img src="{% static 'images/clinic-waiting.jpg' %}" alt="Clinic environment" class="ttt-target-img" style="background-color: #d1e5df;">
+                    <div class="ttt-target-text">
+                        <h3>Keep your license active — <em>without</em> sacrificing family milestones.</h3>
+                        <p>This is less about financial desperation and more about professional identity and life engagement like giving you "an outlet" that keeps your brain in the field. TTT gives you control over your schedule. Only want to work 2 Saturdays a month when your partner has the kids? Perfect. Want to cover a clean 2-week listing while your kids are at summer camp? You can do that. TTT handles the platform contract matching, and the facility pays your direct rate.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Column 2 -->
+            <div class="ttt-target-col">
+                <div class="ttt-target-col-header">
+                    <span>For Pre-Retirees</span>
+                    <span class="letter">B</span>
+                </div>
+                <div class="ttt-target-content">
+                    <img src="{% static 'images/retiree-running.jpg' %}" alt="Active pre-retiree" class="ttt-target-img" style="background-color: #accabf;">
+                    <div class="ttt-target-text">
+                        <h3>Step down from full-time <em>burnout</em> — not from your clinical identity.</h3>
+                        <p>Don't let 30+ years of clinical wisdom sit idle. Use The Traveling Therapist to pick up short-term, low-intensity clinical listings on your own terms. Finance your retirement lifestyle, serve your local community, and stay connected to local practicing without owning a practice or managing a permanent caseload.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section: Expanding the Supply Pool -->
+    <section class="ttt-expanding-section">
+        <h2>Expanding the Supply Pool: The Nurse & PSW Burnout</h2>
+        <div class="ttt-expanding-grid">
+            <div>
+                <p>While mid-to-late-career Physiotherapists face operational friction, Registered Nurses (RNs/RPNs) and Personal Support Workers (PSWs) face a state of chronic and systemic institutional burnout. In Canada, institutional healthcare environments rely on heavy scheduling frameworks: 12-hour rotating shifts, mandatory overtime, chronic understaffing, and high-acute emotional stress.</p>
+                <p>This environment creates a massive pool of highly skilled, credentialed "non-customers." These are nurses and PSWs who love patient care but are actively fleeing full-time institutional employment to save their own mental and physical health.</p>
+            </div>
+            <div>
+                <p><strong>How The Traveling Therapist Fixes Burnout</strong><br>
+                TTT serves as the ultimate pressure-relief for these professionals. Instead of forcing them to abandon their hard-earned healthcare credentials entirely, TTT bridges them into the casual, low-stress outpatient and community health markets.</p>
+                <p>TTT strips away the administrative work and the scheduling difficulties. A nurse can step down from a chaotic hospital floor but still use TTT to claim a simple, low-intensity shift administering specialized infusions at a local private clinic, or a clean 3-day coverage contract. It completely reframes healthcare work from an exhausting obligation to an autonomous, lifestyle-first choice.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 5: Discovery Survey Link -->
+    <section class="ttt-survey-section">
+        <div class="ttt-survey-header">
+            <h2>Help us tailor your <em>experience</em>.</h2>
+            <p>Take our quick 30-second discovery survey to enter the platform giveaway raffle.</p>
+            <a href="#" class="ttt-btn-primary" style="margin-top: 1rem;">Take the Survey &rarr;</a>
+        </div>
+    </section>
+
+    <!-- Section 6: Real-World Segment Case Studies -->
+    <section class="ttt-cases-section">
+        <div class="ttt-friction-header" style="margin-bottom: 2rem;">
+            <h2>Real-World Segment Case Studies</h2>
+        </div>
+
+        <div class="ttt-cases-grid">
+            <!-- Case Study 1 -->
+            <div class="ttt-case-card">
+                <img src="{% static 'images/case-pt.jpg' %}" alt="Sandra PT" class="ttt-case-img">
+                <span class="ttt-case-section-title">Profile — The 45-50 Year Old Transitioner</span>
+                <p><strong>Sandra (48, Senior PT):</strong> Her eldest just left for university. She wants to leave a draining full-time outpatient clinic role to reclaim her lifestyle, but she is worried about her professional identity and needs to maintain 1,200 hours to keep her CPO independent license intact.</p>
+                
+                <span class="ttt-case-section-title">Traditional Alternative</span>
+                <p class="ttt-alternative">Trying to find casual flexible part-time outpatient shifts locally, or stepping down from a full caseload to a permanent part-time role.</p>
+                
+                <span class="ttt-case-section-title">The Friction</span>
+                <p>Her current clinic manager relies heavily on her fee-split billing. Asking for days off causes a direct hit to revenue, creating uncomfortable social pressure and guilt, making Sandra feel like she is "letting the clinic down."</p>
+                
+                <span class="ttt-case-section-title" style="color: var(--ttt-teal);">TTT Angle</span>
+                <p class="ttt-angle">TTT offers scheduled lead time. Sandra can browse local outpatient coverage listings weeks in advance and decide if she wants to stay part-time at her current clinic—or leave altogether for a local clinic looking for coverage with no long-term expectations!</p>
+            </div>
+
+            <!-- Case Study 2 -->
+            <div class="ttt-case-card">
+                <img src="{% static 'images/case-pta.jpg' %}" alt="Jordan PTA" class="ttt-case-img">
+                <span class="ttt-case-section-title">Profile — The Overburdened PTA</span>
+                <p><strong>Jordan (41, PTA):</strong> Working in a high-volume corporate clinic. Physically exhausted by relentless triple-booking and lack of schedule control. He is on the verge of leaving the healthcare sector entirely due to corporate burn-out.</p>
+                
+                <span class="ttt-case-section-title">Traditional Alternative</span>
+                <p class="ttt-alternative">Applying for permanent PTA roles at other clinics, only to find the exact same high-volume, low-paying corporate culture with severe waitlists and unpaid overtime.</p>
+                
+                <span class="ttt-case-section-title">The Friction</span>
+                <p>PTA job postings are almost exclusively rigid, full-time positions with capped hourly rates and zero schedule autonomy, aligning strictly with clinic operating hours.</p>
+                
+                <span class="ttt-case-section-title" style="color: var(--ttt-teal);">TTT Angle</span>
+                <p class="ttt-angle">TTT allows Jordan to leverage the massive HHR market shortage to his advantage. He gains direct access to short-term contract listings, offering his desired hourly rate to clinics facing temporary staffing shortages. He reclaims his passion without the physical toll.</p>
+            </div>
+
+            <!-- Case Study 3 -->
+            <div class="ttt-case-card">
+                <img src="{% static 'images/case-nurse.jpg' %}" alt="Linda RPN" class="ttt-case-img">
+                <span class="ttt-case-section-title">Profile — The Burnt-Out Institutional Nurse</span>
+                <p><strong>Linda (44, RPN):</strong> 18 years of Emergency & Trauma experience. Experiencing severe clinical burnout from rotating night shifts, ward understaffing, and emotional burden. She wants to leave the institutional grid but needs to support her family and keep her mastery.</p>
+                
+                <span class="ttt-case-section-title">Traditional Alternative</span>
+                <p class="ttt-alternative">Leaving nursing completely to take a lower-paying, non-healthcare retail or administrative desk job just to get a predictable schedule.</p>
+                
+                <span class="ttt-case-section-title">The Friction</span>
+                <p>Over 60% of nurses report high levels of severe burnout, and casual hospital pools still trap clinicians in unpredictable, high-stress institutional systems.</p>
+                
+                <span class="ttt-case-section-title" style="color: var(--ttt-teal);">TTT Angle</span>
+                <p class="ttt-angle">Linda cleanly exits the institutional grind without abandoning her nursing identity. She uses TTT to pick up occasional, low-stress daytime shifts at local private wellness and medical aesthetics clinics, utilizing her advanced skills as a premium asset.</p>
+            </div>
+        </div>
+
+        <div class="ttt-cases-grid" style="grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));">
+            <!-- Case Study 4 -->
+            <div class="ttt-case-card">
+                <img src="{% static 'images/case-psw.jpg' %}" alt="Anaya PSW" class="ttt-case-img">
+                <span class="ttt-case-section-title">Profile — The Overburdened Long-Term Care PSW</span>
+                <p><strong>Anaya (38, PSW):</strong> Working in long-term care. Loves working with seniors, but managing a heavy 12-patient caseload and 18-hour days with mandatory overtime has caused recurring back strain. Her doctor says she can't sustain full-time shifts.</p>
+                
+                <span class="ttt-case-section-title">Traditional Alternative</span>
+                <p class="ttt-alternative">Going on long-term disability or exiting the care sector completely, leaving her without a livelihood.</p>
+                
+                <span class="ttt-case-section-title">The Friction</span>
+                <p>Anaya is not highly tech-native and finds modern independent gig-apps confusing and untrustworthy. She assumes freelance care work means complex corporate digital bidding systems.</p>
+                
+                <span class="ttt-case-section-title" style="color: var(--ttt-teal);">TTT Angle</span>
+                <p class="ttt-angle">TTT is a simplified, trusted platform. Instead of heavy lifting, Anaya discovers lightweight casual contracts for senior day programs (e.g., covering a 3-day shift for low-impact mobility), fulfilling her passion without destroying her health.</p>
+            </div>
+
+            <!-- Case Study 5 -->
+            <div class="ttt-case-card">
+                <img src="{% static 'images/case-legacy.jpg' %}" alt="Robert Legacy PT" class="ttt-case-img">
+                <span class="ttt-case-section-title">Profile — The "Giving Back" Legacy Physiotherapist</span>
+                <p><strong>Robert (58, Senior PT):</strong> Recently sold his private practice. Financially comfortable and "retired," but misses clinical problem-solving. Wants to mentor the next generation and stay connected to his local community without owning a business.</p>
+                
+                <span class="ttt-case-section-title">Traditional Alternative</span>
+                <p class="ttt-alternative">Working part-time or casually at the clinic he just sold, where he already knows the staff and patient database.</p>
+                
+                <span class="ttt-case-section-title">The Friction</span>
+                <p>The new ownership took the clinic in a profit-driven direction (strict KPIs, double-booking, upselling). Robert refuses to compromise his ethical standards but still wants to treat patients.</p>
+                
+                <span class="ttt-case-section-title" style="color: var(--ttt-teal);">TTT Angle</span>
+                <p class="ttt-angle">TTT is positioned as a community asset. Robert uses it to pick up short-term shifts or 1-day-a-week blocks at independent, community-focused clinics that need an experienced hand. He mentors junior staff and keeps his license active on his own ethical terms.</p>
+            </div>
+        </div>
+
+        <!-- Caseload Consistency / Use Cases -->
+        <div class="ttt-use-cases-wrapper">
+            <h3>Overcoming the "Caseload Consistency" Hurdle</h3>
+            <p><strong>The Challenge:</strong> Clinic owners frequently push back against rotating or casual clinicians, citing the importance of clinical "consistency" for patient recovery outcomes.</p>
+            <p>TTT overcomes this by educating clinics that our platform does not mean random daily clinician churn. TTT is designed for structured block-bookings, ensuring clinics maintain high clinical consistency. If a clinician is a good fit, the clinic can onboard them to a full/part-time permanent position with zero additional charges from TTT!</p>
+            
+            <div class="ttt-use-case-grid">
+                <div class="ttt-use-case-item">
+                    <h4>Use Case 1: Ultra-Short / Emergency</h4>
+                    <p>Low-friction matching to patch immediate operational holes caused by sudden sickness, unexpected clinician callouts, short-term vacations, or abrupt leaves of absence.</p>
+                </div>
+                <div class="ttt-use-case-item">
+                    <h4>Use Case 2: Recurring Blocks ("Try Before You Buy")</h4>
+                    <p>Securing a single clinician for a regular recurring block (e.g., every Tuesday & Thursday for 6 weeks). Maintains consistency and serves as a low-risk evaluation period for a potential permanent hire off-platform.</p>
+                </div>
+                <div class="ttt-use-case-item">
+                    <h4>Use Case 3: Long-Term Structured Coverage</h4>
+                    <p>Standardized placements designed for extended clinic vacancies, such as 12-month maternity leave backfills, prolonged medical leaves, or dedicated extended clinician presence.</p>
+                </div>
+                <div class="ttt-use-case-item">
+                    <h4>Use Case 4: Seasonal Surge & Burnout Relief</h4>
+                    <p>Deploying contract clinicians during predictable seasonal peaks like summer holiday blocks. Puts immediate support into the system, preventing the core full-time team from exhaustion.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 7: Final CTA -->
+    <section class="ttt-cta-section">
+        <h2>Your <em class="ttt-text-teal">rate</em>. Your window.<br>Your license — <em>intact</em>.</h2>
+        <a href="#" class="ttt-cta-link">Make an account with us &#x2197;</a>
+    </section>
+
+</div>
+
+{% endblock %}

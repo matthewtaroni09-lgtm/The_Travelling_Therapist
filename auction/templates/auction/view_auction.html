@@ -424,10 +424,10 @@
             <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mt-3">
               <div>
                 {% if decline_all_offers_option %}
-                <div class="d-flex align-items-center">
-                  <input class="form-check-input me-2" type="radio" id="declineAllOffersRadio" name="selectedReviewOfferOption">
-                  <button type="button" id="declineOffersBtn" class="btn btn-link text-secondary p-0 small text-decoration-none decline-offers-trigger" disabled style="pointer-events: none; opacity: 0.6;">I would not like to accept any offer</button>
-                </div>
+                <label id="declineOffersContainer" class="btn btn-outline-secondary d-inline-flex align-items-center gap-2 m-0 opacity-50" style="transition: all 0.2s ease; cursor: pointer;">
+                  <input class="form-check-input m-0" type="radio" id="declineAllOffersRadio" name="selectedReviewOfferOption" style="cursor: pointer;">
+                  <span class="small fw-semibold">I would not like to accept any offer</span>
+                </label>
                 {% endif %}
               </div>
               <button id="reviewOffersConfirmButton" type="button" class="btn btn-primary" disabled>Accept</button>
@@ -687,7 +687,7 @@
     const declineForm = document.getElementById('declineAllOffersForm');
     const reviewModalEl = document.getElementById('reviewOffersModal');
     const declineRadio = document.getElementById('declineAllOffersRadio');
-    const declineBtn = document.getElementById('declineOffersBtn');
+    const declineContainer = document.getElementById('declineOffersContainer');
     let declineFormSubmitted = false;
     let openDeclineModalAfterHide = false;
 
@@ -707,33 +707,34 @@
     }
 
     function updateDeclineState() {
-      if (!declineRadio || !declineBtn) {
+      if (!declineRadio || !declineContainer) {
         return;
       }
       if (declineRadio.checked) {
-        declineBtn.disabled = false;
-        declineBtn.classList.remove('text-secondary');
-        declineBtn.classList.add('text-dark');
-        declineBtn.style.pointerEvents = 'auto';
-        declineBtn.style.opacity = '1';
+        declineContainer.classList.remove('opacity-50', 'btn-outline-secondary');
+        declineContainer.classList.add('opacity-100', 'btn-outline-danger', 'active');
       } else {
-        declineBtn.disabled = true;
-        declineBtn.classList.remove('text-dark');
-        declineBtn.classList.add('text-secondary');
-        declineBtn.style.pointerEvents = 'none';
-        declineBtn.style.opacity = '0.6';
+        declineContainer.classList.remove('opacity-100', 'btn-outline-danger', 'active');
+        declineContainer.classList.add('opacity-50', 'btn-outline-secondary');
       }
     }
 
     if (declineRadio) {
       declineRadio.addEventListener('change', function () {
         if (declineRadio.checked) {
+          // Deselect any offer radio buttons
           reviewOfferChoices.forEach(function (choice) {
             choice.checked = false;
           });
           syncConfirmAvailability();
+          updateDeclineState();
+
+          // Immediately open the decline popup modal
+          if (declineModalEl && declineModal) {
+            openDeclineModalAfterHide = true;
+            reviewModal.hide();
+          }
         }
-        updateDeclineState();
       });
     }
 
@@ -780,17 +781,6 @@
     });
 
     if (declineModalEl && declineModal && declineForm) {
-      Array.from(document.querySelectorAll('.decline-offers-trigger')).forEach(function (trigger) {
-        trigger.addEventListener('click', function (e) {
-          if (trigger.disabled || (declineRadio && !declineRadio.checked)) {
-            e.preventDefault();
-            return;
-          }
-          openDeclineModalAfterHide = true;
-          reviewModal.hide();
-        });
-      });
-
       declineForm.addEventListener('submit', function () {
         declineFormSubmitted = true;
       });

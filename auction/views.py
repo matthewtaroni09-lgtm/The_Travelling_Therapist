@@ -597,6 +597,9 @@ def healthcare_facility_guide(request):
 def clinician_guide(request):
     return render(request, 'auction/clinician_guide.html', {'path': 'clinician-guide'})
 
+def casual_work(request):
+    return render(request, 'auction/casual_work.html', {'path': 'casual-work'})
+
 def maternity(request):
     return render(request, 'auction/maternity.html', {'path': 'maternity'})
 
