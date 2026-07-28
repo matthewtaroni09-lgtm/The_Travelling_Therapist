@@ -131,23 +131,30 @@ def clinic_reserve_not_met(clinic_name, start_date, end_date, payment_type):
   message = message + email_footer
   return message
 
-def clinic_no_bids(clinic_name, start_date, end_date):
+def clinic_no_bids(clinic_name, start_date=None, end_date=None):
+    repost_url = ACTIVE_LINK + "/create_auction"
     message = email_header
-    message = message + """<section style="font-size: 16px; margin-bottom: 1rem; padding: 10px;">
-  <p>Hello <span class="text-weight-bold">""" + clinic_name + """</span>,</p>
+    message = message + f"""<section style="font-size: 16px; margin-bottom: 1rem; padding: 10px;">
+  <p>Hello <span class="text-weight-bold">{clinic_name}</span>,</p>
   
-  <p>Your listing has reached an end, and there were no offers made. As such there will be no match made at this time.</p>
+  <p>Your listing has now closed and, unfortunately, no clinicians submitted an offer this time.</p>
 
-  <p>Feel free to re-create your listing if you'd like to try to fill this position again.</p>
+  <p>Don't worry, this happens from time to time. The good news is that listings with no offers are always free to repost.</p>
 
-  <p>Re-created listings will still need to be approved by us like any other listing .</p>
+  <div style="text-align: center; margin: 25px 0;">
+    <a href="{repost_url}" style="background-color: #02CA90; color: #ffffff; padding: 12px 24px; font-weight: bold; text-decoration: none; border-radius: 5px; display: inline-block;">Repost My Listing</a>
+  </div>
 
-  <h3>Listing Details:</h3>
-  <p>Therapist Start Date: """ + str(start_date) + """</p>
-  <p>Therapist End Date: """ + str(end_date) + """</p>
+  <p><b>Want to improve your chances of receiving offers? Before reposting, consider:</b></p>
+  <ul style="margin-bottom: 1.5rem; padding-left: 20px;">
+    <li style="margin-bottom: 6px;">Updating your reference payment information to make your opportunity more competitive</li>
+    <li style="margin-bottom: 6px;">Adding more details about your clinic, schedule, or patient population</li>
+    <li style="margin-bottom: 6px;">Including any negotiable perks or additional information that may attract clinicians</li>
+  </ul>
 
-  <p>Thanks for using our service - we hope to see you again soon,</p>
-  <p style="font-weight: 700; padding-top: 0rem; margin-top: 0; line-height: 0;">The Traveling Therapist Team</p>
+  <p>Thank you for choosing The Traveling Therapist. We look forward to helping you find the right clinician.</p>
+
+  <p style="font-weight: 700; padding-top: 0.5rem; margin-top: 1rem; line-height: 1.2;">— The Traveling Therapist Team</p>
 </section>"""
     message = message + email_footer
     return message
@@ -470,4 +477,27 @@ def raffle_winner_email(first_name, raffle_title, raffle_month, ticket_balance):
 
 </section>"""
     message = message + email_footer
+    return message
+
+    # Add this function to email_templates.py[cite: 2]
+
+def contact_us_confirmation(user_name, user_message):
+    faq_url = ACTIVE_LINK + "/faq"[cite: 2]
+    account_url = ACTIVE_LINK + "/register"[cite: 2]
+
+    message = email_header[cite: 2]
+    message = message + f"""<section style="font-size: 16px; margin-bottom: 1rem; padding: 10px;">
+  <p>Hello <span class="text-weight-bold">{user_name if user_name else 'there'}</span>,</p>
+  
+  <p>Thank you for contacting us. A representative from The Traveling Therapist will be in touch soon. In the meantime, please feel free to explore our site, <a href="{account_url}">create an account</a>, and read our <a href="{faq_url}">FAQ page</a>.</p>
+
+  <p><b>Copy of your submitted message:</b></p>
+  <blockquote style="background-color: #f4f4f4; border-left: 4px solid #02CA90; padding: 12px; margin: 15px 0; border-radius: 4px;">
+    {user_message}
+  </blockquote>
+
+  <p>Warm regards,</p>
+  <p style="font-weight: 700; padding-top: 0.5rem; margin-top: 1rem; line-height: 1.2;">The Traveling Therapist Team</p>
+</section>"""
+    message = message + email_footer[cite: 2]
     return message

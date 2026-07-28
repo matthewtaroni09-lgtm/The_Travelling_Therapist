@@ -39,6 +39,7 @@ urlpatterns = [
     path("mission_vision", views.mission_vision, name="mission-vision"),
     path("healthcare_facility_guide", views.healthcare_facility_guide, name="healthcare-facility-guide"),
     path("clinician_guide", views.clinician_guide, name="clinician-guide"),
+    path("casual_work", views.casual_work, name="casual-work"),
     path("maternity", views.maternity, name="maternity"),
     path("non_traditional_hiring", views.non_traditional_hiring, name="non-traditional-hiring"),
     path("hospital_guide", views.hospital_guide, name="hospital-guide"),

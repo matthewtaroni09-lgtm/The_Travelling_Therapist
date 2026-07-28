@@ -4,33 +4,103 @@
 {% block content %}
 
 <style>
-      .ttt-info-dot-sm {
-        width: 16px;
-        height: 16px;
-        border-radius: 999px;
-        border: 1px solid #8896a5;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 11px;
-        line-height: 1;
-        padding: 0;
-        background: #fff;
-        color: #6d7986;
-      }
+  .ttt-info-dot-sm {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 1px solid #8896a5;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    font-style: normal;
+    line-height: 1;
+    padding: 0;
+    background: #ffffff;
+    color: #5a6e82;
+    text-align: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    vertical-align: middle;
+    margin-left: 6px;
+    position: relative;
+    top: -1px;
+    transition: all 0.15s ease-in-out;
+  }
 
-      .ttt-perk-help {
-        font-size: 0.77rem;
-        color: #637180;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.35rem;
-      }
+  .ttt-info-dot-sm:hover {
+    background: #f0f4f8;
+    color: #2b3541;
+    border-color: #5a6673;
+  }
 
+  /* Hide default Django/Crispy password requirement bullet list under the field */
+  #hint_id_password1,
+  #div_id_password1 .form-text,
+  #div_id_password1 small.text-muted {
+    display: none !important;
+  }
+
+  /* Style tooltips and remove unwanted bottom margin gaps */
+  .tooltip-inner {
+    max-width: 320px !important;
+    text-align: left !important;
+    color: #ffffff !important;
+    padding: 10px 14px !important;
+  }
+
+  .tooltip-inner ul,
+  .tooltip-inner ol,
+  .tooltip-inner p {
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+  }
+
+  .tooltip-inner ul,
+  .tooltip-inner li {
+    color: #ffffff !important;
+  }
+
+  .tooltip-inner li:last-child {
+    margin-bottom: 0 !important;
+  }
+
+  /* Force error message text directly below errored input fields */
+  .invalid-feedback,
+  .errorlist {
+    display: block !important;
+    color: #dc3545 !important;
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-top: 0.35rem;
+  }
+
+  /* Red border for input, select, and textarea elements with errors */
+  .is-invalid,
+  .is-invalid input,
+  .is-invalid select,
+  .is-invalid textarea {
+    border-color: #dc3545 !important;
+  }
+
+  .ttt-perk-help {
+    font-size: 0.77rem;
+    color: #637180;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  /* Terms button matches Create Account styling */
+  #termsButton, #submitButton {
+    font-weight: 500;
+  }
 </style>
 
 <script>
-  //global grecaptcha
+  // global grecaptcha
   grecaptcha.ready(function () {
     grecaptcha.execute('6Lc2PPUqAAAAAL4lTOiKa8tjoekP5FbXkt8JnyyQ', { action: "/register/" }).then(function (token) {
       document.getElementById('g-recaptcha-response').value = token;
@@ -42,62 +112,306 @@
 <p id="pageTitle" class="d-none">Register</p>
 <input id="userTypeHiddenInput" class="d-none" value="{{user_type}}">
 <h1 class="text-center mb-5">Register to Get Started With The Traveling Therapist!</h1>
+
 <!-- Register Box Start -->
 <div class="row">
   <div class="col-md-6 offset-md-3">
-    <form method="post" enctype="multipart/form-data" class="d-flex flex-column gap-3">
-      <h5>Are you signing up as a Healthcare Facility or a Healthcare Professional?</h5>
+    <!-- novalidate allows Django backend validation to handle errors -->
+    <form method="post" enctype="multipart/form-data" novalidate class="d-flex flex-column gap-3">
+      <h5 class="text-center mb-3">Are you signing up as a Healthcare Facility or a Healthcare Professional?</h5>
 
-      <div class="row  align-items-center">
-        <div class="col-sm-1"></div>
-        <a href="#" id="clinicButton" class="col-sm-4 selection-boxes d-flex flex-column align-items-center gap-2 p-4">
-          <img class="img-fluid" src="/media/images/clinic.png" alt="Clinic office as a cartoon" width="100" height="100">
-          <h4>Healthcare Facility</h4>
-        </a>
-        <div class="col-sm-2"></div>
-        <a href="#" id="therapistButton"
-          class="col-sm-4 selection-boxes d-flex flex-column align-items-center gap-2 p-3">
-          <img class="img-fluid" src="/media/images/therapy.png" alt="Healthcare Professional as a cartoon" width="100" height="100">
-          <h5>Healthcare Professional</h5>
-        </a>
-        <div class="col-sm-1"></div>
+      <!-- Equal-sized Selection Cards -->
+      <div class="row align-items-stretch justify-content-center g-3 mb-4">
+        <div class="col-sm-5 d-flex">
+          <a href="#" id="clinicButton" class="selection-boxes d-flex flex-column align-items-center justify-content-center text-decoration-none w-100 p-4 text-center">
+            <img class="img-fluid mb-2" src="/media/images/clinic.png" alt="Clinic office cartoon" width="100" height="100">
+            <h4 class="mb-0 text-dark">Healthcare<br>Facility</h4>
+          </a>
+        </div>
+        <div class="col-sm-5 d-flex">
+          <a href="#" id="therapistButton" class="selection-boxes d-flex flex-column align-items-center justify-content-center text-decoration-none w-100 p-4 text-center">
+            <img class="img-fluid mb-2" src="/media/images/therapy.png" alt="Healthcare Professional cartoon" width="100" height="100">
+            <h4 class="mb-0 text-dark">Healthcare<br>Professional</h4>
+          </a>
+        </div>
       </div>
 
       {% csrf_token %}
-      {{ form | as_crispy_errors }}
+      
+      <!-- Top Error Summary Banner -->
+      {% if form.errors %}
+        <div id="topErrorSummary" class="alert alert-danger shadow-sm mb-3" role="alert" style="border: 2px solid #dc3545; background-color: #f8d7da; color: #842029;">
+          <h5 class="alert-heading fw-bold mb-2">Please correct the following errors:</h5>
+          <ul class="mb-0 ps-3">
+            {% for field in form %}
+              {% for error in field.errors %}
+                <li><strong>{{ field.label|default:field.name }}:</strong> {{ error }}</li>
+              {% endfor %}
+            {% endfor %}
+            {% for error in form.non_field_errors %}
+              <li>{{ error }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+
+      <!-- Form Fields -->
       <span class="clinicField">{{ form.clinicName | as_crispy_field }}</span>
       <span class="clinicField">{{ form.city | as_crispy_field }}</span>
       <span class="clinicField">{{ form.province | as_crispy_field }}</span>
       <span class="clinicField">{{ form.about | as_crispy_field }}</span>
       <span class="clinicField">{{ form.clinicWebsite | as_crispy_field }}</span>
-      <span class="clinicField">{{ form.imageOne | as_crispy_field }} <button type="button" class="ttt-info-dot-sm" data-bs-toggle="tooltip" data-bs-placement="top" 
-                      title="Image one is the primary image that will show on your listings">i</button></label></span> 
+      
+      <!-- Primary Image Field with clean info-dot tooltip integration -->
+      <div class="clinicField">
+        <div class="d-flex align-items-center gap-2 mb-1">
+          <label class="form-label fw-semibold mb-0">Clinic Image One</label>
+          <button type="button" class="ttt-info-dot-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Image one is the primary image that will show on your listings">i</button>
+        </div>
+        {{ form.imageOne | as_crispy_field }}
+      </div>
+
       <span class="clinicField">{{ form.imageTwo | as_crispy_field }}</span>
       <span class="clinicField">{{ form.imageThree | as_crispy_field }}</span>
       <span class="clinicField">{{ form.imageFour | as_crispy_field }}</span>
-      <p class="clinicField">Images must be 10 MB or less and in one of the following formats: jpg, jpeg or png.</p>
+      <p class="clinicField text-muted small">Images must be 5 MB or less and in one of the following formats: jpg, jpeg or png.</p>
+
       <span class="therapistField">{{ form.user_type | as_crispy_field }}</span>
       <span class="therapistField">{{ form.first_name | as_crispy_field }}</span>
       <span class="therapistField">{{ form.last_name | as_crispy_field }}</span>
+      
       <span class="combinedFields">{{ form.username | as_crispy_field }}</span>
       <span class="combinedFields">{{ form.password1 | as_crispy_field }}</span>
       <span class="combinedFields">{{ form.password2 | as_crispy_field }}</span>
-      <span class="combinedFields"><input id="showPasswordCheckBox" type="checkbox">
-        <label class="form-label">Show Password</label></span>
-      <!-- Practce Area & Demographics -->
-      <button id="termsButton" data-bs-toggle="modal" data-bs-target="#tandcModal" class="btn btn-primary"
-        type="button">Read Terms
-        and Conditions</button>
-      <p class="combinedFields"><small>Terms and Conditions must be agreed to before an account can be
-          created.</small></p>
+      
+      <!-- Show Password Checkbox -->
+      <span class="combinedFields">
+        <div class="d-flex align-items-center gap-2 mb-2">
+          <input id="showPasswordCheckBox" type="checkbox" class="form-check-input mt-0">
+          <label class="form-label mb-0" for="showPasswordCheckBox">Show Password</label>
+        </div>
+      </span>
+
+      <!-- Terms & Action Buttons -->
+      <button id="termsButton" data-bs-toggle="modal" data-bs-target="#tandcModal" class="btn btn-primary combinedFields w-100" type="button">Read Terms and Conditions</button>
+      <p class="combinedFields text-muted mt-1"><small>Terms and Conditions must be agreed to before an account can be created.</small></p>
+
       <div>
         <input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response">
-        <button type="submit" disabled id="submitButton" class="btn btn-primary combinedFields">Create Account</button>
+        <button type="submit" disabled id="submitButton" class="btn btn-primary combinedFields w-100">Create Account</button>
       </div>
     </form>
   </div>
 </div>
 <!-- Register Box End -->
-<!-- Content End -->
+
 <script src="{% static 'auction/register.js' %}?v=20260723-image-5mb-popup-v1"></script>
+
+<!-- Error Highlighting & Clean Password Mapping Logic -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // 1. Move Password Help Text into an Info-Dot Tooltip
+    const pass1Hint = document.getElementById('hint_id_password1') || document.querySelector('#div_id_password1 .form-text');
+    const pass1Label = document.querySelector('label[for="id_password1"]');
+
+    if (pass1Label && !pass1Label.querySelector('.ttt-info-dot-sm')) {
+      let hintContent = `
+        <ul class="mb-0 ps-3 small text-white">
+          <li>Your password can't be too similar to your other personal information.</li>
+          <li>Your password must contain at least 8 characters.</li>
+          <li>Your password can't be a commonly used password.</li>
+          <li>Your password can't be entirely numeric.</li>
+        </ul>
+      `;
+
+      if (pass1Hint && pass1Hint.innerHTML.trim()) {
+        hintContent = pass1Hint.innerHTML;
+      }
+
+      const infoBtn = document.createElement('button');
+      infoBtn.type = 'button';
+      infoBtn.className = 'ttt-info-dot-sm';
+      infoBtn.textContent = 'i';
+      infoBtn.setAttribute('data-bs-toggle', 'tooltip');
+      infoBtn.setAttribute('data-bs-html', 'true');
+      infoBtn.setAttribute('data-bs-placement', 'top');
+      infoBtn.setAttribute('title', hintContent);
+
+      pass1Label.appendChild(infoBtn);
+    }
+
+    // 2. Initialize Bootstrap tooltips with HTML support enabled
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    tooltipTriggerList.map(function (tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl, { html: true });
+    });
+
+    // Helper function to turn an input red and display clean error text below it
+    function markFieldInvalid(fieldSelector, messageText) {
+      const input = document.querySelector(fieldSelector);
+      if (!input) return;
+
+      input.classList.add('is-invalid');
+
+      // Ensure field parent container stays visible
+      const fieldWrapper = input.closest('.clinicField, .therapistField, .combinedFields');
+      if (fieldWrapper) {
+        fieldWrapper.style.setProperty('display', 'block', 'important');
+        fieldWrapper.classList.remove('d-none');
+      }
+
+      // Find or create feedback text container
+      const parent = input.closest('.mb-3, .form-group') || input.parentElement;
+      let feedback = parent.querySelector('.invalid-feedback');
+      
+      if (!feedback) {
+        feedback = document.createElement('div');
+        feedback.className = 'invalid-feedback d-block';
+        input.parentNode.appendChild(feedback);
+      }
+
+      // Set clean error message without duplicating text
+      if (messageText && messageText.trim()) {
+        const existingText = feedback.innerText.trim();
+        if (!existingText || existingText === messageText) {
+          feedback.innerText = messageText;
+        } else if (!existingText.includes(messageText)) {
+          feedback.innerText = existingText + ' ' + messageText;
+        }
+      }
+      feedback.style.setProperty('display', 'block', 'important');
+    }
+
+    // Ensures strength errors are moved to password1 and removed from password2
+    function cleanPasswordErrors() {
+      const pass1 = document.querySelector('[name="password1"], #id_password1');
+      const pass2 = document.querySelector('[name="password2"], #id_password2');
+
+      if (!pass2) return;
+
+      const p2Container = pass2.closest('.mb-3, .form-group') || pass2.parentElement;
+      if (!p2Container) return;
+
+      const p2Feedbacks = p2Container.querySelectorAll('.invalid-feedback, .errorlist, [id^="error_"]');
+
+      p2Feedbacks.forEach(function (fb) {
+        const text = fb.innerText.toLowerCase();
+
+        // Detect password strength/complexity errors that belong strictly on password1
+        const isStrengthError = text.includes('too short') || 
+                                text.includes('character') || 
+                                text.includes('similar') || 
+                                text.includes('common') || 
+                                text.includes('numeric');
+
+        if (isStrengthError) {
+          // Transfer message to password1
+          if (pass1) {
+            markFieldInvalid('[name="password1"], #id_password1', fb.innerText.trim());
+          }
+
+          // Clear and hide from password2
+          fb.innerText = '';
+          fb.style.setProperty('display', 'none', 'important');
+        }
+      });
+
+      // If password2 has no remaining error text, remove red border
+      let hasRemainingP2Error = false;
+      p2Container.querySelectorAll('.invalid-feedback, .errorlist, [id^="error_"]').forEach(function (fb) {
+        if (fb.innerText.trim() && fb.style.display !== 'none') {
+          hasRemainingP2Error = true;
+        }
+      });
+
+      if (!hasRemainingP2Error) {
+        pass2.classList.remove('is-invalid');
+      }
+    }
+
+    function processErrors() {
+      // 1. Process top error summary items cleanly
+      const summaryItems = document.querySelectorAll('#topErrorSummary li');
+      summaryItems.forEach(function (li) {
+        const fullText = li.innerText.toLowerCase();
+        
+        // Clean label: convert "Password confirmation:" to "Password:" in the summary banner
+        const strongEl = li.querySelector('strong');
+        if (strongEl && strongEl.innerText.toLowerCase().includes('password confirmation')) {
+          strongEl.innerText = 'Password:';
+        }
+
+        // Extract clean error message text without destroying URLs (http://)
+        let cleanMessage = li.innerText;
+        if (strongEl) {
+          cleanMessage = li.innerText.replace(strongEl.innerText, '').trim();
+          if (cleanMessage.startsWith(':')) {
+            cleanMessage = cleanMessage.substring(1).trim();
+          }
+        }
+
+        // Differentiate password strength vs mismatch errors
+        const isPasswordStrength = fullText.includes('too short') || 
+                                   fullText.includes('character') || 
+                                   fullText.includes('similar') || 
+                                   fullText.includes('common') || 
+                                   fullText.includes('numeric');
+
+        const isPasswordMismatch = fullText.includes('match') || 
+                                   fullText.includes("didn't match") || 
+                                   fullText.includes('same password');
+
+        // Route to corresponding input fields
+        if (fullText.includes('facility name') || fullText.includes('healthcare facility')) {
+          markFieldInvalid('[name="clinicName"], #id_clinicName', cleanMessage);
+        } else if (fullText.includes('city')) {
+          markFieldInvalid('[name="city"], #id_city', cleanMessage);
+        } else if (fullText.includes('province')) {
+          markFieldInvalid('[name="province"], #id_province', cleanMessage);
+        } else if (fullText.includes('url') || fullText.includes('website')) {
+          markFieldInvalid('[name="clinicWebsite"], #id_clinicWebsite', cleanMessage);
+        } else if (fullText.includes('about')) {
+          markFieldInvalid('[name="about"], #id_about', cleanMessage);
+        } else if (fullText.includes('first name')) {
+          markFieldInvalid('[name="first_name"], #id_first_name', cleanMessage);
+        } else if (fullText.includes('last name')) {
+          markFieldInvalid('[name="last_name"], #id_last_name', cleanMessage);
+        } else if (fullText.includes('username') || fullText.includes('email')) {
+          markFieldInvalid('[name="username"], #id_username', cleanMessage);
+        } else if (isPasswordStrength) {
+          markFieldInvalid('[name="password1"], #id_password1', cleanMessage);
+        } else if (isPasswordMismatch) {
+          markFieldInvalid('[name="password2"], #id_password2', cleanMessage);
+        } else if (fullText.includes('password confirmation') || fullText.includes('confirm')) {
+          markFieldInvalid('[name="password2"], #id_password2', cleanMessage);
+        } else if (fullText.includes('password')) {
+          markFieldInvalid('[name="password1"], #id_password1', cleanMessage);
+        }
+      });
+
+      // 2. Mark native Crispy Form error fields
+      const invalidInputs = document.querySelectorAll('.is-invalid, .invalid-feedback, .errorlist, [id^="error_"]');
+      invalidInputs.forEach(function (el) {
+        let input = (el.tagName === 'INPUT' || el.tagName === 'SELECT' || el.tagName === 'TEXTAREA') 
+          ? el 
+          : el.closest('.mb-3, .form-group')?.querySelector('input, select, textarea');
+        
+        if (input) {
+          input.classList.add('is-invalid');
+          const fieldWrapper = input.closest('.clinicField, .therapistField, .combinedFields');
+          if (fieldWrapper) {
+            fieldWrapper.style.setProperty('display', 'block', 'important');
+            fieldWrapper.classList.remove('d-none');
+          }
+        }
+      });
+
+      // 3. Enforce clean separation for password field errors
+      cleanPasswordErrors();
+    }
+
+    processErrors();
+    setTimeout(processErrors, 150);
+  });
+</script>
 {% endblock %}
