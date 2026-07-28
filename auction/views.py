@@ -416,7 +416,17 @@ def contact(request):
 
                 try:
                     if admin.sendEmails:
-                        send_mail(subject, message, 'info@travelingtherapist.ca', ['info@travelingtherapist.ca']) 
+                        send_mail(subject, message, 'info@travelingtherapist.ca', ['info@travelingtherapist.ca'])
+                        # Send confirmation email to the person who contacted us
+                        first_name = form.cleaned_data['first_name']
+                        user_email = form.cleaned_data['email_address']
+                        send_mail(
+                            subject="We've received your message — The Traveling Therapist",
+                            message=f"Hi {first_name},\n\nThank you for contacting us. A representative will be in touch soon.\n\nYour message:\n{form.cleaned_data['message']}",
+                            html_message=emails.contact_us_confirmation(first_name, form.cleaned_data['message']),
+                            from_email=settings.EMAIL_HOST_USER,
+                            recipient_list=[user_email],
+                        )
                 except BadHeaderError:
                     return HttpResponse('Invalid header found.')
                 except:

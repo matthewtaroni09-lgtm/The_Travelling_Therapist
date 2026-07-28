@@ -84,7 +84,7 @@ email_header = f"""<head>
 <body style="background-color:#B2FBDD; margin:0; padding:0;">
   <div class="container">
     <div class="header">
-      <img src="{LOGO_URL_WB}" alt="The Traveling Therapist Logo" padding:5px; border-radius:4px;">
+      <img src="{LOGO_URL_WB}" alt="The Traveling Therapist Logo" style="padding:5px; border-radius:4px;">
     </div>
 """
 
@@ -482,10 +482,10 @@ def raffle_winner_email(first_name, raffle_title, raffle_month, ticket_balance):
     # Add this function to email_templates.py[cite: 2]
 
 def contact_us_confirmation(user_name, user_message):
-    faq_url = ACTIVE_LINK + "/faq"[cite: 2]
-    account_url = ACTIVE_LINK + "/register"[cite: 2]
+    faq_url = ACTIVE_LINK + "/faq"
+    account_url = ACTIVE_LINK + "/register"
 
-    message = email_header[cite: 2]
+    message = email_header
     message = message + f"""<section style="font-size: 16px; margin-bottom: 1rem; padding: 10px;">
   <p>Hello <span class="text-weight-bold">{user_name if user_name else 'there'}</span>,</p>
   
@@ -499,5 +499,5 @@ def contact_us_confirmation(user_name, user_message):
   <p>Warm regards,</p>
   <p style="font-weight: 700; padding-top: 0.5rem; margin-top: 1rem; line-height: 1.2;">The Traveling Therapist Team</p>
 </section>"""
-    message = message + email_footer[cite: 2]
+    message = message + email_footer
     return message
