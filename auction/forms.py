@@ -519,65 +519,65 @@ class RegisterAcount(UserCreationForm):
         imageThree = self.cleaned_data.get('imageThree')
         imageFour = self.cleaned_data.get('imageFour')
 
-        # If the username is none it is a duplicate that Django has already caught and removed. Returning here triggers the front-end error message to be displayed
+        # If the username is none it is a duplicate that Django has already caught and removed.
         if username is None:
             return
 
-        error_list = []
+        # Image validation — attach errors to the specific image fields
+        for field_name, value, label in [
+            ('imageOne', imageOne, 'Clinic Image One'),
+            ('imageTwo', imageTwo, 'Clinic Image Two'),
+            ('imageThree', imageThree, 'Clinic Image Three'),
+            ('imageFour', imageFour, 'Clinic Image Four'),
+        ]:
+            for err in (validate_file_extension(value, label) or []):
+                self.add_error(field_name, err)
 
-        image_errors_one = validate_file_extension(imageOne, 'Clinic Image One')
-        image_errors_two = validate_file_extension(imageTwo, 'Clinic Image Two')
-        image_errors_three = validate_file_extension(imageThree, 'Clinic Image Three')
-        image_errors_four = validate_file_extension(imageFour, 'Clinic Image Four')
-
-        if image_errors_one is not None:
-            error_list.extend(image_errors_one)
-        if image_errors_two is not None:
-            error_list.extend(image_errors_two)
-        if image_errors_three is not None:
-            error_list.extend(image_errors_three)
-        if image_errors_four is not None:
-            error_list.extend(image_errors_four)
-
+        # Duplicate username — attach to username field
         if User.objects.exclude(pk=self.instance.pk).filter(username=username).exists():
-            error_list.append(f'Username "{username}" is already in use.')
-            print(f'Username "{username}" is already in use.')
+            self.add_error('username', f'An account with email "{username}" already exists.')
 
         if str(userType).split(' ')[-1] == "Clinic":
-            errors = validate_clinic_fields(clinicName, city, province, username)
-            if errors is not None:
-                error_list.extend(errors)
+            # Required clinic fields — attached to their own fields
+            if not clinicName:
+                self.add_error('clinicName', "Please enter a healthcare facility name.")
+            elif len(clinicName) <= 4:
+                self.add_error('clinicName', "Please enter a healthcare facility name that is greater than 4 characters.")
+
+            if not city:
+                self.add_error('city', "Please enter a city.")
+
+            if not province:
+                self.add_error('province', "Please select a province.")
+
+            pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+            if username and not re.match(pattern, username):
+                self.add_error('username', "Email is not in the correct format.")
 
             try:
                 self.cleaned_data['clinicWebsite'] = normalize_website_url(clinicWebsite)
             except ValidationError:
-                error_list.append(ValidationError(WEBSITE_URL_ERROR_MESSAGE))
+                self.add_error('clinicWebsite', WEBSITE_URL_ERROR_MESSAGE)
 
-            if len(clinicName) <= 4:
-                error_list.append(ValidationError("Please enter a healthcare facility name that is greater than 4 characters."))
         else:
-            if firstName == '' or firstName is None:
-                error_list.append(ValidationError("Please enter a first name."))
+            if not firstName:
+                self.add_error('first_name', "Please enter a first name.")
             elif any(char.isdigit() for char in firstName):
-                error_list.append(ValidationError("First name cannot contain numbers."))
+                self.add_error('first_name', "First name cannot contain numbers.")
+            elif len(firstName) <= 1:
+                self.add_error('first_name', "Please enter a first name that is greater than 1 character.")
 
-            if firstName is not None and len(firstName) <= 1:
-                error_list.append(ValidationError("Please enter a first name that is greater than 1 character."))
-
-            if lastName == '' or lastName is None:
-                error_list.append(ValidationError("Please enter a last name."))
+            if not lastName:
+                self.add_error('last_name', "Please enter a last name.")
             elif any(char.isdigit() for char in lastName):
-                error_list.append(ValidationError("Last name cannot contain numbers."))
-
-            if lastName is not None and len(lastName) <= 1:
-                error_list.append(ValidationError("Please enter a last name that is greater than 1 character."))
+                self.add_error('last_name', "Last name cannot contain numbers.")
+            elif len(lastName) <= 1:
+                self.add_error('last_name', "Please enter a last name that is greater than 1 character.")
 
             pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
-            if not re.match(pattern, username):
-                error_list.append(ValidationError("Email is not in the correct format."))
+            if username and not re.match(pattern, username):
+                self.add_error('username', "Email is not in the correct format.")
 
-        if len(error_list) > 0:
-            raise forms.ValidationError(error_list)
 
 class CreateUserForm(UserCreationForm):
     class Meta:

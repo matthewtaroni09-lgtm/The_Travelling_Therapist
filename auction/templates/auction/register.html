@@ -78,10 +78,10 @@
   }
 
   /* Red border for input, select, and textarea elements with errors */
-  .is-invalid,
-  .is-invalid input,
-  .is-invalid select,
-  .is-invalid textarea {
+  input.is-invalid,
+  select.is-invalid,
+  textarea.is-invalid,
+  .is-invalid {
     border-color: #dc3545 !important;
   }
 
@@ -137,60 +137,43 @@
       </div>
 
       {% csrf_token %}
-      
-      <!-- Top Error Summary Banner -->
-      {% if form.errors %}
-        <div id="topErrorSummary" class="alert alert-danger shadow-sm mb-3" role="alert" style="border: 2px solid #dc3545; background-color: #f8d7da; color: #842029;">
-          <h5 class="alert-heading fw-bold mb-2">Please correct the following errors:</h5>
-          <ul class="mb-0 ps-3">
-            {% for field in form %}
-              {% for error in field.errors %}
-                <li><strong>{{ field.label|default:field.name }}:</strong> {{ error }}</li>
-              {% endfor %}
-            {% endfor %}
-            {% for error in form.non_field_errors %}
-              <li>{{ error }}</li>
-            {% endfor %}
-          </ul>
-        </div>
-      {% endif %}
 
-      <!-- Form Fields -->
-      <span class="clinicField">{{ form.clinicName | as_crispy_field }}</span>
-      <span class="clinicField">{{ form.city | as_crispy_field }}</span>
-      <span class="clinicField">{{ form.province | as_crispy_field }}</span>
-      <span class="clinicField">{{ form.about | as_crispy_field }}</span>
-      <span class="clinicField">{{ form.clinicWebsite | as_crispy_field }}</span>
+      <!-- Form Fields (Changed to div tags to prevent DOM breaking) -->
+      <div class="clinicField">{{ form.clinicName | as_crispy_field }}</div>
+      <div class="clinicField">{{ form.city | as_crispy_field }}</div>
+      <div class="clinicField">{{ form.province | as_crispy_field }}</div>
+      <div class="clinicField">{{ form.about | as_crispy_field }}</div>
+      <div class="clinicField">{{ form.clinicWebsite | as_crispy_field }}</div>
       
       <!-- Primary Image Field with clean info-dot tooltip integration -->
       <div class="clinicField">
-        <div class="d-flex align-items-center gap-2 mb-1">
+        <div class="d-flex align-items-center gap-2 mb-0">
           <label class="form-label fw-semibold mb-0">Clinic Image One</label>
           <button type="button" class="ttt-info-dot-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Image one is the primary image that will show on your listings">i</button>
         </div>
         {{ form.imageOne | as_crispy_field }}
       </div>
 
-      <span class="clinicField">{{ form.imageTwo | as_crispy_field }}</span>
-      <span class="clinicField">{{ form.imageThree | as_crispy_field }}</span>
-      <span class="clinicField">{{ form.imageFour | as_crispy_field }}</span>
+      <div class="clinicField">{{ form.imageTwo | as_crispy_field }}</div>
+      <div class="clinicField">{{ form.imageThree | as_crispy_field }}</div>
+      <div class="clinicField">{{ form.imageFour | as_crispy_field }}</div>
       <p class="clinicField text-muted small">Images must be 5 MB or less and in one of the following formats: jpg, jpeg or png.</p>
 
-      <span class="therapistField">{{ form.user_type | as_crispy_field }}</span>
-      <span class="therapistField">{{ form.first_name | as_crispy_field }}</span>
-      <span class="therapistField">{{ form.last_name | as_crispy_field }}</span>
+      <div class="therapistField">{{ form.user_type | as_crispy_field }}</div>
+      <div class="therapistField">{{ form.first_name | as_crispy_field }}</div>
+      <div class="therapistField">{{ form.last_name | as_crispy_field }}</div>
       
-      <span class="combinedFields">{{ form.username | as_crispy_field }}</span>
-      <span class="combinedFields">{{ form.password1 | as_crispy_field }}</span>
-      <span class="combinedFields">{{ form.password2 | as_crispy_field }}</span>
+      <div class="combinedFields">{{ form.username | as_crispy_field }}</div>
+      <div class="combinedFields">{{ form.password1 | as_crispy_field }}</div>
+      <div class="combinedFields">{{ form.password2 | as_crispy_field }}</div>
       
       <!-- Show Password Checkbox -->
-      <span class="combinedFields">
+      <div class="combinedFields">
         <div class="d-flex align-items-center gap-2 mb-2">
           <input id="showPasswordCheckBox" type="checkbox" class="form-check-input mt-0">
           <label class="form-label mb-0" for="showPasswordCheckBox">Show Password</label>
         </div>
-      </span>
+      </div>
 
       <!-- Terms & Action Buttons -->
       <button id="termsButton" data-bs-toggle="modal" data-bs-target="#tandcModal" class="btn btn-primary combinedFields w-100" type="button">Read Terms and Conditions</button>
@@ -210,7 +193,33 @@
 <!-- Error Highlighting & Clean Password Mapping Logic -->
 <script>
   document.addEventListener('DOMContentLoaded', function () {
-    // 1. Move Password Help Text into an Info-Dot Tooltip
+
+    // 1. Persist Terms and Conditions State Across Page Reloads without modifying button appearance
+    const termsBtn = document.getElementById('termsButton');
+    const submitBtn = document.getElementById('submitButton');
+
+    function confirmTermsAgreed() {
+      if (submitBtn) submitBtn.disabled = false;
+    }
+
+    if (sessionStorage.getItem('ttt_terms_agreed') === 'true') {
+      confirmTermsAgreed();
+    }
+
+    // Listens for external scripts (like register.js) unlocking the submit button
+    if (submitBtn) {
+      const observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+          if (mutation.attributeName === 'disabled' && !submitBtn.disabled) {
+            sessionStorage.setItem('ttt_terms_agreed', 'true');
+            confirmTermsAgreed();
+          }
+        });
+      });
+      observer.observe(submitBtn, { attributes: true });
+    }
+
+    // 2. Move Password Help Text into an Info-Dot Tooltip
     const pass1Hint = document.getElementById('hint_id_password1') || document.querySelector('#div_id_password1 .form-text');
     const pass1Label = document.querySelector('label[for="id_password1"]');
 
@@ -240,15 +249,14 @@
       pass1Label.appendChild(infoBtn);
     }
 
-    // 2. Initialize Bootstrap tooltips with HTML support enabled
+    // Initialize Bootstrap tooltips with HTML support enabled
     const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
     tooltipTriggerList.map(function (tooltipTriggerEl) {
       return new bootstrap.Tooltip(tooltipTriggerEl, { html: true });
     });
 
-    // Helper function to turn an input red and display clean error text below it
-    function markFieldInvalid(fieldSelector, messageText) {
-      const input = document.querySelector(fieldSelector);
+    // Centralized function to turn an input red and display clean error text below it
+    function markElementInvalid(input, messageText) {
       if (!input) return;
 
       input.classList.add('is-invalid');
@@ -262,15 +270,17 @@
 
       // Find or create feedback text container
       const parent = input.closest('.mb-3, .form-group') || input.parentElement;
-      let feedback = parent.querySelector('.invalid-feedback');
+      let feedback = parent.querySelector('.invalid-feedback, .errorlist, [id^="error_"]');
       
       if (!feedback) {
         feedback = document.createElement('div');
         feedback.className = 'invalid-feedback d-block';
-        input.parentNode.appendChild(feedback);
+        parent.appendChild(feedback);
+      } else {
+        feedback.classList.add('d-block');
       }
 
-      // Set clean error message without duplicating text
+      // Set clean error message without duplicating text or erasing Django backend messages
       if (messageText && messageText.trim()) {
         const existingText = feedback.innerText.trim();
         if (!existingText || existingText === messageText) {
@@ -305,18 +315,12 @@
                                 text.includes('numeric');
 
         if (isStrengthError) {
-          // Transfer message to password1
-          if (pass1) {
-            markFieldInvalid('[name="password1"], #id_password1', fb.innerText.trim());
-          }
-
-          // Clear and hide from password2
+          if (pass1) markElementInvalid(pass1, fb.innerText.trim());
           fb.innerText = '';
           fb.style.setProperty('display', 'none', 'important');
         }
       });
 
-      // If password2 has no remaining error text, remove red border
       let hasRemainingP2Error = false;
       p2Container.querySelectorAll('.invalid-feedback, .errorlist, [id^="error_"]').forEach(function (fb) {
         if (fb.innerText.trim() && fb.style.display !== 'none') {
@@ -330,88 +334,112 @@
     }
 
     function processErrors() {
-      // 1. Process top error summary items cleanly
-      const summaryItems = document.querySelectorAll('#topErrorSummary li');
-      summaryItems.forEach(function (li) {
-        const fullText = li.innerText.toLowerCase();
-        
-        // Clean label: convert "Password confirmation:" to "Password:" in the summary banner
-        const strongEl = li.querySelector('strong');
-        if (strongEl && strongEl.innerText.toLowerCase().includes('password confirmation')) {
-          strongEl.innerText = 'Password:';
-        }
-
-        // Extract clean error message text without destroying URLs (http://)
-        let cleanMessage = li.innerText;
-        if (strongEl) {
-          cleanMessage = li.innerText.replace(strongEl.innerText, '').trim();
-          if (cleanMessage.startsWith(':')) {
-            cleanMessage = cleanMessage.substring(1).trim();
-          }
-        }
-
-        // Differentiate password strength vs mismatch errors
-        const isPasswordStrength = fullText.includes('too short') || 
-                                   fullText.includes('character') || 
-                                   fullText.includes('similar') || 
-                                   fullText.includes('common') || 
-                                   fullText.includes('numeric');
-
-        const isPasswordMismatch = fullText.includes('match') || 
-                                   fullText.includes("didn't match") || 
-                                   fullText.includes('same password');
-
-        // Route to corresponding input fields
-        if (fullText.includes('facility name') || fullText.includes('healthcare facility')) {
-          markFieldInvalid('[name="clinicName"], #id_clinicName', cleanMessage);
-        } else if (fullText.includes('city')) {
-          markFieldInvalid('[name="city"], #id_city', cleanMessage);
-        } else if (fullText.includes('province')) {
-          markFieldInvalid('[name="province"], #id_province', cleanMessage);
-        } else if (fullText.includes('url') || fullText.includes('website')) {
-          markFieldInvalid('[name="clinicWebsite"], #id_clinicWebsite', cleanMessage);
-        } else if (fullText.includes('about')) {
-          markFieldInvalid('[name="about"], #id_about', cleanMessage);
-        } else if (fullText.includes('first name')) {
-          markFieldInvalid('[name="first_name"], #id_first_name', cleanMessage);
-        } else if (fullText.includes('last name')) {
-          markFieldInvalid('[name="last_name"], #id_last_name', cleanMessage);
-        } else if (fullText.includes('username') || fullText.includes('email')) {
-          markFieldInvalid('[name="username"], #id_username', cleanMessage);
-        } else if (isPasswordStrength) {
-          markFieldInvalid('[name="password1"], #id_password1', cleanMessage);
-        } else if (isPasswordMismatch) {
-          markFieldInvalid('[name="password2"], #id_password2', cleanMessage);
-        } else if (fullText.includes('password confirmation') || fullText.includes('confirm')) {
-          markFieldInvalid('[name="password2"], #id_password2', cleanMessage);
-        } else if (fullText.includes('password')) {
-          markFieldInvalid('[name="password1"], #id_password1', cleanMessage);
-        }
-      });
-
-      // 2. Mark native Crispy Form error fields
-      const invalidInputs = document.querySelectorAll('.is-invalid, .invalid-feedback, .errorlist, [id^="error_"]');
-      invalidInputs.forEach(function (el) {
+      // Find all error wrappers returned by Django
+      const invalidElements = document.querySelectorAll('.is-invalid, .invalid-feedback, .errorlist, [id^="error_"]');
+      
+      invalidElements.forEach(function (el) {
         let input = (el.tagName === 'INPUT' || el.tagName === 'SELECT' || el.tagName === 'TEXTAREA') 
           ? el 
-          : el.closest('.mb-3, .form-group')?.querySelector('input, select, textarea');
+          : (el.parentElement.querySelector('input, select, textarea') || el.closest('.mb-3, .form-group')?.querySelector('input, select, textarea'));
         
         if (input) {
-          input.classList.add('is-invalid');
-          const fieldWrapper = input.closest('.clinicField, .therapistField, .combinedFields');
-          if (fieldWrapper) {
-            fieldWrapper.style.setProperty('display', 'block', 'important');
-            fieldWrapper.classList.remove('d-none');
+          // If the element is Django's native errorlist, capture its text so we don't accidentally overwrite it
+          let backendMsg = null;
+          if (el.tagName !== 'INPUT' && el.tagName !== 'SELECT' && el.tagName !== 'TEXTAREA') {
+              backendMsg = el.innerText.trim();
           }
+          markElementInvalid(input, backendMsg);
         }
       });
 
-      // 3. Enforce clean separation for password field errors
       cleanPasswordErrors();
+      
+      // Look for the first TRULY VISIBLE errored input to scroll to
+      const allInvalidInputs = document.querySelectorAll('.is-invalid');
+      for (let i = 0; i < allInvalidInputs.length; i++) {
+        if (allInvalidInputs[i].offsetParent !== null) {
+          return allInvalidInputs[i];
+        }
+      }
+      return null;
     }
 
-    processErrors();
+    // Scroll to the first error automatically on page load
+    const initialFirstError = processErrors();
+    if (initialFirstError) {
+        setTimeout(() => {
+            initialFirstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            initialFirstError.focus({ preventScroll: true });
+        }, 150);
+    }
+    
     setTimeout(processErrors, 150);
+
+    // Frontend validation: Check visible fields immediately when "Create Account" is clicked
+    const registerForm = document.querySelector('form');
+    if (registerForm) {
+      registerForm.addEventListener('submit', function (e) {
+        let hasError = false;
+        let firstInvalidInput = null;
+
+        const inputs = this.querySelectorAll('input, select, textarea');
+        inputs.forEach(input => {
+          if (input.type === 'hidden' || input.disabled || input.type === 'file' || input.type === 'checkbox') return;
+
+          const isVisible = input.offsetParent !== null;
+
+          if (isVisible) {
+             const isValueEmpty = !input.value || !input.value.trim();
+             
+             // Normalize strings by removing casing and underscores to ensure they are caught regardless of what Django names them
+             const normalizedName = (input.name || '').toLowerCase().replace(/_/g, '');
+             const normalizedId = (input.id || '').toLowerCase().replace(/_/g, '');
+             
+             let isHtmlInvalid = typeof input.checkValidity === 'function' ? !input.checkValidity() : false;
+
+             // Bulletproof URL Validation: Check explicitly if field is a website or URL format
+             if (!isValueEmpty && (input.type === 'url' || normalizedName.includes('website') || normalizedId.includes('website'))) {
+                 const urlPattern = /^(https?:\/\/)?([\w\d-]+\.)+[\w\d]{2,}(\/.*)?$/i;
+                 if (!urlPattern.test(input.value.trim())) {
+                     isHtmlInvalid = true;
+                 }
+             }
+
+             // Ensure these fields throw an error if empty
+             const forceRequiredFields = ['clinicname', 'city', 'province', 'clinicwebsite', 'firstname', 'lastname', 'username', 'password1', 'password2'];
+             const isForceRequired = input.required || forceRequiredFields.some(reqName => normalizedName === reqName || normalizedId.includes(reqName));
+
+             if ((isForceRequired && isValueEmpty) || isHtmlInvalid) {
+                hasError = true;
+                
+                let errorMsg = 'This field is required.';
+                if (input.tagName === 'SELECT' && isValueEmpty) {
+                    errorMsg = 'Please select an option.';
+                } else if ((input.type === 'url' || normalizedName.includes('website') || normalizedId.includes('website')) && !isValueEmpty && isHtmlInvalid) {
+                    errorMsg = 'Please enter a valid URL (e.g., https://example.com).';
+                } else if (!isValueEmpty && isHtmlInvalid) {
+                    errorMsg = input.validationMessage || 'Invalid input.';
+                }
+                
+                markElementInvalid(input, errorMsg);
+                if (!firstInvalidInput) firstInvalidInput = input;
+             } else {
+                input.classList.remove('is-invalid');
+                let parent = input.closest('.mb-3, .form-group') || input.parentElement;
+                let feedback = parent ? parent.querySelector('.invalid-feedback, .errorlist, [id^="error_"]') : null;
+                if (feedback) feedback.style.display = 'none';
+             }
+          }
+        });
+
+        // Intercept form submission, show highlights, and scroll directly to the first error
+        if (hasError && firstInvalidInput) {
+          e.preventDefault(); 
+          firstInvalidInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          firstInvalidInput.focus({ preventScroll: true });
+        }
+      });
+    }
   });
 </script>
 {% endblock %}
