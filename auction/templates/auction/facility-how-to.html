@@ -654,22 +654,18 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.05);
             overflow: hidden;
             border: 1px solid var(--border-dark);
-            transition: box-shadow 0.3s ease;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
         }
 
         .pricing-table:hover {
-            box-shadow: 0 16px 40px rgba(0,0,0,0.08);
+            transform: translateY(-6px);
+            box-shadow: 0 20px 48px rgba(0,0,0,0.12);
         }
 
         .pt-cell {
             padding: 32px 24px;
             border-right: 1px solid var(--border);
             border-bottom: 1px solid var(--border);
-            transition: background-color 0.2s ease, transform 0.2s ease;
-        }
-
-        .pt-cell:not(.pt-header):hover {
-            background-color: #F3F4F6;
         }
 
         .pt-cell:last-child { border-right: none; }
@@ -691,11 +687,6 @@
             background: var(--primary);
             color: var(--black);
             font-size: 16px;
-            transition: background-color 0.3s ease;
-        }
-
-        .pt-header.traveling-therapist-col:hover {
-            background: var(--primary-dark);
         }
 
         .row-header {
@@ -716,10 +707,6 @@
             background: #FAFFFD;
             border-left: 2px solid var(--primary);
             border-right: 2px solid var(--primary);
-        }
-
-        .pt-content.traveling-therapist-col:hover {
-            background: #E6FBF5;
         }
 
         /* <!-- Section 5: CTA --> */

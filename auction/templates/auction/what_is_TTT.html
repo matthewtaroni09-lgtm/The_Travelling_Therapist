@@ -1,375 +1,674 @@
 {% extends 'auction/base.html' %}
 {% load static %}
+
 {% block content %}
-<!-- content -->
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+    :root {
+        --primary: #00D2A0;
+        --primary-dark: #00B88C;
+        --black: #0B0F19;
+        --dark-gray: #1A1D24;
+        --gray: #6B7280;
+        --light-gray: #F3F4F6;
+        --white: #FFFFFF;
+        --border: #E5E7EB;
+        --border-dark: #D1D5DB;
+        --font: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    .ttt-about-page * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    .ttt-about-page {
+        font-family: var(--font);
+        color: var(--black);
+        line-height: 1.6;
+        background-color: #FAFAFA;
+        padding-top: 32px;
+        padding-bottom: 80px;
+    }
+
+    .ttt-about-page .container {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 0 24px;
+    }
+
+    .ttt-about-page h1, .ttt-about-page h2, .ttt-about-page h3, .ttt-about-page h4 {
+        line-height: 1.2;
+    }
+
+    /* Section Dividers */
+    .section-divider {
+        border: none;
+        height: 1px;
+        background-color: var(--border-dark);
+        margin: 60px 0;
+        opacity: 0.6;
+    }
+
+    /* Buttons */
+    .ttt-about-page .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 14px 28px;
+        border-radius: 50px;
+        font-weight: 600;
+        text-decoration: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 16px;
+        border: none;
+    }
+
+    .ttt-about-page .btn-black {
+        background-color: var(--black);
+        color: var(--white);
+    }
+
+    .ttt-about-page .btn-black:hover {
+        background-color: var(--dark-gray);
+        color: var(--white);
+    }
+
+    .ttt-about-page .btn-primary {
+        background-color: var(--primary);
+        color: var(--black);
+        font-weight: 700;
+    }
+
+    .ttt-about-page .btn-primary:hover {
+        background-color: var(--primary-dark);
+        color: var(--black);
+    }
+
+    .ttt-about-page .btn-outline {
+        background-color: var(--white);
+        color: var(--black);
+        border: 1px solid var(--border-dark);
+    }
+
+    .ttt-about-page .btn-outline:hover {
+        border-color: var(--black);
+    }
+
+    /* Hero Section */
+    .hero-section {
+        text-align: center;
+        padding: 40px 0 20px 0;
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+    .hero-badge {
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--black);
+        background-color: var(--white);
+        padding: 8px 16px;
+        border-radius: 8px;
+        display: inline-block;
+        margin-bottom: 24px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+        border: 1px solid var(--border);
+    }
+
+    .hero-section h1 {
+        font-size: clamp(36px, 5vw, 56px);
+        font-weight: 700;
+        letter-spacing: -1.5px;
+        margin-bottom: 24px;
+        color: var(--black);
+    }
+
+    .hero-section p {
+        font-size: 18px;
+        color: var(--gray);
+        margin-bottom: 32px;
+        line-height: 1.7;
+    }
+
+    /* How It Works Overview Card */
+    .overview-card {
+        background: var(--white);
+        border-radius: 24px;
+        padding: 40px;
+        border: 1px solid var(--border-dark);
+        margin-top: 24px;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.03);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .overview-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 16px 32px rgba(0,0,0,0.08);
+    }
+
+    .overview-card h3 {
+        font-size: 22px;
+        margin-bottom: 12px;
+        color: var(--black);
+    }
+
+    .overview-card p {
+        font-size: 16px;
+        color: var(--gray);
+        margin: 0;
+        line-height: 1.7;
+    }
+
+    /* Audience Section Headings */
+    .audience-header {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+
+    .audience-header p {
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--primary-dark);
+        margin-bottom: 8px;
+    }
+
+    .audience-header h2 {
+        font-size: 36px;
+        color: var(--black);
+        font-weight: 700;
+    }
+
+    /* Feature Grid */
+    .feature-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+        margin-bottom: 40px;
+    }
+
+    .feature-card {
+        background: var(--white);
+        border-radius: 20px;
+        padding: 32px 24px;
+        border: 1px solid var(--border-dark);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.03);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .feature-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 16px 32px rgba(0,0,0,0.08);
+    }
+
+    .feature-icon-wrapper {
+        width: 64px;
+        height: 64px;
+        background: #E6FBF5;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px;
+    }
+
+    .feature-icon-wrapper img {
+        width: 36px;
+        height: 36px;
+        object-fit: contain;
+    }
+
+    .feature-card h3 {
+        font-size: 20px;
+        font-weight: 700;
+        margin-bottom: 16px;
+        color: var(--black);
+    }
+
+    .feature-card ul {
+        list-style: none;
+        padding: 0;
+        margin: 0 0 16px 0;
+        flex-grow: 1;
+    }
+
+    .feature-card ul li {
+        font-size: 14px;
+        color: var(--gray);
+        margin-bottom: 10px;
+        position: relative;
+        padding-left: 18px;
+        line-height: 1.5;
+    }
+
+    .feature-card ul li::before {
+        content: "•";
+        color: var(--primary-dark);
+        font-weight: bold;
+        font-size: 18px;
+        position: absolute;
+        left: 0;
+        top: -2px;
+    }
+
+    /* Stat Callout Box inside Card */
+    .card-callout {
+        background: #FFFBEB;
+        border-left: 3px solid #F59E0B;
+        padding: 12px 14px;
+        border-radius: 8px;
+        font-size: 12px;
+        color: #78350F;
+        line-height: 1.5;
+        margin-top: auto;
+    }
+
+    /* Hiring Holes Lead Magnet Section */
+    .lead-magnet-card {
+        background: var(--dark-gray);
+        border-radius: 24px;
+        padding: 48px;
+        color: var(--white);
+        margin: 40px 0;
+        box-shadow: 0 12px 32px rgba(0,0,0,0.12);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 32px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .lead-magnet-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.22);
+    }
+
+    .lead-magnet-content {
+        max-width: 750px;
+    }
+
+    .lead-magnet-tag {
+        background: var(--primary);
+        color: var(--black);
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 700;
+        display: inline-block;
+        margin-bottom: 16px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .lead-magnet-card h3 {
+        font-size: 24px;
+        color: var(--white);
+        margin-bottom: 12px;
+        font-weight: 600;
+    }
+
+    .lead-magnet-card p {
+        color: #D1D5DB;
+        font-size: 15px;
+        line-height: 1.6;
+        margin-bottom: 0;
+    }
+
+    .lead-magnet-action {
+        flex-shrink: 0;
+    }
+
+    /* Comparison Table Styles (Imported 1:1) */
+    .table-section {
+        padding: 20px 0 60px 0;
+    }
+
+    .table-section h2 {
+        text-align: center;
+        font-size: 36px;
+        margin-bottom: 48px;
+        color: var(--black);
+        font-weight: 700;
+    }
+
+    .pricing-table {
+        display: grid;
+        grid-template-columns: 250px 1fr 1fr 1fr;
+        background: var(--white);
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        overflow: hidden;
+        border: 1px solid var(--border-dark);
+        transition: transform 0.4s ease, box-shadow 0.4s ease;
+    }
+
+    .pricing-table:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 20px 48px rgba(0,0,0,0.12);
+    }
+
+    .pt-cell {
+        padding: 32px 24px;
+        border-right: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
+    }
+
+    .pt-cell:last-child { border-right: none; }
+    
+    .pt-header {
+        background: #FFFFFF;
+        font-weight: 700;
+        text-align: center;
+        text-transform: uppercase;
+        font-size: 14px;
+        letter-spacing: 1px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--black);
+    }
+
+    .pt-header.traveling-therapist-col {
+        background: var(--primary);
+        color: var(--black);
+        font-size: 16px;
+    }
+
+    .row-header {
+        background: #F9FAFB;
+        font-weight: 600;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    .row-header span { font-size: 13px; font-weight: 400; color: var(--gray); margin-top: 8px; }
+
+    .pt-content { font-size: 14px; color: var(--black); }
+    .pt-content ul, .pt-content ol { padding-left: 20px; margin-top: 8px; color: var(--gray); }
+    .pt-content li { margin-bottom: 16px; line-height: 1.5; font-size: 13px;}
+    .pt-content strong { color: var(--black); }
+    
+    .pt-content.traveling-therapist-col {
+        background: #FAFFFD;
+        border-left: 2px solid var(--primary);
+        border-right: 2px solid var(--primary);
+    }
+
+    /* Responsiveness */
+    @media (max-width: 1024px) {
+        .feature-grid { grid-template-columns: repeat(2, 1fr); }
+        .lead-magnet-card { flex-direction: column; text-align: center; }
+        .pricing-table { display: flex; flex-direction: column; }
+        .row-header { display: none; }
+    }
+
+    @media (max-width: 640px) {
+        .feature-grid { grid-template-columns: 1fr; }
+        .overview-card { padding: 24px; }
+        .lead-magnet-card { padding: 32px 24px; }
+    }
+</style>
+
+<!-- Functional Template Title Identifier preserved -->
 <p id="pageTitle" class="d-none">What_Is_TTT</p>
 
-<div class="container" style="background-color: rgba(0, 0, 0, 0);">
-    <div class=" row">
-        <div class="col-md-12">
-            <h1 class="text-center mb-5">What's The Traveling Therapist?</h1>
-        </div>
-    </div>
-    <div class="row">
-        <p><b>What is The Traveling Therapist</b> The Traveling Therapist is an online matching platform that connects
-            healthcare facilities with qualified clinicians for short-term work and provides the opportunity to
-            transition into long term employment if both parties choose to continue the partnership.
-            <br><br>
-            <b>How it works and why it helps</b> Create a profile and post a listing in under 10 minutes; listings stay
-            live
-            for 14 days While clinicians place an offer on the work, so you get fast, transparent matches without hidden
-            fees. Our
-            pricing model starts affordably and you only pay when we deliver a match, helping facilities reduce hiring
-            overhead while clinicians gain flexible, higher‑value opportunities
-        </p>
-    </div>
-    <hr>
-    <div class="row">
-        <div class="row provider-userbox fixbottom">
-            <div class="divider"></div>
-            <div class="center">
-                <h1 class="text-center">Who is The Traveling Therapist For?</h1>
-                <h2 class="text-center mb-5 offset-lm-item">For healthcare facilities we are...</h2>
-            </div>
-            <div class="col-md-3">
-                <h2 class="text-center offset-lm-item">Fast</h2>
-                <div class="center-img">
-                    <img src="/media/images/startup.png" alt="Rocket ship" width="100px" height="100px">
-                </div>
-                <ul class="text-center offset-tm-item">
-                    <li>Create your profile, and post your listing in under 10 minutes.</li>
-                    <li>Listings are live for 14 days, so you get a match quickly!</li>
-                </ul>
-                <div class="mb-4 ps-3 border-start border-3 border-warning"> 66% of facilities we surveyed in November
-                    2025 claimed that their biggest hiring problem was SPEED, citing a "slow hiring process" as a hurdle
-                    when hiring or filling positions. </div>
-            </div>
-            <div class="col-md-3">
-                <h2 class="text-center offset-lm-item">Transparent</h2>
-                <div class="center-img">
-                    <!-- this image requires attribution -->
-                    <img src="/media/images/like.png" alt="thumbs up" width="100px" height="100px">
-                </div>
-                <ul class="text-center offset-tm-item">
-                    <li>Save the agency fees and expensive job board advertisements. Our prices start at $300 per match.
-                    </li>
-                    <li>Post your listing for free! We only invoice you if we get you a match!</li>
-                    <li>No hidden fees once your employee starts.</li>
-                </ul>
-            </div>
-            <div class="col-md-3">
-                <h2 class="text-center offset-lm-item">Customizable</h2>
-                <div class="center-img">
-                    <img src="/media/images/price.png" alt="Price" width="100px" height="100px">
-                </div>
-                <ul class="text-center offset-tm-item">
-                    <li>Select between full contract price and fee split for most practitioner types </li>
-                    <li>Create a posting for PT, RMT, PSW, Chiropractor, and many more!</li>
-                    <li>Set ceiling prices to keep your posting on budget.</li>
-                </ul>
-            </div>
-            <div class="col-md-3">
-                <h2 class="text-center offset-lm-item">Hassle free</h2>
-                <div class="center-img">
-                    <img src="/media/images/hired.png" alt="Hands shaking" width="100px" height="100px">
-                </div>
-                <ul class="text-center offset-tm-item">
-                    <li>Save time, and effort screening resumes and conducting interviews for your short term or
-                        contract hires.</li>
-                    <li>Once your ad is live, therapists place an offer on your posting for the next 14 days with no
-                        action needed
-                        on your side.</li>
-                    <li>Eliminate the agency middleman, back and forth calls, and haggling!</li>
-                </ul>
-            </div>
-        </div>
-        <div class="row therapist-userbox fixbottom">
-            <div class="divider"></div>
-            <div class="center col-md-4">
+<div class="ttt-about-page">
+    <div class="container">
 
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <span class="hero-badge">On-Demand Healthcare Staffing</span>
+            <h1>What's The Traveling Therapist?</h1>
+            <p>The Traveling Therapist is an online matching platform that connects healthcare facilities with qualified clinicians for short-term work and provides the opportunity to transition into long-term employment if both parties choose to continue the partnership.</p>
+            
+            <div class="overview-card">
+                <h3>How It Works and Why It Helps</h3>
+                <p>Create a profile and post a listing in under 10 minutes; listings stay live for 14 days while clinicians place an offer on the work, so you get fast, transparent matches without hidden fees. Our pricing model starts affordably and you only pay when we deliver a match, helping facilities reduce hiring overhead while clinicians gain flexible, higher‑value opportunities.</p>
             </div>
-            <hr>
-            <blockquote class="quote-card quote-card-facility">
-                <p>50% of clinics surveyed reported that they were not sure how to or where to
-                    best recruit physiotherapists from. They both cited that a service capturing more of the physios
-                    available to work at any one time would help! <br>
-                    <br>
-                    Share your "hiring holes" and receive 5% off of your first invoice when you create an account.
-                    <br>
-                    <br>
+        </section>
 
-                    <a class="btn btn-primary btn-lg" href="https://forms.gle/UJzcTFQQnRzg9i1L7">Share your hiring
-                        holes</a>
-                </p>
-            </blockquote>
-            <hr>
-        </div>
-        <div class="center col-md-4"></div>
-        <div class="divider"></div>
-        <div class="center">
-            <h2 class="text-center mb-5">For practitioners we are...</h2>
-        </div>
-        <div class="col-md-3">
-            <h2 class="text-center offset-lm-item">Private</h2>
-            <div class="center-img">
-                <img src="/media/images/spy.png" alt="Incognito" width="100px" height="100px">
+        <hr class="section-divider">
+
+        <!-- Section: Who is it for? -->
+        <section>
+            <!-- Facilities Section -->
+            <div class="audience-header">
+                <p>Healthcare Facilities</p>
+                <h2>For healthcare facilities we are...</h2>
             </div>
-            <ul class="text-center offset-tm-item">
-                <li>We do not collect your license, personal or credit card information when you sign up</li>
-            </ul>
-        </div>
-        <div class="col-md-3">
-            <h2 class="text-center offset-lm-item">Free</h2>
-            <div class="center-img">
-                <img src="/media/images/free.png" alt="Price tag" width="100px" height="100px">
-            </div>
-            <ul class="text-center offset-tm-item">
-                <li>Always free to create an account and place an offer!</li>
-            </ul>
-        </div>
-        <div class="col-md-3">
-            <h2 class="text-center offset-lm-item">Flexible</h2>
-            <div class="center-img">
-                <img src="/media/images/leave.png" alt="Plane and calendar" width="100px" height="100px">
-            </div>
-            <ul class="text-center offset-tm-item">
-                <li>Determine your own schedule and price to work.</li>
-                <li>Only place an offer on postings you are interested in.</li>
-            </ul>
-        </div>
-        <div class="col-md-3">
-            <h2 class="text-center offset-lm-item">Expanding Your Career</h2>
-            <div class="center-img">
-                <img src="/media/images/career-choice.png" alt="Person with arrows" width="100px" height="100px">
-            </div>
-            <ul class="text-center offset-tm-item">
-                <li>Travel while you work by taking jobs in new locations.</li>
-                <li>Serve new clinical populations.</li>
-                <li>Network and build your career!</li>
-            </ul>
-        </div>
-    </div>
-</div>
-<div class="row">
-    <h1 class="text-center">Healthcare Staffing Service Provider Comparison</h1>
-    <div id="whyUseCarousel" class="carousel slide" data-bs-interval="false">
-        <div class="carousel-inner">
-            <div class="carousel-item active">
-                <div class="card">
-                    <h3 class="card-header">AGENCY</h3>
-                    <div class="card-body whyUseCardBody">
-                        <h4 class="card-title">SPEED & CONVENIENCE</h4>
-                        <h6>What is the time required and process needed to hire a healthcare worker?</h6>
-                        <h6 class="card-title">VERY SLOW</h6>
-                        <ol>
-                            <li>Research potential agencies</li>
-                            <li>Hire an Agency</li>
-                            <li>Call them & <b>wait</b></li>
-                            <li>Hope they have a candidate interested in your job</li>
-                            <li><b>WAIT</b> again</li>
-                            <li>Back & forth communication to coordinate with <b>waiting</b> between each step</li>
-                        </ol>
-                        <hr>
-                        <h5 class="card-title">COSTS</h5>
-                        <h6>What are the upfront and & hidden costs to onboard that worker?</h6>
-                        <ul>
-                            <li>Fee per match and/or a % spread between the cost to you and what the clinician
-                                receives</li>
-                            <li>Healthcare facilities may be blind to how much the clinician is paid</li>
-                            <li>Healthcare facilities support the overhead costs of the people & operations of the
-                                agency</li>
-                            <li>Agency middleman makes back and forth communication time & resource intensive for
-                                healthcare facilities</li>
-                        </ul>
-                        <hr>
-                        <h5 class="card-title"><b>RESULT</b></h5>
-                        <h6><b>SLOW & EXPENSIVE</b></h6>
+
+            <div class="feature-grid">
+                <!-- Fast -->
+                <div class="feature-card">
+                    <div class="feature-icon-wrapper">
+                        <img src="/media/images/startup.png" alt="Rocket ship">
+                    </div>
+                    <h3>Fast</h3>
+                    <ul>
+                        <li>Create your profile, and post your listing in under 10 minutes.</li>
+                        <li>Listings are live for 14 days, so you get a match quickly!</li>
+                    </ul>
+                    <div class="card-callout">
+                        <strong>Survey Insight:</strong> 66% of facilities we surveyed in November 2025 claimed their biggest hiring problem was SPEED, citing a "slow hiring process" as a hurdle when hiring or filling positions.
                     </div>
                 </div>
-            </div>
-            <div class="carousel-item">
-                <div class="card">
-                    <h3 class="card-header">HEALTHCARE JOB BOARDS</h3>
-                    <div class="card-body whyUseCardBody">
-                        <h4 class="card-title">SPEED & CONVENIENCE</h4>
-                        <h6>What is the time required and process needed to hire a healthcare worker?</h6>
-                        <h6 class="card-title">SLOW</h6>
-                        <ol>
-                            <li>Which association or job board services will you use?</li>
-                            <li>Membership required to post a job?</li>
-                            <li>Sometimes healthcare facilities can post a job, otherwise the association has to do
-                                it for you.</li>
-                            <li>Post your ad, hope someone relevant and qualified applies</li>
-                            <li>Screen resumes, conduct interviews, etc. adding time you don't have as a healthcare
-                                facilities</li>
-                        </ol>
-                        <hr>
-                        <h5 class="card-title">COSTS</h5>
-                        <h6>What are the upfront and & hidden costs to onboard that worker?</h6>
-                        <ul>
-                            <li>Pay fees to be a member & post + $600 OR MORE per job posting!</li>
-                            <li>Healthcare facilities lose time & money posting their job, waiting for applicants,
-                                screening resumes, interviewing candidates, etc.</li>
-                            <li>Does the new hire stay on your team?</li>
-                            <li>If not, post another job for another $600+ & repeat!</li>
-                            <li>Manage the complexity of posting for your different clinician types on different job
-                                boards, resulting in MORE lost time, money, & complexity</li>
-                        </ul>
-                        <hr>
-                        <h5 class="card-title"><b>RESULT</b></h5>
-                        <h6><b>CUMBERSOME & RESOURCE INTENSIVE</b></h6>
+
+                <!-- Transparent -->
+                <div class="feature-card">
+                    <div class="feature-icon-wrapper">
+                        <img src="/media/images/like.png" alt="Thumbs up">
                     </div>
+                    <h3>Transparent</h3>
+                    <ul>
+                        <li>Save the agency fees and expensive job board advertisements. Our prices start at $300 per match.</li>
+                        <li>Post your listing for free! We only invoice you if we get you a match!</li>
+                        <li>No hidden fees once your employee starts.</li>
+                    </ul>
+                </div>
+
+                <!-- Customizable -->
+                <div class="feature-card">
+                    <div class="feature-icon-wrapper">
+                        <img src="/media/images/price.png" alt="Price Tag">
+                    </div>
+                    <h3>Customizable</h3>
+                    <ul>
+                        <li>Select between full contract price and fee split for most practitioner types.</li>
+                        <li>Create a posting for PT, RMT, PSW, Chiropractor, and many more!</li>
+                        <li>Set ceiling prices to keep your posting on budget.</li>
+                    </ul>
+                </div>
+
+                <!-- Hassle Free -->
+                <div class="feature-card">
+                    <div class="feature-icon-wrapper">
+                        <img src="/media/images/hired.png" alt="Hands shaking">
+                    </div>
+                    <h3>Hassle Free</h3>
+                    <ul>
+                        <li>Save time and effort screening resumes and conducting interviews for your short-term or contract hires.</li>
+                        <li>Once your ad is live, therapists place an offer on your posting for the next 14 days with no action needed on your side.</li>
+                        <li>Eliminate the agency middleman, back and forth calls, and haggling!</li>
+                    </ul>
                 </div>
             </div>
-            <div class="carousel-item">
-                <div class="card">
-                    <h3 class="card-header"><img src="/media/images/TTT_LOGO.png" id="carouselLogo"
-                            alt="Traveling Therapist Logo" class="img-fluid banner-logo"></h3>
-                    <div class="card-body whyUseCardBody">
-                        <h4 class="card-title">SPEED & CONVENIENCE</h4>
-                        <h6>What is the time required and process needed to hire a healthcare worker?</h6>
-                        <h6 class="card-title">FAST</h6>
-                        <ol>
-                            <li><a href="{% url 'register' %}">Signup</a> for <b>FREE</b>, no membership fees for
-                                healthcare facilities to post a job</li>
-                            <li>Create a job posting in < 10 min</li>
-                            <li>Login to create new job postings anytime.</li>
-                            <li>Job postings show immediately to the relevant clinicians so they can make you an
-                                offer!</li>
-                            <li>At the end of an listing, you are matched with <u>lowest offer</u> within 48
-                                hours</li>
-                        </ol>
-                        <hr>
-                        <h5 class="card-title">COSTS</h5>
-                        <h6>What are the upfront and & hidden costs to onboard that worker?</h6>
-                        <ul>
-                            <li><b>Transparent:</b> as low as $300/match with No hidden fees. See our <a
-                                    href="{% url 'faq' %}">FAQ Page</a> for more details</li>
-                            <li><b>Low Commitment:</b> We match you to a clinician in 14 days or re-post your ad for
-                                free</li>
-                            <li><b>Bottom Line Efficiency:</b> We keep your staffing costs down by matching you to
-                                the lowest offer at the end of your listing.</li>
-                            <li>Online service = lower overhead costs. We pass the savings on to you!</li>
-                        </ul>
-                        <hr>
-                        <h5 class="card-title"><b>RESULT</b></h5>
-                        <h6><b>FAST, TRANSPARENT & FLEXIBLE SOLUTION FOR YOUR HEALTHCARE STAFFING NEEDS</b></h6>
-                    </div>
+
+            <!-- Facilities Special Offer / Form CTA Block -->
+            <div class="lead-magnet-card">
+                <div class="lead-magnet-content">
+                    <span class="lead-magnet-tag">Facility Insight & Discount</span>
+                    <h3>Are you facing recruitment bottlenecks?</h3>
+                    <p>50% of clinics surveyed reported that they were not sure how or where to best recruit physiotherapists from. They both cited that a service capturing more of the physios available to work at any one time would help!</p>
+                    <p style="margin-top: 8px; color: white;"><strong style="color: white;">Special offer:</strong> Share your "hiring holes" and receive raffle tickets for prizes when you create an account.</p>
+                </div>
+                <div class="lead-magnet-action">
+                    <a class="btn btn-primary" href="{% url 'surveys' %}" target="_blank" rel="noopener">Share Your Hiring Holes ↗</a>
                 </div>
             </div>
-        </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#whyUseCarousel" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#whyUseCarousel" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-        </button>
-    </div>
-</div>
-<div class="row">
-    <table id="whyUseTable">
-        <thead>
-            <tr>
-                <th></th>
-                <th><b>AGENCY</b></th>
-                <th><b>HEALTHCARE JOB BOARDS</b></th>
-                <th><img src="/media/images/TTT_LOGO.png" id="whyUseTableLogo" alt="Traveling Therapist Logo"
-                        class="img-fluid banner-logo"></th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>
-                    <b>SPEED & CONVENIENCE</b><br>
-                    What is the time required and process needed to hire a healthcare worker?
-                </td>
-                <td>
-                    <b class="cellTitle">VERY SLOW</b><br>
+
+            <hr class="section-divider">
+
+            <!-- Practitioners Section -->
+            <div class="audience-header">
+                <p>Clinicians & Practitioners</p>
+                <h2>For practitioners we are...</h2>
+            </div>
+
+            <div class="feature-grid">
+                <!-- Private -->
+                <div class="feature-card">
+                    <div class="feature-icon-wrapper">
+                        <img src="/media/images/spy.png" alt="Incognito">
+                    </div>
+                    <h3>Private</h3>
+                    <ul>
+                        <li>We do not collect your license, personal or credit card information when you sign up.</li>
+                    </ul>
+                </div>
+
+                <!-- Free -->
+                <div class="feature-card">
+                    <div class="feature-icon-wrapper">
+                        <img src="/media/images/free.png" alt="Free Tag">
+                    </div>
+                    <h3>Free</h3>
+                    <ul>
+                        <li>Always free to create an account and place an offer!</li>
+                    </ul>
+                </div>
+
+                <!-- Flexible -->
+                <div class="feature-card">
+                    <div class="feature-icon-wrapper">
+                        <img src="/media/images/leave.png" alt="Plane and calendar">
+                    </div>
+                    <h3>Flexible</h3>
+                    <ul>
+                        <li>Determine your own schedule and price to work.</li>
+                        <li>Only place an offer on postings you are interested in.</li>
+                    </ul>
+                </div>
+
+                <!-- Expanding Your Career -->
+                <div class="feature-card">
+                    <div class="feature-icon-wrapper">
+                        <img src="/media/images/career-choice.png" alt="Person with arrows">
+                    </div>
+                    <h3>Expanding Your Career</h3>
+                    <ul>
+                        <li>Travel while you work by taking jobs in new locations.</li>
+                        <li>Serve new clinical populations.</li>
+                        <li>Network and build your career!</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <hr class="section-divider">
+
+        <!-- Section: Comparison Chart (Imported 1:1 from Example Page) -->
+        <section class="table-section">
+            <h2>Healthcare Staffing Service Provider Comparison</h2>
+            <div class="pricing-table">
+                <!-- Headers -->
+                <div class="pt-cell pt-header" style="background: transparent;"></div>
+                <div class="pt-cell pt-header" style="background: transparent;">AGENCY</div>
+                <div class="pt-cell pt-header" style="background: transparent;">HEALTHCARE JOB BOARDS</div>
+                <div class="pt-cell pt-header traveling-therapist-col" style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    THE TRAVELING THERAPIST
+                </div>
+                
+                <!-- Row 1: Speed & Convenience -->
+                <div class="pt-cell row-header">
+                    <strong style="color: var(--black); font-size: 14px; text-transform: uppercase;">SPEED & CONVENIENCE</strong>
+                    <span>What is the time required and process needed to hire a healthcare worker?</span>
+                </div>
+                <div class="pt-cell pt-content">
+                    <div style="text-align: center; font-weight: 700; margin-bottom: 16px; color: var(--black);">VERY SLOW</div>
                     <ol>
                         <li>Research potential agencies</li>
                         <li>Hire an Agency</li>
-                        <li>Call them & <b>wait</b></li>
+                        <li>Call them & wait</li>
                         <li>Hope they have a candidate interested in your job</li>
-                        <li><b>WAIT</b> again</li>
-                        <li>Back & forth communication to coordinate with <b>waiting</b> between each step</li>
+                        <li>WAIT again</li>
+                        <li>Back & forth communication to coordinate with <strong>waiting between each step</strong></li>
                     </ol>
-                </td>
-                <td>
-                    <b class="cellTitle">SLOW</b><br>
+                </div>
+                <div class="pt-cell pt-content">
+                    <div style="text-align: center; font-weight: 700; margin-bottom: 16px; color: var(--black);">SLOW</div>
                     <ol>
                         <li>Which association or job board services will you use?</li>
                         <li>Membership required to post a job?</li>
-                        <li>Sometimes healthcare facilities can post a job, otherwise the association has to do it
-                            for you.</li>
+                        <li>Sometimes healthcare facilities can post a job, otherwise the association has to do it for you.</li>
                         <li>Post your ad, hope someone relevant and qualified applies</li>
-                        <li>Screen resumes, conduct interviews, etc. adding time you don't have as a healthcare
-                            facilities owner</li>
+                        <li>Screen resumes, conduct interviews, etc. adding time you don't have as a healthcare facilities owner</li>
                     </ol>
-                </td>
-                <td>
-                    <b class="cellTitle">FAST</b><br>
+                </div>
+                <div class="pt-cell pt-content traveling-therapist-col">
+                    <div style="text-align: center; font-weight: 700; margin-bottom: 16px; color: var(--black);">FAST</div>
                     <ol>
-                        <li><a href="{% url 'register' %}">Signup</a> for <b>FREE</b>, no membership fees for
-                            healthcare facilities to post a job</li>
-                        <li>Create a job posting in < 10 min</li>
+                        <li><a href="{% url 'register' %}" style="color: #008766; text-decoration: underline;">Signup</a> for FREE, no membership fees for healthcare facilities to post a job</li>
+                        <li>Create a job posting in &lt; 10 min</li>
                         <li>Login to create new job postings anytime.</li>
-                        <li>Job postings show immediately to the relevant clinicians so they can make you an offer!
-                        </li>
-                        <li>At the end of an listing, you are matched to the <u>lowest bidder</u> within 48 hours
-                        </li>
+                        <li>Job postings show immediately to the relevant clinicians so they can make you an offer!</li>
+                        <li>Review your offers anytime and match with a clinician of your choosing based on their rate, skills, and qualifications!</li>
                     </ol>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <b>COSTS</b><br>
-                    What are the upfront and & hidden costs to onboard that worker?
-                </td>
-                <td>
+                </div>
+                
+                <!-- Row 2: Costs -->
+                <div class="pt-cell row-header">
+                    <strong style="color: var(--black); font-size: 14px; text-transform: uppercase;">COSTS</strong>
+                    <span>What are the upfront and & hidden costs to onboard that worker?</span>
+                </div>
+                <div class="pt-cell pt-content">
                     <ul>
-                        <li>Fee per match and/or a % spread between the cost to you and what the clinician receives
-                        </li>
+                        <li>Fee per match and/or a % spread between the cost to you and what the clinician receives</li>
                         <li>Healthcare facilities may be blind to how much the clinician is paid</li>
-                        <li>Healthcare facilities support the overhead costs of the people & operations of the
-                            agency</li>
-                        <li>Agency middleman makes back and forth communication time & resource intensive for
-                            healthcare facilities</li>
+                        <li>Healthcare facilities support the overhead costs of the people & operations of the agency</li>
+                        <li>Agency middleman makes back and forth communication time & resource intensive for healthcare facilities</li>
                     </ul>
-                </td>
-                <td>
+                </div>
+                <div class="pt-cell pt-content">
                     <ul>
-                        <li>Pay fees to be a member & post + $600 OR MORE per job posting!</li>
-                        <li>healthcare facilities lose time & money posting their job, waiting for applicants,
-                            screening resumes, interviewing candidates, etc.</li>
+                        <li>Pay fees to be a member & post + <em>$600 OR MORE</em> per job posting!</li>
+                        <li>Healthcare facilities lose time & money posting their job, waiting for applicants, screening resumes, interviewing candidates, etc.</li>
                         <li>Does the new hire stay on your team?</li>
                         <li>If not, post another job for another $600+ & repeat!</li>
-                        <li>Manage the complexity of posting for your different clinician types on different job
-                            boards, resulting in MORE lost time, money, & complexity</li>
+                        <li>Manage the complexity of posting for your different clinician types on different job boards, resulting in MORE lost time, money, & complexity</li>
                     </ul>
-                </td>
-                <td>
+                </div>
+                <div class="pt-cell pt-content traveling-therapist-col">
                     <ul>
-                        <li><b>Transparent:</b> as low as $300/match with No hidden fees. See our <a
-                                href="{% url 'faq' %}">FAQ Page</a> for more details</li>
-                        <li><b>Low Commitment:</b> We match you to a clinician in 14 days or re-post your ad for
-                            free</li>
-                        <li><b>Bottom Line Efficiency:</b> We keep your staffing costs down by matching you to the
-                            lowest bidder at the end of your listing.</li>
-                        <li>Online service = lower overhead costs. We pass the savings on to you!</li>
+                        <li><strong>Transparent:</strong> as low as $300/match with No hidden fees. See our <a href="{% url 'faq' %}" style="color: #008766; text-decoration: underline;">FAQ Page</a> for more details</li>
+                        <li><strong>Low Commitment:</strong> We match you to a clinician in 14 days or re-post your ad for free</li>
+                        <li><strong>Bottom Line Efficiency:</strong> Online service = lower overhead costs. We pass the savings on to you!</li>
                     </ul>
-                </td>
-            </tr>
-            <tr>
-                <td><b>RESULT</b></td>
-                <td><b>SLOW & EXPENSIVE</b></td>
-                <td><b>CUMBERSOME & RESOURCE INTENSIVE</b></td>
-                <td><b>FAST, TRANSPARENT & FLEXIBLE SOLUTION FOR YOUR HEALTHCARE STAFFING NEEDS</b></td>
-            </tr>
-        </tbody>
-    </table>
+                </div>
+
+                <!-- Result Row -->
+                <div class="pt-cell" style="background: transparent; display: flex; align-items: center; justify-content: center; font-weight: 700; border-bottom: none;">RESULT</div>
+                <div class="pt-cell pt-content" style="text-align:center; font-weight:700; border-bottom: none; display: flex; align-items: center; justify-content: center; background: #F9FAFB; color: var(--black);">SLOW & EXPENSIVE</div>
+                <div class="pt-cell pt-content" style="text-align:center; font-weight:700; border-bottom: none; display: flex; align-items: center; justify-content: center; background: #F9FAFB; color: var(--black);">CUMBERSOME & RESOURCE INTENSIVE</div>
+                
+                <!-- Result Box -->
+                <div class="pt-cell pt-content traveling-therapist-col" style="text-align:center; font-weight:700; border: none; display: flex; align-items: center; justify-content: center; background: var(--primary); color: var(--black); border-radius: 0 0 16px 0;">
+                    FAST, TRANSPARENT & FLEXIBLE SOLUTION FOR YOUR HEALTHCARE STAFFING NEEDS
+                </div>
+            </div>
+        </section>
+
+    </div>
 </div>
-</div>
+
 <script src="{% static 'auction/why-use.js' %}"></script>
 {% endblock %}
