@@ -248,13 +248,33 @@ def auction_closed(id):
     dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
     print("date and time =", dt_string)
     auction = Auction.objects.get(auctionID=id)
+    was_active = auction.active
     logger.warning(auction.auctionID)
     bids = Bid.objects.filter(auction=id, active=True).annotate(Min('amount')).order_by('amount')
     auction.active = False
     auction.waitingCloseout = True
     auction.closed = False
-    logger.warning(bids.count())
+    active_bid_count = bids.count()
+    logger.warning(active_bid_count)
     auction.save()
+
+    if was_active and active_bid_count == 0:
+        admin = AdminSetting.objects.first()
+        if admin is not None and admin.sendEmails:
+            try:
+                send_mail(
+                    subject='Your Listing Closed with No Offers',
+                    message='',
+                    html_message=emails.clinic_no_bids(
+                        str(auction.clinic.clinicName),
+                        auction.placementStart,
+                        auction.placementEnd,
+                    ),
+                    from_email=settings.EMAIL_HOST_USER,
+                    recipient_list=(auction.clinic.user.email,),
+                )
+            except Exception as exc:
+                logger.warning('Clinic no-bids email failed to send for auction %s: %s', auction.auctionID, exc)
 
     finalize_run_date = timezone.now() + timedelta(seconds=get_default_closed_waiting_period_seconds())
     schedule_waiting_closeout(auction.auctionID, finalize_run_date)

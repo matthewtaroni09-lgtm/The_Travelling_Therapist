@@ -6,7 +6,7 @@ from operator import mod
 from pyexpat import model
 from tkinter import Widget
 from django import forms
-from .models import PROVINCES, Auction, Bid, Account, Demographic, DemographicType, PracticeArea, PracticeAreaType, User, UserType, MessageAcknowledgement, PaymentType
+from .models import PROVINCES, PAYMENT_METHOD_CHOICES, Auction, Bid, Account, Demographic, DemographicType, PracticeArea, PracticeAreaType, User, UserType, MessageAcknowledgement, PaymentType, normalize_youtube_embed_url
 from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
 import random
 from django.core.exceptions import ValidationError
@@ -152,6 +152,24 @@ class AuctionForm(forms.ModelForm):
         min_value=1,
     )
 
+    paymentMethodToggle = forms.BooleanField(
+        label='Include Payment Method?',
+        required=False,
+    )
+
+    paymentMethod = forms.ChoiceField(
+        label='Payment Method',
+        required=False,
+        choices=(('', '---------'),) + PAYMENT_METHOD_CHOICES,
+        widget=forms.RadioSelect,
+    )
+
+    paymentMethodOther = forms.CharField(
+        label='Other Payment Method',
+        required=False,
+        max_length=200,
+    )
+
     class Meta:
         model = Auction
         fields = ( 
@@ -163,6 +181,9 @@ class AuctionForm(forms.ModelForm):
             'minimumCompensation',
             'desiredFlatFeeHourly',
             'desiredFlatFeeTotalContract',
+            'paymentMethodToggle',
+            'paymentMethod',
+            'paymentMethodOther',
             'treatmentCost',
             'treatmentMin',
             'assessmentCost',
@@ -205,6 +226,7 @@ class AuctionForm(forms.ModelForm):
             'minimumCompensation': forms.NumberInput(attrs={'class': 'form-control', 'min': '1', 'placeholder': 'e.g. 75'}),
             'desiredFlatFeeHourly': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'placeholder': 'e.g. 80.00'}),
             'desiredFlatFeeTotalContract': forms.NumberInput(attrs={'class': 'form-control', 'step': '1', 'min': '1', 'placeholder': 'e.g. 5000'}),
+            'paymentMethodOther': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter payment method'}),
             'comments': forms.Textarea(attrs={'placeholder': 'Tell us about your clinic...', 'rows': '4'})
         }
 
@@ -218,6 +240,9 @@ class AuctionForm(forms.ModelForm):
         if self.instance and self.instance.pk:
             self.initial.setdefault('paymentTypesSelection', self.instance.get_payment_types_list())
             self.initial.setdefault('flatFeeType', self.instance.flatFeeType)
+            self.initial.setdefault('paymentMethodToggle', self.instance.paymentMethodToggle)
+            self.initial.setdefault('paymentMethod', self.instance.paymentMethod)
+            self.initial.setdefault('paymentMethodOther', self.instance.paymentMethodOther)
 
     def clean(self):
         cleaned_data = super().clean()
@@ -235,6 +260,9 @@ class AuctionForm(forms.ModelForm):
         desired_fee_split_percentage = cleaned_data.get('desiredFeeSplitPercentage')
         desired_flat_fee_hourly = cleaned_data.get('desiredFlatFeeHourly')
         desired_flat_fee_total_contract = cleaned_data.get('desiredFlatFeeTotalContract')
+        payment_method_toggle = bool(cleaned_data.get('paymentMethodToggle'))
+        payment_method = cleaned_data.get('paymentMethod')
+        payment_method_other = (cleaned_data.get('paymentMethodOther') or '').strip()
 
         minimum_compensation = cleaned_data.get('minimumCompensation')
 
@@ -347,6 +375,19 @@ class AuctionForm(forms.ModelForm):
         if desired_flat_fee_total_contract is not None and ('Flat Fee' not in payment_types or flat_fee_type != 'total_contract'):
             cleaned_data['desiredFlatFeeTotalContract'] = None
 
+        if payment_method_toggle and not payment_method:
+            error_list.append(ValidationError('Please select a payment method or turn off Include Payment Method.'))
+
+        if payment_method_toggle and payment_method == 'Other' and payment_method_other == '':
+            error_list.append(ValidationError('Please enter a value for Other Payment Method.'))
+
+        if payment_method_toggle and payment_method != 'Other':
+            cleaned_data['paymentMethodOther'] = ''
+
+        if not payment_method_toggle:
+            cleaned_data['paymentMethod'] = ''
+            cleaned_data['paymentMethodOther'] = ''
+
         if len(error_list) > 0:
             raise forms.ValidationError(error_list)
 
@@ -371,6 +412,17 @@ class AuctionForm(forms.ModelForm):
         else:
             auction.desiredFlatFeeHourly = None
             auction.desiredFlatFeeTotalContract = None
+
+        auction.paymentMethodToggle = bool(self.cleaned_data.get('paymentMethodToggle'))
+        if auction.paymentMethodToggle:
+            auction.paymentMethod = self.cleaned_data.get('paymentMethod')
+            if auction.paymentMethod == 'Other':
+                auction.paymentMethodOther = (self.cleaned_data.get('paymentMethodOther') or '').strip()
+            else:
+                auction.paymentMethodOther = None
+        else:
+            auction.paymentMethod = None
+            auction.paymentMethodOther = None
 
         primary_payment_type = payment_types[0] if payment_types else ''
         if primary_payment_type:
@@ -652,7 +704,7 @@ class ProfileUpdateClinic(forms.ModelForm):
     
     class Meta:
         model = Account
-        fields = ['clinicName', 'city', 'province', 'about', 'clinicWebsite', 'imageOne', 'imageTwo', 'imageThree', 'imageFour']
+        fields = ['clinicName', 'city', 'province', 'about', 'clinicWebsite', 'clinicVideo', 'imageOne', 'imageTwo', 'imageThree', 'imageFour']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -661,6 +713,7 @@ class ProfileUpdateClinic(forms.ModelForm):
             ''
         )
         self.fields['clinicWebsite'].error_messages['invalid'] = WEBSITE_URL_ERROR_MESSAGE
+        self.fields['clinicVideo'].help_text = 'Optional: Paste a YouTube URL. We will automatically convert it to an embeddable link.'
 
         for image_field in ('imageOne', 'imageTwo', 'imageThree', 'imageFour'):
             self.fields[image_field].widget = ProfileImageInput()
@@ -675,6 +728,7 @@ class ProfileUpdateClinic(forms.ModelForm):
         city = self.cleaned_data.get('city')
         about = self.cleaned_data.get('about')
         clinicWebsite = self.cleaned_data.get('clinicWebsite')
+        clinicVideo = self.cleaned_data.get('clinicVideo')
         province = self.cleaned_data.get('province')
         username = self.instance.user.username if getattr(self.instance, 'user', None) else None
         imageOne = self.cleaned_data.get('imageOne')
@@ -712,9 +766,18 @@ class ProfileUpdateClinic(forms.ModelForm):
             self.cleaned_data['clinicWebsite'] = normalize_website_url(clinicWebsite)
         except ValidationError:
             error_list.append(ValidationError(WEBSITE_URL_ERROR_MESSAGE))
+
+        if clinicVideo:
+            normalized_video = normalize_youtube_embed_url(clinicVideo)
+            if not normalized_video:
+                error_list.append(ValidationError('Please enter a valid YouTube URL for Clinic Video.'))
+            else:
+                self.cleaned_data['clinicVideo'] = normalized_video
     
         if len(error_list) > 0:
             raise forms.ValidationError(error_list)
+
+        return self.cleaned_data
 
 class PasswordChangingForm(PasswordChangeForm):
     old_password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control', 'type': 'password'}))

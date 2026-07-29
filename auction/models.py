@@ -3,8 +3,10 @@ from django.utils import timezone as django_timezone
 import datetime
 import math
 import os
+import re
 from tabnanny import verbose
 from unicodedata import category
+from urllib.parse import parse_qs, urlparse
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
@@ -60,6 +62,60 @@ FLAT_FEE_TYPE_CHOICES = (
     ('total_contract', 'Total Contract Price'),
 )
 
+PAYMENT_METHOD_CHOICES = (
+    ('Cash', 'Cash'),
+    ('Cheque', 'Cheque'),
+    ('Direct Deposit', 'Direct Deposit'),
+    ('E-Transfer', 'E-Transfer'),
+    ('As part of payroll with other staff', 'As part of payroll with other staff'),
+    ('Other', 'Other'),
+    ("Clinician's Choice", "Clinician's Choice"),
+)
+
+
+def normalize_youtube_embed_url(raw_url):
+    if raw_url is None:
+        return ''
+
+    normalized_value = str(raw_url).strip()
+    if normalized_value == '':
+        return ''
+
+    if '://' not in normalized_value:
+        normalized_value = f'https://{normalized_value}'
+
+    try:
+        parsed = urlparse(normalized_value)
+    except Exception:
+        return None
+
+    hostname = (parsed.netloc or '').lower()
+    if hostname.startswith('www.'):
+        hostname = hostname[4:]
+
+    path = (parsed.path or '').strip('/')
+    query_params = parse_qs(parsed.query or '')
+    video_id = ''
+
+    if hostname in ('youtube.com', 'm.youtube.com'):
+        if path == 'watch':
+            video_id = query_params.get('v', [''])[0]
+        elif path.startswith('embed/'):
+            video_id = path.split('/', 1)[1].split('/')[0]
+        elif path.startswith('shorts/'):
+            video_id = path.split('/', 1)[1].split('/')[0]
+    elif hostname == 'youtu.be':
+        video_id = path.split('/')[0]
+    elif hostname == 'youtube-nocookie.com' and path.startswith('embed/'):
+        video_id = path.split('/', 1)[1].split('/')[0]
+    else:
+        return None
+
+    if not re.fullmatch(r'[A-Za-z0-9_-]{11}', video_id or ''):
+        return None
+
+    return f'https://www.youtube.com/embed/{video_id}'
+
 @deconstructible
 class PathAndRename(object):
     def __init__(self, sub_path):
@@ -99,6 +155,7 @@ class Account(models.Model):
         null=True,
         help_text='This field is optional. Adding a website may give more traction to your listing - your website will be linked in your listings.'
     )
+    clinicVideo = models.URLField(verbose_name='Clinic Video', blank=True, null=True, help_text='This field is optional. Add a YouTube video URL to showcase your clinic.')
     underEighteen = models.IntegerField(verbose_name='% Under 18', blank=True, null=True)
     eighteenToSixtyFive = models.IntegerField(verbose_name='% 18 - 65', blank=True, null=True)
     overSixtyFive = models.IntegerField(verbose_name='% Over 65', blank=True, null=True)
@@ -120,6 +177,12 @@ class Account(models.Model):
 
     def __str__(self):
         return str(self.user)
+
+    def save(self, *args, **kwargs):
+        normalized_video = normalize_youtube_embed_url(self.clinicVideo)
+        if normalized_video:
+            self.clinicVideo = normalized_video
+        super().save(*args, **kwargs)
 
     @property
     def total_tickets(self):
@@ -304,6 +367,9 @@ class Auction(models.Model):
     payFrequency = models.ForeignKey('PayFrequency', verbose_name='Pay Frequency', related_name='pay_frequency', null=True, blank=True, on_delete=models.CASCADE) 
     reservePrice = models.IntegerField(verbose_name='Reserve Price', null=True, blank=True)
     paymentTypes = models.TextField(verbose_name='Payment Types', null=True, blank=True, help_text='Comma-separated list of payment types the clinic offers.')
+    paymentMethodToggle = models.BooleanField(verbose_name='Payment Method Toggle', default=False)
+    paymentMethod = models.CharField(verbose_name='Payment Method', max_length=100, choices=PAYMENT_METHOD_CHOICES, null=True, blank=True)
+    paymentMethodOther = models.CharField(verbose_name='Other Payment Method', max_length=200, null=True, blank=True)
     flatFeeType = models.CharField(verbose_name='Flat Fee Offer Type', max_length=50, null=True, blank=True, choices=FLAT_FEE_TYPE_CHOICES, help_text='Choose how flat-fee offers should be priced.')
     desiredFeeSplitPercentage = models.IntegerField(verbose_name='Desired Fee Split Percentage', null=True, blank=True)
     minimumCompensation = models.IntegerField(verbose_name='Minimum Compensation', null=True, blank=True)

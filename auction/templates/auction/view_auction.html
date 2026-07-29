@@ -15,11 +15,15 @@
       background: #f8fafb;
       overflow: hidden;
     }
-    .ttt-listing-carousel .carousel-item img {
+    .ttt-listing-carousel .carousel-item img,
+    .ttt-listing-carousel .carousel-item .ttt-video-wrapper {
       width: 100%;
       height: clamp(280px, 52vw, 620px);
       object-fit: contain;
       background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     .ttt-listing-carousel .carousel-control-prev,
     .ttt-listing-carousel .carousel-control-next {
@@ -61,13 +65,24 @@
 
   <div id="listingImageCarousel" class="carousel slide my-3 ttt-listing-carousel" data-bs-ride="false">
     <div class="carousel-inner">
+      <!-- Video Item Logic -->
+      {% if auction.clinic.clinicVideo %}
+      <div class="carousel-item active">
+        <div class="ttt-video-wrapper">
+          <iframe width="100%" height="100%" src="{{ auction.clinic.clinicVideo }}" title="Clinic video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+      </div>
+      {% endif %}
+      
+      <!-- Image Iteration -->
       {% for image_url in listing_images %}
-      <div class="carousel-item {% if forloop.first %}active{% endif %}">
+      <div class="carousel-item {% if not auction.clinic.clinicVideo and forloop.first %}active{% endif %}">
         <img src="{{ image_url }}" alt="Clinic image {{ forloop.counter }}" onerror="this.src='/media/images/no-image.jpg';">
       </div>
       {% endfor %}
     </div>
-    {% if listing_image_count > 1 %}
+    
+    {% if listing_image_count > 1 or auction.clinic.clinicVideo and listing_image_count > 0 %}
     <button class="carousel-control-prev" type="button" data-bs-target="#listingImageCarousel" data-bs-slide="prev">
       <span class="ttt-carousel-arrow">
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -81,12 +96,17 @@
       <span class="visually-hidden">Next</span>
     </button>
     <div class="carousel-indicators">
+      {% if auction.clinic.clinicVideo %}
+      <button type="button" data-bs-target="#listingImageCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+      {% endif %}
+      
       {% for image_url in listing_images %}
-      <button type="button" data-bs-target="#listingImageCarousel" data-bs-slide-to="{{ forloop.counter0 }}" class="{% if forloop.first %}active{% endif %}" {% if forloop.first %}aria-current="true"{% endif %} aria-label="Slide {{ forloop.counter }}"></button>
+      <button type="button" data-bs-target="#listingImageCarousel" data-bs-slide-to="{% if auction.clinic.clinicVideo %}{{ forloop.counter }}{% else %}{{ forloop.counter0 }}{% endif %}" class="{% if not auction.clinic.clinicVideo and forloop.first %}active{% endif %}" {% if not auction.clinic.clinicVideo and forloop.first %}aria-current="true"{% endif %} aria-label="Slide {% if auction.clinic.clinicVideo %}{{ forloop.counter|add:1 }}{% else %}{{ forloop.counter }}{% endif %}"></button>
       {% endfor %}
     </div>
     {% endif %}
   </div>
+  
   <div class="d-flex align-items-start flex-wrap gap-2 mb-3">
     <section class="d-inline-flex align-items-center text-white bg-dark py-2 px-3 me-3 rounded mb-0">
       {% if auction.is_effectively_closed %}
@@ -308,11 +328,12 @@
                       {% endfor %}
                     </div>
                     {% endif %}
+                    
                     {% if finalize_skill_rows %}
                     <hr>
-                    <p class="mb-2 fw-semibold">Skills and Qualifications for This Listing</p>
-                    <p class="small text-muted mb-2">Skills already selected in your profile are pre-checked. Add listing-specific skills before confirming your offer.</p>
-                    <div id="finalizeSkillChecklist" class="d-flex flex-column gap-1">
+                    <p class="mb-0 fw-semibold">Skills and Qualifications for This Listing</p>
+                    <p class="small text-muted mb-3" style="margin-top: 2px;">Skills already selected in your profile are pre-checked. Add listing-specific skills before confirming your offer.</p>
+                    <div id="finalizeSkillChecklist" class="d-flex flex-column gap-1 mb-3">
                       {% for skill in finalize_skill_rows %}
                       <label class="d-flex align-items-center justify-content-between border rounded px-2 py-1 mb-0" data-skill-name="{{ skill.name }}">
                         <span><input type="checkbox" class="form-check-input me-2 finalize-skill-check" {% if skill.selected %}checked{% endif %}>{{ skill.name }}</span>
@@ -321,6 +342,25 @@
                       {% endfor %}
                     </div>
                     {% endif %}
+                    
+                    <!-- NEW PAYMENT METHOD CHECKBOX IN FINALIZE -->
+                    {% if auction.paymentMethod %}
+                    <hr>
+                    <p class="mb-2 fw-semibold">Payment Information</p>
+                    <div class="border rounded d-flex justify-content-between align-items-center px-2 py-2">
+                   <span>Payment Method: 
+                     <strong>
+                       {% if auction.paymentMethod == 'Other' %}
+                       {{ auction.paymentMethodOther }}
+                       {% else %}
+                       {{ auction.paymentMethod }}
+                       {% endif %}
+                     </strong>
+                   </span>
+    <input class="form-check-input ms-2 mt-0" type="checkbox" checked disabled aria-label="Payment method">
+</div>
+                    {% endif %}
+
                   </div>
                 </div>
               </div>
