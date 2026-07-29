@@ -343,13 +343,20 @@ class PaymentType(models.Model):
     def __str__(self):
         return str(self.name)
 
+def get_default_start_date():
+    return datetime.date.today() + datetime.timedelta(days=1)
+
+def get_default_end_date():
+    return datetime.date.today() + datetime.timedelta(days=30)
+
+
 class Auction(models.Model):
     auctionID = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     clinic = models.ForeignKey(Account, related_name='auction_clinic', on_delete=models.CASCADE)
     auctionStart = models.DateTimeField(verbose_name='Auction Start', help_text='Enter the start date of the listing.')
     auctionEnd = models.DateTimeField(verbose_name='Auction End', help_text='Enter the end date of the listing.')
-    placementStart = models.DateField(verbose_name='Clinican Start Date', help_text='Enter the start date of the placement.', default=lambda: datetime.date.today() + datetime.timedelta(days=1))
-    placementEnd = models.DateField(verbose_name='Clinican End Date', help_text='Enter the end date of the placement.', default=lambda: datetime.date.today() + datetime.timedelta(days=30))
+    placementStart = models.DateField(verbose_name='Clinican Start Date', help_text='Enter the start date of the placement.', default=get_default_start_date)
+    placementEnd = models.DateField(verbose_name='Clinican End Date', help_text='Enter the end date of the placement.', default=get_default_end_date)
     mondayStart = models.TimeField(verbose_name='Start Time', null=True, blank=True, default='09:00')
     mondayEnd = models.TimeField(verbose_name='End Time', null=True, blank=True, default='17:00')
     tuesdayStart = models.TimeField(verbose_name='Start Time', null=True, blank=True, default='09:00')
@@ -405,7 +412,7 @@ class Auction(models.Model):
     assessmentCost = models.FloatField(verbose_name="Healthcare facility's Assessment Price", blank=True, null=True)
     assessmentMin = models.IntegerField(verbose_name='Daily Minimum # of Assessments', blank=True, null=True)
     auctionNumber = models.IntegerField(verbose_name='Listing Number', blank=True, null=True)
-
+    
     def __str__(self):
         return str(self.clinic.clinicName) + ": " + str(self.auctionStart.strftime("%m/%d/%Y %H:%M"))
 

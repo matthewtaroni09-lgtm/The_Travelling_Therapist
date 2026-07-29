@@ -506,16 +506,23 @@ def auction_search(request):
     # filter = city_fitler & payment_type_fitler & status_select_fitler & clinic_fitler
     print(filter)
     auctions_queryset = Auction.objects.filter(filter, deleted=False)
+    
     if clinic_input:
         normalized_search = clinic_input.lower()
+        
+        def sort_by_clinic_match(auction):
+            clinic_name = (auction.clinic.clinicName or '').strip().lower()
+            if clinic_name == normalized_search:
+                match_score = 0
+            elif clinic_name.startswith(normalized_search):
+                match_score = 1
+            else:
+                match_score = 2
+            return (match_score, _effective_auction_sort_key(auction))
+
         auctions = sorted(
             auctions_queryset,
-            key=lambda auction: (
-                0 if (auction.clinic.clinicName or '').strip().lower() == normalized_search else
-                1 if (auction.clinic.clinicName or '').strip().lower().startswith(normalized_search) else
-                2,
-                _effective_auction_sort_key(auction),
-            ),
+            key=sort_by_clinic_match,
         )
     else:
         auctions = sorted(auctions_queryset, key=_effective_auction_sort_key)
@@ -633,6 +640,9 @@ def headhunter_recruitment(request):
 
 def hiring_with_the_traveling_therapist_view(request):
     return render(request, 'auction/hiring_with_the_traveling_therapist.html', {'path': 'hiring-with-the-traveling-therapist'})
+
+def sort_by_auction_end(listing):
+    return listing.auctionEnd or timezone.now()
 
 def profile(request):
     if request.user.is_authenticated == False:
@@ -763,12 +773,12 @@ def profile(request):
         ).distinct())
         active_auctions_list = sorted(
             [listing for listing in therapist_auctions if listing.is_effectively_active()],
-            key=lambda listing: listing.auctionEnd or timezone.now(),
+            key=sort_by_auction_end,
             reverse=True,
         )
         past_auctions_list = sorted(
             [listing for listing in therapist_auctions if listing.is_effectively_closed()],
-            key=lambda listing: listing.auctionEnd or timezone.now(),
+            key=sort_by_auction_end,
             reverse=True,
         )
         therapist_offer_history = list(
@@ -1989,8 +1999,12 @@ def surveys(request):
     }
     return render(request, 'auction/surveys.html', context)
 
+
+def is_user_staff(u):
+    return u.is_staff
+
 @login_required(login_url='login')
-@user_passes_test(lambda u: u.is_staff)
+@user_passes_test(is_user_staff)
 def admin_raffle_management(request):
     """
     Raffle Management Dashboard for Admins.
@@ -2087,7 +2101,7 @@ def admin_raffle_management(request):
     return render(request, 'auction/admin_raffle_management.html', context)
 
 @login_required(login_url='login')
-@user_passes_test(lambda u: u.is_staff)
+@user_passes_test(is_user_staff)
 def admin_raffle_api(request):
     """
     AJAX API for Raffle CRUD and Administrative Actions.
