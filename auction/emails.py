@@ -1,9 +1,27 @@
-from The_Travelling_Therapist.settings import ACTIVE_LINK
+from The_Travelling_Therapist.settings import ACTIVE_LINK, PROD_LINK
 
 # email_templates.py
 
+def _get_public_email_base_link():
+  base_link = str(ACTIVE_LINK or '').strip()
+  lowered = base_link.lower()
+
+  # Email clients cannot reach local dev hosts.
+  if (
+    base_link == ''
+    or '127.0.0.1' in lowered
+    or 'localhost' in lowered
+    or lowered.startswith('http://0.0.0.0')
+  ):
+    return str(PROD_LINK or '').strip()
+
+  return base_link
+
+
+EMAIL_BASE_LINK = _get_public_email_base_link()
+
 # Placeholder logo URL - White Background
-LOGO_URL_WB = ACTIVE_LINK + "/media/images/TTT_LOGO_white_BG.png"
+LOGO_URL_WB = EMAIL_BASE_LINK + "/media/images/TTT_LOGO_white_BG.png"
 
 from datetime import datetime
 
@@ -482,8 +500,8 @@ def raffle_winner_email(first_name, raffle_title, raffle_month, ticket_balance):
     # Add this function to email_templates.py[cite: 2]
 
 def contact_us_confirmation(user_name, user_message):
-    faq_url = ACTIVE_LINK + "/faq"
-    account_url = ACTIVE_LINK + "/register"
+    faq_url = EMAIL_BASE_LINK + "/faq"
+    account_url = EMAIL_BASE_LINK + "/register"
 
     message = email_header
     message = message + f"""<section style="font-size: 16px; margin-bottom: 1rem; padding: 10px;">

@@ -185,6 +185,7 @@
         .dash-row {
             display: flex;
             align-items: center;
+            gap: 12px;
             padding: 16px;
             border: 1px solid var(--light-gray);
             border-radius: 12px;
@@ -204,7 +205,15 @@
             border-color: var(--primary);
             color: var(--black);
             font-weight: 600;
+            display: flex;
+            align-items: center;
             justify-content: space-between;
+        }
+
+        .dash-row.active .dash-row-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
         
         .dash-row.active:hover {
@@ -214,7 +223,8 @@
 
         .time {
             font-weight: 600;
-            width: 60px;
+            width: 48px;
+            flex-shrink: 0;
             color: var(--gray);
         }
 
@@ -228,6 +238,8 @@
             padding: 4px 12px;
             border-radius: 20px;
             font-size: 12px;
+            white-space: nowrap;
+            flex-shrink: 0;
         }
 
         .floating-badge {
@@ -642,12 +654,22 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.05);
             overflow: hidden;
             border: 1px solid var(--border-dark);
+            transition: box-shadow 0.3s ease;
+        }
+
+        .pricing-table:hover {
+            box-shadow: 0 16px 40px rgba(0,0,0,0.08);
         }
 
         .pt-cell {
             padding: 32px 24px;
             border-right: 1px solid var(--border);
             border-bottom: 1px solid var(--border);
+            transition: background-color 0.2s ease, transform 0.2s ease;
+        }
+
+        .pt-cell:not(.pt-header):hover {
+            background-color: #F3F4F6;
         }
 
         .pt-cell:last-child { border-right: none; }
@@ -665,10 +687,15 @@
             color: var(--black);
         }
 
-        .pt-header.ttt-col {
+        .pt-header.traveling-therapist-col {
             background: var(--primary);
             color: var(--black);
             font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        .pt-header.traveling-therapist-col:hover {
+            background: var(--primary-dark);
         }
 
         .row-header {
@@ -685,10 +712,14 @@
         .pt-content li { margin-bottom: 16px; line-height: 1.5; font-size: 13px;}
         .pt-content strong { color: var(--black); }
         
-        .pt-content.ttt-col {
+        .pt-content.traveling-therapist-col {
             background: #FAFFFD;
             border-left: 2px solid var(--primary);
             border-right: 2px solid var(--primary);
+        }
+
+        .pt-content.traveling-therapist-col:hover {
+            background: #E6FBF5;
         }
 
         /* <!-- Section 5: CTA --> */
@@ -804,9 +835,9 @@
                     <span>Post-Op Rehab — M. Okafor</span>
                 </div>
                 <div class="dash-row active">
-                    <div>
+                    <div class="dash-row-info">
                         <span class="time">10:00</span>
-                        <span>TTT Shift Covered</span>
+                        <span>The Traveling Therapist Shift Covered</span>
                     </div>
                     <span class="badge-filled">✓ Filled</span>
                 </div>
@@ -915,13 +946,13 @@
                     <div class="bar dark"></div>
                     
                     <div class="bar-row">
-                        <span style="color: var(--gray)">Cost of TTT coverage</span>
+                        <span style="color: var(--gray)">Cost of The Traveling Therapist coverage</span>
                         <span style="color: var(--gray)">-30-40%</span>
                     </div>
                     <div class="bar light"></div>
                     
                     <div class="bar-row">
-                        <span style="color: var(--primary-dark); font-weight: 700;">Net revenue saved with TTT</span>
+                        <span style="color: var(--primary-dark); font-weight: 700;">Net revenue saved with The Traveling Therapist</span>
                         <span style="color: var(--primary-dark); font-weight: 700;">60%+</span>
                     </div>
                     <div class="bar teal"></div>
@@ -942,7 +973,7 @@
                 </div>
                 <h3>The Tuesday Morning Callout</h3>
                 <p class="cs-text"><strong>Scenario —</strong> On a packed Tuesday morning, their lead orthopedic clinician woke up with a severe stomach flu. Rescheduling up to 11 high-value patients would have caused immediate revenue loss and severe patient frustration.</p>
-                <p class="cs-text"><strong>TTT Action —</strong> Tom posted an emergency 1-day listing on TTT and connected with a licensed, experienced local orthopedic clinician who offered to work the shift for the day.</p>
+                <p class="cs-text"><strong>The Traveling Therapist Action —</strong> Tom posted an emergency 1-day listing on The Traveling Therapist and connected with a licensed, experienced local orthopedic clinician who offered to work the shift for the day.</p>
                 <div class="cs-result">
                     <p class="cs-text" style="margin:0;"><strong>Result —</strong> The day’s patient volume was fully treated. The clinic protected $1,680 in billing and maintained seamless patient trust through The Traveling Therapist.</p>
                 </div>
@@ -982,7 +1013,7 @@
                     <div class="comp-card">
                         <h5>
                             <svg class="icon-svg icon-alert" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
-                            Without TTT
+                            Without The Traveling Therapist
                         </h5>
                         <p>Overloaded schedules</p>
                         <p>Rushed 15-min double-bookings</p>
@@ -991,7 +1022,7 @@
                     <div class="comp-card success">
                         <h5>
                             <svg class="icon-svg icon-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-                            With TTT
+                            With The Traveling Therapist
                         </h5>
                         <p>Clean, balanced schedules</p>
                         <p>Full appointment durations</p>
@@ -1012,9 +1043,9 @@
                 </div>
                 <h3>The Planned Summer Vacation</h3>
                 <p class="cs-text"><strong>Scenario —</strong> A senior physiotherapist scheduled a 2-week summer vacation. Historically, the clinic forced their remaining two PTs to absorb the caseload — triple-bookings, patient complaints, and staff friction.</p>
-                <p class="cs-text"><strong>TTT Action —</strong> Sarah posted a listing weeks in advance. Many clinicians offered to cover the 10-shift block, and she selected coverage based on years of experience to match the senior position.</p>
+                <p class="cs-text"><strong>The Traveling Therapist Action —</strong> Sarah posted a listing weeks in advance. Many clinicians offered to cover the 10-shift block, and she selected coverage based on years of experience to match the senior position.</p>
                 <div class="cs-result">
-                    <p class="cs-text" style="margin:0;"><strong>Result —</strong> TTT managed the vacationing clinician's caseload and permanent staff kept their normal hours — preventing operational burnout entirely.</p>
+                    <p class="cs-text" style="margin:0;"><strong>Result —</strong> The Traveling Therapist managed the vacationing clinician's caseload and permanent staff kept their normal hours — preventing operational burnout entirely.</p>
                 </div>
                 <div class="cs-metric">
                     <span>Covered Without Overloading Staff</span>
@@ -1068,7 +1099,7 @@
                         <li><span>20% of $80,000 annual salary</span> <strong>= $16,000</strong></li>
                         <li><span>15% of $90,000 annual salary</span> <strong>= $13,500</strong></li>
                     </ul>
-                    <p>TTT’s $0 buyout saves the clinic $12,000+.</p>
+                    <p>The Traveling Therapist's $0 buyout saves the clinic $12,000+.</p>
                 </div>
             </div>
             <div class="case-study">
@@ -1084,9 +1115,9 @@
                 </div>
                 <h3>The Post-Grad Growth Pivot</h3>
                 <p class="cs-text"><strong>Scenario —</strong> The clinic was ready to expand but wary of bad hires who looked great on paper yet couldn't keep up with the pace of private practice.</p>
-                <p class="cs-text"><strong>TTT Action —</strong> Dave posted a 1-month contract block (Tuesdays & Thursdays) to evaluate a prospective PTA in real-world clinical conditions.</p>
+                <p class="cs-text"><strong>The Traveling Therapist Action —</strong> Dave posted a 1-month contract block (Tuesdays & Thursdays) to evaluate a prospective PTA in real-world clinical conditions.</p>
                 <div class="cs-result">
-                    <p class="cs-text" style="margin:0;"><strong>Result —</strong> Over 4 weeks they assessed clinical speed, documentation accuracy, and patient rapport. Recognizing a perfect cultural fit, they hired the PTA off-platform. TTT charged $0 in buyout fees — saving over $8,000 versus traditional agencies.</p>
+                    <p class="cs-text" style="margin:0;"><strong>Result —</strong> Over 4 weeks they assessed clinical speed, documentation accuracy, and patient rapport. Recognizing a perfect cultural fit, they hired the PTA off-platform. The Traveling Therapist charged $0 in buyout fees — saving over $8,000 versus traditional agencies.</p>
                 </div>
                 <div class="cs-metric">
                     <span>Saved vs. Traditional Placement</span>
@@ -1124,7 +1155,7 @@
                     <div class="comp-card">
                         <h5>
                             <svg class="icon-svg icon-alert" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
-                            Without TTT
+                            Without The Traveling Therapist
                         </h5>
                         <p>Patients transferred to competitors</p>
                         <p>Disrupted care plans</p>
@@ -1133,7 +1164,7 @@
                     <div class="comp-card success">
                         <h5>
                             <svg class="icon-svg icon-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-                            With TTT
+                            With The Traveling Therapist
                         </h5>
                         <p>Continuity of care maintained</p>
                         <p>Patients stay in-house</p>
@@ -1154,9 +1185,9 @@
                 </div>
                 <h3>The Maternity Leave Preservation</h3>
                 <p class="cs-text"><strong>Scenario —</strong> The clinic’s specialized pelvic health therapist announced a 12-month maternity leave. Because pelvic health is highly specialized, patients would migrate to competitors — permanently destroying the value of that caseload.</p>
-                <p class="cs-text"><strong>TTT Action —</strong> Olivia accepted a highly specialized pelvic health clinician on a structured 9-month contract block via TTT.</p>
+                <p class="cs-text"><strong>The Traveling Therapist Action —</strong> Olivia accepted a highly specialized pelvic health clinician on a structured 9-month contract block via The Traveling Therapist.</p>
                 <div class="cs-result">
-                    <p class="cs-text" style="margin:0;"><strong>Result —</strong> The incoming TTT therapist maintained the specialized clinic hours. Over 87% of patients were retained throughout the leave — preserving a $120,000 caseload that would have otherwise leaked to local clinics.</p>
+                    <p class="cs-text" style="margin:0;"><strong>Result —</strong> The incoming Traveling Therapist maintained the specialized clinic hours. Over 87% of patients were retained throughout the leave — preserving a $120,000 caseload that would have otherwise leaked to local clinics.</p>
                 </div>
                 <div class="cs-metric">
                     <span>Caseload Value Preserved</span>
@@ -1171,13 +1202,13 @@
 
     <!-- Section 4: Enhanced Table -->
     <section class="table-section container">
-        <h2>The TTT Advantage</h2>
+        <h2>The Traveling Therapist Advantage</h2>
         <div class="pricing-table">
             <!-- Headers -->
             <div class="pt-cell pt-header" style="background: transparent;"></div>
             <div class="pt-cell pt-header" style="background: transparent;">AGENCY</div>
             <div class="pt-cell pt-header" style="background: transparent;">HEALTHCARE JOB BOARDS</div>
-            <div class="pt-cell pt-header ttt-col" style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+            <div class="pt-cell pt-header traveling-therapist-col" style="display: flex; align-items: center; justify-content: center; gap: 8px;">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                 THE TRAVELING THERAPIST
             </div>
@@ -1208,14 +1239,14 @@
                     <li>Screen resumes, conduct interviews, etc. adding time you don't have as a healthcare facilities owner</li>
                 </ol>
             </div>
-            <div class="pt-cell pt-content ttt-col">
+            <div class="pt-cell pt-content traveling-therapist-col">
                 <div style="text-align: center; font-weight: 700; margin-bottom: 16px; color: var(--black);">FAST</div>
                 <ol>
-                    <li><a href="#" style="color: #008766; text-decoration: underline;">Signup</a> for FREE, no membership fees for healthcare facilities to post a job</li>
+                    <li><a href="{% url 'register' %}" style="color: #008766; text-decoration: underline;">Signup</a> for FREE, no membership fees for healthcare facilities to post a job</li>
                     <li>Create a job posting in &lt; 10 min</li>
                     <li>Login to create new job postings anytime.</li>
                     <li>Job postings show immediately to the relevant clinicians so they can make you an offer!</li>
-                    <li>At the end of an listing, you are matched to the <span style="text-decoration: underline;">lowest bidder</span> within 48 hours</li>
+                    <li>Review your offers anytime and match with a clinician of your choosing based on their rate, skills, and qualifications!</li>
                 </ol>
             </div>
             
@@ -1241,12 +1272,11 @@
                     <li>Manage the complexity of posting for your different clinician types on different job boards, resulting in MORE lost time, money, & complexity</li>
                 </ul>
             </div>
-            <div class="pt-cell pt-content ttt-col">
+            <div class="pt-cell pt-content traveling-therapist-col">
                 <ul>
-                    <li><strong>Transparent:</strong> as low as $300/match with No hidden fees. See our <a href="#" style="color: #008766; text-decoration: underline;">FAQ Page</a> for more details</li>
+                    <li><strong>Transparent:</strong> as low as $300/match with No hidden fees. See our <a href="{% url 'pricing' %}" style="color: #008766; text-decoration: underline;">Pricing Page</a> for more details</li>
                     <li><strong>Low Commitment:</strong> We match you to a clinician in 14 days or re-post your ad for free</li>
-                    <li><strong>Bottom Line Efficiency:</strong> We keep your staffing costs down by matching you to the lowest bidder at the end of your listing.</li>
-                    <li>Online service = lower overhead costs. We pass the savings on to you!</li>
+                    <li><strong>Bottom Line Efficiency:</strong> Online service = lower overhead costs. We pass the savings on to you!</li>
                 </ul>
             </div>
 
@@ -1256,7 +1286,7 @@
             <div class="pt-cell pt-content" style="text-align:center; font-weight:700; border-bottom: none; display: flex; align-items: center; justify-content: center; background: #F9FAFB; color: var(--black);">CUMBERSOME & RESOURCE INTENSIVE</div>
             
             <!-- Result Box -->
-            <div class="pt-cell pt-content ttt-col" style="text-align:center; font-weight:700; border: none; display: flex; align-items: center; justify-content: center; background: var(--primary); color: var(--black); border-radius: 0 0 16px 0;">
+            <div class="pt-cell pt-content traveling-therapist-col" style="text-align:center; font-weight:700; border: none; display: flex; align-items: center; justify-content: center; background: var(--primary); color: var(--black); border-radius: 0 0 16px 0;">
                 FAST, TRANSPARENT & FLEXIBLE SOLUTION FOR YOUR HEALTHCARE STAFFING NEEDS
             </div>
         </div>
@@ -1269,7 +1299,7 @@
     <section class="cta-section">
         <div>
             <h2>Ready to protect your clinic's bottom line?</h2>
-            <p>Join hundreds of Canadian healthcare facilities using TTT to stabilize their schedules. No sign-up fees, no listing costs—just pure operational peace of mind.</p>
+            <p>Join hundreds of Canadian healthcare facilities using The Traveling Therapist to stabilize their schedules. No sign-up fees, no listing costs—just pure operational peace of mind.</p>
 
             <!-- Existing Clinics should not be told to create an account -->
             {% if user.account.get_split_user_type == 'Clinic' %}

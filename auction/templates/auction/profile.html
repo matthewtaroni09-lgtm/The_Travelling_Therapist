@@ -29,11 +29,15 @@
         background: #f8fafb;
         overflow: hidden;
     }
-    .ttt-listing-carousel .carousel-item img {
+    .ttt-listing-carousel .carousel-item img,
+    .ttt-listing-carousel .carousel-item .ttt-video-wrapper {
         width: 100%;
         height: clamp(280px, 52vw, 620px);
         object-fit: contain;
-        background: #fff;
+      background: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
     .ttt-listing-carousel .carousel-control-prev,
     .ttt-listing-carousel .carousel-control-next {
@@ -121,15 +125,27 @@
       <div class="tab-pane fade" id="profile" role="tabpanel">
         <div class="p-3">
           <h2 class="mb-4">Update Profile</h2>
+          
           <div id="clinicProfileImageCarousel" class="carousel slide mb-3 ttt-listing-carousel" data-bs-ride="false">
             <div class="carousel-inner">
+              <!-- Video Item Logic -->
+              {% if user.account.clinicVideo %}
+              <div class="carousel-item active">
+                <div class="ttt-video-wrapper">
+                  <iframe width="100%" height="100%" src="{{ user.account.clinicVideo }}" title="Clinic video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                </div>
+              </div>
+              {% endif %}
+              
+              <!-- Image Iteration -->
               {% for image_url in profile_images %}
-              <div class="carousel-item {% if forloop.first %}active{% endif %}">
+              <div class="carousel-item {% if not user.account.clinicVideo and forloop.first %}active{% endif %}">
                 <img src="{{ image_url }}" alt="Clinic image {{ forloop.counter }}" onerror="this.src='/media/images/no-image.jpg';">
               </div>
               {% endfor %}
             </div>
-            {% if profile_image_count > 1 %}
+            
+            {% if profile_image_count > 1 or user.account.clinicVideo and profile_image_count > 0 %}
             <button class="carousel-control-prev" type="button" data-bs-target="#clinicProfileImageCarousel" data-bs-slide="prev">
               <span class="ttt-carousel-arrow">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -143,8 +159,12 @@
               <span class="visually-hidden">Next</span>
             </button>
             <div class="carousel-indicators">
+              {% if user.account.clinicVideo %}
+              <button type="button" data-bs-target="#clinicProfileImageCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+              {% endif %}
+              
               {% for image_url in profile_images %}
-              <button type="button" data-bs-target="#clinicProfileImageCarousel" data-bs-slide-to="{{ forloop.counter0 }}" class="{% if forloop.first %}active{% endif %}" {% if forloop.first %}aria-current="true"{% endif %} aria-label="Slide {{ forloop.counter }}"></button>
+              <button type="button" data-bs-target="#clinicProfileImageCarousel" data-bs-slide-to="{% if user.account.clinicVideo %}{{ forloop.counter }}{% else %}{{ forloop.counter0 }}{% endif %}" class="{% if not user.account.clinicVideo and forloop.first %}active{% endif %}" {% if not user.account.clinicVideo and forloop.first %}aria-current="true"{% endif %} aria-label="Slide {% if user.account.clinicVideo %}{{ forloop.counter|add:1 }}{% else %}{{ forloop.counter }}{% endif %}"></button>
               {% endfor %}
             </div>
             {% endif %}
@@ -152,7 +172,7 @@
           
           <div class="row">
             <h5>User Type: {{user.account.userType}}</h5>
-            <form method="post" enctype="multipart/form-data" class="d-flex flex-column gap-3">
+            <form method="post" enctype="multipart/form-data" class="d-flex flex-column gap-3" id="profileClinicUpdateForm">
               {% csrf_token %}
               {{ user_clinic_form | crispy }}
               
@@ -162,14 +182,26 @@
                 <div class="mb-3 col-md-4">{{ profile_clinic_form.province | as_crispy_field }}</div>
                 <div class="mb-3">{{ profile_clinic_form.about | as_crispy_field }}</div>
                 
-                <div class="mb-3">
+                <div class="mb-3 col-md-6">
                   {{ profile_clinic_form.clinicWebsite | as_crispy_field }}
                   <div class="d-flex align-items-center gap-2 mt-1">
                     <button type="button" class="ttt-info-dot-sm" data-bs-toggle="tooltip" data-bs-placement="top" 
                             title="You can put your social media account here or another link of your choice if you prefer">i</button>
-                    <small class="text-muted">This field is optional. Adding a website may give more traction to your listing - your website will be linked in your listings.</small>
+                    <small class="text-muted">This field is optional. Adding a website may give more traction to your listing.</small>
                   </div>
                 </div>
+                
+                <!-- NEW CLINIC VIDEO URL BOX -->
+                <div class="mb-3 col-md-6">
+                  {{ profile_clinic_form.clinicVideo | as_crispy_field }}
+                  <div class="d-flex align-items-center gap-2 mt-1">
+                    <button type="button" class="ttt-info-dot-sm" data-bs-toggle="tooltip" data-bs-placement="top" 
+                            title="Link a YouTube video to showcase your clinic. It will appear first in your listing image carousel.">i</button>
+                    <small class="text-muted">Must be a valid YouTube URL.</small>
+                  </div>
+                  <div id="videoErrorMsg" class="text-danger small mt-1 d-none fw-bold">Please enter a valid YouTube link (youtube.com or youtu.be).</div>
+                </div>
+                
               </div>
 
               <div class="row">
@@ -647,6 +679,37 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function () {
+    // ----------------------------------------------------
+    // YOUTUBE FORM VALIDATION SCRIPT
+    // ----------------------------------------------------
+    const profileForm = document.getElementById('profileClinicUpdateForm');
+    const videoInput = document.querySelector('input[name*="clinicVideo"]');
+    const videoErrorMsg = document.getElementById('videoErrorMsg');
+
+    if(profileForm && videoInput) {
+      function validateYoutubeUrl() {
+        const val = videoInput.value.trim();
+        if(val && !val.includes('youtube.com') && !val.includes('youtu.be')) {
+          videoErrorMsg.classList.remove('d-none');
+          videoInput.classList.add('is-invalid');
+          return false;
+        } else {
+          videoErrorMsg.classList.add('d-none');
+          videoInput.classList.remove('is-invalid');
+          return true;
+        }
+      }
+
+      videoInput.addEventListener('input', validateYoutubeUrl);
+
+      profileForm.addEventListener('submit', function(e) {
+        if(!validateYoutubeUrl()) {
+          e.preventDefault();
+          videoInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      });
+    }
+
     // ----------------------------------------------------
     // 1. AUTO-SWITCH TAB & SCROLL TO FORM ON ERROR/SUCCESS
     // ----------------------------------------------------

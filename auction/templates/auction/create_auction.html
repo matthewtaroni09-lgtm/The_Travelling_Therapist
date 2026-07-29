@@ -230,6 +230,25 @@
         font-size: 0.93rem;
       }
 
+.ttt-perk-details {
+  resize: vertical;         /* Keeps bottom-right drag slider */
+  height: 31px;             /* Matches input box height */
+  min-height: 31px;         /* Locks the absolute minimum floor */
+  
+  padding: 5px 12px;        /* Matches standard Bootstrap input padding */
+  line-height: 1.35;        /* Vertically centers text nicely */
+  box-sizing: border-box;   /* Ensures padding doesn't swell box height */
+  
+  overflow: auto;
+  scrollbar-width: none;    /* Firefox */
+  -ms-overflow-style: none; /* IE / Edge */
+}
+
+/* Hide scrollbar for Chrome, Safari, and Opera */
+.ttt-perk-details::-webkit-scrollbar {
+  display: none;
+}
+
       .ttt-perk-amount-label {
         display: inline-flex;
         align-items: center;
@@ -308,8 +327,29 @@
         margin: 0.45rem 0;
         font-size: 0.9rem;
       }
+
+      /* Payment Method Animation Classes */
+      .payment-method-collapse {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.35s ease, padding 0.35s ease, opacity 0.35s ease;
+        opacity: 0;
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+        margin-top: 0 !important;
+        border-color: transparent !important;
+      }
+
+      .payment-method-collapse.show {
+        max-height: 700px;
+        opacity: 1;
+        padding-top: 1rem !important;
+        padding-bottom: 1rem !important;
+        margin-top: 1rem !important;
+        border-color: #dee2e6 !important;
+      }
     </style>
-    <form method="post" class="p-2">
+    <form method="post" class="p-2" id="createAuctionForm">
       <input id="AOPPopulated" name="AOPPopulated" class="d-none" value="No">
       <h1 class="text-large text-weight-normal mb-5">Create New Listing</h1>
       {% csrf_token %}
@@ -494,7 +534,7 @@
       <div class="row g-3 mb-2">
         <div class="col-lg-6">
           <div class="ttt-create-grid-card" id="requiredSkillsContainer">
-            <h4 class="text-weight-normal mb-1">Required Skills &amp; Qualifications</h4>
+            <h4 class="text-weight-normal mb-1">Required Skills &amp; Qualifications <span class="ttt-optional-note">(optional)</span></h4>
             <p class="ttt-card-subtitle">Choose what matters most and mark each as Required or Preferred.</p>
             <div class="ttt-grid-head d-none">
               <div>Skill / Qualification</div>
@@ -512,187 +552,247 @@
         </div>
 
         <div class="col-lg-6">
-  <div class="ttt-create-grid-card" id="negotiablePerksContainer">
-    <div class="ttt-card-header-row mb-1">
-      <h4 class="text-weight-normal mb-0">Negotiable Job Perks</h4>
-      <button type="button" class="ttt-info-dot" data-bs-toggle="tooltip" data-bs-placement="top" title="You can give clinicians additional information about the kind of 'perks' they could receive if they are matched with you for your listing. These amounts are shown to clinicians as negotiable, so it is up to you to negotiate these amounts privately with your candidate after the match!">i</button>
-    </div>
-    <p class="ttt-card-subtitle">Add perks clinicians can ask to negotiate before final match.</p>
-    
-    <div class="ttt-grid-head">
-      <div>Perk</div>
-      <div>Included / Details</div>
-    </div>
-
-    <!-- ======================================================== -->
-    <!-- PERK 1: Virtual Position START                           -->
-    <!-- ======================================================== -->
-    <div class="ttt-grid-row" data-item-name="Virtual Position">
-      <span class="ttt-grid-item-label">Virtual Position</span>
-      <div class="ttt-perk-switch-wrap">
-        <div class="form-check form-switch">
-          <input type="checkbox" class="form-check-input ttt-perk-switch" role="switch" aria-label="Virtual position included">
-        </div>
-      </div>
-    </div>
-    <div class="ttt-perk-detail-panel d-none">
-      <div class="row g-2 align-items-start">
-        <div class="col-12">
-          <label class="form-label">Details</label>
-          <textarea class="form-control form-control-sm ttt-perk-details" rows="3" placeholder="Clarify if position is fully virtual or partially virtual"></textarea>
-        </div>
-      </div>
-    </div>
-    <!-- PERK 1: Virtual Position END =========================== -->
-
-
-    <!-- ======================================================== -->
-    <!-- PERK 2: Parking on Site START                            -->
-    <!-- ======================================================== -->
-    <div class="ttt-grid-row" data-item-name="Parking on Site">
-      <span class="ttt-grid-item-label">Parking on Site</span>
-      <div class="ttt-perk-switch-wrap">
-        <div class="form-check form-switch">
-          <input type="checkbox" class="form-check-input ttt-perk-switch" role="switch" aria-label="Parking on site included">
-        </div>
-      </div>
-    </div>
-    <div class="ttt-perk-detail-panel d-none">
-      <div class="row g-2 align-items-start">
-        <div class="col-12">
-          <label class="form-label">Details</label>
-          <textarea class="form-control form-control-sm ttt-perk-details" rows="3" placeholder="Clarify if parking is free or paid"></textarea>
-        </div>
-      </div>
-    </div>
-    <!-- PERK 2: Parking on Site END ============================ -->
-
-
-    <div class="ttt-grid-list" data-grid-kind="perk">
-      <!-- ====================================================== -->
-      <!-- PERK 3: Relocation Assistance START                    -->
-      <!-- ====================================================== -->
-      <div class="ttt-grid-row" data-item-name="Relocation assistance">
-        <span class="ttt-grid-item-label">Relocation assistance</span>
-        <div class="ttt-perk-switch-wrap">
-          <div class="form-check form-switch">
-            <input type="checkbox" class="form-check-input ttt-perk-switch" role="switch" aria-label="Relocation assistance included">
-          </div>
-        </div>
-      </div>
-      <div class="ttt-perk-detail-panel">
-        <div class="row g-2 align-items-start">
-          <div class="col-md-4">
-            <label class="form-label ttt-perk-amount-label">Amount <button type="button" class="ttt-info-dot-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="This amount will only be shown to clinicians when they go to place an offer, it will not be seen on the listing page">i</button></label>
-            <div class="input-group input-group-sm">
-              <span class="input-group-text">$</span>
-              <input type="number" min="0" class="form-control ttt-perk-amount" placeholder="Optional amount">
+          <div class="ttt-create-grid-card mb-3" id="negotiablePerksContainer">
+            <div class="ttt-card-header-row mb-1">
+              <h4 class="text-weight-normal mb-0">Negotiable Job Perks <span class="ttt-optional-note">(optional)</span></h4>
+              <button type="button" class="ttt-info-dot" data-bs-toggle="tooltip" data-bs-placement="top" title="You can give clinicians additional information about the kind of 'perks' they could receive if they are matched with you for your listing. These amounts are shown to clinicians as negotiable, so it is up to you to negotiate these amounts privately with your candidate after the match!">i</button>
             </div>
-          </div>
-          <div class="col-md-8">
-            <label class="form-label">Details</label>
-            <textarea class="form-control form-control-sm ttt-perk-details" rows="2" placeholder="Add relocation details"></textarea>
-          </div>
-        </div>
-      </div>
-      <!-- PERK 3: Relocation Assistance END ==================== -->
-
-
-      <!-- ====================================================== -->
-      <!-- PERK 4: Housing / Accommodation START                  -->
-      <!-- ====================================================== -->
-      <div class="ttt-grid-row" data-item-name="Housing/accommodation">
-        <span class="ttt-grid-item-label">Housing/accommodation</span>
-        <div class="ttt-perk-switch-wrap">
-          <div class="form-check form-switch">
-            <input type="checkbox" class="form-check-input ttt-perk-switch" role="switch" aria-label="Housing or accommodation included">
-          </div>
-        </div>
-      </div>
-      <div class="ttt-perk-detail-panel d-none">
-        <div class="row g-2 align-items-start">
-          <div class="col-md-4">
-            <label class="form-label ttt-perk-amount-label">Amount <button type="button" class="ttt-info-dot-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="This amount will only be shown to clinicians when they go to place an offer, it will not be seen on the listing page">i</button></label>
-            <div class="input-group input-group-sm">
-              <span class="input-group-text">$</span>
-              <input type="number" min="0" class="form-control ttt-perk-amount" placeholder="Optional amount">
+            <p class="ttt-card-subtitle">Add perks clinicians can ask to negotiate before final match.</p>
+            
+            <div class="ttt-grid-head">
+              <div>Perk</div>
+              <div>Included / Details</div>
             </div>
-          </div>
-          <div class="col-md-8">
-            <label class="form-label">Details</label>
-            <textarea class="form-control form-control-sm ttt-perk-details" rows="2" placeholder="Add housing or accommodation details"></textarea>
-          </div>
-        </div>
-      </div>
-      <!-- PERK 4: Housing / Accommodation END ================== -->
 
-
-      <!-- ====================================================== -->
-      <!-- PERK 5: Signing Bonus START                            -->
-      <!-- ====================================================== -->
-      <div class="ttt-grid-row" data-item-name="Signing bonus">
-        <span class="ttt-grid-item-label">Signing bonus</span>
-        <div class="ttt-perk-switch-wrap">
-          <div class="form-check form-switch">
-            <input type="checkbox" class="form-check-input ttt-perk-switch" role="switch" aria-label="Signing bonus included">
-          </div>
-        </div>
-      </div>
-      <div class="ttt-perk-detail-panel d-none">
-        <div class="row g-2 align-items-start">
-          <div class="col-md-4">
-            <label class="form-label ttt-perk-amount-label">Amount <button type="button" class="ttt-info-dot-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="This amount will only be shown to clinicians when they go to place an offer, it will not be seen on the listing page">i</button></label>
-            <div class="input-group input-group-sm">
-              <span class="input-group-text">$</span>
-              <input type="number" min="0" class="form-control ttt-perk-amount" placeholder="Optional amount">
+            <!-- PERK 1: Virtual Position -->
+            <div class="ttt-grid-row" data-item-name="Virtual Position">
+              <span class="ttt-grid-item-label">Virtual Position</span>
+              <div class="ttt-perk-switch-wrap">
+                <div class="form-check form-switch">
+                  <input type="checkbox" class="form-check-input ttt-perk-switch" role="switch" aria-label="Virtual position included">
+                </div>
+              </div>
             </div>
-          </div>
-          <div class="col-md-8">
-            <label class="form-label">Details</label>
-            <textarea class="form-control form-control-sm ttt-perk-details" rows="2" placeholder="Add signing bonus details"></textarea>
+            <div class="ttt-perk-detail-panel d-none">
+              <div class="row g-2 align-items-start">
+                <div class="col-12">
+                  <label class="form-label">Details</label>
+                  <div class="position-relative">
+                    <textarea class="form-control form-control-sm ttt-perk-details pe-5" rows="1" placeholder="Clarify if position is fully virtual or partially virtual"></textarea>
+                    <span class="position-absolute top-0 end-0 pt-1 pe-2 text-muted small word-counter" style="font-size: 0.75rem; pointer-events: none;">0/50</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- PERK 2: Parking on Site -->
+            <div class="ttt-grid-row" data-item-name="Parking on Site">
+              <span class="ttt-grid-item-label">Parking on Site</span>
+              <div class="ttt-perk-switch-wrap">
+                <div class="form-check form-switch">
+                  <input type="checkbox" class="form-check-input ttt-perk-switch" role="switch" aria-label="Parking on site included">
+                </div>
+              </div>
+            </div>
+            <div class="ttt-perk-detail-panel d-none">
+              <div class="row g-2 align-items-start">
+                <div class="col-12">
+                  <label class="form-label">Details</label>
+                  <div class="position-relative">
+                    <textarea class="form-control form-control-sm ttt-perk-details pe-5" rows="1" placeholder="Clarify if parking is free or paid"></textarea>
+                    <span class="position-absolute top-0 end-0 pt-1 pe-2 text-muted small word-counter" style="font-size: 0.75rem; pointer-events: none;">0/50</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="ttt-grid-list" data-grid-kind="perk">
+              <!-- PERK 3: Relocation Assistance -->
+              <div class="ttt-grid-row" data-item-name="Relocation assistance">
+                <span class="ttt-grid-item-label">Relocation assistance</span>
+                <div class="ttt-perk-switch-wrap">
+                  <div class="form-check form-switch">
+                    <input type="checkbox" class="form-check-input ttt-perk-switch" role="switch" aria-label="Relocation assistance included">
+                  </div>
+                </div>
+              </div>
+              <div class="ttt-perk-detail-panel">
+                <div class="row g-2 align-items-start">
+                  <div class="col-md-4">
+                    <label class="form-label ttt-perk-amount-label">Amount <button type="button" class="ttt-info-dot-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="This amount will only be shown to clinicians when they go to place an offer, it will not be seen on the listing page">i</button></label>
+                    <div class="input-group input-group-sm">
+                      <span class="input-group-text">$</span>
+                      <input type="number" min="0" class="form-control ttt-perk-amount" placeholder="Optional amount">
+                    </div>
+                  </div>
+                  <div class="col-md-8">
+                    <label class="form-label">Details</label>
+                    <div class="position-relative">
+                      <textarea class="form-control form-control-sm ttt-perk-details pe-5" rows="1" placeholder="Add relocation details"></textarea>
+                      <span class="position-absolute top-0 end-0 pt-1 pe-2 text-muted small word-counter" style="font-size: 0.75rem; pointer-events: none;">0/50</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- PERK 4: Housing / Accommodation -->
+              <div class="ttt-grid-row" data-item-name="Housing/accommodation">
+                <span class="ttt-grid-item-label">Housing/accommodation</span>
+                <div class="ttt-perk-switch-wrap">
+                  <div class="form-check form-switch">
+                    <input type="checkbox" class="form-check-input ttt-perk-switch" role="switch" aria-label="Housing or accommodation included">
+                  </div>
+                </div>
+              </div>
+              <div class="ttt-perk-detail-panel d-none">
+                <div class="row g-2 align-items-start">
+                  <div class="col-md-4">
+                    <label class="form-label ttt-perk-amount-label">Amount <button type="button" class="ttt-info-dot-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="This amount will only be shown to clinicians when they go to place an offer, it will not be seen on the listing page">i</button></label>
+                    <div class="input-group input-group-sm">
+                      <span class="input-group-text">$</span>
+                      <input type="number" min="0" class="form-control ttt-perk-amount" placeholder="Optional amount">
+                    </div>
+                  </div>
+                  <div class="col-md-8">
+                    <label class="form-label">Details</label>
+                    <div class="position-relative">
+                      <textarea class="form-control form-control-sm ttt-perk-details pe-5" rows="1" placeholder="Add housing or accommodation details"></textarea>
+                      <span class="position-absolute top-0 end-0 pt-1 pe-2 text-muted small word-counter" style="font-size: 0.75rem; pointer-events: none;">0/50</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- PERK 5: Signing Bonus -->
+              <div class="ttt-grid-row" data-item-name="Signing bonus">
+                <span class="ttt-grid-item-label">Signing bonus</span>
+                <div class="ttt-perk-switch-wrap">
+                  <div class="form-check form-switch">
+                    <input type="checkbox" class="form-check-input ttt-perk-switch" role="switch" aria-label="Signing bonus included">
+                  </div>
+                </div>
+              </div>
+              <div class="ttt-perk-detail-panel d-none">
+                <div class="row g-2 align-items-start">
+                  <div class="col-md-4">
+                    <label class="form-label ttt-perk-amount-label">Amount <button type="button" class="ttt-info-dot-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="This amount will only be shown to clinicians when they go to place an offer, it will not be seen on the listing page">i</button></label>
+                    <div class="input-group input-group-sm">
+                      <span class="input-group-text">$</span>
+                      <input type="number" min="0" class="form-control ttt-perk-amount" placeholder="Optional amount">
+                    </div>
+                  </div>
+                  <div class="col-md-8">
+                    <label class="form-label">Details</label>
+                    <div class="position-relative">
+                      <textarea class="form-control form-control-sm ttt-perk-details pe-5" rows="1" placeholder="Add signing bonus details"></textarea>
+                      <span class="position-absolute top-0 end-0 pt-1 pe-2 text-muted small word-counter" style="font-size: 0.75rem; pointer-events: none;">0/50</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- PERK 6: Flexible Schedule -->
+              <div class="ttt-grid-row" data-item-name="Flexible schedule">
+                <span class="ttt-grid-item-label">Flexible schedule</span>
+                <div class="ttt-perk-switch-wrap">
+                  <div class="form-check form-switch">
+                    <input type="checkbox" class="form-check-input ttt-perk-switch" role="switch" aria-label="Flexible schedule included">
+                  </div>
+                </div>
+              </div>
+              <div class="ttt-perk-detail-panel d-none">
+                <div class="row g-2 align-items-start">
+                  <div class="col-12">
+                    <label class="form-label">Details</label>
+                    <div class="position-relative">
+                      <textarea class="form-control form-control-sm ttt-perk-details pe-5" rows="1" placeholder="Describe the scheduling flexibility"></textarea>
+                      <span class="position-absolute top-0 end-0 pt-1 pe-2 text-muted small word-counter" style="font-size: 0.75rem; pointer-events: none;">0/50</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div><!-- /.ttt-grid-list -->
+
+            <div class="ttt-add-row">
+              <button type="button" class="ttt-add-trigger" data-grid-target="negotiablePerksContainer">+ Add Custom Perk</button>
+              <div class="d-flex gap-2 mt-2">
+                <input type="text" class="form-control form-control-sm ttt-custom-input" placeholder="Input custom perk" data-custom-input="negotiablePerksContainer">
+              </div>
+            </div>
+          </div><!-- /#negotiablePerksContainer -->
+
+          <!-- Payment Information -->
+          <div class="ttt-create-grid-card" id="paymentMethodContainer">
+            <div class="ttt-card-header-row mb-1">
+              <h4 class="text-weight-normal mb-0">Payment Information <span class="ttt-optional-note">(optional)</span></h4>
+              <button type="button" class="ttt-info-dot" data-bs-toggle="tooltip" data-bs-placement="top" title="Select how you plan to pay the clinician for this role.">i</button>
+            </div>
+            <p class="ttt-card-subtitle">Add payment information only for practitioners.</p>
+      
+            <div class="ttt-grid-row border-top-0 pt-0 pb-0">
+              <span class="ttt-grid-item-label fw-bold" style="font-size: 0.95rem;">Include Payment Method?</span>
+              <div class="ttt-perk-switch-wrap">
+                <div class="form-check form-switch">
+                  <input type="checkbox" class="form-check-input ttt-perk-switch" id="id_paymentMethodToggle" name="paymentMethodToggle" role="switch" aria-label="Include payment method" {% if form.paymentMethodToggle.value %}checked{% endif %}>
+                </div>
+              </div>
+            </div>
+      
+            <div id="paymentMethodSection" class="payment-method-collapse p-3 border rounded bg-light-subtle">
+              <div class="ttt-grid-row border-bottom py-2">
+                <div class="form-check m-0">
+                  <input class="form-check-input" type="radio" name="paymentMethod" id="pmCash" value="Cash" {% if form.paymentMethod.value == 'Cash' %}checked{% endif %}>
+                  <label class="form-check-label text-dark w-100" style="cursor: pointer;" for="pmCash">Cash</label>
+                </div>
+              </div>
+              <div class="ttt-grid-row border-bottom py-2">
+                <div class="form-check m-0">
+                  <input class="form-check-input" type="radio" name="paymentMethod" id="pmCheque" value="Cheque" {% if form.paymentMethod.value == 'Cheque' %}checked{% endif %}>
+                  <label class="form-check-label text-dark w-100" style="cursor: pointer;" for="pmCheque">Cheque</label>
+                </div>
+              </div>
+              <div class="ttt-grid-row border-bottom py-2">
+                <div class="form-check m-0">
+                  <input class="form-check-input" type="radio" name="paymentMethod" id="pmDirectDeposit" value="Direct Deposit" {% if form.paymentMethod.value == 'Direct Deposit' %}checked{% endif %}>
+                  <label class="form-check-label text-dark w-100" style="cursor: pointer;" for="pmDirectDeposit">Direct Deposit</label>
+                </div>
+              </div>
+              <div class="ttt-grid-row border-bottom py-2">
+                <div class="form-check m-0">
+                  <input class="form-check-input" type="radio" name="paymentMethod" id="pmETransfer" value="E-Transfer" {% if form.paymentMethod.value == 'E-Transfer' %}checked{% endif %}>
+                  <label class="form-check-label text-dark w-100" style="cursor: pointer;" for="pmETransfer">E-transfer</label>
+                </div>
+              </div>
+              <div class="ttt-grid-row border-bottom py-2">
+                <div class="form-check m-0">
+                  <input class="form-check-input" type="radio" name="paymentMethod" id="pmPayroll" value="As part of payroll with other staff" {% if form.paymentMethod.value == 'As part of payroll with other staff' %}checked{% endif %}>
+                  <label class="form-check-label text-dark w-100" style="cursor: pointer;" for="pmPayroll">As part of payroll with other staff</label>
+                </div>
+              </div>
+              <div class="ttt-grid-row border-bottom py-2">
+                <div class="form-check m-0">
+                  <input class="form-check-input" type="radio" name="paymentMethod" id="pmCliniciansChoice" value="Clinician's Choice" {% if form.paymentMethod.value == "Clinician's Choice" %}checked{% endif %}>
+                  <label class="form-check-label text-dark w-100" style="cursor: pointer;" for="pmCliniciansChoice">Clinicians choice</label>
+                </div>
+              </div>
+              <div class="ttt-grid-row py-2">
+                <div class="form-check m-0">
+                  <input class="form-check-input" type="radio" name="paymentMethod" id="pmOther" value="Other" {% if form.paymentMethod.value == 'Other' %}checked{% endif %}>
+                  <label class="form-check-label text-dark w-100" style="cursor: pointer;" for="pmOther">Other</label>
+                </div>
+              </div>
+              
+              <div id="paymentMethodOtherContainer" class="d-none mt-2">
+                <input type="text" class="form-control form-control-sm" id="id_paymentMethodOther" name="paymentMethodOther" placeholder="Specify facility's choice" value="{{ form.paymentMethodOther.value|default_if_none:'' }}">
+              </div>
+            </div>
+            
+            <div id="pmErrorMsg" class="text-danger small mt-2 d-none fw-bold">Please select a payment method.</div>
           </div>
         </div>
       </div>
-      <!-- PERK 5: Signing Bonus END ============================ -->
 
-
-      <!-- ====================================================== -->
-      <!-- PERK 6: Flexible Schedule START                        -->
-      <!-- ====================================================== -->
-      <div class="ttt-grid-row" data-item-name="Flexible schedule">
-        <span class="ttt-grid-item-label">Flexible schedule</span>
-        <div class="ttt-perk-switch-wrap">
-          <div class="form-check form-switch">
-            <input type="checkbox" class="form-check-input ttt-perk-switch" role="switch" aria-label="Flexible schedule included">
-          </div>
-        </div>
-      </div>
-      <div class="ttt-perk-detail-panel d-none">
-        <div class="row g-2 align-items-start">
-          <div class="col-12">
-            <label class="form-label">Details</label>
-            <textarea class="form-control form-control-sm ttt-perk-details" rows="3" placeholder="Describe the scheduling flexibility"></textarea>
-          </div>
-        </div>
-      </div>
-      <!-- PERK 6: Flexible Schedule END ======================== -->
-
-    </div><!-- /.ttt-grid-list -->
-
-
-    <!-- ======================================================== -->
-    <!-- ADD CUSTOM PERK SECTION START                            -->
-    <!-- ======================================================== -->
-    <div class="ttt-add-row">
-      <button type="button" class="ttt-add-trigger" data-grid-target="negotiablePerksContainer">+ Add Custom Perk</button>
-      <div class="d-flex gap-2 mt-2">
-        <input type="text" class="form-control form-control-sm ttt-custom-input" placeholder="Input custom perk" data-custom-input="negotiablePerksContainer">
-      </div>
-    </div>
-    <!-- ADD CUSTOM PERK SECTION END ============================ -->
-
-  </div><!-- /#negotiablePerksContainer -->
-</div>
       <input type="hidden" id="id_requiredSkillsPayload" name="requiredSkillsPayload" value="[]">
       <input type="hidden" id="id_negotiablePerksPayload" name="negotiablePerksPayload" value="[]">
 
@@ -753,7 +853,116 @@
 <script src="{% static 'auction/textarea.js' %}"></script>
 
 <script>
+// Combined input handler for negotiating payloads & dynamic textarea expansion
+$(document).on('input', '.ttt-perk-amount, .ttt-perk-details', function () {
+    if (typeof syncNegotiablePayloads === 'function') {
+        syncNegotiablePayloads();
+    }
+    
+    // Auto-expand logic for details textareas
+    if ($(this).hasClass('ttt-perk-details')) {
+        if (this.scrollHeight > this.clientHeight) {
+            this.style.height = this.scrollHeight + 'px';
+        }
+    }
+});
+
 document.addEventListener('DOMContentLoaded', function() {
+  // ----------------------------------------------------
+  // TEXTAREA WORD COUNTER LOGIC
+  // ----------------------------------------------------
+  document.addEventListener('input', function(e) {
+    if (e.target && e.target.classList.contains('ttt-perk-details')) {
+      const text = e.target.value;
+      const words = text.trim().split(/\s+/).filter(w => w.length > 0);
+      let wordCount = words.length;
+
+      // Restrict text to 50 words max
+      if (wordCount > 50) {
+        e.target.value = words.slice(0, 50).join(" ") + " ";
+        wordCount = 50;
+      }
+
+      const counter = e.target.nextElementSibling;
+      if (counter && counter.classList.contains('word-counter')) {
+        counter.textContent = wordCount + '/50';
+        if (wordCount === 50) {
+          counter.classList.add('text-danger');
+        } else {
+          counter.classList.remove('text-danger');
+        }
+      }
+    }
+  });
+
+  // ----------------------------------------------------
+  // PAYMENT METHOD JAVASCRIPT LOGIC
+  // ----------------------------------------------------
+  const togglePayment = document.getElementById('id_paymentMethodToggle');
+  const paymentOptionsDiv = document.getElementById('paymentMethodSection');
+  const radios = document.querySelectorAll('input[name="paymentMethod"]');
+  const pmOtherText = document.getElementById('paymentMethodOtherContainer');
+  const pmOtherInput = document.getElementById('id_paymentMethodOther');
+  const form = document.getElementById('createAuctionForm');
+  
+  if(togglePayment) {
+    togglePayment.addEventListener('change', function() {
+      if(this.checked) {
+        paymentOptionsDiv.classList.add('show');
+      } else {
+        paymentOptionsDiv.classList.remove('show');
+        // Reset selections if toggled off
+        setTimeout(() => {
+          radios.forEach(r => r.checked = false);
+          pmOtherText.classList.add('d-none');
+          pmOtherInput.value = '';
+        }, 350);
+      }
+    });
+
+    radios.forEach(radio => {
+      radio.addEventListener('change', function() {
+        if(this.value === 'Other' && this.checked) {
+          pmOtherText.classList.remove('d-none');
+        } else {
+          pmOtherText.classList.add('d-none');
+        }
+      });
+    });
+
+    if(form) {
+      form.addEventListener('submit', function(e) {
+        if(togglePayment.checked) {
+          const selected = document.querySelector('input[name="paymentMethod"]:checked');
+          const errorMsg = document.getElementById('pmErrorMsg');
+          
+          if(!selected) {
+            e.preventDefault();
+            errorMsg.textContent = 'You toggled Payment Method on. Please select a payment method.';
+            errorMsg.classList.remove('d-none');
+            togglePayment.scrollIntoView({behavior: 'smooth', block: 'center'});
+          } else if(selected.value === 'Other' && pmOtherInput.value.trim() === '') {
+            e.preventDefault();
+            errorMsg.textContent = 'Please specify the facility\'s choice payment method.';
+            errorMsg.classList.remove('d-none');
+            pmOtherInput.focus();
+          } else {
+            errorMsg.classList.add('d-none');
+          }
+        }
+      });
+    }
+
+    // Restore state after server-side validation errors
+    if (togglePayment.checked) {
+      paymentOptionsDiv.classList.add('show');
+      const selected = document.querySelector('input[name="paymentMethod"]:checked');
+      if (selected && selected.value === 'Other') {
+        pmOtherText.classList.remove('d-none');
+      }
+    }
+  }
+
   // 1. Prevent invalid character keypresses on number inputs
   const sections = document.querySelectorAll('.aop, .input-group');
   sections.forEach(function(section) {
@@ -774,18 +983,15 @@ document.addEventListener('DOMContentLoaded', function() {
   dateInputs.forEach(function(input) {
     if (!input) return;
 
-    // Constrain picker to max 4-digit years
     input.setAttribute('min', today);
     input.setAttribute('max', maxAllowedDate);
 
-    // BLOCK DIRECT KEYBOARD TYPING ENTIRELY (Allows Tab for accessibility)
     input.addEventListener('keydown', function(e) {
       if (e.key !== 'Tab') {
         e.preventDefault();
       }
     });
 
-    // Open calendar picker when clicking anywhere inside the box
     input.addEventListener('click', function() {
       if (typeof this.showPicker === 'function') {
         try {
@@ -794,7 +1000,6 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
 
-    // Clear field if an invalid year length is pasted or somehow inputted
     input.addEventListener('input', function() {
       if (this.value) {
         const year = this.value.split('-')[0];
