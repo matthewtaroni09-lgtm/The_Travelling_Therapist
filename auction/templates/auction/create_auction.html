@@ -97,7 +97,7 @@
       .ttt-card-header-row {
         display: flex;
         align-items: flex-start;
-        justify-content: space-between;
+        justify-space-between;
         gap: 0.75rem;
       }
 
@@ -230,24 +230,21 @@
         font-size: 0.93rem;
       }
 
-.ttt-perk-details {
-  resize: vertical;         /* Keeps bottom-right drag slider */
-  height: 31px;             /* Matches input box height */
-  min-height: 31px;         /* Locks the absolute minimum floor */
-  
-  padding: 5px 12px;        /* Matches standard Bootstrap input padding */
-  line-height: 1.35;        /* Vertically centers text nicely */
-  box-sizing: border-box;   /* Ensures padding doesn't swell box height */
-  
-  overflow: auto;
-  scrollbar-width: none;    /* Firefox */
-  -ms-overflow-style: none; /* IE / Edge */
-}
+      .ttt-perk-details {
+        resize: vertical;
+        height: 31px;
+        min-height: 31px;
+        padding: 5px 12px;
+        line-height: 1.35;
+        box-sizing: border-box;
+        overflow: auto;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+      }
 
-/* Hide scrollbar for Chrome, Safari, and Opera */
-.ttt-perk-details::-webkit-scrollbar {
-  display: none;
-}
+      .ttt-perk-details::-webkit-scrollbar {
+        display: none;
+      }
 
       .ttt-perk-amount-label {
         display: inline-flex;
@@ -896,7 +893,7 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   // ----------------------------------------------------
-  // PAYMENT METHOD JAVASCRIPT LOGIC
+  // PAYMENT METHOD JAVASCRIPT LOGIC & SUBMIT ERROR TRAP
   // ----------------------------------------------------
   const togglePayment = document.getElementById('id_paymentMethodToggle');
   const paymentOptionsDiv = document.getElementById('paymentMethodSection');
@@ -904,6 +901,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const pmOtherText = document.getElementById('paymentMethodOtherContainer');
   const pmOtherInput = document.getElementById('id_paymentMethodOther');
   const form = document.getElementById('createAuctionForm');
+  const submitButton = document.getElementById('submitButton');
   
   if(togglePayment) {
     togglePayment.addEventListener('change', function() {
@@ -949,6 +947,17 @@ document.addEventListener('DOMContentLoaded', function() {
           } else {
             errorMsg.classList.add('d-none');
           }
+        }
+
+        // DOUBLE-SUBMIT ERROR TRAP:
+        // Disables button and changes text to prevent spam clicks once form is validated
+        if (!e.defaultPrevented && submitButton) {
+          setTimeout(() => {
+            submitButton.disabled = true;
+            submitButton.innerText = "Creating Listing...";
+            submitButton.style.opacity = "0.65";
+            submitButton.style.cursor = "not-allowed";
+          }, 0);
         }
       });
     }

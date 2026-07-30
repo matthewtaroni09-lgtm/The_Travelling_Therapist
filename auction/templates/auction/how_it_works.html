@@ -347,7 +347,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding-left: 2px; /* Centers the SVG nicely */
+    padding-left: 2px;
   }
 
   /* Right Pane Visuals */
@@ -736,11 +736,11 @@
             
             <div class="offer-section">
               <p class="offer-text">Not sure how to review your offers?</p>
-              <button class="video-link" onclick="openVideoModal('https://www.youtube.com/embed/o5dIt7sF_Fc')">
+              <button class="video-link" onclick="openVideoModal('https://www.youtube.com/watch?v=5V2ec58lGi8')">
                 <div class="play-icon">
                   <svg width="10" height="10" viewBox="0 0 24 24" fill="#FFFFFF"><path d="M5 3l14 9-14 9V3z"/></svg>
                 </div> 
-                <span class="link-text">Watch 90-Sec Platform Overview</span>
+                <span class="link-text">Watch Quick Platform Overview</span>
               </button>
             </div>
 
@@ -915,11 +915,11 @@
             
             <div class="offer-section">
               <p class="offer-text">Not sure how to make an offer?</p>
-              <button class="video-link" onclick="openVideoModal('https://www.youtube.com/embed/IE6vYY2Xx3E')">
+              <button class="video-link" onclick="openVideoModal('https://www.youtube.com/watch?v=5V2ec58lGi8')">
                 <div class="play-icon">
                   <svg width="10" height="10" viewBox="0 0 24 24" fill="#FFFFFF"><path d="M5 3l14 9-14 9V3z"/></svg>
                 </div> 
-                <span class="link-text">Watch 90-Sec Platform Overview</span>
+                <span class="link-text">Watch Quick Platform Overview</span>
               </button>
             </div>
 
@@ -1017,8 +1017,8 @@
                 <svg width="18" height="18" fill="none" stroke="#FFFFFF" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"></path></svg>
               </span>
             </a>
-            <button class="btn-ttt-secondary" onclick="openVideoModal('https://www.youtube.com/embed/o5dIt7sF_Fc')">
-              <span>▶</span> Watch 90-sec overview
+            <button class="btn-ttt-secondary" onclick="openVideoModal('https://www.youtube.com/watch?v=5V2ec58lGi8')">
+              <span>▶</span> Watch quick overview
             </button>
           </div>
         </div>
@@ -1067,8 +1067,8 @@
                 <svg width="18" height="18" fill="none" stroke="#FFFFFF" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"></path></svg>
               </span>
             </a>
-            <button class="btn-ttt-secondary" onclick="openVideoModal('https://www.youtube.com/embed/IE6vYY2Xx3E')">
-              <span>▶</span> Watch 90-sec overview
+            <button class="btn-ttt-secondary" onclick="openVideoModal('https://www.youtube.com/watch?v=5V2ec58lGi8')">
+              <span>▶</span> Watch quick overview
             </button>
           </div>
         </div>
@@ -1242,7 +1242,15 @@
       </div>
       <div class="modal-body p-0">
         <div class="ratio ratio-16x9">
-          <iframe id="modalVideoIframe" src="" title="Platform Overview" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          <!-- FIX: Added referrerpolicy="strict-origin-when-cross-origin" below -->
+          <iframe 
+            id="modalVideoIframe" 
+            src="" 
+            title="Platform Overview" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+            referrerpolicy="strict-origin-when-cross-origin" 
+            allowfullscreen>
+          </iframe>
         </div>
       </div>
     </div>
@@ -1327,11 +1335,30 @@
     goToStep(stream, prev);
   }
 
+  let videoModalInstance = null;
+
   function openVideoModal(videoUrl) {
+    // Automatically convert watch?v= format to embed/ format if it is passed directly
+    if (videoUrl.includes('watch?v=')) {
+      videoUrl = videoUrl.replace('watch?v=', 'embed/');
+    }
+
     const iframe = document.getElementById('modalVideoIframe');
     iframe.src = videoUrl + "?autoplay=1";
-    const modal = new bootstrap.Modal(document.getElementById('videoOverviewModal'));
-    modal.show();
+    
+    const modalEl = document.getElementById('videoOverviewModal');
+    
+    // Only initialize the modal once to prevent Bootstrap background stack issues
+    if (!videoModalInstance) {
+      videoModalInstance = new bootstrap.Modal(modalEl);
+      
+      // Stop video and clear src when the modal is closed (e.g. clicking the backdrop)
+      modalEl.addEventListener('hidden.bs.modal', function () {
+        iframe.src = "";
+      });
+    }
+    
+    videoModalInstance.show();
   }
 
   function closeVideoModal() {

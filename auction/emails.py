@@ -120,8 +120,12 @@ email_footer = f"""
 # -----------------------------
 
 def clinic_welcome(clinic_name):
+    # Setup matching urls from navigation.html
     create_listing_url = f"{EMAIL_BASE_LINK}/create-auction"
+    pricing_url = f"{EMAIL_BASE_LINK}/pricing"
     login_url = f"{EMAIL_BASE_LINK}/login"
+    profile_url = f"{EMAIL_BASE_LINK}/profile"
+    healthcare_facility_guide_url = f"{EMAIL_BASE_LINK}/healthcare-facility-guide"
     
     message = email_header + f"""<section style="font-size: 16px; margin-bottom: 1rem; padding: 10px;">
   <p>Hello <span style="font-weight: bold;">{clinic_name}</span>,</p>
@@ -150,8 +154,12 @@ def clinic_welcome(clinic_name):
 
 
 def therapist_welcome(first_name, last_name):
-    browse_url = f"{EMAIL_BASE_LINK}/login"
+    # Setup matching urls from navigation.html
+    login_url = f"{EMAIL_BASE_LINK}/login"
     profile_url = f"{EMAIL_BASE_LINK}/profile"
+    index_url = f"{EMAIL_BASE_LINK}/"
+    hiring_healthcare_worker_url = f"{EMAIL_BASE_LINK}/hiring-healthcare-worker"
+    
     full_name = f"{first_name or ''} {last_name or ''}".strip() or "Clinician"
 
     message = email_header + f"""<section style="font-size: 16px; margin-bottom: 1rem; padding: 10px;">
@@ -182,7 +190,7 @@ def therapist_welcome(first_name, last_name):
 # -----------------------------
 
 def clinic_auction_created(clinic_name):
-    how_it_works_url = f"{EMAIL_BASE_LINK}/how-it-works/"
+    how_it_works_url = f"{EMAIL_BASE_LINK}/how-it-works"
     message = email_header + f"""<section style="font-size: 16px; margin-bottom: 1rem; padding: 10px;">
   <p>Hello <span style="font-weight: bold;">{clinic_name}</span>,</p>
   
@@ -195,7 +203,7 @@ def clinic_auction_created(clinic_name):
 
 
 def clinic_auction_live(clinic_name):
-    how_it_works_url = "https://travelingtherapist.ca/how-it-works"
+    how_it_works_url = f"{EMAIL_BASE_LINK}/how-it-works"
     message = email_header + f"""<section style="font-size: 16px; margin-bottom: 1rem; padding: 10px;">
   <p>Hello <span style="font-weight: bold;">{clinic_name}</span>,</p>
   
@@ -212,7 +220,7 @@ def clinic_auction_live(clinic_name):
 
 def new_auction_email_to_all(first_name, last_name, link, start_date, end_date, payment_type, clinic_name, clinic_location, time_remaining, auctionID=None):
     full_name = f"{first_name or ''} {last_name or ''}".strip() or "Clinician"
-    listing_url = link or (f"{EMAIL_BASE_LINK}/auction/{auctionID}" if auctionID else EMAIL_BASE_LINK)
+    listing_url = link or (f"{EMAIL_BASE_LINK}/auction/{auctionID}" if auctionID else f"{EMAIL_BASE_LINK}/")
     payment_type_message = ""
 
     message = email_header + f"""<section style="font-size: 16px; margin-bottom: 1rem; padding: 10px;">
@@ -263,9 +271,6 @@ def therapist_auction_thank_you_bid(first_name, last_name, clinic_name, start_da
 
 
 def clinician_placed_offer_other_users(first_name, last_name, clinic_name, start_date, auctionID):
-    """
-    Renamed from therapist_auction_outbid_all_users. Sent to other clinicians who offered on this listing.
-    """
     full_name = f"{first_name or ''} {last_name or ''}".strip() or "Clinician"
     listing_url = f"{EMAIL_BASE_LINK}/auction/{auctionID}"
     formatted_date = start_date.strftime("%Y-%m-%d") if hasattr(start_date, 'strftime') else str(start_date)
@@ -339,7 +344,7 @@ def therapist_auction_end_win(first_name, last_name, clinic_name, start_date, en
 
 def therapist_auction_end_lose(first_name, last_name, clinic_name, start_date, end_date):
     full_name = f"{first_name or ''} {last_name or ''}".strip() or "Clinician"
-    browse_url = "https://travelingtherapist.ca"
+    browse_url = f"{EMAIL_BASE_LINK}/"
 
     message = email_header + f"""<section style="font-size: 16px; margin-bottom: 1rem; padding: 10px;">
   <p>Hello <span style="font-weight: bold;">{full_name}</span>,</p>
@@ -364,11 +369,11 @@ def therapist_auction_end_lose(first_name, last_name, clinic_name, start_date, e
     return message
 
 # -----------------------------
-# LISTING ENDS WITHOUT MATCH
+# LISTING ENDS WITHOUT MATCH OR EXPIRES
 # -----------------------------
 
 def clinic_no_bids(clinic_name, start_date=None, end_date=None):
-    repost_url = f"{EMAIL_BASE_LINK}/create_auction"
+    repost_url = f"{EMAIL_BASE_LINK}/create-auction"
     message = email_header + f"""<section style="font-size: 16px; margin-bottom: 1rem; padding: 10px;">
   <p>Hello <span style="font-weight: bold;">{clinic_name}</span>,</p>
   
@@ -388,6 +393,77 @@ def clinic_no_bids(clinic_name, start_date=None, end_date=None):
   </ul>
 
   <p>Thank you for choosing The Traveling Therapist. We look forward to helping you find the right clinician.</p>
+  <br>
+  <p style="font-weight: 700; margin-top: 0; line-height: 1.2;">— The Traveling Therapist Team</p>
+</section>""" + email_footer
+    return message
+
+def clinic_auction_closed_waiting_email(clinic_name, auctionID):
+    listing_url = f"{EMAIL_BASE_LINK}/auction/{auctionID}"
+    
+    message = email_header + f"""<section style="font-size: 16px; margin-bottom: 1rem; padding: 10px;">
+  <p>Hello <span style="font-weight: bold;">{clinic_name}</span>,</p>
+  
+  <p>Your listing has reached its 14-day duration and is now marked as <strong>Closed</strong>.</p>
+  
+  <p><strong>Action Required:</strong> You currently have pending offers. You have exactly <strong>7 days</strong> to review and select a candidate. 
+  If no candidate is selected by the end of this period, we will assume you have decided to select no clinician from the set of offers.</p>
+
+  <p>Friendly reminder that your invoice total will be generated based on the candidate you select or decide not to select. Learn more at our <a href="{pricing_url}" style="background-color: #02CA90; color: #ffffff; padding: 12px 24px; font-weight: bold; text-decoration: none; border-radius: 5px; display: inline-block;">Pricing Page</a></p>
+
+  <div style="text-align: center; margin: 25px 0;">
+    <a href="{listing_url}" style="background-color: #02CA90; color: #ffffff; padding: 12px 24px; font-weight: bold; text-decoration: none; border-radius: 5px; display: inline-block;">Review Offers Now</a>
+  </div>
+
+  <p>Thank you for using The Traveling Therapist.</p>
+  <br>
+  <p style="font-weight: 700; margin-top: 0; line-height: 1.2;">— The Traveling Therapist Team</p>
+</section>""" + email_footer
+    return message
+
+def clinic_manual_no_offer_accepted(clinic_name, start_date, end_date):
+    repost_url = f"{EMAIL_BASE_LINK}/create-auction"
+    message = email_header + f"""<section style="font-size: 16px; margin-bottom: 1rem; padding: 10px;">
+  <p>Hello <span style="font-weight: bold;">{clinic_name}</span>,</p>
+  
+  <p>You have chosen to select none of the candidate offers availaible to you for your listing.</p>
+   <a href="{listing_url}" style="background-color: #02CA90; color: #ffffff; padding: 12px 24px; font-weight: bold; text-decoration: none; border-radius: 5px; display: inline-block;">View Listing</a>
+  
+  <p>Because your listing successfully generated offers from clinicians on our platform, a $50 invoice will be sent to you shortly.</p>
+  <p>We're sorry you didn't find the perfect fit this time! We encourage you to create a new listing and consider adjusting the terms or rate to attract the candidate you need.</p>
+  
+  <div style="text-align: center; margin: 25px 0;">
+    <a href="{repost_url}" style="background-color: #02CA90; color: #ffffff; padding: 12px 24px; font-weight: bold; text-decoration: none; border-radius: 5px; display: inline-block;">Post a New Listing</a>
+  </div>
+  
+  <h3>Listing Details:</h3>
+  <p><b>Therapist Start Date:</b> {start_date}</p>
+  <p><b>Therapist End Date:</b> {end_date}</p>
+  
+  <p>Thank you for using The Traveling Therapist.</p>
+  <br>
+  <p style="font-weight: 700; margin-top: 0; line-height: 1.2;">— The Traveling Therapist Team</p>
+</section>""" + email_footer
+    return message
+
+def clinic_automatic_closeout_no_offer(clinic_name, start_date, end_date):
+    repost_url = f"{EMAIL_BASE_LINK}/create-auction"
+    message = email_header + f"""<section style="font-size: 16px; margin-bottom: 1rem; padding: 10px;">
+  <p>Hello <span style="font-weight: bold;">{clinic_name}</span>,</p>
+  
+  <p>Your listing's 7-day review period has expired, and none of the offers from the candidates were selected. As a result, your listing has automatically closed.</p>
+  
+  <p>Because your listing successfully generated offers from our clinicians, a $50 invoice will be sent to you shortly.</p>
+  
+  <div style="text-align: center; margin: 25px 0;">
+    <a href="{repost_url}" style="background-color: #02CA90; color: #ffffff; padding: 12px 24px; font-weight: bold; text-decoration: none; border-radius: 5px; display: inline-block;">Post a New Listing</a>
+  </div>
+  
+  <h3>Listing Details:</h3>
+  <p><b>Therapist Start Date:</b> {start_date}</p>
+  <p><b>Therapist End Date:</b> {end_date}</p>
+  
+  <p>Thank you for using The Traveling Therapist.</p>
   <br>
   <p style="font-weight: 700; margin-top: 0; line-height: 1.2;">— The Traveling Therapist Team</p>
 </section>""" + email_footer
@@ -499,18 +575,3 @@ def auction_created_admin(clinicName, city, province, email, paymentTypes, flatF
         <p><a href="{admin_link}">Link to listing page</a></p>
     </section>""" + email_footer
     return message
-
-# =====================================================================
-# DEPRECATED / IRRELEVANT IN NEW SYSTEM (KEPT AS COMMENTED OUT REFERENCE)
-# =====================================================================
-# def therapist_auction_outbid_lowest(first_name, last_name, clinic_name, start_date, auctionID):
-#     """Outbid lowest email - Irrelevant in new system where clinics pick candidates freely."""
-#     pass
-
-# def therapist_auction_not_met(first_name, last_name, clinic_name, start_date, end_date, payment_type):
-#     """Reserve price not met email - Irrelevant in new system."""
-#     pass
-
-# def clinic_reserve_not_met(clinic_name, start_date, end_date, payment_type):
-#     """Clinic reserve not met email - Irrelevant in new system."""
-#     pass
