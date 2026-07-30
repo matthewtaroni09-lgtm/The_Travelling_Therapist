@@ -1,124 +1,64 @@
 {% extends 'auction/base.html' %}
 {% load static %}
+
 {% block content %}
 <p id="pageTitle" class="d-none">Pricing at The Traveling Therapist</p>
 
 <style>
-  .ttt-pricing-page {
-    --ttt-ink: #17322d;
-    --ttt-muted: #4f6460;
-    --ttt-accent: #0f9972;
-    --ttt-soft: #eef8f4;
-    --ttt-border: #d7e7e2;
-    --ttt-panel: #ffffff;
-    max-width: 1240px;
+  :root {
+    --ttt-mint: #00E5A3;
+    --ttt-mint-hover: #00c78c;
+    --ttt-mint-light: #e6fcf5;
+    --ttt-dark: #0A0E17;
+    --ttt-dark-card: #121824;
+    --ttt-border: #E2E8F0;
+    --ttt-text-muted: #64748B;
+    --ttt-card-bg: #FFFFFF;
+    --ttt-ink: #0F172A;
   }
 
+  /* Hero Section Styling */
   .ttt-pricing-hero {
-    position: relative;
-    overflow: hidden;
-    border: 1px solid var(--ttt-border);
-    border-radius: 28px;
-    background: linear-gradient(135deg, #f6fbf9 0%, #ffffff 58%, #f1f8f5 100%);
-    padding: 1.6rem 1.7rem;
-    box-shadow: 0 18px 40px rgba(10, 76, 61, 0.09);
-    margin-bottom: 1.25rem;
-  }
-
-  .ttt-pricing-hero::before,
-  .ttt-pricing-hero::after {
-    content: '';
-    position: absolute;
-    border-radius: 999px;
-    background: rgba(15, 153, 114, 0.08);
-    pointer-events: none;
-  }
-
-  .ttt-pricing-hero::before {
-    width: 220px;
-    height: 220px;
-    top: -90px;
-    right: -70px;
-  }
-
-  .ttt-pricing-hero::after {
-    width: 150px;
-    height: 150px;
-    bottom: -60px;
-    left: -40px;
-  }
-
-  .ttt-page-title {
     text-align: center;
-    font-family: Futura-Extra-Bold, sans-serif;
-    color: var(--ttt-ink);
-    font-size: clamp(1rem, 2vw, 1.15rem);
-    margin-bottom: 0.4rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+    padding: 3.5rem 1.5rem 2.5rem;
+    background: linear-gradient(180deg, #F8FAFC 0%, #FFFFFF 100%);
+    border-bottom: 1px solid var(--ttt-border);
+    margin-bottom: 3rem;
+    position: relative;
+    border-radius: 28px;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  .ttt-pricing-hero:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.05);
   }
 
   .ttt-transparency-kicker {
-    display: inline-block;
-    padding: 0.6rem 0.9rem;
-    border-radius: 999px;
-    background: #e8f6f1;
-    color: #165c49;
-    font-family: Futura-Bold, sans-serif;
-    font-size: 0.92rem;
-    line-height: 1.3;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 20px;
+    border-radius: 50px;
+    background: var(--ttt-mint-light);
+    color: #0c694e;
+    font-weight: 700;
+    font-size: 0.9rem;
+    letter-spacing: 0.5px;
+    margin-bottom: 1.25rem;
+    border: 1px solid rgba(0, 229, 163, 0.3);
   }
 
-  .ttt-pricing-headline {
-    margin: 0.4rem 0 1rem;
-    font-family: Futura-Extra-Bold, sans-serif;
+  .ttt-hero-title {
+    font-size: clamp(2.25rem, 5vw, 3.5rem);
+    font-weight: 900;
     color: var(--ttt-ink);
-    font-size: clamp(2rem, 4vw, 2.85rem);
-    line-height: 1.08;
-    letter-spacing: -0.01em;
-    text-align: center;
+    line-height: 1.15;
+    letter-spacing: -1px;
+    margin-bottom: 2rem;
   }
 
-  .ttt-hero-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1.25rem;
-    align-items: start;
-  }
-
-  .ttt-hero-copy {
-    max-width: 1080px;
-    margin: 0 auto;
-    text-align: center;
-  }
-
-  .ttt-pricing-highlight-list {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(420px, 1fr));
-    gap: 0.85rem;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    justify-content: center;
-  }
-
-  .ttt-pricing-highlight-list li {
-    border: 1px solid #d9e7e2;
-    border-radius: 14px;
-    background: #fbfdfc;
-    padding: 1rem 1.2rem;
-    box-shadow: 0 10px 24px rgba(14, 77, 61, 0.06);
-    text-align: center;
-    font-size: 0.98rem;
-  }
-
-  .ttt-pricing-highlight-list strong {
-    display: block;
-    color: var(--ttt-ink);
-    margin-bottom: 0.25rem;
-    font-size: 1.05rem;
-  }
-
+  /* High-Contrast Image Toggle Switch */
   .ttt-stream-switch {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -131,10 +71,10 @@
     border: 1px solid #d5e6e0;
     border-radius: 24px;
     padding: 1rem 1.1rem;
-    font-family: Futura-Bold, sans-serif;
+    font-weight: 800;
     color: #58706b;
     background: #eef2f1;
-    transition: transform 0.15s ease, background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+    transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
     display: grid;
     grid-template-columns: 56px 1fr;
     gap: 0.9rem;
@@ -148,12 +88,14 @@
   .ttt-stream-btn:hover {
     background: #f6faf8;
     opacity: 0.92;
+    transform: translateY(-3px);
+    box-shadow: 0 12px 24px rgba(14, 77, 61, 0.12);
   }
 
   .ttt-stream-btn.is-active {
     background: #ffffff;
-    color: #0c5f4a;
-    border: 2px solid #1b2a2b;
+    color: var(--ttt-dark);
+    border: 2px solid var(--ttt-dark);
     box-shadow: 0 18px 32px rgba(19, 135, 105, 0.16);
     transform: translateY(-2px);
     opacity: 1;
@@ -176,85 +118,53 @@
     margin-top: 0.2rem;
     font-size: 0.88rem;
     color: inherit;
-    font-family: Futura-Book, sans-serif;
+    font-weight: normal;
   }
 
-  .ttt-hero-stack {
-    display: grid;
-    gap: 0.85rem;
-  }
-
-  .ttt-hero-summary-card {
-    display: grid;
-    grid-template-columns: 92px 1fr;
-    gap: 0.9rem;
-    align-items: center;
-    border: 1px solid #d9e7e2;
-    border-radius: 20px;
-    background: rgba(255, 255, 255, 0.96);
-    padding: 1rem;
-  }
-
-  .ttt-hero-summary-card img {
-    width: 92px;
-    height: 92px;
-    object-fit: contain;
-  }
-
-  .ttt-hero-mini-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.75rem;
-  }
-
-  .ttt-hero-mini-card {
-    border: 1px solid #dce9e4;
-    border-radius: 18px;
-    background: #ffffff;
-    padding: 0.9rem;
-    min-height: 152px;
-  }
-
-  .ttt-hero-mini-card img {
-    width: 56px;
-    height: 56px;
-    object-fit: contain;
-    margin-bottom: 0.7rem;
-  }
-
+  /* Dynamic Audience Stream Visibility */
   .ttt-audience-stream {
     display: none;
-    margin-top: 0.9rem;
-    animation: tttFadeIn 0.25s ease;
+    animation: tttFadeIn 0.35s ease-in-out;
   }
 
   .ttt-audience-stream.is-visible {
     display: block;
   }
 
-  .ttt-stream-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1rem;
+  /* Value Cards, Panels & Boxes - Universal Hover Styling */
+  .ttt-panel {
+    border: 1px solid var(--ttt-border);
+    border-radius: 28px;
+    background: var(--ttt-card-bg);
+    padding: 2.5rem;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.04);
+    margin-bottom: 2.5rem;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
   }
 
-  .ttt-top-horizontal {
-    display: grid;
-    grid-template-columns: 1.4fr 1fr;
-    gap: 1rem;
-    align-items: stretch;
+  .ttt-panel:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.08);
   }
 
-  .ttt-top-horizontal-clinic-focus {
-    grid-template-columns: 1fr 1.7fr;
+  .ttt-half-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    align-items: center;
   }
 
   .ttt-side-image-wrap {
-    border: 1px solid #d7e6e1;
-    border-radius: 14px;
+    border: 1px solid var(--ttt-border);
+    border-radius: 20px;
     overflow: hidden;
     min-height: 260px;
-    background: #f3f8f6;
+    background: #f8fafc;
+    transition: transform 0.25s ease;
+  }
+
+  .ttt-side-image-wrap:hover {
+    transform: scale(1.01);
   }
 
   .ttt-side-image-wrap img {
@@ -265,676 +175,761 @@
     display: block;
   }
 
-  .ttt-half-split {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-    align-items: stretch;
-  }
-
-  .ttt-panel {
-    border: 1px solid var(--ttt-border);
-    border-radius: 20px;
-    background: var(--ttt-panel);
-    padding: 1.2rem;
-    box-shadow: 0 10px 24px rgba(16, 64, 53, 0.06);
-  }
-
-  .ttt-panel-pop {
-    box-shadow: 0 18px 36px rgba(14, 77, 61, 0.1);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-  }
-
-  .ttt-panel-pop:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 24px 42px rgba(14, 77, 61, 0.14);
-  }
-
   .ttt-value-card {
-    border: 1px solid #d3e5df;
-    border-radius: 16px;
-    background: #f2faf7;
-    color: #173f34;
-    padding: 1rem;
-    margin: 0.7rem 0;
+    border: 1px solid #C3F2E3;
+    border-radius: 20px;
+    background: #F2FCF8;
+    padding: 2rem;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
   }
 
-  .ttt-value-card h3 {
-    font-family: Futura-Bold, sans-serif;
-    font-size: clamp(1.15rem, 2.5vw, 1.55rem);
-    margin-bottom: 0.45rem;
+  .ttt-value-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 28px rgba(0, 229, 163, 0.15);
   }
 
-  .ttt-value-cost {
-    font-family: Futura-Extra-Bold, sans-serif;
-    font-size: clamp(1.2rem, 3vw, 1.6rem);
-    margin-bottom: 0.4rem;
-    color: #0e7d5d;
-  }
-
-  .ttt-muted-lead {
-    color: var(--ttt-muted);
+  .ttt-value-badge {
+    display: inline-block;
+    font-size: 0.8rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #0c694e;
     margin-bottom: 0.5rem;
   }
 
-  .ttt-case-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(280px, 1fr));
-    gap: 1rem;
+  .ttt-value-cost {
+    font-size: clamp(2rem, 4vw, 2.75rem);
+    font-weight: 900;
+    color: var(--ttt-ink);
+    margin-bottom: 0.75rem;
+    line-height: 1.1;
   }
 
-  .ttt-case-grid-three {
-    grid-template-columns: repeat(3, minmax(240px, 1fr));
+  /* Carousel Cards Hover */
+  .carousel-inner .card {
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
   }
 
-  .ttt-case-card {
-    border: 1px solid #d7e6e1;
-    border-radius: 16px;
-    background: #ffffff;
-    color: #21473d;
-    padding: 1.15rem;
-    height: 100%;
-    box-shadow: 0 12px 28px rgba(14, 77, 61, 0.08);
+  .carousel-inner .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1) !important;
   }
 
-  .ttt-case-card h4 {
-    font-family: Futura-Bold, sans-serif;
-    margin-bottom: 0.6rem;
+  /* Subtle Hover for Inner Light Info Boxes */
+  .p-3.bg-light.border {
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
   }
 
-  .ttt-case-card ul {
-    margin-bottom: 0.6rem;
-    padding-left: 1rem;
+  .p-3.bg-light.border:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.04);
+    border-color: #cbd5e1 !important;
   }
 
-  .ttt-pricing-link {
-    font-family: Futura-Bold, sans-serif;
-    color: #0c7e61;
-    text-decoration: underline;
+  /* Referral Loop Banner Box */
+  .ttt-referral-banner {
+    background-color: var(--ttt-dark);
+    color: #FFFFFF;
+    border-radius: 28px;
+    padding: 3rem 2.5rem;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
   }
 
-  .ttt-safety-list {
-    margin-bottom: 0;
-    padding-left: 1.25rem;
+  .ttt-referral-banner:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 24px 48px rgba(0,0,0,0.28);
   }
 
-  .ttt-dual-referral-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.85rem;
+  .ttt-referral-inner-card {
+    background-color: var(--ttt-dark-card);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: transform 0.25s ease, border-color 0.25s ease;
   }
 
-  .ttt-referral-box {
-    border: 1px solid #d7e6e1;
-    background: #f7fbf9;
-    border-radius: 14px;
-    padding: 1rem;
-    box-shadow: 0 10px 22px rgba(14, 77, 61, 0.08);
+  .ttt-referral-inner-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(0, 229, 163, 0.4);
   }
 
-  .ttt-referral-box h4 {
-    font-family: Futura-Bold, sans-serif;
-    margin-bottom: 0.6rem;
+  .ttt-referral-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: var(--ttt-mint);
+    padding: 6px 16px;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  /* CTAs and Links */
+  .ttt-action-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 800;
+    color: var(--ttt-ink);
+    text-decoration: none;
+    border-bottom: 2px solid var(--ttt-mint);
+    padding-bottom: 2px;
+    transition: color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+  }
+
+  .ttt-action-link:hover {
+    color: var(--ttt-mint-hover);
+    border-bottom-color: var(--ttt-mint-hover);
+    transform: translateX(3px);
+  }
+
+  .ttt-btn-primary {
+    background-color: var(--ttt-mint);
+    color: var(--ttt-dark);
+    font-weight: 800;
+    border-radius: 50px;
+    padding: 12px 28px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .ttt-btn-primary:hover {
+    background-color: var(--ttt-mint-hover);
+    color: var(--ttt-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(0, 229, 163, 0.3);
   }
 
   @keyframes tttFadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(4px);
-    }
-
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 
-  @media (max-width: 991.98px) {
-    .ttt-pricing-highlight-list,
-    .ttt-hero-mini-grid,
-    .ttt-stream-grid,
-    .ttt-top-horizontal,
-    .ttt-half-split,
-    .ttt-case-grid,
-    .ttt-case-grid-three,
-    .ttt-dual-referral-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .ttt-pricing-headline {
-      font-size: clamp(1.8rem, 7vw, 2.45rem);
-    }
-
-    .ttt-stream-switch {
-      max-width: none;
-    }
-
-    .ttt-stream-btn {
-      grid-template-columns: 1fr;
-      text-align: center;
-    }
-
-    .ttt-stream-btn img {
-      margin: 0 auto;
-    }
-
-    .ttt-hero-summary-card {
-      grid-template-columns: 1fr;
-      text-align: center;
-    }
-
-    .ttt-hero-summary-card img {
-      margin: 0 auto;
-    }
+  @media (max-width: 991px) {
+    .ttt-panel { padding: 1.5rem; }
+    .ttt-stream-switch, .ttt-half-split { grid-template-columns: 1fr; }
+    .ttt-stream-btn { grid-template-columns: 1fr; text-align: center; }
+    .ttt-stream-btn img { margin: 0 auto; }
   }
 </style>
 
-<div class="ttt-pricing-page container my-3 mb-5">
+<div class="container my-4 mb-5">
+
+  <!-- ================= SECTION 1 & 2: HERO & SEGMENTED SWITCH ================= -->
   <section class="ttt-pricing-hero">
-    <div class="ttt-hero-grid">
-      <div class="ttt-hero-copy">
-        <p class="card-title mb-2 text-weight-bold text-dark-colour text-center fs-2">Transparent, No-Risk Pricing Built for Healthcare</p>
-        <p class="ttt-transparency-kicker mb-3">We believe in full transparency for both Clinicians and Clinics here at The Traveling Therapist!</p>
-        </ul>
-        <h1 class="ttt-pricing-headline mt-4 pt-2">Who Are We Pricing For?</h1>
-        <div class="ttt-stream-switch" role="tablist" aria-label="Pricing audience switch">
-          <button type="button" id="streamClinicianBtn" class="ttt-stream-btn is-active" role="tab" aria-selected="true" aria-controls="clinicianStream" data-stream-target="clinician">
-            <img src="/media/images/therapy.png" alt="Healthcare professional illustration">
-            <span>
-              <span class="ttt-stream-btn-label">Healthcare Professional</span>
-              <span class="ttt-stream-btn-copy">Free to browse, offer, and keep your full rate.</span>
-            </span>
-          </button>
-          <button type="button" id="streamFacilityBtn" class="ttt-stream-btn" role="tab" aria-selected="false" aria-controls="facilityStream" data-stream-target="facility">
-            <img src="/media/images/clinic.png" alt="Healthcare facility illustration">
-            <span>
-              <span class="ttt-stream-btn-label">Healthcare Facility</span>
-              <span class="ttt-stream-btn-copy">Post free and only pay when a match is accepted.</span>
-            </span>
-          </button>
-        </div>
-      </div>
+    <div class="ttt-transparency-kicker">
+      We believe in full transparency for both Clinicians and Clinics here at The Traveling Therapist!
+    </div>
+    <h1 class="ttt-hero-title">Who Are We Pricing For?</h1>
+
+    <!-- Image-Based Toggle Switch -->
+    <div class="ttt-stream-switch" role="tablist" aria-label="Pricing audience switch">
+      <button type="button" 
+              id="btn-clinician" 
+              class="ttt-stream-btn is-active" 
+              role="tab" 
+              aria-selected="true" 
+              onclick="switchPricingStream('clinician')">
+        <img src="/media/images/therapy.png" alt="Healthcare professional illustration">
+        <span>
+          <span class="ttt-stream-btn-label">Healthcare Professional</span>
+          <span class="ttt-stream-btn-copy">Free to browse, offer, and keep your full rate.</span>
+        </span>
+      </button>
+      <button type="button" 
+              id="btn-facility" 
+              class="ttt-stream-btn" 
+              role="tab" 
+              aria-selected="false" 
+              onclick="switchPricingStream('facility')">
+        <img src="/media/images/clinic.png" alt="Healthcare facility illustration">
+        <span>
+          <span class="ttt-stream-btn-label">Healthcare Facility</span>
+          <span class="ttt-stream-btn-copy">Post free and only pay when a match is accepted.</span>
+        </span>
+      </button>
     </div>
   </section>
 
-  <section id="clinicianStream" class="ttt-audience-stream is-visible" data-stream="clinician" aria-labelledby="streamClinicianBtn">
-    <div class="ttt-stream-grid">
-      <div class="ttt-panel ttt-panel-pop ttt-top-horizontal">
-        <div>
-          <h2 class="h4 mb-2">Clinicians / Healthcare Professionals</h2>
-          <p class="ttt-muted-lead">Browsing, matching, and scaling your career is 100% free.</p>
-          <p class="fst-italic mb-2">Wondering how The Traveling Therapist makes money?</p>
-          <p class="mb-2">We invoice the healthcare facilities for a platform premium on top of your rate. They pay for the software solution and you keep 100% of your clinical revenue.</p>
+
+  <!-- ================= SECTION 3: STREAM A - HEALTHCARE PROFESSIONAL (CLINICIAN) ================= -->
+  <section id="stream-clinician" class="ttt-audience-stream is-visible">
+    
+    <!-- 1. Clinician Value Card -->
+    <div class="ttt-panel">
+      <div class="row align-items-center g-4">
+        <div class="col-lg-7">
+          <span class="ttt-value-badge">Healthcare Professional View</span>
+          <h2 class="h3 fw-bold text-dark mb-3">Browsing, Matching, and Scaling Your Career is 100% Free.</h2>
+          <p class="text-secondary fs-5 mb-3">
+            We never shave down your hourly contractor rates or charge you a subscription to browse shifts. You keep every dollar of your contract rate.
+          </p>
+          <div class="p-3 bg-light rounded-3 mb-4 border">
+            <p class="small text-muted mb-0">
+              <strong>Wondering how The Traveling Therapist makes money?</strong><br>
+              We invoice the healthcare facilities for a platform premium on top of your rate—they pay for the software solution, while you keep 100% of your hard-earned clinical revenue!
+            </p>
+          </div>
+          <a href="{% url 'hiring-healthcare-worker' %}" class="ttt-action-link">
+            Learn about other premium benefits of Traveling Therapist for clinicians here →
+          </a>
         </div>
-        <div class="ttt-value-card my-0">
-          <h3>Your Cost As a Clinician</h3>
-          <p class="ttt-value-cost">$0</p>
-          <p class="mb-0">We never shave down your hourly contractor rates or charge you a subscription to browse listings. You keep every dollar of your contract rate.</p>
+        <div class="col-lg-5">
+          <div class="ttt-value-card text-center">
+            <span class="ttt-value-badge">Your Cost</span>
+            <div class="ttt-value-cost">$0</div>
+            <p class="text-muted small mb-0">No hidden fees. No subscription. You keep 100% of your listed rate.</p>
+          </div>
         </div>
       </div>
-
-<div class="row mb-5 mt-5">
-    <div class="col-10 col-md-9 col-lg-8 mx-auto position-relative">
-        <div id="caseExamplesCarousel" class="carousel carousel-dark slide" data-bs-ride="false">
-            
-            <div class="carousel-inner">
-                <!-- Example A -->
-                <div class="carousel-item active">
-                    <div class="card shadow border-0 rounded-3 overflow-hidden d-flex flex-column" style="height: 660px;">
-                        <div class="survey-cta-button p-1" style="background-color: #198754;"></div>
-                        <div class="card-body p-4 p-md-5 bg-white d-flex flex-column h-100">
-                            
-                            <div class="flex-grow-1">
-                                <h2 class="card-title mb-2 text-weight-bold text-dark-colour text-center">Example A</h2>
-                                <h3 class="mb-4 border-bottom pb-3 text-weight-normal text-muted text-center h5">The Weekend Multiplier Shift</h3>
-
-                                <p class="fs-5 text-dark-colour mb-4">
-                                    <strong>The Scenario:</strong> A freelance practitioner picks up a Saturday coverage shift at a local multidisciplinary clinic.
-                                </p>
-
-                                <p class="fs-5 text-dark-colour mb-3"><strong>Financial Breakdown:</strong></p>
-                                <ul class="list-unstyled text-start fs-5 text-dark-colour mb-4 ms-3">
-                                    <li class="mb-2">• <strong>Clinician's Contract Rate:</strong> $75/hr × 6 hours = $450</li>
-                                    <li class="mb-2">• <strong>The Traveling Therapist Platform Fee:</strong> $0</li>
-                                    <li class="mb-2">• <strong>Total Clinician Payout:</strong> $450</li>
-                                </ul>
-                            </div>
-
-                            <div class="mt-auto">
-                                <div class="p-4 rounded shadow-sm" style="background-color: #f8f9fa; border-left: 4px solid #198754;">
-                                    <h4 class="fw-bold text-dark-colour mb-3">Outcome</h4>
-                                    <ul class="list-unstyled text-start fs-5 text-dark-colour mb-0">
-                                        <li class="d-flex align-items-start">
-                                            <span class="material-icons text-success me-2 mt-1">check_circle</span> 
-                                            <span>The practitioner walks away with <strong>100% of their earned revenue</strong>.</span>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Example B -->
-                <div class="carousel-item">
-                    <div class="card shadow border-0 rounded-3 overflow-hidden d-flex flex-column" style="height: 660px;">
-                        <div class="survey-cta-button p-1" style="background-color: #198754;"></div>
-                        <div class="card-body p-4 p-md-5 bg-white d-flex flex-column h-100">
-                            
-                            <div class="flex-grow-1">
-                                <h2 class="card-title mb-2 text-weight-bold text-dark-colour text-center">Example B</h2>
-                                <h3 class="mb-4 border-bottom pb-3 text-weight-normal text-muted text-center h5">The 3-Week Vacation Bridge</h3>
-
-                                <p class="fs-5 text-dark-colour mb-4">
-                                    <strong>The Scenario:</strong> A clinic uses The Traveling Therapist to fill a 3-week vacation leave, and subsequently offers the clinician a permanent role.
-                                </p>
-
-                                <p class="fs-5 text-dark-colour mb-3"><strong>Financial Breakdown (Contract Coverage):</strong></p>
-                                <ul class="list-unstyled text-start fs-5 text-dark-colour mb-4 ms-3">
-                                    <li class="mb-2">• <strong>Clinician's Contract Rate:</strong> $70/hr × 60 hours = $4,200</li>
-                                    <li class="mb-2">• <strong>The Traveling Therapist Platform Fee:</strong> $0</li>
-                                    <li class="mb-2">• <strong>Total Clinician Payout:</strong> $4,200</li>
-                                    <li class="mb-2">• <strong>Direct Onboarding / Hiring Fee:</strong> $0</li>
-                                </ul>
-                            </div>
-
-                            <div class="mt-auto">
-                                <div class="p-4 rounded shadow-sm" style="background-color: #f8f9fa; border-left: 4px solid #198754;">
-                                    <h4 class="fw-bold text-dark-colour mb-3">Result</h4>
-                                    <ul class="list-unstyled text-start fs-5 text-dark-colour mb-0">
-                                        <li class="d-flex align-items-start">
-                                            <span class="material-icons text-success me-2 mt-1">check_circle</span> 
-                                            <span><strong>Zero transition fees</strong> when a contract clinician transitions into a permanent team member.</span>
-                                        </li>
-                                    </ul>
-                                </div>
-
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <button class="carousel-control-prev" type="button" data-bs-target="#caseExamplesCarousel" data-bs-slide="prev" style="width: auto; left: -3.5rem;">
-                <span class="bg-white shadow-sm border rounded-circle d-flex align-items-center justify-content-center" style="width: 42px; height: 42px;">
-                    <span class="carousel-control-prev-icon" aria-hidden="true" style="width: 1.25rem; height: 1.25rem; filter: brightness(0);"></span>
-                </span>
-                <span class="visually-hidden">Previous</span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#caseExamplesCarousel" data-bs-slide="next" style="width: auto; right: -3.5rem;">
-                <span class="bg-white shadow-sm border rounded-circle d-flex align-items-center justify-content-center" style="width: 42px; height: 42px;">
-                    <span class="carousel-control-next-icon" aria-hidden="true" style="width: 1.25rem; height: 1.25rem; filter: brightness(0);"></span>
-                </span>
-                <span class="visually-hidden">Next</span>
-            </button>
-
-            <div class="carousel-indicators" style="margin-bottom: -2.5rem;">
-                <button type="button" data-bs-target="#caseExamplesCarousel" data-bs-slide-to="0" class="active bg-dark" aria-current="true" aria-label="Slide 1"></button>
-                <button type="button" data-bs-target="#caseExamplesCarousel" data-bs-slide-to="1" class="bg-dark" aria-label="Slide 2"></button>
-            </div>
-
-        </div>
     </div>
-</div>
 
-      <div class="ttt-panel ttt-panel-pop ttt-half-split">
+    <!-- 2. Real-World Clinician Case Examples (Carousel) -->
+    <div class="mb-5">
+      <h3 class="fw-bold mb-1">Real-World Clinician Case Examples</h3>
+      <p class="text-secondary mb-4">See exactly how your payout works in different real-world working arrangements.</p>
+
+      <div class="row">
+          <div class="col-10 col-md-9 col-lg-8 mx-auto position-relative">
+              <div id="caseExamplesCarousel" class="carousel carousel-dark slide" data-bs-ride="false">
+                  
+                  <div class="carousel-inner">
+                      <!-- Example A -->
+                      <div class="carousel-item active">
+                          <div class="card shadow border-0 rounded-3 overflow-hidden d-flex flex-column" style="height: 660px;">
+                              <div class="survey-cta-button p-1" style="background-color: var(--ttt-mint);"></div>
+                              <div class="card-body p-4 p-md-5 bg-white d-flex flex-column h-100">
+                                  
+                                  <div class="flex-grow-1">
+                                      <h2 class="card-title mb-2 text-weight-bold text-dark text-center">Example A</h2>
+                                      <h3 class="mb-4 border-bottom pb-3 text-weight-normal text-muted text-center h5">The Weekend Multiplier Shift</h3>
+
+                                      <p class="fs-5 text-dark mb-4">
+                                          <strong>Scenario:</strong> A freelance practitioner picks up a Saturday coverage shift at a local multidisciplinary clinic offering an hourly contract rate of $75/hr for a 6-hour shift.
+                                      </p>
+
+                                      <p class="fs-5 text-dark mb-3"><strong>Financial Breakdown:</strong></p>
+                                      <ul class="list-unstyled text-start fs-5 text-dark mb-4 ms-3">
+                                          <li class="mb-2">• <strong>Clinician's Contract Rate:</strong> $75/hr × 6 hours = $450</li>
+                                          <li class="mb-2">• <strong>The Traveling Therapist Usage Fee:</strong> $0</li>
+                                          <li class="mb-2">• <strong>Total Clinician Payout:</strong> $450</li>
+                                      </ul>
+                                  </div>
+
+                                  <div class="mt-auto">
+                                      <div class="p-4 rounded shadow-sm" style="background-color: #f8f9fa; border-left: 4px solid var(--ttt-mint);">
+                                          <h4 class="fw-bold text-dark mb-3">The Outcome</h4>
+                                          <ul class="list-unstyled text-start fs-5 text-dark mb-0">
+                                              <li class="d-flex align-items-start">
+                                                  <span class="material-icons text-success me-2 mt-1">check_circle</span> 
+                                                  <span>The practitioner walks away with <strong>100% of their earned revenue!</strong></span>
+                                              </li>
+                                          </ul>
+                                      </div>
+                                  </div>
+
+                              </div>
+                          </div>
+                      </div>
+
+                      <!-- Example B -->
+                      <div class="carousel-item">
+                          <div class="card shadow border-0 rounded-3 overflow-hidden d-flex flex-column" style="height: 660px;">
+                              <div class="survey-cta-button p-1" style="background-color: var(--ttt-mint);"></div>
+                              <div class="card-body p-4 p-md-5 bg-white d-flex flex-column h-100">
+                                  
+                                  <div class="flex-grow-1">
+                                      <h2 class="card-title mb-2 text-weight-bold text-dark text-center">Example B</h2>
+                                      <h3 class="mb-4 border-bottom pb-3 text-weight-normal text-muted text-center h5">The 3-Week Vacation Bridge</h3>
+
+                                      <p class="fs-5 text-dark mb-4">
+                                          <strong>Scenario:</strong> A clinic uses The Traveling Therapist to fill a 3-week vacancy. The clinician fits the clinic culture so perfectly that the owner offers them a permanent, full-time position starting the following month!
+                                      </p>
+
+                                      <p class="fs-5 text-dark mb-3"><strong>Financial Breakdown:</strong></p>
+                                      <ul class="list-unstyled text-start fs-5 text-dark mb-4 ms-3">
+                                          <li class="mb-2">• <strong>Clinician's Contract Rate:</strong> $70/hr × 60 hours = $4,200</li>
+                                          <li class="mb-2">• <strong>The Traveling Therapist Usage Fee:</strong> $0</li>
+                                          <li class="mb-2">• <strong>Total Clinician Payout:</strong> $4,200</li>
+                                          <li class="mb-2">• <strong>Direct Onboarding / Hiring Fee:</strong> $0</li>
+                                      </ul>
+                                  </div>
+
+                                  <div class="mt-auto">
+                                      <div class="p-4 rounded shadow-sm" style="background-color: #f8f9fa; border-left: 4px solid var(--ttt-mint);">
+                                          <h4 class="fw-bold text-dark mb-3">The Result</h4>
+                                          <ul class="list-unstyled text-start fs-5 text-dark mb-0">
+                                              <li class="d-flex align-items-start">
+                                                  <span class="material-icons text-success me-2 mt-1">check_circle</span> 
+                                                  <span>The clinician keeps 100% of their earned revenue ($4,200). Unlike traditional staffing agencies charging predatory $5,000+ placement fees, we charge $0 to transition to permanent!</span>
+                                              </li>
+                                          </ul>
+                                      </div>
+                                  </div>
+
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+
+                  <button class="carousel-control-prev" type="button" data-bs-target="#caseExamplesCarousel" data-bs-slide="prev" style="width: auto; left: -3.5rem;">
+                      <span class="bg-white shadow-sm border rounded-circle d-flex align-items-center justify-content-center" style="width: 42px; height: 42px;">
+                          <span class="carousel-control-prev-icon" aria-hidden="true" style="width: 1.25rem; height: 1.25rem; filter: brightness(0);"></span>
+                      </span>
+                      <span class="visually-hidden">Previous</span>
+                  </button>
+                  <button class="carousel-control-next" type="button" data-bs-target="#caseExamplesCarousel" data-bs-slide="next" style="width: auto; right: -3.5rem;">
+                      <span class="bg-white shadow-sm border rounded-circle d-flex align-items-center justify-content-center" style="width: 42px; height: 42px;">
+                          <span class="carousel-control-next-icon" aria-hidden="true" style="width: 1.25rem; height: 1.25rem; filter: brightness(0);"></span>
+                      </span>
+                      <span class="visually-hidden">Next</span>
+                  </button>
+
+                  <div class="carousel-indicators" style="margin-bottom: -2.5rem;">
+                      <button type="button" data-bs-target="#caseExamplesCarousel" data-bs-slide-to="0" class="active bg-dark" aria-current="true" aria-label="Slide 1"></button>
+                      <button type="button" data-bs-target="#caseExamplesCarousel" data-bs-slide-to="1" class="bg-dark" aria-label="Slide 2"></button>
+                  </div>
+
+              </div>
+          </div>
+      </div>
+    </div>
+
+    <!-- 3. The Traveling Therapist vs. Personal Referrals -->
+    <div class="ttt-panel">
+      <div class="ttt-half-split">
         <div>
-          <h3 class="h5 mb-2">Why Use The Traveling Therapist Instead of a Direct Personal Referral?</h3>
-          <p class="mb-2"><strong>The logical next question:</strong> &quot;If I keep 100% of my rate either way, why shouldn't I just find coverage listings through my personal network?&quot;</p>
-          <p class="ttt-value-card mb-2">When you accept an informal referral shift, you are on your own to negotiate terms, manage invoicing, and chase communication. Any breakdown can risk a dropped contract and lost income.</p>
-          <p class="fst-italic mb-2">The Traveling Therapist gives you a smoother, more guided path while still protecting your pay.</p>
-          <p class="mb-2">Your contract is fully secured. You get the same 100% payout with less administrative headache.</p>
-          <a class="ttt-pricing-link" href="{% url 'referrals-and-networks' %}">See How The Traveling Therapist Streamlines Referrals vs. Going Solo</a>
+          <h3 class="fw-bold text-dark mb-3">Why Use The Traveling Therapist Instead of a Direct Personal Referral?</h3>
+          
+          <div class="mb-3">
+            <p class="fw-bold text-primary mb-1">The Clinician’s Logical Next Question:</p>
+            <blockquote class="blockquote fs-6 text-muted ps-3 border-start">
+              "If I keep 100% of my rate either way, why shouldn't I just find coverage shifts through my personal network?"
+            </blockquote>
+          </div>
+
+          <p class="text-secondary small mb-3">
+            <strong>The Reality:</strong> When you accept an informal referral shift, you are entirely on your own. You have to manually negotiate your hourly rate, draft your own contract terms, handle manual invoice reminders, and chase down clinic managers. Any breakdown in communication risks a dropped contract and lost income.
+          </p>
+
+          <p class="text-secondary small mb-4">
+            <strong>The Traveling Therapist Alternative:</strong> We give you a smooth, automated, and entirely frictionless experience. We help you secure your rate, your billing, and provide guidance throughout our website along the way so your contract is fully secured. You get the same 100% payout with fewer administrative headaches.
+          </p>
+
+          <a href="{% url 'referrals-and-networks' %}" class="ttt-btn-primary">
+            See How We Streamline Referrals vs. Going Solo →
+          </a>
         </div>
         <div class="ttt-side-image-wrap">
           <img src="/media/images/Pricing_Clinician.webp" alt="Clinician pricing comparison" onerror="this.src='/media/images/default.jpg';">
         </div>
       </div>
+    </div>
 
-      <div class="ttt-panel ttt-panel-pop">
-        <h3 class="h5 mb-3">FAQs</h3>
-        <div class="accordion" id="clinicianPricingFaq">
-          <div class="accordion-item">
-            <h2 class="accordion-header" id="clinicianFaqOne">
-              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#clinicianFaqOneCollapse" aria-expanded="true" aria-controls="clinicianFaqOneCollapse">
-                Q1: Does The Traveling Therapist take a cut of my posted hourly or contract rate?
-              </button>
-            </h2>
-            <div id="clinicianFaqOneCollapse" class="accordion-collapse collapse show" aria-labelledby="clinicianFaqOne" data-bs-parent="#clinicianPricingFaq">
-              <div class="accordion-body">A: No. The platform is 100% free for clinicians. The hourly rate you offer a facility is the exact gross amount you take home.</div>
-            </div>
-          </div>
-          <div class="accordion-item">
-            <h2 class="accordion-header" id="clinicianFaqTwo">
-              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#clinicianFaqTwoCollapse" aria-expanded="false" aria-controls="clinicianFaqTwoCollapse">
-                Q2: How and when do I get paid for the contract hours I complete?
-              </button>
-            </h2>
-            <div id="clinicianFaqTwoCollapse" class="accordion-collapse collapse" aria-labelledby="clinicianFaqTwo" data-bs-parent="#clinicianPricingFaq">
-              <div class="accordion-body">A: Invoicing is through direct payment methods between the clinician and healthcare facility, outside of The Traveling Therapist.</div>
-            </div>
-          </div>
-          <div class="accordion-item">
-            <h2 class="accordion-header" id="clinicianFaqThree">
-              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#clinicianFaqThreeCollapse" aria-expanded="false" aria-controls="clinicianFaqThreeCollapse">
-                Q3: Do clinics or healthcare facilities set the rates?
-              </button>
-            </h2>
-            <div id="clinicianFaqThreeCollapse" class="accordion-collapse collapse" aria-labelledby="clinicianFaqThree" data-bs-parent="#clinicianPricingFaq">
-              <div class="accordion-body">A: No. The marketplace lets clinicians set their own offers, and clinics decide which offer best fits their listing.</div>
-            </div>
-          </div>
-          <div class="accordion-item">
-            <h2 class="accordion-header" id="clinicianFaqFour">
-              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#clinicianFaqFourCollapse" aria-expanded="false" aria-controls="clinicianFaqFourCollapse">
-                Q4: What happens if a clinic backs out or cancels a confirmed match?
-              </button>
-            </h2>
-            <div id="clinicianFaqFourCollapse" class="accordion-collapse collapse" aria-labelledby="clinicianFaqFour" data-bs-parent="#clinicianPricingFaq">
-              <div class="accordion-body">
-                <p>Your time, value, and schedule availability are protected on The Traveling Therapist. If a clinic backs out of a match:</p>
-                <ul>
-                  <li>You may start looking for other listings immediately on The Traveling Therapist platform to help you secure an alternative placement.</li>
-                  <li>The facility is immediately flagged and reviewed by our team to ensure our platform remains a high-trust environment for both clinicians and clinics.</li>
-                </ul>
-              </div>
+    <!-- 4. Dedicated FAQs (Clinician) -->
+    <div class="ttt-panel">
+      <h3 class="fw-bold mb-4">Frequently Asked Questions</h3>
+      <div class="accordion accordion-flush" id="faqAccordionClinician">
+        
+        <div class="accordion-item border-bottom">
+          <h2 class="accordion-header" id="faqC1">
+            <button class="accordion-button fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseC1" aria-expanded="true">
+              Q1: Does The Traveling Therapist take a cut of my posted hourly or contract rate?
+            </button>
+          </h2>
+          <div id="collapseC1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordionClinician">
+            <div class="accordion-body text-secondary">
+              No. The platform is 100% free for clinicians. The hourly rate you offer a facility is the exact gross amount you take home. The Traveling Therapist bills the healthcare facility a separate platform premium on top of your rate, meaning your hard-earned clinical revenue is never cut down.
             </div>
           </div>
         </div>
+
+        <div class="accordion-item border-bottom">
+          <h2 class="accordion-header" id="faqC2">
+            <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseC2">
+              Q2: How and when do I get paid for the contract hours I complete?
+            </button>
+          </h2>
+          <div id="collapseC2" class="accordion-collapse collapse" data-bs-parent="#faqAccordionClinician">
+            <div class="accordion-body text-secondary">
+              Invoicing is through direct payment methods between the clinician and healthcare facility, which is done outside of The Traveling Therapist.
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item border-bottom">
+          <h2 class="accordion-header" id="faqC3">
+            <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseC3">
+              Q3: Do clinics/healthcare facilities set the rates?
+            </button>
+          </h2>
+          <div id="collapseC3" class="accordion-collapse collapse" data-bs-parent="#faqAccordionClinician">
+            <div class="accordion-body text-secondary">
+              No. As a clinician/healthcare professional, The Traveling Therapist enables you to set your own rates as offers on posted listings along with other healthcare professionals. Clinics and healthcare facilities accept offers on their listings based on their preference – which is how The Traveling Therapist makes matches!
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="faqC4">
+            <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseC4">
+              Q4: What happens if a clinic backs out or cancels a confirmed match?
+            </button>
+          </h2>
+          <div id="collapseC4" class="accordion-collapse collapse" data-bs-parent="#faqAccordionClinician">
+            <div class="accordion-body text-secondary">
+              Your time, value, and schedule availability are protected on The Traveling Therapist. If a clinic backs out of a match, you may start looking for other listings immediately on the platform to help you secure an alternative placement, and the facility is immediately flagged and reviewed by our team to ensure our platform remains a high-trust environment.
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
+
   </section>
 
-  <section id="facilityStream" class="ttt-audience-stream" data-stream="facility" aria-labelledby="streamFacilityBtn" hidden>
-    <div class="ttt-stream-grid">
-      <div class="ttt-panel ttt-panel-pop ttt-top-horizontal ttt-top-horizontal-clinic-focus">
-        <div>
-          <h2 class="h4 mb-2">Clinics / Healthcare Facilities</h2>
-          <p class="ttt-muted-lead">Protect your revenue. Pay only for results.</p>
-          <p class="mb-0">We charge a max of $5,000 + HST/tax per transaction for large listings and a $300 + HST/tax minimum.</p>
+
+  <!-- ================= SECTION 4: STREAM B - HEALTHCARE FACILITY (EMPLOYER) ================= -->
+  <section id="stream-facility" class="ttt-audience-stream">
+    
+    <!-- 1. Facility Value Card -->
+    <div class="ttt-panel">
+      <div class="row align-items-center g-4">
+        <div class="col-lg-7">
+          <span class="ttt-value-badge">Healthcare Facility View</span>
+          <h2 class="h3 fw-bold text-dark mb-3">Protect your revenue. Pay for results!</h2>
+          <p class="text-secondary fs-5 mb-3">
+            From emergency single-shift coverage to year-long parental leave contracts, The Traveling Therapist connects your facility with local clinicians.
+          </p>
+          <div class="p-3 bg-light rounded-3 mb-0 border">
+            <p class="small text-muted mb-0">
+              <strong>How It Works:</strong> Posting listings and browsing offers is 100% free. A transparent platform fee is applied only when a contract offer is successfully accepted and communicated!
+            </p>
+          </div>
         </div>
-        <div class="ttt-value-card my-0">
-          <h3>Your Cost As a Clinic</h3>
-          <p class="ttt-value-cost">Predictable, Success-Based Premium (5% Flat Fee)</p>
-          <p class="mb-0">Posting listings and browsing offers is free. A transparent 5% platform fee is applied only when a contract offer is successfully accepted and communicated.</p>
+        <div class="col-lg-5">
+          <div class="ttt-value-card text-center">
+            <span class="ttt-value-badge">Predictable, Success-Based Premium</span>
+            <div class="ttt-value-cost fs-3">$25/day or 5%</div>
+            <p class="text-muted small mb-0">
+              <strong>$25/day</strong> for hourly & fee-split models<br>
+              <strong>5% Flat Fee</strong> for flat contracts
+            </p>
+          </div>
         </div>
       </div>
-
-      <div class="row mb-5 mt-5">
-    <div class="col-10 col-md-9 col-lg-8 mx-auto position-relative">
-        <div id="facilityCaseExamplesCarousel" class="carousel carousel-dark slide" data-bs-ride="false">
-            
-            <div class="carousel-inner">
-                <!-- Example A -->
-                <div class="carousel-item active">
-                    <div class="card shadow border-0 rounded-3 overflow-hidden d-flex flex-column" style="height: 660px;">
-                        <div class="survey-cta-button p-1" style="background-color: #198754;"></div>
-                        <div class="card-body p-4 p-md-5 bg-white d-flex flex-column h-100">
-                            
-                            <!-- Top Content Section -->
-                            <div class="flex-grow-1">
-                                <h2 class="card-title mb-2 text-weight-bold text-dark-colour text-center">Example A</h2>
-                                <h3 class="mb-4 border-bottom pb-3 text-weight-normal text-muted text-center h5">The Single-Day Emergency Cover</h3>
-
-                                <p class="fs-5 text-dark-colour mb-4">
-                                    <strong>The Scenario:</strong> A private practice clinic needs a Registered Physiotherapist to cover a single 8-hour shift.
-                                </p>
-
-                                <p class="fs-5 text-dark-colour mb-3"><strong>Financial Breakdown:</strong></p>
-                                <ul class="list-unstyled text-start fs-5 text-dark-colour mb-4 ms-3">
-                                    <li class="mb-2">• <strong>Clinician's Direct Contract Rate:</strong> $65/hr × 8 hours = $520</li>
-                                    <li class="mb-2">• <strong>The Traveling Therapist Platform Fulfillment Fee (5%):</strong> $26</li>
-                                    <li class="mb-2">• <strong>Total Facility Investment:</strong> $546</li>
-                                </ul>
-                            </div>
-
-                            <!-- Bottom Outcome Section -->
-                            <div class="mt-auto">
-                                <div class="p-4 rounded shadow-sm" style="background-color: #f8f9fa; border-left: 4px solid #198754;">
-                                    <h4 class="fw-bold text-dark-colour mb-3">Result</h4>
-                                    <ul class="list-unstyled text-start fs-5 text-dark-colour mb-0">
-                                        <li class="d-flex align-items-start">
-                                            <span class="material-icons text-success me-2 mt-1">check_circle</span> 
-                                            <span>The clinic protects its daily patient billing for a minor platform fee.</span>
-                                        </li>
-                                    </ul>
-                                </div>
-
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Example B -->
-                <div class="carousel-item">
-                    <div class="card shadow border-0 rounded-3 overflow-hidden d-flex flex-column" style="height: 660px;">
-                        <div class="survey-cta-button p-1" style="background-color: #198754;"></div>
-                        <div class="card-body p-4 p-md-5 bg-white d-flex flex-column h-100">
-                            
-                            <!-- Top Content Section -->
-                            <div class="flex-grow-1">
-                                <h2 class="card-title mb-2 text-weight-bold text-dark-colour text-center">Example B</h2>
-                                <h3 class="mb-4 border-bottom pb-3 text-weight-normal text-muted text-center h5">The 12-Month Maternity or Parental Leave Bridge</h3>
-
-                                <p class="fs-5 text-dark-colour mb-4">
-                                    <strong>The Scenario:</strong> A rehabilitation center needs long-term coverage for a 1-year maternity or parental leave.
-                                </p>
-
-                                <p class="fs-5 text-dark-colour mb-3"><strong>Financial Breakdown:</strong></p>
-                                <ul class="list-unstyled text-start fs-5 text-dark-colour mb-4 ms-3">
-                                    <li class="mb-2">• <strong>Baseline Annualized Contract Valuation:</strong> $75,000</li>
-                                    <li class="mb-2">• <strong>The Traveling Therapist Platform Fulfillment Fee (5%):</strong> $3,750</li>
-                                    <li class="mb-2">• <strong>Total 1-Year Coverage Investment:</strong> $78,750</li>
-                                </ul>
-                            </div>
-
-                            <!-- Bottom Outcome Section -->
-                            <div class="mt-auto">
-                                <div class="p-4 rounded shadow-sm" style="background-color: #f8f9fa; border-left: 4px solid #198754;">
-                                    <h4 class="fw-bold text-dark-colour mb-3">Result</h4>
-                                    <ul class="list-unstyled text-start fs-5 text-dark-colour mb-0">
-                                        <li class="d-flex align-items-start">
-                                            <span class="material-icons text-success me-2 mt-1">check_circle</span> 
-                                            <span>The clinic avoids the overhead of permanent recruiting agencies while protecting its long-term caseload.</span>
-                                        </li>
-                                    </ul>
-                                </div>
-
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Example C -->
-                <div class="carousel-item">
-                    <div class="card shadow border-0 rounded-3 overflow-hidden d-flex flex-column" style="height: 660px;">
-                        <div class="survey-cta-button p-1" style="background-color: #198754;"></div>
-                        <div class="card-body p-4 p-md-5 bg-white d-flex flex-column h-100">
-                            
-                            <div class="flex-grow-1">
-                                <h2 class="card-title mb-2 text-weight-bold text-dark-colour text-center">Example C</h2>
-                                <h3 class="mb-4 border-bottom pb-3 text-weight-normal text-muted text-center h5">The Direct Permanent Placement</h3>
-
-                                <p class="fs-5 text-dark-colour mb-4">
-                                    <strong>The Scenario:</strong> A temporary The Traveling Therapist clinician is converted to a permanent full-time hire.
-                                </p>
-
-                                <p class="fs-5 text-dark-colour mb-3"><strong>Financial Breakdown:</strong></p>
-                                <ul class="list-unstyled text-start fs-5 text-dark-colour mb-4 ms-3">
-                                    <li class="mb-2">• <strong>Direct Onboarding or Hiring Fee:</strong> $0</li>
-                                </ul>
-                            </div>
-
-                            <div class="mt-auto">
-                                <div class="p-4 rounded shadow-sm" style="background-color: #f8f9fa; border-left: 4px solid #198754;">
-                                    <h4 class="fw-bold text-dark-colour mb-3">Result</h4>
-                                    <ul class="list-unstyled text-start fs-5 text-dark-colour mb-0">
-                                        <li class="d-flex align-items-start">
-                                            <span class="material-icons text-success me-2 mt-1">check_circle</span> 
-                                            <span>There is <strong>no buyout fee</strong> to transition a contract clinician into a permanent team member.</span>
-                                        </li>
-                                    </ul>
-                                </div>
-
-
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <button class="carousel-control-prev" type="button" data-bs-target="#facilityCaseExamplesCarousel" data-bs-slide="prev" style="width: auto; left: -3.5rem;">
-                <span class="bg-white shadow-sm border rounded-circle d-flex align-items-center justify-content-center" style="width: 42px; height: 42px;">
-                    <span class="carousel-control-prev-icon" aria-hidden="true" style="width: 1.25rem; height: 1.25rem; filter: brightness(0);"></span>
-                </span>
-                <span class="visually-hidden">Previous</span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#facilityCaseExamplesCarousel" data-bs-slide="next" style="width: auto; right: -3.5rem;">
-                <span class="bg-white shadow-sm border rounded-circle d-flex align-items-center justify-content-center" style="width: 42px; height: 42px;">
-                    <span class="carousel-control-next-icon" aria-hidden="true" style="width: 1.25rem; height: 1.25rem; filter: brightness(0);"></span>
-                </span>
-                <span class="visually-hidden">Next</span>
-            </button>
-
-            <div class="carousel-indicators" style="margin-bottom: -2.5rem;">
-                <button type="button" data-bs-target="#facilityCaseExamplesCarousel" data-bs-slide-to="0" class="active bg-dark" aria-current="true" aria-label="Slide 1"></button>
-                <button type="button" data-bs-target="#facilityCaseExamplesCarousel" data-bs-slide-to="1" class="bg-dark" aria-label="Slide 2"></button>
-                <button type="button" data-bs-target="#facilityCaseExamplesCarousel" data-bs-slide-to="2" class="bg-dark" aria-label="Slide 3"></button>
-            </div>
-
-        </div>
     </div>
-</div>
 
-      <div class="ttt-panel ttt-panel-pop ttt-half-split">
+    <!-- 2. Real-World Facility Case Examples (Carousel) -->
+    <div class="mb-5">
+      <h3 class="fw-bold mb-1">Real-World Facility Case Examples</h3>
+      <p class="text-secondary mb-4">See how our success-based premium model protects facility caseloads and budgets.</p>
+
+      <div class="row">
+          <div class="col-10 col-md-9 col-lg-8 mx-auto position-relative">
+              <div id="facilityCaseExamplesCarousel" class="carousel carousel-dark slide" data-bs-ride="false">
+                  
+                  <div class="carousel-inner">
+                      <!-- Example A -->
+                      <div class="carousel-item active">
+                          <div class="card shadow border-0 rounded-3 overflow-hidden d-flex flex-column" style="height: 660px;">
+                              <div class="survey-cta-button p-1" style="background-color: var(--ttt-mint);"></div>
+                              <div class="card-body p-4 p-md-5 bg-white d-flex flex-column h-100">
+                                  
+                                  <div class="flex-grow-1">
+                                      <h2 class="card-title mb-2 text-weight-bold text-dark text-center">Example A</h2>
+                                      <h3 class="mb-4 border-bottom pb-3 text-weight-normal text-muted text-center h5">Single-Day Emergency Cover</h3>
+
+                                      <p class="fs-5 text-dark mb-4">
+                                          <strong>Scenario:</strong> A private practice clinic needs a Registered Physiotherapist to cover a single 8-hour Tuesday shift using an hourly model.
+                                      </p>
+
+                                      <p class="fs-5 text-dark mb-3"><strong>Financial Breakdown:</strong></p>
+                                      <ul class="list-unstyled text-start fs-5 text-dark mb-4 ms-3">
+                                          <li class="mb-2">• <strong>Clinician Direct Rate:</strong> $65/hr × 8 hours = $520</li>
+                                          <li class="mb-2">• <strong>Platform Fee:</strong> $25/day</li>
+                                          <li class="mb-2">• <strong>Total Facility Investment:</strong> $545</li>
+                                      </ul>
+                                  </div>
+
+                                  <div class="mt-auto">
+                                      <div class="p-4 rounded shadow-sm" style="background-color: #f8f9fa; border-left: 4px solid var(--ttt-mint);">
+                                          <h4 class="fw-bold text-dark mb-3">The Result</h4>
+                                          <ul class="list-unstyled text-start fs-5 text-dark mb-0">
+                                              <li class="d-flex align-items-start">
+                                                  <span class="material-icons text-success me-2 mt-1">check_circle</span> 
+                                                  <span>The clinic protects its entire daily patient billing and keeps its caseload intact for a predictable daily fee!</span>
+                                              </li>
+                                          </ul>
+                                      </div>
+                                  </div>
+
+                              </div>
+                          </div>
+                      </div>
+
+                      <!-- Example B -->
+                      <div class="carousel-item">
+                          <div class="card shadow border-0 rounded-3 overflow-hidden d-flex flex-column" style="height: 660px;">
+                              <div class="survey-cta-button p-1" style="background-color: var(--ttt-mint);"></div>
+                              <div class="card-body p-4 p-md-5 bg-white d-flex flex-column h-100">
+                                  
+                                  <div class="flex-grow-1">
+                                      <h2 class="card-title mb-2 text-weight-bold text-dark text-center">Example B</h2>
+                                      <h3 class="mb-4 border-bottom pb-3 text-weight-normal text-muted text-center h5">12-Month Parental Leave Bridge</h3>
+
+                                      <p class="fs-5 text-dark mb-4">
+                                          <strong>Scenario:</strong> A rehab center needs long-term coverage for a 1-year maternity/parental leave block under a flat contract fee.
+                                      </p>
+
+                                      <p class="fs-5 text-dark mb-3"><strong>Financial Breakdown:</strong></p>
+                                      <ul class="list-unstyled text-start fs-5 text-dark mb-4 ms-3">
+                                          <li class="mb-2">• <strong>Annualized Contract:</strong> $75,000</li>
+                                          <li class="mb-2">• <strong>Platform Fee (5%):</strong> $3,750</li>
+                                          <li class="mb-2">• <strong>Total 1-Year Investment:</strong> $78,750</li>
+                                      </ul>
+                                  </div>
+
+                                  <div class="mt-auto">
+                                      <div class="p-4 rounded shadow-sm" style="background-color: #f8f9fa; border-left: 4px solid var(--ttt-mint);">
+                                          <h4 class="fw-bold text-dark mb-3">The Result</h4>
+                                          <ul class="list-unstyled text-start fs-5 text-dark mb-0">
+                                              <li class="d-flex align-items-start">
+                                                  <span class="material-icons text-success me-2 mt-1">check_circle</span> 
+                                                  <span>The clinic avoids massive agency overhead and temporary benefit costs while saving its long-term caseload.</span>
+                                              </li>
+                                          </ul>
+                                      </div>
+                                  </div>
+
+                              </div>
+                          </div>
+                      </div>
+
+                      <!-- Example C -->
+                      <div class="carousel-item">
+                          <div class="card shadow border-0 rounded-3 overflow-hidden d-flex flex-column" style="height: 660px;">
+                              <div class="survey-cta-button p-1" style="background-color: var(--ttt-mint);"></div>
+                              <div class="card-body p-4 p-md-5 bg-white d-flex flex-column h-100">
+                                  
+                                  <div class="flex-grow-1">
+                                      <h2 class="card-title mb-2 text-weight-bold text-dark text-center">Example C</h2>
+                                      <h3 class="mb-4 border-bottom pb-3 text-weight-normal text-muted text-center h5">Direct Permanent Placement</h3>
+
+                                      <p class="fs-5 text-dark mb-4">
+                                          <strong>Scenario:</strong> A temporary coverage clinician fits your clinic culture so perfectly that you both decide to make it a permanent, full-time hire.
+                                      </p>
+
+                                      <p class="fs-5 text-dark mb-3"><strong>Financial Breakdown:</strong></p>
+                                      <ul class="list-unstyled text-start fs-5 text-dark mb-4 ms-3">
+                                          <li class="mb-2">• <strong>Direct Onboarding/Hiring Fee:</strong> $0</li>
+                                          <li class="mb-2">• <strong>Agency Buyout Fee:</strong> $0</li>
+                                      </ul>
+                                  </div>
+
+                                  <div class="mt-auto">
+                                      <div class="p-4 rounded shadow-sm" style="background-color: #f8f9fa; border-left: 4px solid var(--ttt-mint);">
+                                          <h4 class="fw-bold text-dark mb-3">The Result</h4>
+                                          <ul class="list-unstyled text-start fs-5 text-dark mb-0">
+                                              <li class="d-flex align-items-start">
+                                                  <span class="material-icons text-success me-2 mt-1">check_circle</span> 
+                                                  <span>Unlike staffing agencies charging predatory $5,000+ buyout fees, we charge $0 to transition contract clinicians to permanent staff!</span>
+                                              </li>
+                                          </ul>
+                                      </div>
+                                  </div>
+
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+
+                  <button class="carousel-control-prev" type="button" data-bs-target="#facilityCaseExamplesCarousel" data-bs-slide="prev" style="width: auto; left: -3.5rem;">
+                      <span class="bg-white shadow-sm border rounded-circle d-flex align-items-center justify-content-center" style="width: 42px; height: 42px;">
+                          <span class="carousel-control-prev-icon" aria-hidden="true" style="width: 1.25rem; height: 1.25rem; filter: brightness(0);"></span>
+                      </span>
+                      <span class="visually-hidden">Previous</span>
+                  </button>
+                  <button class="carousel-control-next" type="button" data-bs-target="#facilityCaseExamplesCarousel" data-bs-slide="next" style="width: auto; right: -3.5rem;">
+                      <span class="bg-white shadow-sm border rounded-circle d-flex align-items-center justify-content-center" style="width: 42px; height: 42px;">
+                          <span class="carousel-control-next-icon" aria-hidden="true" style="width: 1.25rem; height: 1.25rem; filter: brightness(0);"></span>
+                      </span>
+                      <span class="visually-hidden">Next</span>
+                  </button>
+
+                  <div class="carousel-indicators" style="margin-bottom: -2.5rem;">
+                      <button type="button" data-bs-target="#facilityCaseExamplesCarousel" data-bs-slide-to="0" class="active bg-dark" aria-current="true" aria-label="Slide 1"></button>
+                      <button type="button" data-bs-target="#facilityCaseExamplesCarousel" data-bs-slide-to="1" class="bg-dark" aria-label="Slide 2"></button>
+                      <button type="button" data-bs-target="#facilityCaseExamplesCarousel" data-bs-slide-to="2" class="bg-dark" aria-label="Slide 3"></button>
+                  </div>
+
+              </div>
+          </div>
+      </div>
+    </div>
+
+    <!-- 3. The Safety Net -->
+    <div class="ttt-panel">
+      <div class="ttt-half-split">
         <div>
-          <h3 class="h4 mb-2">The Safety Net</h3>
-          <p class="fst-italic mb-2">The Traveling Therapist is built on charging your facility $0 for the early steps.</p>
-          <ul class="ttt-safety-list">
-            <li>Post listings at no initial cost.</li>
-            <li>Log in and review local clinician offers and pricing.</li>
-            <li>If a coverage clinician at The Traveling Therapist fits your clinic culture and you choose to hire them full-time, onboarding them is not charged with any fees.</li>
-          </ul>
+          <h3 class="fw-bold text-dark mb-2">The Safety Net (When We Charge $0)</h3>
+          <p class="text-secondary mb-4">
+            Many traditional staffing agencies lock you into heavy upfront fees just to look around. The Traveling Therapist strictly charges your facility $0 for:
+          </p>
+          
+          <div class="p-3 bg-light rounded-3 border mb-3">
+            <div class="fw-bold text-dark mb-1">1. Posting Listings</div>
+            <div class="small text-secondary">Post as many shift or contract listings as you need at no initial cost.</div>
+          </div>
+          
+          <div class="p-3 bg-light rounded-3 border mb-3">
+            <div class="fw-bold text-dark mb-1">2. Reviewing Offers</div>
+            <div class="small text-secondary">Log in and review local clinician offers and pricing completely risk-free.</div>
+          </div>
+          
+          <div class="p-3 bg-light rounded-3 border">
+            <div class="fw-bold text-dark mb-1">3. Permanent Hires</div>
+            <div class="small text-secondary">Transition temporary clinicians to full-time staff with $0 in onboarding or buyout fees.</div>
+          </div>
         </div>
+        
         <div class="ttt-side-image-wrap">
           <img src="/media/images/Pricing_Clinic.jpg" alt="Facility pricing safety net" onerror="this.src='/media/images/default.jpg';">
         </div>
       </div>
+    </div>
 
-      <div class="ttt-panel ttt-panel-pop">
-        <h3 class="h5 mb-3">FAQs</h3>
-        <div class="accordion" id="facilityPricingFaq">
-          <div class="accordion-item">
-            <h2 class="accordion-header" id="facilityFaqOne">
-              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#facilityFaqOneCollapse" aria-expanded="true" aria-controls="facilityFaqOneCollapse">
-                Q1: What happens if a clinician cancels a shift coverage last minute?
-              </button>
-            </h2>
-            <div id="facilityFaqOneCollapse" class="accordion-collapse collapse show" aria-labelledby="facilityFaqOne" data-bs-parent="#facilityPricingFaq">
-              <div class="accordion-body">A: Your listing stays live on the platform instead of being pulled down. You can immediately choose another available clinician from your active offer pool.</div>
+    <!-- 4. Dedicated FAQs (Facility) -->
+    <div class="ttt-panel">
+      <h3 class="fw-bold mb-4">Frequently Asked Questions</h3>
+      <div class="accordion accordion-flush" id="faqAccordionFacility">
+        
+        <div class="accordion-item border-bottom">
+          <h2 class="accordion-header" id="faqF1">
+            <button class="accordion-button fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseF1" aria-expanded="true">
+              Q1: What happens if a clinician cancels a shift coverage last minute?
+            </button>
+          </h2>
+          <div id="collapseF1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordionFacility">
+            <div class="accordion-body text-secondary">
+              Your momentum doesn’t stop. If a clinician backs out last minute, your listing stays live on the platform instead of being pulled down. You can immediately choose another available clinician from your active offer pool. To protect your facility, the clinician who backed out is flagged and/or penalized/banned from our system.
             </div>
           </div>
-          <div class="accordion-item">
-            <h2 class="accordion-header" id="facilityFaqTwo">
-              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#facilityFaqTwoCollapse" aria-expanded="false" aria-controls="facilityFaqTwoCollapse">
-                Q2: How does communication work after a clinician accepts our listing?
-              </button>
-            </h2>
-            <div id="facilityFaqTwoCollapse" class="accordion-collapse collapse" aria-labelledby="facilityFaqTwo" data-bs-parent="#facilityPricingFaq">
-              <div class="accordion-body">A: Once a match occurs, clinicians have a 48-hour window to connect with your facility and finalize. If they fail to respond, the contract can be voided and your listing reset.</div>
+        </div>
+
+        <div class="accordion-item border-bottom">
+          <h2 class="accordion-header" id="faqF2">
+            <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseF2">
+              Q2: How does communication work after a clinician accepts our listing?
+            </button>
+          </h2>
+          <div id="collapseF2" class="accordion-collapse collapse" data-bs-parent="#faqAccordionFacility">
+            <div class="accordion-body text-secondary">
+              Once a match occurs, you pay us the invoice we charge you based on the contract between your facility and the clinician, and you receive your clinician’s information. You may choose to proceed with the chosen clinician or choose not to hire them. In the event that a clinician fails to respond within a certain timestamp, The Traveling Therapist will contact you to advise you that the contract has been voided, allowing you to find another clinician from your offer pool.
             </div>
           </div>
-          <div class="accordion-item">
-            <h2 class="accordion-header" id="facilityFaqThree">
-              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#facilityFaqThreeCollapse" aria-expanded="false" aria-controls="facilityFaqThreeCollapse">
-                Q3: Are there any monthly or annual recurring fees?
-              </button>
-            </h2>
-            <div id="facilityFaqThreeCollapse" class="accordion-collapse collapse" aria-labelledby="facilityFaqThree" data-bs-parent="#facilityPricingFaq">
-              <div class="accordion-body">A: No. There are no recurring software subscription fees, maintenance fees, or seat license costs. You only pay the platform fulfillment fee when you successfully secure a clinician match.</div>
+        </div>
+
+        <div class="accordion-item border-bottom">
+          <h2 class="accordion-header" id="faqF3">
+            <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseF3">
+              Q3: Are there any monthly or annual recurring fees to stay active on The Traveling Therapist?
+            </button>
+          </h2>
+          <div id="collapseF3" class="accordion-collapse collapse" data-bs-parent="#faqAccordionFacility">
+            <div class="accordion-body text-secondary">
+              No. There are no recurring software subscription fees, maintenance fees, or seat license costs. Your facility profile stays active. You only pay our flat pricing structure when you successfully secure a clinician match.
             </div>
           </div>
-          <div class="accordion-item">
-            <h2 class="accordion-header" id="facilityFaqFour">
-              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#facilityFaqFourCollapse" aria-expanded="false" aria-controls="facilityFaqFourCollapse">
-                Q4: What happens if a match is made but our clinic hires someone internally?
-              </button>
-            </h2>
-            <div id="facilityFaqFourCollapse" class="accordion-collapse collapse" aria-labelledby="facilityFaqFour" data-bs-parent="#facilityPricingFaq">
-              <div class="accordion-body">A: If your clinic accepts an offer and the match is successfully made, backing out after that point due to hiring outside of The Traveling Therapist does not eliminate the platform fulfillment fee.</div>
+        </div>
+
+        <div class="accordion-item border-bottom">
+          <h2 class="accordion-header" id="faqF4">
+            <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseF4">
+              Q4: What happens if a match is made but our clinic hires someone internally?
+            </button>
+          </h2>
+          <div id="collapseF4" class="accordion-collapse collapse" data-bs-parent="#faqAccordionFacility">
+            <div class="accordion-body text-secondary">
+              If a clinic posts a listing and accepts an offer from a clinician, the match is successfully made. Backing out after this point due to hiring outside of The Traveling Therapist does not eliminate the platform fee.
             </div>
           </div>
-          <div class="accordion-item">
-            <h2 class="accordion-header" id="facilityFaqFive">
-              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#facilityFaqFiveCollapse" aria-expanded="false" aria-controls="facilityFaqFiveCollapse">
-                Q5: What happens if we receive offers on our listing, but decide NOT to select a clinician?
-              </button>
-            </h2>
-            <div id="facilityFaqFiveCollapse" class="accordion-collapse collapse" aria-labelledby="facilityFaqFive" data-bs-parent="#facilityPricingFaq">
-              <div class="accordion-body">
-                <p>To ensure our clinician community remains active and engaged, The Traveling Therapist requires that listings with active offers result in a hire or pay a standard fee. This prevents misuse of the system and clinicians reviewing jobs and making offers to facilities with no intention of hiring.</p>
-                <p class="mb-0">If your listing receives valid clinician offers and you choose not to select a match (or allow the 14-day listing window to expire without hiring), a $50 Abandoned Listing/No-selection Fee will be applied to your account.</p>
-              </div>
-            </div>
+        </div>
+
+      </div>
+
+      <div class="mt-4 text-center">
+        <a href="{% url 'how-it-works' %}" class="ttt-action-link">
+          Learn about other pricing FAQs here →
+        </a>
+      </div>
+    </div>
+
+  </section>
+
+
+  <!-- ================= SECTION 5: THE REFERRAL LOOP (WITH SURVEY BUTTON) ================= -->
+  <section class="ttt-referral-banner mt-4">
+    <div class="row align-items-center g-4">
+      <div class="col-lg-7">
+        <div class="ttt-referral-pill mb-3">
+          Earn Rewards Network-Wide
+        </div>
+        <h2 class="display-6 fw-bold text-white mb-3">Turn Your Referral Tickets Into Instant Billing Credits</h2>
+        <p class="text-secondary fs-5 mb-0">
+          Want to lower your platform fulfillment fees? Use your unique link to invite peer clinic owners or freelance clinicians to join The Traveling Therapist network. Every successful invite earns you Raffle Tickets.
+        </p>
+      </div>
+      <div class="col-lg-5">
+        <div class="p-4 rounded-4 ttt-referral-inner-card d-flex flex-column h-100">
+          <h3 class="h5 fw-bold text-white mb-2">The Perks</h3>
+          <p class="small text-secondary mb-3">
+            While these tickets enter you into our premium monthly prize draws, you can also cash them in directly at your billing portal to unlock instant percentage discounts or credits on your very next Traveling Therapist fulfillment invoice!
+          </p>
+          <div class="mt-auto text-end">
+            <a href="{% url 'surveys' %}" class="ttt-btn-primary">
+              Take A Survey →
+            </a>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="ttt-panel ttt-panel-pop mt-3">
-    <h2 class="h3 mb-2">Turn Your Referral Tickets Into Instant Billing Credits</h2>
-    <p class="mb-2">Want to lower your platform fulfillment fees? Use your unique link to invite peer clinic owners or freelance clinicians to join The Traveling Therapist network. Every successful invite earns you Raffle Tickets.</p>
-    <p class="mb-3">While these tickets enter you into premium monthly prize draws, you can also cash them in directly at your billing portal to unlock percentage discounts or credits on your next fulfillment invoice.</p>
-
-    <div class="ttt-dual-referral-grid">
-      <div class="ttt-referral-box">
-        <h4>Healthcare Facility</h4>
-        <p class="mb-0">Invite peer healthcare employers to the platform, then apply your earned referral tickets toward upcoming fulfillment invoices.</p>
-      </div>
-      <div class="ttt-referral-box">
-        <h4>Healthcare Clinician</h4>
-        <p class="mb-0">Invite freelance clinicians to the network and use your referral tickets for premium draw entries or invoice-credit opportunities where applicable.</p>
-      </div>
-    </div>
-  </section>
 </div>
 
+<!-- JavaScript Toggle Logic -->
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    var streamButtons = Array.prototype.slice.call(document.querySelectorAll('.ttt-stream-btn'));
-    var streams = Array.prototype.slice.call(document.querySelectorAll('.ttt-audience-stream'));
+  function switchPricingStream(stream) {
+    const btnClinician = document.getElementById('btn-clinician');
+    const btnFacility = document.getElementById('btn-facility');
+    const streamClinician = document.getElementById('stream-clinician');
+    const streamFacility = document.getElementById('stream-facility');
 
-    if (!streamButtons.length || !streams.length) {
-      return;
+    if (stream === 'clinician') {
+      btnClinician.classList.add('is-active');
+      btnClinician.setAttribute('aria-selected', 'true');
+      btnFacility.classList.remove('is-active');
+      btnFacility.setAttribute('aria-selected', 'false');
+
+      streamClinician.classList.add('is-visible');
+      streamFacility.classList.remove('is-visible');
+    } else {
+      btnFacility.classList.add('is-active');
+      btnFacility.setAttribute('aria-selected', 'true');
+      btnClinician.classList.remove('is-active');
+      btnClinician.setAttribute('aria-selected', 'false');
+
+      streamFacility.classList.add('is-visible');
+      streamClinician.classList.remove('is-visible');
     }
-
-    function setActiveStream(streamName) {
-      streamButtons.forEach(function (btn) {
-        var isActive = btn.getAttribute('data-stream-target') === streamName;
-        btn.classList.toggle('is-active', isActive);
-        btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
-      });
-
-      streams.forEach(function (section) {
-        var isVisible = section.getAttribute('data-stream') === streamName;
-        section.classList.toggle('is-visible', isVisible);
-        section.hidden = !isVisible;
-      });
-    }
-
-    streamButtons.forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        setActiveStream(btn.getAttribute('data-stream-target'));
-      });
-    });
-
-    setActiveStream('clinician');
-  });
+  }
 </script>
 {% endblock %}

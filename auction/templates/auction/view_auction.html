@@ -295,6 +295,23 @@
                     {% if allow_flat_fee %}
                     <p class="mb-2">Flat Fee Offer: <strong id="summaryFlatFee">Not entered</strong></p>
                     {% endif %}
+
+                    <!-- 1. SKILLS -->
+                    {% if finalize_skill_rows %}
+                    <hr>
+                    <p class="mb-0 fw-semibold">Skills and Qualifications for This Listing</p>
+                    <p class="small text-muted mb-3" style="margin-top: 2px;">Skills already selected in your profile are pre-checked. Add listing-specific skills before confirming your offer.</p>
+                    <div id="finalizeSkillChecklist" class="d-flex flex-column gap-1 mb-3">
+                      {% for skill in finalize_skill_rows %}
+                      <label class="d-flex align-items-center justify-content-between border rounded px-2 py-1 mb-0" data-skill-name="{{ skill.name }}">
+                        <span><input type="checkbox" class="form-check-input me-2 finalize-skill-check" {% if skill.selected %}checked{% endif %}>{{ skill.name }}</span>
+                        <span class="ttt-requirement-pill {% if skill.requirement|lower == 'required' %}ttt-requirement-pill-required{% else %}ttt-requirement-pill-preferred{% endif %}">{{ skill.requirement }}</span>
+                      </label>
+                      {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <!-- 2. PERKS -->
                     {% if private_perk_rows %}
                     <hr>
                     <p class="mb-2 fw-semibold">Negotiable Perks</p>
@@ -329,36 +346,22 @@
                     </div>
                     {% endif %}
                     
-                    {% if finalize_skill_rows %}
-                    <hr>
-                    <p class="mb-0 fw-semibold">Skills and Qualifications for This Listing</p>
-                    <p class="small text-muted mb-3" style="margin-top: 2px;">Skills already selected in your profile are pre-checked. Add listing-specific skills before confirming your offer.</p>
-                    <div id="finalizeSkillChecklist" class="d-flex flex-column gap-1 mb-3">
-                      {% for skill in finalize_skill_rows %}
-                      <label class="d-flex align-items-center justify-content-between border rounded px-2 py-1 mb-0" data-skill-name="{{ skill.name }}">
-                        <span><input type="checkbox" class="form-check-input me-2 finalize-skill-check" {% if skill.selected %}checked{% endif %}>{{ skill.name }}</span>
-                        <span class="ttt-requirement-pill {% if skill.requirement|lower == 'required' %}ttt-requirement-pill-required{% else %}ttt-requirement-pill-preferred{% endif %}">{{ skill.requirement }}</span>
-                      </label>
-                      {% endfor %}
-                    </div>
-                    {% endif %}
-                    
-                    <!-- NEW PAYMENT METHOD CHECKBOX IN FINALIZE -->
+                    <!-- 3. PAYMENT INFORMATION -->
                     {% if auction.paymentMethod %}
                     <hr>
                     <p class="mb-2 fw-semibold">Payment Information</p>
                     <div class="border rounded d-flex justify-content-between align-items-center px-2 py-2">
-                   <span>Payment Method: 
-                     <strong>
-                       {% if auction.paymentMethod == 'Other' %}
-                       {{ auction.paymentMethodOther }}
-                       {% else %}
-                       {{ auction.paymentMethod }}
-                       {% endif %}
-                     </strong>
-                   </span>
-    <input class="form-check-input ms-2 mt-0" type="checkbox" checked disabled aria-label="Payment method">
-</div>
+                      <span>Payment Method: 
+                        <strong>
+                          {% if auction.paymentMethod == 'Other' %}
+                          {{ auction.paymentMethodOther }}
+                          {% else %}
+                          {{ auction.paymentMethod }}
+                          {% endif %}
+                        </strong>
+                      </span>
+                      <input class="form-check-input ms-2 mt-0" type="checkbox" checked disabled aria-label="Payment method">
+                    </div>
                     {% endif %}
 
                   </div>
@@ -834,6 +837,12 @@
 
       declineModalEl.addEventListener('hidden.bs.modal', function () {
         if (!declineFormSubmitted) {
+          // Reset the decline radio choice and selection state on Cancel
+          if (declineRadio) {
+            declineRadio.checked = false;
+            updateDeclineState();
+            syncConfirmAvailability();
+          }
           reviewModal.show();
         }
         declineFormSubmitted = false;
