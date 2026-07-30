@@ -604,26 +604,6 @@ function syncPaymentTypeUI() {
     }
 }
 
-function syncPaymentMethodUI() {
-    const includePaymentMethod = $('#id_paymentMethodToggle').is(':checked');
-    const selectedPaymentMethod = $('input[name="paymentMethod"]:checked').val() || '';
-
-    $('#paymentMethodSection').toggleClass('d-none', !includePaymentMethod);
-
-    if (!includePaymentMethod) {
-        $('input[name="paymentMethod"]').prop('checked', false);
-        $('#id_paymentMethodOther').val('');
-        $('#paymentMethodOtherContainer').addClass('d-none');
-        return;
-    }
-
-    const showOtherInput = selectedPaymentMethod === 'Other';
-    $('#paymentMethodOtherContainer').toggleClass('d-none', !showOtherInput);
-    if (!showOtherInput) {
-        $('#id_paymentMethodOther').val('');
-    }
-}
-
 $(document).ready(function () {
     $('.alert.alert-block.alert-danger').hide();
     $('.feeSplitFields').hide();
@@ -685,14 +665,6 @@ $(document).ready(function () {
 
     $('input[name="flatFeeType"]').change(function () {
         syncOfferGuidanceUI(getSelectedPaymentTypes());
-    });
-
-    $('#id_paymentMethodToggle').change(function () {
-        syncPaymentMethodUI();
-    });
-
-    $(document).on('change', 'input[name="paymentMethod"]', function () {
-        syncPaymentMethodUI();
     });
 
     $('#id_desiredFlatFeeHourly').on('input change', function () {
@@ -863,7 +835,6 @@ $(document).ready(function () {
     $("#id_type option[value='" + clinicVal + "']").remove();
 
     syncPaymentTypeUI();
-    syncPaymentMethodUI();
     populateRequiredSkillsByClinicianType();
     syncAllGridRowsAvailability();
     syncAllPerkDetailPanels();
@@ -909,18 +880,6 @@ $("#submitButton").click(function () {
 
     if (getSelectedPaymentTypes().includes('Flat Fee') && getSelectedFlatFeeType() === "") {
         errorList += "<li>Please select how flat fee offers should be priced.</li>";
-    }
-
-    const includePaymentMethod = $('#id_paymentMethodToggle').is(':checked');
-    const selectedPaymentMethod = $('input[name="paymentMethod"]:checked').val() || '';
-    const otherPaymentMethod = ($('#id_paymentMethodOther').val() || '').trim();
-
-    if (includePaymentMethod && selectedPaymentMethod === '') {
-        errorList += '<li>Please select a payment method or turn off Include Payment Method.</li>';
-    }
-
-    if (includePaymentMethod && selectedPaymentMethod === 'Other' && otherPaymentMethod === '') {
-        errorList += '<li>Please enter a value for Other Payment Method.</li>';
     }
 
     let placementStart = parseLocalDateInput($("#id_placementStart").val());

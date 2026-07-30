@@ -1,210 +1,622 @@
 {% extends 'auction/base.html' %}
 {% load static %}
+
+{% block meta %}
+  <title>Mission & Vision - The Traveling Therapist</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary: #00D2A0;
+      --primary-dark: #00B88C;
+      --primary-teal: #00b894;
+      --accent-mint: #e6f7f4;
+      --accent-mint-dark: #0d9488;
+      --black: #0B0F19;
+      --dark-gray: #1A1D24;
+      --gray: #64748b;
+      --light-gray: #F3F4F6;
+      --bg-light: #FAFAFA;
+      --white: #FFFFFF;
+      --border: #E5E7EB;
+      --font-serif: 'Playfair Display', Georgia, serif;
+      --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      color: var(--black);
+      background-color: var(--bg-light);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Typography & Badges */
+    .section-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent-mint-dark);
+      margin-bottom: 8px;
+      display: inline-block;
+    }
+
+    .badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 14px;
+      border-radius: 9999px;
+      background-color: var(--white);
+      color: var(--accent-mint-dark);
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 16px;
+      border: 1px solid rgba(13, 148, 136, 0.2);
+    }
+
+    .badge-pill .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background-color: var(--accent-mint-dark);
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 22px;
+      border-radius: 9999px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      text-decoration: none;
+      transition: all 0.25s ease;
+      cursor: pointer;
+      border: 1px solid transparent;
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      color: var(--black);
+      box-shadow: 0 6px 16px rgba(0, 210, 160, 0.2);
+    }
+
+    .btn-primary:hover {
+      background-color: #10e8b4;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(0, 210, 160, 0.3);
+    }
+
+    /* Clean Unboxed Hero Title Section */
+    .hero {
+      padding: 32px 0;
+      text-align: center;
+      max-width: 900px;
+      margin: 20px auto 40px;
+      background: transparent;
+      border: none;
+      box-shadow: none;
+    }
+
+    .hero h1 {
+      font-family: var(--font-serif);
+      font-size: 3.25rem;
+      font-weight: 700;
+      line-height: 1.15;
+      margin-bottom: 16px;
+      color: var(--black);
+    }
+
+    .hero h1 span.highlight {
+      position: relative;
+      display: inline-block;
+    }
+
+    .hero h1 span.highlight::after {
+      content: '';
+      position: absolute;
+      bottom: 4px;
+      left: 0;
+      width: 100%;
+      height: 6px;
+      background-color: var(--primary-teal);
+      opacity: 0.35;
+      border-radius: 3px;
+    }
+
+    .hero p {
+      font-size: 1rem;
+      color: var(--gray);
+      margin-bottom: 12px;
+      max-width: 860px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.6;
+    }
+
+    .hero p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* Universal Hover Effects for Boxes */
+    .mv-card, .stat-card, .data-block, .hiring-cta-box {
+      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    }
+
+    .mv-card:hover, .stat-card:hover, .data-block:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.05);
+      border-color: rgba(0, 210, 160, 0.4);
+    }
+
+    /* Mission & Vision Grid */
+    .mv-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 40px;
+    }
+
+    .mv-card {
+      background: var(--white);
+      border-radius: 20px;
+      padding: 32px;
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.02);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .mv-card.dark {
+      background: var(--dark-gray);
+      color: var(--white);
+      border-color: var(--dark-gray);
+    }
+
+    .mv-card.dark:hover {
+      border-color: var(--primary);
+    }
+
+    .mv-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+      font-size: 20px;
+    }
+
+    .mv-card .mv-icon {
+      background: var(--accent-mint);
+      color: var(--accent-mint-dark);
+    }
+
+    .mv-card.dark .mv-icon {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--primary);
+    }
+
+    .mv-card h2 {
+      font-family: var(--font-serif);
+      font-size: 1.75rem;
+      margin-bottom: 12px;
+    }
+
+    .mv-card.dark h2 {
+      color: var(--white);
+    }
+
+    .mv-card p {
+      font-size: 0.95rem;
+      color: var(--gray);
+      line-height: 1.55;
+    }
+
+    .mv-card.dark p {
+      color: #D1D5DB;
+    }
+
+    .vision-list {
+      list-style: none;
+      margin-top: 14px;
+      padding: 0;
+    }
+
+    .vision-list li {
+      display: flex;
+      gap: 10px;
+      font-size: 0.9rem;
+      color: #E5E7EB;
+      margin-bottom: 8px;
+      align-items: flex-start;
+    }
+    
+    .vision-list li svg {
+      flex-shrink: 0;
+      color: var(--primary);
+      margin-top: 2px;
+    }
+
+    /* Stats Banner */
+    .stats-banner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 48px;
+    }
+
+    .stat-card {
+      background: var(--white);
+      border-left: 4px solid var(--primary);
+      border-top: 1px solid var(--border);
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 24px 28px;
+      border-radius: 0 16px 16px 0;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+    }
+
+    .stat-card h3 {
+      font-size: 2.25rem;
+      font-weight: 700;
+      color: var(--black);
+      margin-bottom: 4px;
+      font-family: var(--font-serif);
+    }
+
+    .stat-card p {
+      color: var(--gray);
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    /* Equal 50/50 Side-by-Side Split Sections */
+    .split-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 36px;
+      margin-bottom: 48px;
+      align-items: stretch;
+    }
+
+    .split-section.reverse {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    /* Non-sticky Media Visual Container - Equal height stretch */
+    .media-visual {
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+      height: 100%;
+      min-height: 380px;
+      width: 100%;
+      border: 1px solid var(--border);
+      position: relative;
+    }
+
+    .media-visual img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .content-stream h2 {
+      font-family: var(--font-serif);
+      font-size: 2rem;
+      color: var(--black);
+      margin-bottom: 14px;
+      line-height: 1.25;
+    }
+
+    .content-stream p {
+      font-size: 0.95rem;
+      color: var(--gray);
+      margin-bottom: 12px;
+      line-height: 1.55;
+    }
+
+    /* Styled Blocks for Data */
+    .data-block {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px 24px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+      width: 100%;
+    }
+
+    .data-block h4 {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      color: var(--accent-mint-dark);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .data-block h3 {
+      font-size: 1.15rem;
+      margin-bottom: 8px;
+      color: var(--black);
+    }
+
+    .data-list {
+      padding-left: 18px;
+      margin-top: 6px;
+      color: var(--gray);
+    }
+
+    .data-list li {
+      margin-bottom: 6px;
+      font-size: 0.9rem;
+      line-height: 1.45;
+    }
+
+    /* CTA Section Inside Content */
+    .hiring-cta-box {
+      background-color: var(--accent-mint);
+      border-radius: 16px;
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-top: 20px;
+      border: 1px solid rgba(13, 148, 136, 0.25);
+    }
+
+    .hiring-cta-box:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(13, 148, 136, 0.1);
+    }
+
+    .hiring-cta-content h4 {
+      color: var(--accent-mint-dark);
+      font-size: 1.05rem;
+      margin-bottom: 2px;
+    }
+
+    .hiring-cta-content p {
+      color: var(--black);
+      margin: 0;
+      font-size: 0.9rem;
+    }
+
+    /* Bottom CTA Banner */
+    .bottom-cta {
+      background: var(--dark-gray);
+      border-radius: 20px;
+      padding: 44px 24px;
+      text-align: center;
+      color: var(--white);
+      margin: 24px 0 48px;
+      box-shadow: 0 12px 28px rgba(0,0,0,0.1);
+    }
+
+    .bottom-cta h2 {
+      font-family: var(--font-serif);
+      font-size: 2.35rem;
+      margin-bottom: 10px;
+      color: var(--white);
+    }
+
+    .bottom-cta p {
+      font-size: 0.95rem;
+      color: #D1D5DB;
+      max-width: 580px;
+      margin: 0 auto 20px auto;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 992px) {
+      .hero h1 {
+        font-size: 2.35rem;
+      }
+      .mv-grid, .stats-banner, .split-section, .split-section.reverse {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+      .media-visual {
+        height: 300px;
+        min-height: auto;
+      }
+      .split-section.reverse .media-visual {
+        order: -1;
+      }
+      .hiring-cta-box {
+        flex-direction: column;
+        text-align: left;
+        align-items: flex-start;
+      }
+    }
+  </style>
+{% endblock %}
+
 {% block content %}
-<!-- content -->
 <p id="pageTitle" class="d-none">Mission_Vision</p>
 
-<div class="container" style="background-color: rgba(0, 0, 0, 0);">
-    <div class=" row">
-        <div class="col-md-12">
-            <h1 class="text-center mb-5">Mission & Vision</h1>
-        </div>
-    </div>
-    <div class="row">
-        <p>We benefit healthcare workers & healthcare facilities owners by eliminating the countless inefficiencies of
-            the existing healthcare staffing model. Healthcare facility owners get access to clinicians, often on
-            short notice when they need them most, and transparent costs, while healthcare workers benefit by choosing
-            their desired rate of compensation for their own time.
-            <br><br>
-            The Traveling Therapist offers all the benefits of an agency but operating 24/7 with few of the overhead
-            costs. We give healthcare facilities access to an ever growing database of healthcare workers to help them
-            care for their clients, and clinicians the opportunity to fill their empty schedules, work with new clinical
-            populations, grow their career.
-            <br><br>
-            This leads to happier healthcare facilities, happier clinicians, and of course better care for patients!
-            Practitioners and Healthcare workers can use The Traveling Therapist to fill their empty schedules, offer a
-            rate of compensation of their choice, work with new clinical populations, and grow their career.
-            <br><br>
-            Our service can help lead to happier healthcare facilities, happier clinicians, and of course better care
-            for the patients too!
-        </p>
-    </div>
-    <div id="missionVisionDiv" class="row mt-2">
-        <div class="col-md-6 col-sm-12">
-            <h2>Mission</h2>
-            <p>Eliminate the countless inefficiencies of the existing healthcare staffing model with an easy to use
-                online platform, accessible to clinicians and healthcare facility owners 24/7.</p>
-        </div>
-        <div class="col-md-6 col-sm-12">
-            <h2>Vision</h2>
-            <p>A world where better allocation of clinicians, and healthcare staffing improves the lives of:</p>
-            <ol>
-                <li>Healthcare facility owners, by minimizing their administrative burden</li>
-                <li>Clinicians and practitioners by optimizing their time, energy and effort</li>
-                <li>The patients who get better access to the quality care they deserve</li>
-            </ol>
-        </div>
-    </div>
-    <hr>
-    <div class="row g-3">
-        <div class="col-12 col-md-4">
-            <blockquote class="quote-card-facility">
-            </blockquote>
-        </div>
-        <div class="col-12 col-md-4">
-            <blockquote class="quote-card quote-card-facility">
-                <p>66% of facilities we surveyed in November 2025 claimed that their biggest hiring problem was SPEED,
-                    citing a "slow hiring process" as a hurdle when hiring or filling positions.</p>
-            </blockquote>
-        </div>
-    </div>
-    <hr>
-    <div class="row">
-        <h3>Our Story & Passion to Improve the World</h3>
-        <div class="col-sm-12 col-lg-4">
-            <img src="/media/images/Advertorial_IMG_1.jpg" class="whyUseImages img-fluid"
-                alt="Therapist and patient shaking hands.">
-        </div>
-        <div class="col-sm-12 col-lg-8">
-            <div class="truncate">
-                <p>
-                    While working as students at a private outpatient healthcare facility, we saw countless instances of
-                    therapists calling in sick, having to cancel their day, and healthcare facilities seeking PTs, RMTs,
-                    etc. for short term contracts, therapists on mat leave, or to cover their expected and unexpected
-                    absences.
-                    <br><br>
-                    We know all too well the number of clinicians with gaps in their weekly schedule, who would love the
-                    autonomy to decide when they work, where they work, and their own rate of pay for the career they
-                    love.
-                    <br><br>
-                    We saw firsthand the administrative headache of healthcare facilities attempting to find PT, RMT, or
-                    other coverage for shifts or short term contracts using online job forums and postings.
-                    <br><br>
-                    Heartbreakingly, we also saw the faces of patients who needed care and had to cancel their
-                    appointments because of these absences. We are all aware of healthcare facilities that are booking
-                    many weeks, and patients who could really benefit from seeing a physiotherapist, PSW, or other
-                    healthcare practitioner today.
-                    <br><br>
-                    Imagine a world where better allocation of clinicians, and healthcare staffing improves upon all of
-                    these opportunities at once.
-                    <br><br>
-                    The Traveling Therapist set out to meet the needs of healthcare facilities and clinicians alike by
-                    creating an online healthcare staffing solution to fill schedule openings all while providing more
-                    congruent patient care in the process. Our online platform facilitates matches between these jobs
-                    and clinicians. The Traveling Therapist is fast, free to use, and we are onboarding more healthcare
-                    facilities and clinicians every day!
-                    <br><br>
-                    Develop your career, fill short term healthcare worker shortages, become a Traveling Therapist!
-                </p>
-            </div>
-        </div>
-    </div>
-    <hr>
-    <blockquote class="quote-card quote-card-facility">
-        <p>50% of clinics surveyed reported that they were not sure how to or where to
-            best recruit physiotherapists from. They both cited that a service capturing more of the physios
-            available to work at any one time would help! <br>
-            <br>
-            Share your "hiring holes" and receive 5% off of your first invoice when you create an account.
-            <br>
-            <br>
+<div class="container">
 
-            <a class="btn btn-primary btn-lg" href="https://forms.gle/UJzcTFQQnRzg9i1L7">Share your hiring
-                holes</a>
-        </p>
-    </blockquote>
-    <br>
-</div>
-<hr>
-<div class="row">
-    <h3>The Impact of Healthcare Worker Vacancies</h3>
-    <div class="col-sm-12 col-lg-4">
-        <img src="/media/images/Advertorial_IMG_2.jpg" class="whyUseImages img-fluid" alt="Therapist using computer.">
+  <!-- Clean Unboxed Hero Section -->
+  <section class="hero">
+    <div class="badge-pill">
+      <span class="dot"></span>
+      Our Purpose
     </div>
-    <div class="col-sm-12 col-lg-8">
-        <div class="truncate">
-            <p>
-                The OPA human health resources in the physiotherapy profession survey ran from May 30th to July
-                11th, 2022, and had 171 respondents with completed data from 146 organizations with multiple sites.
-                This is the second iteration of the health human resource is in the physiotherapy profession survey,
-                which first ran in May 2021. Although the results of this survey put a spotlight on some of the
-                health human resource huge issues emerging in the profession and their impact, it is only a snapshot
-                perspective. This survey demonstrates the need to further examine supply and demand issues in the
-                physiotherapy health human resources, including how to overcome barriers to recruitment and
-                retention to minimize vacancies in the physiotherapy profession.
-                <br><br>
-                <b>Demographics</b><br>
-                Most respondents worked in private practice 51% and hospitals 30%, followed by home care 8%. There
-                was minimal representation from Primary Healthcare facilities 4% and no respondents who worked in
-                long term care homes and retirement homes.
-                <br><br>
-                <b>Vacancies by Sector and Region</b><br>
-                Through this survey, 255 physiotherapist vacancies and 47 physiotherapist assistant vacancies were
-                reported. Most physiotherapist vacancies were reported in private practice 100 and hospital sector
-                94 in acute care and rehabilitation centres, followed by home care 29. Most physiotherapist
-                assistant vacancies were reported within hospital based acute care 30 and private practice 10.
-                When examining the region and area of these reported vacancies, most physiotherapist and
-                physiotherapist assistant vacancies have been reported in urban areas. The majority of
-                physiotherapist vacancies were reported in Toronto central, central Champlain, and southwest, which
-                is similar to what was reported in the 2021 survey with the exception of the central region. The
-                number of physiotherapist assistant vacancies were reported across the province equally with some
-                slightly higher in the central region.
-                It is important to note that the vacancies reported are a purely count based analysis from
-                respondents who chose to participate in this survey. We also do not have any baseline data to
-                provide more context around these numbers, which limits our ability to draw conclusions on the
-                magnitude of the impact of the number of vacancies reported.
-                <br><br>
-                <b>Impact of vacancies</b><br>
-                A substantial amount of qualitative feedback was received through this survey. Respondents described
-                the impact that vacancies have had on their operations or practice, such as on things like human
-                resources and capacity, staff workload, in direct patient care EG charting, direct patient care,
-                etc. Some key takeaways are:
-            <ul>
-                <li>There are significant challenges with meeting the demands with providing patient care with the
-                    shortage of human healthcare resources.</li>
-                <li>There has been an increase in workload hours, and caseload burden place to crossed existing
-                    staff</li>
-                <li>There is increased stress and burnout, which has contributed to increased time off EG sick
-                    leave, leave of absence, vacation, and those leaving the profession</li>
-                <li>There is an impact on business growth, stability, and financial viability.</li>
-                <li>Employers feel the need to offer greater compensation to recruit and retrain</li>
-            </ul>
-            Among the most prominent strategies used to address challenges experienced with filling positions
-            includes implementing a wait list for patients due to limited staffing to meet demand 61%, and
-            increasing the number of hours or amount of workload of the existing staff at their site 55%
-            <br><br>
-            <b>Barriers for recruitment</b><br>
-            The most prominent barriers or factors that contributed to the difficulties or challenges experienced
-            with recruitment include:
-            <ul>
-                <li>Low compensation and compensation inequality among sectors, providers slash organisations,
-                    settings, or regions</li>
-                <li>Competition between sectors and organizations eg with compensation, benefits packages, offering
-                    preferred work hours</li>
-                <li>Low supply of physiotherapists and a lack of applicants</li>
-                <li>Lack of qualifications and experience required for the role</li>
-                <li>Life factors such as cost of living, financial, housing, and employment opportunities for
-                    spouses (especially when moving to rural or northern areas)</li>
-            </ul>
-            <b>Conclusion</b><br>
-            Health human resource issues have a significant impact on patient care and system performance. The
-            results of this survey are informing next steps in a larger project that will more fully examine health
-            human resource issues within the physiotherapy profession in Ontario. We have been collecting and will
-            continue to collect and use this information and data to help support our advocacy and inform our
-            stakeholder conversations. Our recent activities have been highlighted in the snapshot*
-            <br><br>
-            Opa.on.ca, autumn issue 2022
-            </p>
-        </div>
-    </div>
-</div>
-<hr>
-<div class="row mt-2">
-    <a id="howItWorksButton" class="btn btn-primary btn-lg" href="{% url 'how-it-works' %}">Wondering How it
-        Works?</a>
-</div>
+    <h1>Empowering clinicians.<br><span class="highlight">Elevating care.</span></h1>
+    <p>We benefit healthcare workers & healthcare facility owners by eliminating the countless inefficiencies of the existing healthcare staffing model. Healthcare facility owners get access to clinicians—often on short notice when they need them most—with transparent costs, while healthcare workers benefit by choosing their desired rate of compensation for their own time.</p>
+    <p>The Traveling Therapist offers all the benefits of an agency operating 24/7 with few of the overhead costs. We give healthcare facilities access to an ever-growing database of healthcare workers to help them care for their clients, and clinicians the opportunity to fill their empty schedules, work with new clinical populations, and grow their careers.</p>
+  </section>
 
+  <!-- Mission & Vision Cards -->
+  <section class="mv-grid">
+    <div class="mv-card">
+      <div class="mv-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg>
+      </div>
+      <h2>Our Mission</h2>
+      <p>Eliminate the countless inefficiencies of the existing healthcare staffing model with an easy-to-use online platform accessible to clinicians and healthcare facility owners 24/7.</p>
+    </div>
+
+    <div class="mv-card dark">
+      <div class="mv-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h4l3-9 5 18 3-9h5"></path></svg>
+      </div>
+      <h2>Our Vision</h2>
+      <p>A world where better allocation of clinicians and healthcare staffing improves the lives of:</p>
+      <ul class="vision-list">
+        <li>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          Healthcare facility owners, by minimizing their administrative burden
+        </li>
+        <li>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          Clinicians and practitioners, by optimizing their time, energy, and effort
+        </li>
+        <li>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          Patients, who get better access to the quality care they deserve
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Survey Stats Banner -->
+  <section class="stats-banner">
+    <div class="stat-card">
+      <h3>66%</h3>
+      <p>Of facilities we surveyed in November 2025 claimed that their biggest hiring problem was SPEED, citing a "slow hiring process" as a hurdle when hiring or filling positions.</p>
+    </div>
+    <div class="stat-card">
+      <h3>50%</h3>
+      <p>Of clinics surveyed reported that they were not sure how or where to best recruit physiotherapists. They cited that a service capturing more of the available physios at any given time would significantly help.</p>
+    </div>
+  </section>
+
+  <!-- Story Section (50/50 Split) -->
+  <section class="split-section">
+    <div class="media-visual">
+      <img src="/media/images/Advertorial_IMG_1.jpg" alt="Therapist and patient shaking hands.">
+    </div>
+    <div class="content-stream">
+      <span class="section-label">ORIGIN</span>
+      <h2>Our Story & Passion to Improve the World</h2>
+      <p>While working as students at a private outpatient healthcare facility, we saw countless instances of therapists calling in sick, having to cancel their day, and healthcare facilities seeking PTs, RMTs, etc. for short-term contracts, maternity leave coverage, or unexpected absences.</p>
+      
+      <p>We know all too well the number of clinicians with gaps in their weekly schedule who would love the autonomy to decide when they work, where they work, and set their own rate of pay for the career they love.</p>
+      
+      <p>We saw firsthand the administrative headache healthcare facilities face when attempting to find PT, RMT, or other coverage for shifts using job forums and traditional postings.</p>
+      
+      <p>Heartbreakingly, we also saw patients who needed care and had to cancel their appointments because of these absences. Healthcare facilities are booked out for weeks while patients could really benefit from seeing a physiotherapist, PSW, or practitioner today.</p>
+      
+      <p>Imagine a world where better allocation of clinicians and healthcare staffing improves upon all of these opportunities at once.</p>
+      
+      <p>The Traveling Therapist set out to meet the needs of healthcare facilities and clinicians alike by creating an online healthcare staffing solution to fill schedule openings—all while providing more consistent patient care in the process. Our online platform facilitates matches between these jobs and clinicians quickly, freely, and efficiently.</p>
+      
+      <p><strong>Develop your career, fill short-term healthcare worker shortages, and become a Traveling Therapist!</strong></p>
+
+      <div class="hiring-cta-box">
+        <div class="hiring-cta-content">
+          <h4>Exclusive Partner Discount</h4>
+          <p>Share your "hiring holes" and receive raffle tickets when you create an account.</p>
+        </div>
+        <a class="btn btn-primary" href="https://forms.gle/UJzcTFQQnRzg9i1L7" target="_blank" style="white-space: nowrap;">Share Your Hiring Holes &rarr;</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Impact Section (50/50 Split) -->
+  <section class="split-section reverse">
+    <div class="content-stream">
+      <span class="section-label">THE DATA</span>
+      <h2>The Impact of Healthcare Worker Vacancies</h2>
+      <p>The OPA human health resources survey ran from May 30th to July 11th, 2022, with 171 respondents across 146 organizations. This survey demonstrates the critical need to examine supply and demand issues in physiotherapy health human resources, including how to overcome barriers to recruitment and retention to minimize vacancies.</p>
+
+      <div class="data-block">
+        <h4>Insights</h4>
+        <h3>Demographics</h3>
+        <p>Most respondents worked in private practice (51%) and hospitals (30%), followed by home care (8%). There was minimal representation from primary healthcare facilities (4%) and long-term care or retirement homes.</p>
+      </div>
+
+      <div class="data-block">
+        <h4>Insights</h4>
+        <h3>Vacancies by Sector and Region</h3>
+        <p>Through this survey, 255 physiotherapist vacancies and 47 physiotherapist assistant vacancies were reported. Most physiotherapist vacancies were in private practice (100) and the hospital sector (94) in acute care and rehabilitation centers, followed by home care (29).</p>
+        <p>When examining regions, most physiotherapist and assistant vacancies were reported in urban areas (such as Toronto central, central Champlain, and the southwest region).</p>
+        <p>It is important to note that these vacancies are a purely count-based analysis from survey participants, providing a direct snapshot of current staffing challenges.</p>
+      </div>
+
+      <div class="data-block">
+        <h4>Insights</h4>
+        <h3>Impact of Vacancies</h3>
+        <p>Qualitative feedback highlighted key impacts that vacancies have had on daily practice and operations:</p>
+        <ul class="data-list">
+          <li>Significant challenges meeting patient care demand due to human resource shortages</li>
+          <li>Increased workload hours and heavy caseload burden placed on existing staff</li>
+          <li>Elevated stress and burnout, contributing to increased sick leave and career departures</li>
+          <li>Negative impacts on business growth, stability, and financial viability</li>
+          <li>Pressure on employers to offer higher compensation to recruit and retain staff</li>
+        </ul>
+        <p style="margin-top: 8px;">To cope with staffing shortages, 61% of sites implemented waitlists for patients, and 55% increased the workload hours of existing staff.</p>
+      </div>
+
+      <div class="data-block">
+        <h4>Insights</h4>
+        <h3>Barriers to Recruitment</h3>
+        <p>The most prominent factors contributing to recruitment challenges include:</p>
+        <ul class="data-list">
+          <li>Compensation inequality across sectors, settings, or regions</li>
+          <li>High competition between sectors and organizations regarding benefits and hours</li>
+          <li>Overall low supply of physiotherapists and lack of applicants</li>
+          <li>Strict qualification and experience requirements for specialized roles</li>
+          <li>Lifestyle factors such as housing, cost of living, and spousal employment opportunities</li>
+        </ul>
+      </div>
+      
+      <div class="data-block" style="background-color: var(--dark-gray); color: var(--white); border-color: var(--dark-gray);">
+        <h4 style="color: var(--primary);">Conclusion</h4>
+        <p style="color: #D1D5DB;">Health human resource issues have a significant impact on patient care and system performance. We continue to utilize this data to support advocacy efforts and inform stakeholder conversations across Ontario.</p>
+        <p style="color: var(--gray); font-size: 0.85rem; margin-top: 8px; font-style: italic;">OPA.on.ca, Autumn Issue 2022</p>
+      </div>
+    </div>
+    
+    <div class="media-visual">
+      <img src="/media/images/Advertorial_IMG_2.jpg" alt="Therapist using computer.">
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <section class="bottom-cta">
+    <h2>Ready to transform your staffing model?</h2>
+    <p>Our platform helps create happier healthcare facilities, empowered clinicians, and better quality care for patients.</p>
+    <a id="howItWorksButton" class="btn btn-primary" href="{% url 'how-it-works' %}" style="padding: 12px 32px; font-size: 1rem;">Wondering How It Works? &rarr;</a>
+  </section>
 
 </div>
+
 <script src="{% static 'auction/why-use.js' %}"></script>
 {% endblock %}

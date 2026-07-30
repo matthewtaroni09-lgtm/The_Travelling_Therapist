@@ -116,6 +116,12 @@ def normalize_youtube_embed_url(raw_url):
 
     return f'https://www.youtube.com/embed/{video_id}'
 
+def get_default_start_date():
+    return datetime.date.today() + datetime.timedelta(days=1)
+
+def get_default_end_date():
+    return datetime.date.today() + datetime.timedelta(days=30)
+
 @deconstructible
 class PathAndRename(object):
     def __init__(self, sub_path):
@@ -343,11 +349,6 @@ class PaymentType(models.Model):
     def __str__(self):
         return str(self.name)
 
-def get_default_start_date():
-    return datetime.date.today() + datetime.timedelta(days=1)
-
-def get_default_end_date():
-    return datetime.date.today() + datetime.timedelta(days=30)
 
 
 class Auction(models.Model):
