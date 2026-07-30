@@ -713,7 +713,7 @@ class ProfileUpdateClinic(forms.ModelForm):
             ''
         )
         self.fields['clinicWebsite'].error_messages['invalid'] = WEBSITE_URL_ERROR_MESSAGE
-        self.fields['clinicVideo'].help_text = 'Optional: Paste a YouTube URL. We will automatically convert it to an embeddable link.'
+        self.fields['clinicVideo'].help_text = ''
 
         for image_field in ('imageOne', 'imageTwo', 'imageThree', 'imageFour'):
             self.fields[image_field].widget = ProfileImageInput()

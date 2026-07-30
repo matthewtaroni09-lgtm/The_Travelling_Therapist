@@ -227,6 +227,34 @@ def schedule_waiting_closeout(auction_id, run_date):
 def finalize_waiting_closeout(auction_id):
     try:
         auction = Auction.objects.get(auctionID=auction_id)
+        
+        # Check if the listing was actively in the decision phase and they let it timeout
+        if auction.waitingCloseout:
+            bids = Bid.objects.filter(auction=auction, active=True)
+            has_bids = bids.exists()
+            winning_bid = getattr(auction, 'selected_bid', None)
+            
+            # If there are active bids but NO offer was selected when this 7-day period ran out
+            if has_bids and not winning_bid:
+                admin = AdminSetting.objects.first()
+                if admin is None or admin.sendEmails:
+                    clinic_email = auction.clinic.user.email if (auction.clinic and auction.clinic.user) else None
+                    if clinic_email:
+                        try:
+                            send_mail(
+                                subject='No Offer Selected',
+                                message='',
+                                html_message=emails.clinic_automatic_closeout_no_offer(
+                                    str(auction.clinic.clinicName),
+                                    auction.placementStart,
+                                    auction.placementEnd,
+                                ),
+                                from_email=settings.EMAIL_HOST_USER,
+                                recipient_list=[clinic_email],
+                            )
+                        except Exception as exc:
+                            logger.error(f"Error sending automatic closeout invoice email to clinic {clinic_email}: {exc}")
+
         auction.active = False
         auction.waitingCloseout = False
         auction.closed = True
@@ -278,7 +306,7 @@ def auction_closed(id):
                 clinic_email = auction.clinic.user.email if (auction.clinic and auction.clinic.user) else None
                 if clinic_email:
                     send_mail(
-                        subject='Your Listing Closed with No Offers — The Traveling Therapist',
+                        subject='Your Listing Closed with No Offers',
                         message='',
                         html_message=emails.clinic_no_bids(
                             str(auction.clinic.clinicName),
@@ -290,6 +318,25 @@ def auction_closed(id):
                     )
             except Exception as exc:
                 logger.warning('Clinic no-bids email failed to send for auction %s: %s', auction.auctionID, exc)
+                
+    elif was_active and active_bid_count > 0:
+        admin = AdminSetting.objects.first()
+        if admin is None or admin.sendEmails:
+            try:
+                clinic_email = auction.clinic.user.email if (auction.clinic and auction.clinic.user) else None
+                if clinic_email:
+                    send_mail(
+                        subject='Review Offers for Your Listing',
+                        message='',
+                        html_message=emails.clinic_auction_closed_waiting_email(
+                            str(auction.clinic.clinicName),
+                            auction.auctionID,
+                        ),
+                        from_email=settings.EMAIL_HOST_USER,
+                        recipient_list=[clinic_email],
+                    )
+            except Exception as exc:
+                logger.warning('Clinic closed waiting email failed to send for auction %s: %s', auction.auctionID, exc)
 
     finalize_run_date = timezone.now() + timedelta(seconds=get_default_closed_waiting_period_seconds())
     schedule_waiting_closeout(auction.auctionID, finalize_run_date)
@@ -337,7 +384,7 @@ def offer_accepted(id, winning_bid_id=None):
             clinic_user = auction.clinic.user if auction.clinic else None
             if clinic_user and clinic_user.email:
                 send_mail(
-                    subject='Candidate Selected for Your Listing — The Traveling Therapist',
+                    subject='Candidate Selected for Your Listing',
                     message='',
                     html_message=emails.offer_accepted(
                         str(auction.clinic.clinicName),
@@ -387,7 +434,7 @@ def offer_accepted(id, winning_bid_id=None):
                         l_first = losing_user.first_name or (l_account.firstName if l_account else '') or losing_user.username
                         l_last = losing_user.last_name or (l_account.lastName if l_account else '')
                         send_mail(
-                            subject="Listing Update — The Traveling Therapist",
+                            subject="Listing Update",
                             message='',
                             html_message=emails.therapist_auction_end_lose(
                                 l_first,
