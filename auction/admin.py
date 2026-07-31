@@ -228,6 +228,10 @@ class AuctionAdmin(admin.ModelAdmin):
     negotiable_perks_display.short_description = 'Negotiable Perks Summary'
 
     def save_model(self, request, obj, form, change):
+        admin = AdminSetting.objects.first()
+        existing_auction = Auction.objects.filter(pk=obj.auctionID).first()
+        previous_active = existing_auction.active if existing_auction is not None else False
+
         listing_status = form.cleaned_data.get('listing_status') if hasattr(form, 'cleaned_data') else ''
         if listing_status == 'deleted':
             obj.active = False
@@ -255,7 +259,11 @@ class AuctionAdmin(admin.ModelAdmin):
             obj.closed = False
             obj.deleted = False
 
-        admin = AdminSetting.objects.first()
+        if listing_status == 'active' and not previous_active:
+            active_seconds = admin.defaultAuctionLength if admin is not None else 1209600
+            obj.auctionStart = django_timezone.now()
+            obj.auctionEnd = obj.auctionStart + timedelta(seconds=active_seconds)
+
         waiting_closeout_job_id = f'{obj.auctionID}_waiting_closeout'
         if listing_status == 'waiting' and obj.auctionEnd is not None:
             waiting_seconds = admin.defaultClosedWaitingPeriodLength if admin is not None else 604800
@@ -263,8 +271,7 @@ class AuctionAdmin(admin.ModelAdmin):
         else:
             scheduled_tasks.remove_cron_job(waiting_closeout_job_id)
 
-        auction = Auction.objects.filter(pk=obj.auctionID).first()
-        previous_active = auction.active if auction is not None else False
+        auction = existing_auction
         print("auction = " + str(previous_active))
         print("obj = " + str(obj.active))
 
@@ -319,11 +326,11 @@ class AuctionAdmin(admin.ModelAdmin):
                 if email_count < batch_size:
                     try:
                         send_mail(
-                            subject = "NEW LISTING - The Traveling Therapist",
+                            subject = "New Listing Available for Offers!",
                             message = "",
                             html_message = emails.new_auction_email_to_all(account.user.first_name, account.user.last_name, link, str(current_auction.placementStart), str(current_auction.placementEnd), current_auction.get_payment_type_label(), current_auction.clinic.clinicName, clinic_location, time_diff_from_now(current_auction.auctionEnd)),
                             from_email = settings.EMAIL_HOST_USER,
-                            recipient_list = (account.user.email, "loribine@gmail.com")
+                            recipient_list = (account.user.email,)
                         )
                     except BadHeaderError:
                             return HttpResponse('Invalid header found.')
@@ -347,6 +354,24 @@ class AuctionAdmin(admin.ModelAdmin):
                         return HttpResponse('Invalid header found.')
                     break            
         super().save_model(request, obj, form, change)
+
+        if not obj.active and obj.cronID:
+            scheduled_tasks.remove_cron_job(obj.cronID)
+            Auction.objects.filter(pk=obj.pk).update(cronID='')
+            obj.cronID = ''
+
+        if obj.active and not previous_active and obj.auctionEnd is not None:
+            if obj.cronID:
+                scheduled_tasks.remove_cron_job(obj.cronID)
+            scheduled_tasks.start(
+                obj.auctionEnd.year,
+                obj.auctionEnd.month,
+                obj.auctionEnd.day,
+                obj.auctionEnd.hour,
+                obj.auctionEnd.minute,
+                obj.auctionEnd.second,
+                str(obj.auctionID),
+            )
 
     def get_urls(self):
         urls = super().get_urls()

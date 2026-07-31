@@ -291,35 +291,39 @@
       line-height: 1.5;
     }
 
-    /* Equal 50/50 Side-by-Side Split Sections */
+    /* 50/50 Side-by-Side Split Sections */
     .split-section {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 36px;
-      margin-bottom: 48px;
-      align-items: stretch;
+      margin-bottom: 24px;
+      align-items: start; 
     }
 
     .split-section.reverse {
       grid-template-columns: 1fr 1fr;
     }
 
-    /* Non-sticky Media Visual Container - Equal height stretch */
+    /* Standardized Media Visual Container */
     .media-visual {
       border-radius: 20px;
       overflow: hidden;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.05);
-      height: 100%;
-      min-height: 380px;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.08); 
       width: 100%;
       border: 1px solid var(--border);
-      position: relative;
+      background-color: var(--white);
+      transition: box-shadow 0.3s ease;
+    }
+    
+    .media-visual:hover {
+        box-shadow: 0 16px 40px rgba(0, 210, 160, 0.15);
     }
 
     .media-visual img {
       width: 100%;
-      height: 100%;
-      object-fit: cover;
+      height: auto;
+      max-height: 80vh;
+      object-fit: contain; 
       display: block;
     }
 
@@ -375,6 +379,23 @@
       font-size: 0.9rem;
       line-height: 1.45;
     }
+    
+    /* New Grid Layout to Extend Insights Full-Width */
+    .insights-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 48px;
+    }
+
+    .insights-grid .data-block {
+      margin-bottom: 0;
+      height: 100%; /* Ensures side-by-side cards stretch equally */
+    }
+
+    .full-width-block {
+      grid-column: 1 / -1;
+    }
 
     /* CTA Section Inside Content */
     .hiring-cta-box {
@@ -385,7 +406,6 @@
       align-items: center;
       justify-content: space-between;
       gap: 16px;
-      margin-top: 20px;
       border: 1px solid rgba(13, 148, 136, 0.25);
     }
 
@@ -436,13 +456,12 @@
       .hero h1 {
         font-size: 2.35rem;
       }
-      .mv-grid, .stats-banner, .split-section, .split-section.reverse {
+      .mv-grid, .stats-banner, .split-section, .split-section.reverse, .insights-grid {
         grid-template-columns: 1fr;
         gap: 24px;
       }
       .media-visual {
-        height: 300px;
-        min-height: auto;
+        margin-bottom: 24px;
       }
       .split-section.reverse .media-visual {
         order: -1;
@@ -538,74 +557,80 @@
       <p>The Traveling Therapist set out to meet the needs of healthcare facilities and clinicians alike by creating an online healthcare staffing solution to fill schedule openings—all while providing more consistent patient care in the process. Our online platform facilitates matches between these jobs and clinicians quickly, freely, and efficiently.</p>
       
       <p><strong>Develop your career, fill short-term healthcare worker shortages, and become a Traveling Therapist!</strong></p>
-
-      <div class="hiring-cta-box">
-        <div class="hiring-cta-content">
-          <h4>Exclusive Partner Discount</h4>
-          <p>Share your "hiring holes" and receive raffle tickets when you create an account.</p>
-        </div>
-        <a class="btn btn-primary" href="https://forms.gle/UJzcTFQQnRzg9i1L7" target="_blank" style="white-space: nowrap;">Share Your Hiring Holes &rarr;</a>
-      </div>
     </div>
   </section>
+  
+  <!-- Pulled Out to Fill Space Full-Width -->
+  <div class="hiring-cta-box" style="margin-bottom: 48px;">
+    <div class="hiring-cta-content">
+      <h4>Exclusive Partner Offer</h4>
+      <p>Share your "hiring holes" and receive raffle tickets when you create an account.</p>
+    </div>
+    <a class="btn btn-primary" href="https://forms.gle/UJzcTFQQnRzg9i1L7" target="_blank" style="white-space: nowrap;">Share Your Hiring Holes &rarr;</a>
+  </div>
 
-  <!-- Impact Section (50/50 Split) -->
+  <!-- Impact Section Intro (50/50 Split) -->
   <section class="split-section reverse">
     <div class="content-stream">
       <span class="section-label">THE DATA</span>
-      <h2>The Impact of Healthcare Worker Vacancies</h2>
-      <p>The OPA human health resources survey ran from May 30th to July 11th, 2022, with 171 respondents across 146 organizations. This survey demonstrates the critical need to examine supply and demand issues in physiotherapy health human resources, including how to overcome barriers to recruitment and retention to minimize vacancies.</p>
+      <h2>The Impact of Healthcare Worker Vacancies</h2><br>
+      <p>The OPA human health resources survey ran from May 30th to July 11th, 2022, with 171 respondents across 146 organizations. 
+        This survey demonstrates the critical need to examine supply and demand issues in physiotherapy health human resources, including how to overcome barriers 
+        to recruitment and retention to minimize vacancies.</p><br>
 
       <div class="data-block">
         <h4>Insights</h4>
         <h3>Demographics</h3>
         <p>Most respondents worked in private practice (51%) and hospitals (30%), followed by home care (8%). There was minimal representation from primary healthcare facilities (4%) and long-term care or retirement homes.</p>
       </div>
-
-      <div class="data-block">
-        <h4>Insights</h4>
-        <h3>Vacancies by Sector and Region</h3>
-        <p>Through this survey, 255 physiotherapist vacancies and 47 physiotherapist assistant vacancies were reported. Most physiotherapist vacancies were in private practice (100) and the hospital sector (94) in acute care and rehabilitation centers, followed by home care (29).</p>
-        <p>When examining regions, most physiotherapist and assistant vacancies were reported in urban areas (such as Toronto central, central Champlain, and the southwest region).</p>
-        <p>It is important to note that these vacancies are a purely count-based analysis from survey participants, providing a direct snapshot of current staffing challenges.</p>
-      </div>
-
-      <div class="data-block">
-        <h4>Insights</h4>
-        <h3>Impact of Vacancies</h3>
-        <p>Qualitative feedback highlighted key impacts that vacancies have had on daily practice and operations:</p>
-        <ul class="data-list">
-          <li>Significant challenges meeting patient care demand due to human resource shortages</li>
-          <li>Increased workload hours and heavy caseload burden placed on existing staff</li>
-          <li>Elevated stress and burnout, contributing to increased sick leave and career departures</li>
-          <li>Negative impacts on business growth, stability, and financial viability</li>
-          <li>Pressure on employers to offer higher compensation to recruit and retain staff</li>
-        </ul>
-        <p style="margin-top: 8px;">To cope with staffing shortages, 61% of sites implemented waitlists for patients, and 55% increased the workload hours of existing staff.</p>
-      </div>
-
-      <div class="data-block">
-        <h4>Insights</h4>
-        <h3>Barriers to Recruitment</h3>
-        <p>The most prominent factors contributing to recruitment challenges include:</p>
-        <ul class="data-list">
-          <li>Compensation inequality across sectors, settings, or regions</li>
-          <li>High competition between sectors and organizations regarding benefits and hours</li>
-          <li>Overall low supply of physiotherapists and lack of applicants</li>
-          <li>Strict qualification and experience requirements for specialized roles</li>
-          <li>Lifestyle factors such as housing, cost of living, and spousal employment opportunities</li>
-        </ul>
-      </div>
-      
-      <div class="data-block" style="background-color: var(--dark-gray); color: var(--white); border-color: var(--dark-gray);">
-        <h4 style="color: var(--primary);">Conclusion</h4>
-        <p style="color: #D1D5DB;">Health human resource issues have a significant impact on patient care and system performance. We continue to utilize this data to support advocacy efforts and inform stakeholder conversations across Ontario.</p>
-        <p style="color: var(--gray); font-size: 0.85rem; margin-top: 8px; font-style: italic;">OPA.on.ca, Autumn Issue 2022</p>
-      </div>
     </div>
     
     <div class="media-visual">
       <img src="/media/images/Advertorial_IMG_2.jpg" alt="Therapist using computer.">
+    </div>
+  </section>
+
+  <!-- Reorganized Insights Grid (Fills Space Full-Width Under the Split) -->
+  <section class="insights-grid">
+    <div class="data-block">
+      <h4>Insights</h4>
+      <h3>Vacancies by Sector and Region</h3>
+      <p>Through this survey, 255 physiotherapist vacancies and 47 physiotherapist assistant vacancies were reported. Most physiotherapist vacancies were in private practice (100) and the hospital sector (94) in acute care and rehabilitation centers, followed by home care (29).</p>
+      <p>When examining regions, most physiotherapist and assistant vacancies were reported in urban areas (such as Toronto central, central Champlain, and the southwest region).</p>
+      <p>It is important to note that these vacancies are a purely count-based analysis from survey participants, providing a direct snapshot of current staffing challenges.</p>
+    </div>
+
+    <div class="data-block">
+      <h4>Insights</h4>
+      <h3>Impact of Vacancies</h3>
+      <p>Qualitative feedback highlighted key impacts that vacancies have had on daily practice and operations:</p>
+      <ul class="data-list">
+        <li>Significant challenges meeting patient care demand due to human resource shortages</li>
+        <li>Increased workload hours and heavy caseload burden placed on existing staff</li>
+        <li>Elevated stress and burnout, contributing to increased sick leave and career departures</li>
+        <li>Negative impacts on business growth, stability, and financial viability</li>
+        <li>Pressure on employers to offer higher compensation to recruit and retain staff</li>
+      </ul>
+      <p style="margin-top: 8px;">To cope with staffing shortages, 61% of sites implemented waitlists for patients, and 55% increased the workload hours of existing staff.</p>
+    </div>
+
+    <div class="data-block full-width-block">
+      <h4>Insights</h4>
+      <h3>Barriers to Recruitment</h3>
+      <p>The most prominent factors contributing to recruitment challenges include:</p>
+      <ul class="data-list" style="columns: 2; column-gap: 32px;">
+        <li>Compensation inequality across sectors, settings, or regions</li>
+        <li>High competition between sectors and organizations regarding benefits and hours</li>
+        <li>Overall low supply of physiotherapists and lack of applicants</li>
+        <li>Strict qualification and experience requirements for specialized roles</li>
+        <li>Lifestyle factors such as housing, cost of living, and spousal employment opportunities</li>
+      </ul>
+    </div>
+    
+    <div class="data-block full-width-block" style="background-color: var(--dark-gray); color: var(--white); border-color: var(--dark-gray);">
+      <h4 style="color: var(--primary);">Conclusion</h4>
+      <p style="color: #D1D5DB;">Health human resource issues have a significant impact on patient care and system performance. We continue to utilize this data to support advocacy efforts and inform stakeholder conversations across Ontario.</p>
+      <p style="color: var(--gray); font-size: 0.85rem; margin-top: 8px; font-style: italic;">OPA.on.ca, Autumn Issue 2022</p>
     </div>
   </section>
 

@@ -154,6 +154,18 @@ def _clean_text(value):
     return str(value or '').strip()
 
 
+def _resolve_user_email(user):
+    email_value = str(getattr(user, 'email', '') or '').strip()
+    if email_value:
+        return email_value
+
+    username_value = str(getattr(user, 'username', '') or '').strip()
+    if '@' in username_value:
+        return username_value
+
+    return ''
+
+
 def resolve_clinician_skill_key(type_label):
     normalized = _clean_text(type_label).lower()
     if 'physio' in normalized or 'physiotherapist' in normalized or 'physiotherapy' in normalized:
@@ -997,16 +1009,63 @@ def view_auction(request, auction_id):
     if request.method == 'POST':
         print('post')
         if can_review_offers and request.POST.get('declineAllOffersAction') == '1':
+            active_bids = list(Bid.objects.filter(auction=auction, active=True).select_related('user'))
+
             auction.winner = None
             auction.winningPrice = None
             auction.currentLowBid = None
             auction.active = False
+            auction.waitingCloseout = False
             auction.closed = True
             auction.modified = timezone.now()
             auction.modifiedBy = request.user
             auction.save()
 
             Bid.objects.filter(auction=auction, active=True).update(active=False)
+
+            if admin.sendEmails:
+                clinic_email = _resolve_user_email(auction.clinic.user) if auction.clinic and auction.clinic.user else ''
+                if clinic_email:
+                    try:
+                        send_mail(
+                            subject='Listing Closed - No Candidate Selected',
+                            message='',
+                            html_message=emails.clinic_manual_no_offer_accepted(
+                                str(auction.clinic.clinicName),
+                                auction.placementStart,
+                                auction.placementEnd,
+                                auction.auctionID,
+                            ),
+                            from_email=settings.EMAIL_HOST_USER,
+                            recipient_list=(clinic_email, 'info@travelingtherapist.ca'),
+                        )
+                    except Exception:
+                        logger.warning('Healthcare facility no-candidate email failed to send for listing closeout.')
+
+                emailed = set()
+                for bid in active_bids:
+                    clinician_user = bid.user
+                    clinician_email = _resolve_user_email(clinician_user)
+                    if not clinician_email or clinician_email in emailed:
+                        continue
+
+                    emailed.add(clinician_email)
+                    try:
+                        send_mail(
+                            subject='Listing Update',
+                            message='',
+                            html_message=emails.therapist_auction_end_lose(
+                                clinician_user.first_name,
+                                clinician_user.last_name,
+                                auction.clinic.clinicName,
+                                auction.placementStart,
+                                auction.placementEnd,
+                            ),
+                            from_email=settings.EMAIL_HOST_USER,
+                            recipient_list=(clinician_email, 'info@travelingtherapist.ca'),
+                        )
+                    except Exception:
+                        logger.warning('Clinician no-selection update email failed to send during listing closeout.')
 
             messages.success(request, 'Listing closed without accepting an offer. A flat invoice of $50 will be issued and you may relist this placement for free.')
             return HttpResponseRedirect('/auction/' + str(auction.auctionID))
@@ -1023,16 +1082,82 @@ def view_auction(request, auction_id):
                 messages.error(request, 'The selected offer is no longer available.')
                 return HttpResponseRedirect('/auction/' + str(auction.auctionID))
 
+            active_bids = list(Bid.objects.filter(auction=auction, active=True).select_related('user'))
+
             auction.winner = selected_bid.user
             auction.winningPrice = selected_bid.amount
             auction.currentLowBid = selected_bid.amount
             auction.active = False
+            auction.waitingCloseout = False
             auction.closed = True
             auction.modified = timezone.now()
             auction.modifiedBy = request.user
             auction.save()
 
             Bid.objects.filter(auction=auction, active=True).update(active=False)
+
+            if admin.sendEmails:
+                clinic_email = _resolve_user_email(auction.clinic.user) if auction.clinic and auction.clinic.user else ''
+                if clinic_email:
+                    try:
+                        send_mail(
+                            subject='Candidate Selected for Your Listing',
+                            message='',
+                            html_message=emails.offer_accepted(
+                                str(auction.clinic.clinicName),
+                                auction.placementStart,
+                                auction.placementEnd,
+                            ),
+                            from_email=settings.EMAIL_HOST_USER,
+                            recipient_list=(clinic_email, 'info@travelingtherapist.ca'),
+                        )
+                    except Exception:
+                        logger.warning('Clinic selected-candidate email failed to send.')
+
+                winning_email = _resolve_user_email(selected_bid.user)
+                if winning_email:
+                    try:
+                        send_mail(
+                            subject='Congratulations! Your Offer Has Been Accepted!',
+                            message='',
+                            html_message=emails.therapist_auction_end_win(
+                                selected_bid.user.first_name,
+                                selected_bid.user.last_name,
+                                auction.clinic.clinicName,
+                                auction.placementStart,
+                                auction.placementEnd,
+                            ),
+                            from_email=settings.EMAIL_HOST_USER,
+                            recipient_list=(winning_email, 'info@travelingtherapist.ca'),
+                        )
+                    except Exception:
+                        logger.warning('Winning clinician email failed to send.')
+
+                emailed = set([winning_email]) if winning_email else set()
+                for bid in active_bids:
+                    if bid.user_id == selected_bid.user_id:
+                        continue
+                    clinician_email = _resolve_user_email(bid.user)
+                    if not clinician_email or clinician_email in emailed:
+                        continue
+
+                    emailed.add(clinician_email)
+                    try:
+                        send_mail(
+                            subject='Listing Update',
+                            message='',
+                            html_message=emails.therapist_auction_end_lose(
+                                bid.user.first_name,
+                                bid.user.last_name,
+                                auction.clinic.clinicName,
+                                auction.placementStart,
+                                auction.placementEnd,
+                            ),
+                            from_email=settings.EMAIL_HOST_USER,
+                            recipient_list=(clinician_email, 'info@travelingtherapist.ca'),
+                        )
+                    except Exception:
+                        logger.warning('Non-selected clinician email failed to send.')
 
             offer_label = f"${int(selected_bid.amount)}" if selected_bid.offerType == 'Flat Fee' else f"{int(selected_bid.amount)}%"
             messages.success(request, f"Offer accepted: {selected_bid.offerType} {offer_label}.")
@@ -1142,17 +1267,24 @@ def view_auction(request, auction_id):
                 request.user.account.add_tickets(5, f"Placed bid on listing {auction.auctionID}")
                 messages.success(request, 'You have earned 5 raffle tickets for placing an offer!', extra_tags='ticket_earned')
 
-            if len(payment_types) == 1 and current_lowest_bid_user is not None and primary_bid_submitted is not None and (primary_previous_low_bid == 0 or primary_bid_submitted.amount <= primary_previous_low_bid):
-                check_out_bid(auction.auctionID, primary_bid_submitted, request, current_lowest_bid_user, primary_bid_submitted.user)
+            # Notify other clinicians who previously submitted offers on this listing.
+            # Use one canonical helper path instead of legacy ranking-based notification logic.
+            if len(bids_to_create) > 0:
+                try:
+                    scheduled_tasks.notify_clinicians_new_offer(auction.auctionID, bids_to_create[0].id)
+                except Exception:
+                    logger.warning('New-offer notification helper failed for listing %s.', auction.auctionID)
 
             if admin.sendEmails:
                 try:
+                    clinician_email = _resolve_user_email(request.user)
+                    recipient_list = (clinician_email, 'info@travelingtherapist.ca') if clinician_email else ('info@travelingtherapist.ca',)
                     send_mail(
-                        subject = 'Thank You for Your Offer - The Traveling Therapist',
+                        subject = 'Thank You for Your Offer',
                         message = '',
                         html_message = emails.therapist_auction_thank_you_bid(request.user.first_name, request.user.last_name, auction.clinic.clinicName, auction.auctionStart, auction.auctionID),
                         from_email = settings.EMAIL_HOST_USER,
-                        recipient_list = (request.user.email,)
+                        recipient_list = recipient_list
                     )
                 except:
                     print('Thank your for bidding email failed.')
@@ -1219,85 +1351,6 @@ def view_auction(request, auction_id):
             }
         return render(request, 'auction/view_auction.html', context)
     
-def check_out_bid(auction_id, bid, request, current_lowest_bid_user, new_bid_user):
-    admin = AdminSetting.objects.first()
-    auction = Auction.objects.get(pk=auction_id)
-    bids = Bid.objects.filter(auction=auction_id)
-    no_email_List = ""
-    # Add these two emails so they don't get a second email in the loop
-    emailed_list = [current_lowest_bid_user.email, new_bid_user.email]
-    count = 0
-
-    print(current_lowest_bid_user, new_bid_user)
-
-    # Email the user that had the lowest bid before the newest bid. If the same user outbids themselves don't send the email
-    if admin.sendEmails:
-        if current_lowest_bid_user != new_bid_user:
-            try:
-                print("Outbid user")
-                send_mail(
-                    subject = "You've been outbid! Place Your Next Offer Now - The Traveling Therapist",
-                    message = "",
-                    html_message = emails.therapist_auction_outbid_lowest(current_lowest_bid_user.first_name, current_lowest_bid_user.last_name, auction.clinic.clinicName, auction.auctionStart, auction.auctionID),
-                    from_email = settings.EMAIL_HOST_USER,
-                    # recipient_list = (current_lowest_bid_user.email, 'loribine@gmail.com')
-                    recipient_list = (current_lowest_bid_user.email,)
-                )
-                emailed_list.append(single_bid.user.email)
-            except:
-                print('Admin email failed to send for the therapist outbid initial low bidder.')
-                logger.warning('Admin email failed to send for the therapist outbid initial low bidder.')
-
-    print("START!")
-    # Loop through bids and email all other users that there is a new bid. This should not go to the user who just created the bid of the previous lowest bidder since they will get different emails
-    for single_bid in bids:
-        print("START LOOP")
-        print("")
-        print(emailed_list)
-        print(current_lowest_bid_user.email)
-        print("single_bid.user.email: " + str(single_bid.user.email))
-        print(count)
-
-        if admin.sendEmails:
-            if single_bid.user.email not in emailed_list and count < admin.endAuctionEmailBatchSize:
-                # print("Not in email list" + str(single_bid.user.email))
-                try:
-                    send_mail(
-                        subject = "The Traveling Therapist -  A New Lowest Offer Has Been Placed",
-                        message = "",
-                        html_message = emails.therapist_auction_outbid_all_users(single_bid.user.first_name, single_bid.user.last_name, auction.clinic.clinicName, auction.auctionStart, auction.auctionID),
-                        from_email = settings.EMAIL_HOST_USER,
-                        # recipient_list = (single_bid.user.email, 'loribine@gmail.com')
-                        recipient_list = (single_bid.user.email,)
-                    )
-                    emailed_list.append(single_bid.user.email)
-                    count = count + 1
-                    # print("SEND EMAIL: " + str(single_bid.user.email))
-                except:
-                    # print('Admin email failed to send for the therapist outbid.')
-                    logger.warning('Admin email failed to send for the therapist outbid.')
-            elif count >= admin.endAuctionEmailBatchSize and single_bid.user.email not in no_email_List and single_bid.user.email not in emailed_list:
-                # print("batch Size Reached")
-                no_email_List = no_email_List + single_bid.user.email + "<br>"
-                count = count + 1
-            else:
-                print("count = " + str(count))
-        # print("**********************************************************************")
-
-
-    if admin.sendEmails and no_email_List != "":
-        try:
-            send_mail(
-                subject = "ADMIN - Outbid Email Max Reached",
-                message = "",
-                html_message = "Emails have been sent to outbit users and the limit has been reached. These users did not get the email: <br>" + no_email_List,
-                from_email = settings.EMAIL_HOST_USER,
-                recipient_list = ('loribine@gmail.com', 'info@travelingtherapist.ca')
-        )
-        except:
-            print('Admin email failed to send for Auction Creation.')
-            logger.warning('Admin email failed to send for Auction Creation.')
-
 def get_auction_end(request, auction_id):
     auction = Auction.objects.get(pk=auction_id)
     practice_area_valid = True
@@ -1627,7 +1680,7 @@ def create_auction(request):
                             message = "",
                             html_message = emails.auction_created_admin(str(auction.clinic.clinicName), str(auction.clinic.city), str(auction.clinic.province), str(auction.clinic.user.email), str(auction.get_payment_type_label()), str(auction.flatFeeType), str(auction.auctionStart), str(auction.auctionEnd), str(auction.placementStart), str(auction.placementEnd), str(auction.auctionID)),
                             from_email = settings.EMAIL_HOST_USER,
-                            recipient_list = ('loribine@gmail.com', 'info@travelingtherapist.ca')
+                            recipient_list = ('info@travelingtherapist.ca',)
                         )
                     except:
                         print('Admin email failed to send for Listing Creation.')
@@ -1659,7 +1712,8 @@ def create_auction(request):
                         print('Admin copy of healthcare facility email failed to send for Listing Creation.')
                         logger.warning('Admin copy of healthcare facility email failed to send for Listing Creation.')
 
-                scheduled_tasks.start(auction.auctionEnd.year, auction.auctionEnd.month, auction.auctionEnd.day, auction.auctionEnd.hour, auction.auctionEnd.minute, auction.auctionEnd.second, str(auction.auctionID))
+                if auction.active:
+                    scheduled_tasks.start(auction.auctionEnd.year, auction.auctionEnd.month, auction.auctionEnd.day, auction.auctionEnd.hour, auction.auctionEnd.minute, auction.auctionEnd.second, str(auction.auctionID))
                 
                 # Reward the clinic with 5 tickets for creating a listing
                 if hasattr(request.user, 'account'):
@@ -1901,35 +1955,26 @@ def logout_user(request):
     return redirect('index')
 
 def password_reset_request(request):
-	if request.method == "POST":
-		password_reset_form = PasswordResetForm(request.POST)
-		if password_reset_form.is_valid():
-			data = password_reset_form.cleaned_data['email']
-			associated_users = User.objects.filter(Q(email=data))
-			if associated_users.exists():
-				for user in associated_users:
-					subject = "Password Reset Requested"
-					email_template_name = "auction/password/password_reset_email.txt"
-					email_template_name_html = "auction/password/password_reset_email.html"
-					c = {
-					"email":user.email,
-					'domain': ACTIVE_LINK,
-					'site_name': 'Website',
-					"uid": urlsafe_base64_encode(force_bytes(user.pk)),
-					"user": user,
-					'token': default_token_generator.make_token(user),
-					'protocol': 'http',
-					}
-                   
-					email = render_to_string(email_template_name, c)
-					html_email = render_to_string(email_template_name_html, c)
-					try:
-						send_mail(subject, email, 'info@travelingtherapist.ca' , [user.email], html_message=html_email, fail_silently=False)
-					except BadHeaderError:
-						return HttpResponse('Invalid header found.')
-					return redirect ("password_reset/done/")
-	password_reset_form = PasswordResetForm()
-	return render(request=request, template_name="auction/password/password_reset.html", context={"password_reset_form":password_reset_form})
+    if request.method == "POST":
+        password_reset_form = PasswordResetForm(request.POST)
+        if password_reset_form.is_valid():
+            data = password_reset_form.cleaned_data['email']
+            associated_users = User.objects.filter(Q(email=data))
+            if associated_users.exists():
+                for user in associated_users:
+                    subject = "Password Reset Requested"
+                    token = default_token_generator.make_token(user)
+                    uid = urlsafe_base64_encode(force_bytes(user.pk))
+                    reset_link = f"{emails.EMAIL_BASE_LINK}/reset/{uid}/{token}/"
+                    plain_message = f"Use the following link to reset your password: {reset_link}"
+                    html_email = emails.password_reset(user.first_name, reset_link)
+                    try:
+                        send_mail(subject, plain_message, 'info@travelingtherapist.ca', [user.email], html_message=html_email, fail_silently=False)
+                    except BadHeaderError:
+                        return HttpResponse('Invalid header found.')
+                    return redirect("password_reset/done/")
+    password_reset_form = PasswordResetForm()
+    return render(request=request, template_name="auction/password/password_reset.html", context={"password_reset_form": password_reset_form})
 
 # -------------- Utility --------------
 def set_bid_increment(amount):
