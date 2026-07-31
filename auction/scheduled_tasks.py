@@ -24,6 +24,18 @@ register_events(scheduler)
 _raffle_check_registered = False
 
 
+def _resolve_user_email(user):
+    email_value = str(getattr(user, 'email', '') or '').strip()
+    if email_value:
+        return email_value
+
+    username_value = str(getattr(user, 'username', '') or '').strip()
+    if '@' in username_value:
+        return username_value
+
+    return ''
+
+
 def get_default_closed_waiting_period_seconds():
     admin_settings = AdminSetting.objects.first()
     if admin_settings is None:
@@ -232,13 +244,13 @@ def finalize_waiting_closeout(auction_id):
         if auction.waitingCloseout:
             bids = Bid.objects.filter(auction=auction, active=True)
             has_bids = bids.exists()
-            winning_bid = getattr(auction, 'selected_bid', None)
+            has_selected_winner = auction.winner_id is not None
             
             # If there are active bids but NO offer was selected when this 7-day period ran out
-            if has_bids and not winning_bid:
+            if has_bids and not has_selected_winner:
                 admin = AdminSetting.objects.first()
                 if admin is None or admin.sendEmails:
-                    clinic_email = auction.clinic.user.email if (auction.clinic and auction.clinic.user) else None
+                    clinic_email = _resolve_user_email(auction.clinic.user) if (auction.clinic and auction.clinic.user) else None
                     if clinic_email:
                         try:
                             send_mail(
@@ -250,7 +262,7 @@ def finalize_waiting_closeout(auction_id):
                                     auction.placementEnd,
                                 ),
                                 from_email=settings.EMAIL_HOST_USER,
-                                recipient_list=[clinic_email],
+                                recipient_list=[clinic_email, 'info@travelingtherapist.ca'],
                             )
                         except Exception as exc:
                             logger.error(f"Error sending automatic closeout invoice email to clinic {clinic_email}: {exc}")
@@ -291,6 +303,10 @@ def auction_closed(id):
         return JsonResponse({'error': 'Auction not found'}, status=404)
 
     was_active = auction.active
+    if not was_active:
+        logger.info('Skipping auction_closed transition for non-active listing %s.', auction.auctionID)
+        return JsonResponse({'data': 'skipped_non_active'})
+
     auction.active = False
     auction.waitingCloseout = True
     auction.closed = False
@@ -303,7 +319,7 @@ def auction_closed(id):
         admin = AdminSetting.objects.first()
         if admin is None or admin.sendEmails:
             try:
-                clinic_email = auction.clinic.user.email if (auction.clinic and auction.clinic.user) else None
+                clinic_email = _resolve_user_email(auction.clinic.user) if (auction.clinic and auction.clinic.user) else None
                 if clinic_email:
                     send_mail(
                         subject='Your Listing Closed with No Offers',
@@ -314,7 +330,7 @@ def auction_closed(id):
                             auction.placementEnd,
                         ),
                         from_email=settings.EMAIL_HOST_USER,
-                        recipient_list=[clinic_email],
+                        recipient_list=[clinic_email, 'info@travelingtherapist.ca'],
                     )
             except Exception as exc:
                 logger.warning('Clinic no-bids email failed to send for auction %s: %s', auction.auctionID, exc)
@@ -323,7 +339,7 @@ def auction_closed(id):
         admin = AdminSetting.objects.first()
         if admin is None or admin.sendEmails:
             try:
-                clinic_email = auction.clinic.user.email if (auction.clinic and auction.clinic.user) else None
+                clinic_email = _resolve_user_email(auction.clinic.user) if (auction.clinic and auction.clinic.user) else None
                 if clinic_email:
                     send_mail(
                         subject='Review Offers for Your Listing',
@@ -333,7 +349,7 @@ def auction_closed(id):
                             auction.auctionID,
                         ),
                         from_email=settings.EMAIL_HOST_USER,
-                        recipient_list=[clinic_email],
+                        recipient_list=[clinic_email, 'info@travelingtherapist.ca'],
                     )
             except Exception as exc:
                 logger.warning('Clinic closed waiting email failed to send for auction %s: %s', auction.auctionID, exc)
@@ -460,7 +476,7 @@ def offer_accepted(id, winning_bid_id=None):
 def notify_clinicians_new_offer(auction_id, new_bid_id):
     """
     Notifies all other clinicians who placed offers on this listing when a new offer is submitted.
-    Uses clinician_placed_offer_other_users (aliased as therapist_auction_outbid_all_users).
+    Uses clinician_placed_offer_other_users.
     """
     admin = AdminSetting.objects.first()
     if admin and not admin.sendEmails:
@@ -543,7 +559,7 @@ def notify_all_clinicians_auction_live(auction_id):
 
         try:
             send_mail(
-                subject=f"New Healthcare Opportunity Live: {clinic_name}",
+                subject=f"New Job Listing Live: {clinic_name}",
                 message="",
                 html_message=emails.new_auction_email_to_all(
                     first_name,

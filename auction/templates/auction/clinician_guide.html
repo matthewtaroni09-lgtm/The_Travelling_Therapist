@@ -24,6 +24,11 @@
       --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
     }
 
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 120px;
+    }
+
     .clinician-guide-page * {
       box-sizing: border-box;
       font-family: var(--font-sans);
@@ -44,6 +49,7 @@
       padding: 0 24px;
     }
 
+    /* Buttons */
     .clinician-guide-page .btn {
       display: inline-flex;
       align-items: center;
@@ -122,51 +128,97 @@
     }
 
     .hero-image {
-      width: 100%;
-      border-radius: 16px;
-      overflow: hidden;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+      width: 120%;
     }
 
-    /* Carousel / Dark Cards */
+    /* Improved Carousel / Clean Light Card */
     .case-study {
-        background: var(--dark-gray);
+        background: var(--card-bg);
         border-radius: 24px;
-        padding: 48px;
-        color: #FFFFFF !important;
+        padding: 40px 24px;
+        color: var(--primary-dark);
         position: relative;
         overflow: hidden;
-        box-shadow: 0 12px 32px rgba(0,0,0,0.12);
+        border: 1px solid var(--border-color);
+        border-left: 8px solid var(--primary-teal);
+        box-shadow: 0 12px 32px rgba(0,0,0,0.05);
         transition: transform 0.4s ease, box-shadow 0.4s ease;
         margin-bottom: 20px;
     }
 
-    .case-study:hover {
-        transform: translateY(-6px);
-        box-shadow: 0 20px 48px rgba(0,0,0,0.25);
-    }
-
-    .case-study .section-title {
-        color: #FFFFFF !important;
+    .case-study::before {
+        content: "“";
+        position: absolute;
+        top: -20px;
+        left: 20px;
         font-family: var(--font-serif);
-        font-size: 2rem;
-        margin-bottom: 24px;
+        font-size: 12rem;
+        color: var(--accent-mint);
+        opacity: 0.5;
+        line-height: 1;
+        pointer-events: none;
     }
 
-    .custom-paragraph-carousel .paragraph-text, .carouselP {
-        font-size: 1.05rem;
-        color: #E5E7EB;
-        line-height: 1.8;
-        font-style: italic;
+    .case-study:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 20px 48px rgba(0,0,0,0.1);
     }
 
-    .custom-arrow {
-        width: 40px;
-        height: 40px;
-        background: rgba(255, 255, 255, 0.1);
+    .carousel-inner.fixed-height-inner {
+        height: 350px; /* Fixed height prevents the card from changing size between quotes */
+        display: flex;
+        align-items: center;
+    }
+
+    .custom-paragraph-carousel .paragraph-text {
+        font-size: 1.15rem;
+        color: var(--primary-dark);
+        line-height: 1.7;
+        font-weight: 500;
+        padding: 0 60px; /* Breathing room away from arrows */
+        margin: 0;
+        position: relative;
+        z-index: 2;
+    }
+
+    /* Fixed, Centered, Visible Arrows (Overriding Bootstrap defaults) */
+    .carousel-control-prev.custom-arrow,
+    .carousel-control-next.custom-arrow {
+        width: 48px;
+        height: 48px;
+        background-color: var(--primary-teal);
         border-radius: 50%;
         top: 50%;
         transform: translateY(-50%);
+        opacity: 0.9;
+        box-shadow: 0 4px 12px rgba(0, 210, 160, 0.3);
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: none;
+        position: absolute;
+        z-index: 10;
+    }
+
+    .carousel-control-prev.custom-arrow {
+        left: 12px;
+    }
+
+    .carousel-control-next.custom-arrow {
+        right: 12px;
+    }
+
+    .custom-arrow:hover {
+        background-color: var(--primary-dark);
+        box-shadow: 0 6px 16px rgba(11, 15, 25, 0.3);
+        opacity: 1;
+    }
+
+    .carousel-control-prev-icon, 
+    .carousel-control-next-icon {
+        width: 20px;
+        height: 20px;
     }
 
     /* Survey Banner */
@@ -182,50 +234,49 @@
       box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
     }
 
-    .survey-banner a {
-      color: var(--primary-teal-hover);
-      text-decoration: none;
-      font-weight: 600;
+    /* Floating Pill Sticky Anchor Nav */
+    .anchor-nav-wrapper {
+        position: -webkit-sticky;
+        position: sticky;
+        top: 90px; /* Adjusted offset so it clears the navbar when scrolling */
+        z-index: 990; /* Lower than top navbar dropdowns to prevent overlapping */
+        background-color: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        margin: 0 auto 60px auto;
+        padding: 12px 16px;
+        border: 1px solid rgba(229, 231, 235, 0.8);
+        border-radius: 100px;
+        box-shadow: 0 10px 30px -10px rgba(0,0,0,0.1);
+        width: fit-content;
     }
 
-    /* Navigation Pills for Staffing Solutions */
-    .sub-nav {
-        background: transparent;
-        margin: 40px 0;
-        padding: 0;
-    }
-
-    .sub-nav ul {
+    .anchor-nav {
         display: flex;
         flex-wrap: wrap;
         gap: 12px;
         justify-content: center;
-        width: 100%;
-        padding: 0;
-    }
-
-    .sub-nav .nav-item {
-        list-style: none;
+        align-items: center;
     }
 
     .staffSolutionsNavLink {
       padding: 10px 20px;
       border-radius: 9999px;
-      background: #ffffff;
-      border: 1px solid var(--border-color);
+      background: transparent;
       font-size: 0.95rem;
       font-weight: 600;
       color: var(--primary-dark);
-      display: flex;
+      display: inline-flex;
       align-items: center;
       gap: 8px;
+      text-decoration: none;
       transition: all 0.2s ease;
     }
 
     .staffSolutionsNavLink:hover {
         background: var(--bg-light);
         color: var(--primary-teal-hover);
-        border-color: var(--primary-teal);
+        transform: translateY(-2px);
     }
 
     .AccordionIcon {
@@ -234,19 +285,21 @@
         object-fit: contain;
     }
 
-    /* Tier/Solution Rows */
-    .staffingSolutionRow {
+    /* Cleaned up Tier/Solution Cards */
+    .staffingSolutionCard {
         background: var(--card-bg);
         border-radius: 16px;
         border: 1px solid var(--border-color);
         padding: 40px;
         margin-bottom: 40px;
         transition: transform 0.3s ease, box-shadow 0.3s ease;
+        width: 100%;
+        overflow: hidden;
     }
 
-    .staffingSolutionRow:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.15);
+    .staffingSolutionCard:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 32px -8px rgba(0, 0, 0, 0.12);
     }
 
     .staffSolutionsTitle {
@@ -255,7 +308,7 @@
         display: flex;
         align-items: center;
         gap: 12px;
-        margin-bottom: 16px;
+        margin-bottom: 20px;
         color: var(--primary-dark);
     }
     
@@ -264,21 +317,15 @@
         height: 32px;
     }
 
-    .staffingSolutionRow h4 {
-        font-size: 1.1rem;
-        font-weight: 700;
-        margin-bottom: 12px;
-        color: var(--primary-dark);
-    }
-
-    .staffingSolutionRow > div > p.ps-3 {
+    .case-study-quote {
         background: var(--bg-light);
-        padding: 16px 20px;
+        padding: 20px 24px;
         border-left: 4px solid var(--primary-teal);
         border-radius: 0 8px 8px 0;
-        color: var(--text-muted);
-        font-size: 0.95rem;
+        color: var(--primary-dark);
+        font-size: 1.05rem;
         margin-bottom: 32px;
+        font-style: italic;
     }
 
     /* Comparison / Pros & Cons Cards */
@@ -297,6 +344,7 @@
         text-transform: uppercase;
         letter-spacing: 0.05em;
         margin-bottom: 16px;
+        font-weight: 700;
     }
 
     .accordionList {
@@ -369,6 +417,9 @@
       .hero-content h1 { font-size: 2.75rem; }
       .survey-banner { flex-direction: column; text-align: center; }
       .cta-banner h2 { font-size: 2.2rem; }
+      .custom-paragraph-carousel .paragraph-text { padding: 0 20px; font-size: 1rem; }
+      .anchor-nav-wrapper { padding: 12px; margin: 0 auto 40px auto; border-radius: 16px; width: 100%; top: 75px; }
+      .staffSolutionsNavLink { padding: 8px 12px; font-size: 0.9rem; }
     }
   </style>
 {% endblock %}
@@ -394,7 +445,7 @@
         <!-- Divider -->
         <hr class="section-divider">
 
-        <!-- Your Current Role (Carousel built into Dark Case Study Card) -->
+        <!-- Your Current Role -->
         <div class="row align-items-center mb-5">
             <div class="col-lg-5 col-md-12 mb-4 mb-lg-0">
                 <h2 class="staffSolutionsTitle" style="font-size: 2.5rem; margin-bottom: 16px;">The Reality of <br>Your Current Role</h2>
@@ -402,27 +453,27 @@
             </div>
             <div class="col-lg-7 col-md-12">
                 <div class="case-study m-0">
-                    <div id="quoteCarouselClinican" class="carousel slide custom-paragraph-carousel" data-bs-ride="carousel" data-bs-interval="50000000">
-                        <div class="carousel-inner">
+                    <div id="quoteCarouselClinican" class="carousel slide custom-paragraph-carousel" data-bs-ride="carousel" data-bs-interval="8000">
+                        <div class="carousel-inner fixed-height-inner">
                             <div class="carousel-item active">
-                                <p class="paragraph-text"><i>"You arrive at your private clinic on a fee-split model, earning only 50-60% of every patient dollar. Your schedule is locked, pay caps unchanged, and there's zero leverage for extra certifications or overtime. You know you deserve better, but the right opportunity hasn't landed in your inbox yet."</i></p>
+                                <p class="paragraph-text">"You arrive at your private clinic on a fee-split model, earning only 50-60% of every patient dollar. Your schedule is locked, pay caps unchanged, and there's zero leverage for extra certifications or overtime. You know you deserve better, but the right opportunity hasn't landed in your inbox yet."</p>
                             </div>
                             <div class="carousel-item">
-                                <p class="paragraph-text"><i>"You show up for your Monday shift and it looks like your day has already fallen apart. You checked your schedule last night, and you were full - ideal for your schedule and your wallet. But now, the admin staff tells you patient #1 can't make it. Good thing you got up early this morning and sat in traffic for 45 minutes to be here. You see a client, and throughout the day, 2 more clients reschedule, leaving you at the clinic for 7 hours, to only see 4 clients. The clinic does have a cancelation policy, but it's never enforced - meaning you never get paid when a client cancels, even though the policy says you should. How much longer are you willing to put up with this kind of working environment?"</i></p>
+                                <p class="paragraph-text">"You show up for your Monday shift and it looks like your day has already fallen apart. You checked your schedule last night, and you were full... But now, the admin staff tells you patient #1 can't make it. You see a client, and throughout the day, 2 more clients reschedule, leaving you at the clinic for 7 hours, to only see 4 clients. How much longer are you willing to put up with this?"</p>
                             </div>
                             <div class="carousel-item">
-                                <p class="paragraph-text"><i>"You just started working at a new facility this month. You're building a caseload, but it's slow going. Wouldn't it be great to fill those gaps in your schedule by picking up shifts at other clinics in the meantime while you build your caseload?"</i></p>
+                                <p class="paragraph-text">"You just started working at a new facility this month. You're building a caseload, but it's slow going. Wouldn't it be great to fill those gaps in your schedule by picking up shifts at other clinics in the meantime while you build your caseload?"</p>
                             </div>
                             <div class="carousel-item">
-                                <p class="paragraph-text"><i>"You’ve been stuck in the same clinic for what feels like forever. You enjoy the stability of your work, and your pay is slowly improving - although this isn’t really the career you imagined for yourself when you graduated. You wanted to work with a different clinical population, you’d also love to travel and work, while networking and developing yourself in the process. There’s no opportunity for that right now at your current clinic. Wouldn’t it be nice to pick up the odd shift or cover someone’s vacation in an area or with a clinical population you’re really interested in?"</i></p>
+                                <p class="paragraph-text">"You’ve been stuck in the same clinic for what feels like forever. You enjoy the stability of your work, and your pay is slowly improving - although this isn’t really the career you imagined... Wouldn’t it be nice to pick up the odd shift or cover someone’s vacation in an area or with a clinical population you’re really interested in?"</p>
                             </div>
                         </div>
 
                         <!-- controls -->
-                        <button class="carousel-control-prev custom-arrow ms-3" type="button" data-bs-target="#quoteCarouselClinican" data-bs-slide="prev">
+                        <button class="carousel-control-prev custom-arrow" type="button" data-bs-target="#quoteCarouselClinican" data-bs-slide="prev">
                             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                         </button>
-                        <button class="carousel-control-next custom-arrow me-3" type="button" data-bs-target="#quoteCarouselClinican" data-bs-slide="next">
+                        <button class="carousel-control-next custom-arrow" type="button" data-bs-target="#quoteCarouselClinican" data-bs-slide="next">
                             <span class="carousel-control-next-icon" aria-hidden="true"></span>
                         </button>
                     </div>
@@ -430,286 +481,255 @@
             </div>
         </div>
 
-        <!-- Survey Banner & Dissatisfaction Gap -->
+        <!-- Survey Banner -->
         <div class="survey-banner mb-5">
             <div>
                 <h3 style="font-family: var(--font-serif); font-size: 1.75rem; margin-bottom: 8px;">The Dissatisfaction Gap</h3>
                 <p style="color: var(--text-muted); margin: 0;">100% of clinicians responding to our 2025 "clinician pain points" survey reported looking for new job opportunities "somewhat often".</p>
             </div>
             <div class="text-md-end">
-                <a class="btn btn-outline-dark" style="border: 1px solid var(--border-color); padding: 12px 24px; border-radius: 50px; color: var(--primary-dark);" href="https://forms.gle/ttyBYPunCGqbYM1h7">Share your thoughts on this survey</a>
+                <a class="btn btn-primary" href="{% url 'surveys' %}">Share your thoughts on this survey &rarr;</a>
             </div>
         </div>
 
         <div class="row align-items-center text-center mb-5">
             <h3 class="mb-4" style="color: var(--text-muted); font-size: 1.1rem; font-weight: 500;">Hear from fellow clinicians - share yours to get featured on our homepage and social media</h3>
             
-            <div id="dissatisfactionCarousel" class="carousel slide mb-4" data-bs-ride="carousel" data-bs-interval="50000000" style="max-width: 700px; margin: 0 auto;">
+            <div id="dissatisfactionCarousel" class="carousel slide mb-4" data-bs-ride="carousel" style="max-width: 700px; margin: 0 auto;">
                 <div class="carousel-inner">
                     <div class="carousel-item active">
-                        <p class="carouselP" style="font-size: 1.25rem; font-family: var(--font-serif); color: var(--primary-dark);"><i>"I've been at 45% split for three years despite advanced practice credentials and clinic growth."</i></p>
-                        <p class="mt-3"><b><i>— M.G.</i></b></p>
+                        <p style="font-size: 1.25rem; font-family: var(--font-serif); color: var(--primary-dark);"><i>"I've been at a 45% split for three years despite advanced practice credentials and clinic growth."</i></p>
+                        <p class="mt-3" style="color: var(--text-muted);"><b><i>— M.G.</i></b></p>
                     </div>
                 </div>
-                <!-- Hide standard arrows to keep it clean if there's only 1 active quote -->
-                <button class="carousel-control-prev d-none" type="button" data-bs-target="#dissatisfactionCarousel" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                </button>
-                <button class="carousel-control-next d-none" type="button" data-bs-target="#dissatisfactionCarousel" data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                </button>
             </div>
             
             <div>
-                <a class="btn btn-outline-dark" style="border: 1px solid var(--border-color); padding: 12px 24px; border-radius: 50px;" href="https://forms.gle/YCVgndw7xegVWK7V8" target="_blank">Share My Story & Get Featured</a>
+                <a class="btn btn-primary" href="{% url 'surveys' %}">Share My Story & Get Featured &rarr;</a>
             </div>
         </div>
 
-        <!-- Divider -->
-        <hr class="section-divider">
+        <!-- Sticky Anchor Nav (Floating Pill Style) -->
+        <div class="anchor-nav-wrapper">
+            <div class="anchor-nav">
+                <a class="staffSolutionsNavLink" href="#JobBoard">
+                    <img class="AccordionIcon" src="/media/images/job-board.png" alt="Hands shaking">Job Board
+                </a>
+                <a class="staffSolutionsNavLink" href="#DirectEmployerRecruitment">
+                    <img class="AccordionIcon" src="/media/images/recruitment.png" alt="Magnifying glass">Direct Employer
+                </a>
+                <a class="staffSolutionsNavLink" href="#HeadhunterRecruiter">
+                    <img class="AccordionIcon" src="/media/images/headhunting.png" alt="Target icon">Headhunter
+                </a>
+                <a class="staffSolutionsNavLink" href="#StaffingAgency">
+                    <img class="AccordionIcon" src="/media/images/staffingagency.png" alt="Briefcase">Agency
+                </a>
+                <a class="staffSolutionsNavLink" href="#TheTravelingTherapist">
+                    <img class="AccordionIcon" src="/media/images/T_Logo_Final.png" alt="The Traveling Therapist Logo">The Traveling Therapist
+                </a>
+            </div>
+        </div>
 
-        <div class="col-lg-12 col-md-12 text-center mb-4">
+        <div class="col-lg-12 col-md-12 text-center mb-5">
             <h2 class="staffSolutionsTitle justify-content-center" style="font-size: 2.75rem;">Explore Your Staffing Solutions</h2>
             <p class="hero-subtitle mx-auto">As a clinician seeking your next opportunity, you can navigate five distinct paths—each with its own trade-offs. Below is the healthcare worker hiring process, told from your perspective, so you can see why The Traveling Therapist may be the best fit for your career, lifestyle, and earning goals.</p>
         </div>
 
-        <!-- Navigation for Staffing Solutions Section -->
-        <nav class="navbar navbar-expand-xl sub-nav">
-            <div class="container-fluid justify-content-center">
-                <button class="navbar-toggler m-1" type="button" data-bs-toggle="collapse" data-bs-target="#subNavbarToggler" aria-controls="subNavbarToggler" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse justify-content-center" id="subNavbarToggler">
-                    <ul class="navbar-nav mb-2 mb-lg-0">
-                        <li class="nav-item staffingSolutionSubItem">
-                            <a class="navbar-brand staffSolutionsNavLink" href="#JobBoard">
-                                <img class="AccordionIcon" src="/media/images/job-board.png" alt="Hands shaking">Job Board
-                            </a>
-                        </li>
-                        <li class="nav-item staffingSolutionSubItem">
-                            <a class="navbar-brand staffSolutionsNavLink" href="#DirectEmployerRecruitment">
-                                <img class="AccordionIcon" src="/media/images/recruitment.png" alt="People icons with magnfiying glass">Direct Employer
-                            </a>
-                        </li>
-                        <li class="nav-item staffingSolutionSubItem">
-                            <a class="navbar-brand staffSolutionsNavLink" href="#HeadhunterRecruiter">
-                                <img class="AccordionIcon" src="/media/images/headhunting.png" alt="Person icon with target">Headhunter
-                            </a>
-                        </li>
-                        <li class="nav-item staffingSolutionSubItem">
-                            <a class="navbar-brand staffSolutionsNavLink" href="#StaffingAgency">
-                                <img class="AccordionIcon" src="/media/images/staffingagency.png" alt="People icons with breifcase and gear">Agency
-                            </a>
-                        </li>
-                        <li class="nav-item staffingSolutionSubItem">
-                            <a class="navbar-brand staffSolutionsNavLink" href="#TheTravelingTherapist">
-                                <img class="AccordionIcon" src="/media/images/T_Logo_Final.png" alt="The Traveling Therapist Logo">The Traveling Therapist
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-
         <!-- Job Board -->
-        <div class="row staffingSolutionRow" id="JobBoard">
+        <div class="staffingSolutionCard" id="JobBoard">
             <h2 class="staffSolutionsTitle">
                 <img class="AccordionIcon" src="/media/images/job-board.png" alt="Hands shaking">
                 Job Board
             </h2>
-            <div>
-                <h4>Job Board Case Study</h4>
-                <p class="ps-3 pe-3"><i>“Jane sent 40 applications via three boards, landed two interviews, no offers."</i></p>
-                <div class="row align-items-stretch">
-                    <!-- Text (Pros & Cons) on Left -->
-                    <div class="col-lg-6 col-md-12 d-flex flex-column gap-4">
-                        <div class="staffingSolutionsSection" style="border-left: 4px solid #10B981;">
-                            <h4><span style="color: #10B981; margin-right: 8px;">☑</span> Pros</h4>
-                            <ul class="accordionList">
-                                <li>No fees for you</li>
-                                <li>Huge variety of postings</li>
-                                <li>Good for casting a wide net</li>
-                                <li>No middleman</li>
-                            </ul>
-                        </div>
-                        <div class="staffingSolutionsSection" style="border-left: 4px solid #EF4444;">
-                            <h4><span style="color: #EF4444; margin-right: 8px;">☒</span> Cons</h4>
-                            <ul class="accordionList">
-                                <li>Mass competition; low callback rates</li>
-                                <li>Slow responses</li>
-                                <li>Postings often lack real pay transparency</li>
-                                <li>Many jobs are duplicates or expired</li>
-                                <li>Requires you to chase facilities, not the other way around</li>
-                                <li>Pay rates non-negotiable</li>
-                                <li>No ongoing support</li>
-                                <li><b>Avg. time to land a role: 6 - 8 weeks</b></li>
-                            </ul>
-                        </div>
+            <div class="case-study-quote">
+                “Jane sent 40 applications via three boards, landed two interviews, no offers."
+            </div>
+            
+            <div class="row align-items-stretch">
+                <div class="col-lg-6 col-md-12 d-flex flex-column gap-4">
+                    <div class="staffingSolutionsSection" style="border-left: 4px solid #10B981;">
+                        <h4><span style="color: #10B981; margin-right: 8px;">☑</span> Pros</h4>
+                        <ul class="accordionList">
+                            <li>No fees for you</li>
+                            <li>Huge variety of postings</li>
+                            <li>Good for casting a wide net</li>
+                            <li>No middleman</li>
+                        </ul>
                     </div>
-                    <!-- Video on Right -->
-                    <div class="col-lg-6 col-md-12 mt-4 mt-lg-0">
-                        <div class="ratio ratio-16x9 h-100">
-                            <iframe class="howItWorksiFrame" src="https://www.youtube.com/embed/NY04mKw5gzo?si=fh7qJj6jlupqceMl" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-                        </div>
+                    <div class="staffingSolutionsSection" style="border-left: 4px solid #EF4444;">
+                        <h4><span style="color: #EF4444; margin-right: 8px;">☒</span> Cons</h4>
+                        <ul class="accordionList">
+                            <li>Mass competition; low callback rates</li>
+                            <li>Slow responses</li>
+                            <li>Postings often lack real pay transparency</li>
+                            <li>Many jobs are duplicates or expired</li>
+                            <li>Requires you to chase facilities, not the other way around</li>
+                            <li>Pay rates non-negotiable</li>
+                            <li>No ongoing support</li>
+                            <li><b>Avg. time to land a role: 6 - 8 weeks</b></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-12 mt-4 mt-lg-0">
+                    <div class="ratio ratio-16x9 h-100">
+                        <iframe src="https://www.youtube.com/embed/NY04mKw5gzo?si=fh7qJj6jlupqceMl" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Direct Employer Recruitment -->
-        <div class="row staffingSolutionRow" id="DirectEmployerRecruitment">
+        <div class="staffingSolutionCard" id="DirectEmployerRecruitment">
             <h2 class="staffSolutionsTitle">
                 <img class="AccordionIcon" src="/media/images/job-board.png" alt="Hands shaking">
                 Direct Employer Outreach
             </h2>
-            <div>
-                <h4>Direct Employer Case Study</h4>
-                <p class="ps-3 pe-3"><i>“Marcus applied directly to 4 clinics through their website. 3 never responded - Frustrating being left in the dark about if they are interested in you or not! The last clinic took 3 weeks to get back to him - by that point he was already working on an offer with a different clinic."</i></p>
-                <div class="row align-items-stretch">
-                    <!-- Text (Pros & Cons) on Left -->
-                    <div class="col-lg-6 col-md-12 d-flex flex-column gap-4">
-                        <div class="staffingSolutionsSection" style="border-left: 4px solid #10B981;">
-                            <h4><span style="color: #10B981; margin-right: 8px;">☑</span> Pros</h4>
-                            <ul class="accordionList">
-                                <li>Direct line to hiring manager</li>
-                                <li>Can build long-term relationships</li>
-                                <li>No recruiter fees built into pay</li>
-                                <li>Clear expectations on pay/benefits once hired</li>
-                            </ul>
-                        </div>
-                        <div class="staffingSolutionsSection" style="border-left: 4px solid #EF4444;">
-                            <h4><span style="color: #EF4444; margin-right: 8px;">☒</span> Cons</h4>
-                            <ul class="accordionList">
-                                <li>No/slow responses means being left in the dark about if the facility are interested in you</li>
-                                <li>Labor-intensive follow-up</li>
-                                <li>Limited to your personal network</li>
-                                <li>Extremely slow timelines</li>
-                                <li>Limited flexibility</li>
-                                <li>Often requires multiple interviews and onboarding steps</li>
-                                <li>No matchmaking support</li>
-                                <li><b>Avg. time to land a role: 8 - 10 weeks</b></li>
-                            </ul>
-                        </div>
+            <div class="case-study-quote">
+                “Marcus applied directly to 4 clinics through their website. 3 never responded. The last clinic took 3 weeks to get back to him—by that point he was already working on an offer with a different clinic."
+            </div>
+            
+            <div class="row align-items-stretch">
+                <div class="col-lg-6 col-md-12 d-flex flex-column gap-4">
+                    <div class="staffingSolutionsSection" style="border-left: 4px solid #10B981;">
+                        <h4><span style="color: #10B981; margin-right: 8px;">☑</span> Pros</h4>
+                        <ul class="accordionList">
+                            <li>Direct line to hiring manager</li>
+                            <li>Can build long-term relationships</li>
+                            <li>No recruiter fees built into pay</li>
+                            <li>Clear expectations on pay/benefits once hired</li>
+                        </ul>
                     </div>
-                    <!-- Video on Right -->
-                    <div class="col-lg-6 col-md-12 mt-4 mt-lg-0">
-                        <div class="ratio ratio-16x9 h-100">
-                            <iframe class="howItWorksiFrame" src="https://www.youtube.com/embed/U-_2zAn4z78?si=BxvOD8molpe-gLk_" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-                        </div>
+                    <div class="staffingSolutionsSection" style="border-left: 4px solid #EF4444;">
+                        <h4><span style="color: #EF4444; margin-right: 8px;">☒</span> Cons</h4>
+                        <ul class="accordionList">
+                            <li>No/slow responses means being left in the dark</li>
+                            <li>Labor-intensive follow-up</li>
+                            <li>Limited to your personal network</li>
+                            <li>Extremely slow timelines</li>
+                            <li>Limited flexibility</li>
+                            <li>Often requires multiple interviews and onboarding steps</li>
+                            <li>No matchmaking support</li>
+                            <li><b>Avg. time to land a role: 8 - 10 weeks</b></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-12 mt-4 mt-lg-0">
+                    <div class="ratio ratio-16x9 h-100">
+                        <iframe src="https://www.youtube.com/embed/U-_2zAn4z78?si=BxvOD8molpe-gLk_" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Headhunter/Recruiter -->
-        <div class="row staffingSolutionRow" id="HeadhunterRecruiter">
+        <div class="staffingSolutionCard" id="HeadhunterRecruiter">
             <h2 class="staffSolutionsTitle">
                 <img class="AccordionIcon" src="/media/images/headhunting.png" alt="Person icon with target">
                 Headhunter/Recruiter
             </h2>
-            <div>
-                <h4>Headhunter/Recruiter Case Study</h4>
-                <p class="ps-3 pe-3"><i>“Priya accepted a recruiter-arranged contract advertised at $52/hr. Her first paycheck was $44/hr—after “adjustments” she wasn't told about."</i></p>
-                <div class="row align-items-stretch gap-4 gap-lg-0">
-                    <div class="col-lg-6 col-md-12 pe-lg-3">
-                        <div class="staffingSolutionsSection" style="border-left: 4px solid #10B981;">
-                            <h4><span style="color: #10B981; margin-right: 8px;">☑</span> Pros</h4>
-                            <ul class="accordionList">
-                                <li>Access to hidden or unadvertised roles</li>
-                                <li>Resume coaching and interview prep</li>
-                            </ul>
-                        </div>
+            <div class="case-study-quote">
+                “Priya accepted a recruiter-arranged contract advertised at $52/hr. Her first paycheck was $44/hr—after “adjustments” she wasn't told about."
+            </div>
+            
+            <div class="row align-items-stretch gap-4 gap-lg-0">
+                <div class="col-lg-6 col-md-12 pe-lg-3">
+                    <div class="staffingSolutionsSection" style="border-left: 4px solid #10B981;">
+                        <h4><span style="color: #10B981; margin-right: 8px;">☑</span> Pros</h4>
+                        <ul class="accordionList">
+                            <li>Access to hidden or unadvertised roles</li>
+                            <li>Resume coaching and interview prep</li>
+                        </ul>
                     </div>
-                    <div class="col-lg-6 col-md-12 ps-lg-3">
-                        <div class="staffingSolutionsSection" style="border-left: 4px solid #EF4444;">
-                            <h4><span style="color: #EF4444; margin-right: 8px;">☒</span> Cons</h4>
-                            <ul class="accordionList">
-                                <li>Employer-paid model can misalign priorities</li>
-                                <li>Lower pay (recruiter margin comes out of your rate)</li>
-                                <li>Pushy communication</li>
-                                <li>Limited transparency about pay, hours, or expectations</li>
-                                <li>Your priorities often take a backseat to their quota</li>
-                                <li>You may feel “locked in” with one recruiter</li>
-                                <li>Limited visibility into process</li>
-                                <li><b>Avg. time to land a role: 4 - 6 weeks</b></li>
-                            </ul>
-                        </div>
+                </div>
+                <div class="col-lg-6 col-md-12 ps-lg-3 mt-4 mt-lg-0">
+                    <div class="staffingSolutionsSection" style="border-left: 4px solid #EF4444;">
+                        <h4><span style="color: #EF4444; margin-right: 8px;">☒</span> Cons</h4>
+                        <ul class="accordionList">
+                            <li>Employer-paid model can misalign priorities</li>
+                            <li>Lower pay (recruiter margin comes out of your rate)</li>
+                            <li>Pushy communication</li>
+                            <li>Limited transparency about pay, hours, or expectations</li>
+                            <li>Your priorities often take a backseat to their quota</li>
+                            <li>You may feel “locked in” with one recruiter</li>
+                            <li>Limited visibility into process</li>
+                            <li><b>Avg. time to land a role: 4 - 6 weeks</b></li>
+                        </ul>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Staffing Agency -->
-        <div class="row staffingSolutionRow" id="StaffingAgency">
+        <div class="staffingSolutionCard" id="StaffingAgency">
             <h2 class="staffSolutionsTitle">
                 <img class="AccordionIcon" src="/media/images/staffingagency.png" alt="People icons with breifcase and gear">
                 Staffing Agency
             </h2>
-            <div>
-                <h4>Staffing Agency Case Study</h4>
-                <p class="ps-3 pe-3"><i>“Maria did three 8-week temp gigs; each paid 25% less than market rate after agency cuts."</i></p>
-                <div class="row align-items-stretch gap-4 gap-lg-0">
-                    <div class="col-lg-6 col-md-12 pe-lg-3">
-                        <div class="staffingSolutionsSection" style="border-left: 4px solid #10B981;">
-                            <h4><span style="color: #10B981; margin-right: 8px;">☑</span> Pros</h4>
-                            <ul class="accordionList">
-                                <li>Handles credentialing, payroll, compliance</li>
-                                <li>Steady stream of contract work</li>
-                                <li>Agencies can match you across multiple facilities</li>
-                            </ul>
-                        </div>
+            <div class="case-study-quote">
+                “Maria did three 8-week temp gigs; each paid 25% less than market rate after agency cuts."
+            </div>
+            
+            <div class="row align-items-stretch gap-4 gap-lg-0">
+                <div class="col-lg-6 col-md-12 pe-lg-3">
+                    <div class="staffingSolutionsSection" style="border-left: 4px solid #10B981;">
+                        <h4><span style="color: #10B981; margin-right: 8px;">☑</span> Pros</h4>
+                        <ul class="accordionList">
+                            <li>Handles credentialing, payroll, compliance</li>
+                            <li>Steady stream of contract work</li>
+                            <li>Agencies can match you across multiple facilities</li>
+                        </ul>
                     </div>
-                    <div class="col-lg-6 col-md-12 ps-lg-3">
-                        <div class="staffingSolutionsSection" style="border-left: 4px solid #EF4444;">
-                            <h4><span style="color: #EF4444; margin-right: 8px;">☒</span> Cons</h4>
-                            <ul class="accordionList">
-                                <li>Agency fees eat into your take-home pay</li>
-                                <li>Rigid schedules</li>
-                                <li>Little negotiation leverage</li>
-                                <li>Slow onboarding processes</li>
-                                <li><b>Avg. time to land a role: 3 - 5 weeks</b></li>
-                            </ul>
-                        </div>
+                </div>
+                <div class="col-lg-6 col-md-12 ps-lg-3 mt-4 mt-lg-0">
+                    <div class="staffingSolutionsSection" style="border-left: 4px solid #EF4444;">
+                        <h4><span style="color: #EF4444; margin-right: 8px;">☒</span> Cons</h4>
+                        <ul class="accordionList">
+                            <li>Agency fees eat into your take-home pay</li>
+                            <li>Rigid schedules</li>
+                            <li>Little negotiation leverage</li>
+                            <li>Slow onboarding processes</li>
+                            <li><b>Avg. time to land a role: 3 - 5 weeks</b></li>
+                        </ul>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- The Traveling Therapist -->
-        <div class="row staffingSolutionRow" id="TheTravelingTherapist" style="border: 2px solid var(--primary-teal); background: #FAFFFD;">
+        <div class="staffingSolutionCard" id="TheTravelingTherapist" style="border: 2px solid var(--primary-teal); background: #FAFFFD;">
             <h2 class="staffSolutionsTitle">
                 <img class="AccordionIcon" src="/media/images/T_Logo_Final.png" alt="The Traveling Therapist Logo">
                 The Traveling Therapist
             </h2>
-            <div>
-                <h4>The Traveling Therapist Case Study</h4>
-                <p class="ps-3 pe-3"><i>“Raj posted an offer on Monday, compared three offers on Thursday, and signed on for a 4-week OT role—making 15% more than his last contract."</i></p>
-                <div class="row align-items-stretch gap-4 gap-lg-0">
-                    <div class="col-lg-6 col-md-12 pe-lg-3">
-                        <div class="staffingSolutionsSection" style="border: none; background: #ffffff; box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
-                            <h4><span style="color: var(--primary-teal); margin-right: 8px;">☑</span> What Goes Right</h4>
-                            <ul class="accordionList">
-                                <li>Earn 100% of your hourly rate</li>
-                                <li>Transparent pay, schedule, and expectations</li>
-                                <li>No recruiter fees or middleman</li>
-                                <li>Faster matching with ready-to-hire facilities</li>
-                            </ul>
-                        </div>
+            <div class="case-study-quote" style="background: #ffffff; border-color: var(--primary-teal);">
+                “Raj posted an offer on Monday, compared three offers on Thursday, and signed on for a 4-week OT role—making 15% more than his last contract."
+            </div>
+            
+            <div class="row align-items-stretch gap-4 gap-lg-0">
+                <div class="col-lg-6 col-md-12 pe-lg-3">
+                    <div class="staffingSolutionsSection" style="border: none; background: #ffffff; box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
+                        <h4><span style="color: var(--primary-teal); margin-right: 8px;">☑</span> What Goes Right</h4>
+                        <ul class="accordionList">
+                            <li>Earn 100% of your hourly rate</li>
+                            <li>Transparent pay, schedule, and expectations</li>
+                            <li>No recruiter fees or middleman</li>
+                            <li>Faster matching with ready-to-hire facilities</li>
+                        </ul>
                     </div>
-                    <div class="col-lg-6 col-md-12 ps-lg-3">
-                        <div class="staffingSolutionsSection" style="border: none; background: #ffffff; box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
-                            <h4><span style="color: var(--primary-teal); margin-right: 8px;">☑</span> For Your Career</h4>
-                            <ul class="accordionList">
-                                <li>Offer outcomes differ by market demand</li>
-                                <li>Always check in to see new listings!</li>
-                                <li>Once you've placed an offer, check the listing regularly to see what others have offered the facility</li>
-                                <li>Options for Short-term assignments that fit your life.</li>
-                                <li>Travel, network & see new clinical populations while you do what you love for work!</li>
-                                <li>Keep your existing job, and use The Traveling Therapist to fill in the blanks when you like!</li>
-                                <li>Use our platform anywhere, anytime to line up future opportunities!</li>
-                                <li><b>Avg. time to land a role: 7 - 14 days</b></li>
-                            </ul>
-                        </div>
+                </div>
+                <div class="col-lg-6 col-md-12 ps-lg-3 mt-4 mt-lg-0">
+                    <div class="staffingSolutionsSection" style="border: none; background: #ffffff; box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
+                        <h4><span style="color: var(--primary-teal); margin-right: 8px;">☑</span> For Your Career</h4>
+                        <ul class="accordionList">
+                            <li>Offer outcomes differ by market demand</li>
+                            <li>Always check in to see new listings!</li>
+                            <li>Once you've placed an offer, check the listing regularly to see what others have offered the facility</li>
+                            <li>Options for Short-term assignments that fit your life.</li>
+                            <li>Travel, network & see new clinical populations while you do what you love for work!</li>
+                            <li>Keep your existing job, and use The Traveling Therapist to fill in the blanks when you like!</li>
+                            <li>Use our platform anywhere, anytime to line up future opportunities!</li>
+                            <li><b>Avg. time to land a role: 7 - 14 days</b></li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -719,7 +739,7 @@
         <div class="cta-banner">
             <h2>Take Control of Your Career</h2>
             <p>You're already in demand—now make the market work for you. Create your free The Traveling Therapist profile and watch your career take off.</p>
-            <a id="startAuctionButton" class="btn btn-primary btn-lg guidePageButton" href="{% url 'register' %}">Get Started - It's Free &rarr;</a>
+            <a id="startAuctionButton" class="btn btn-primary" href="{% url 'register' %}">Get Started - It's Free &rarr;</a>
         </div>
 
     </div>
