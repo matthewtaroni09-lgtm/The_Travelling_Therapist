@@ -83,6 +83,66 @@
         </div>
     </div>
 
+    <!-- Video Overview Modal -->
+    <div class="modal fade" id="videoOverviewModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content bg-dark rounded-4 overflow-hidden border-0">
+          <div class="modal-header border-0 p-3">
+            <button type="button" class="btn-close btn-close-white ms-auto" data-bs-dismiss="modal" aria-label="Close" onclick="closeVideoModal()"></button>
+          </div>
+          <div class="modal-body p-0">
+            <div class="ratio ratio-16x9">
+              <iframe 
+                id="modalVideoIframe" 
+                src="" 
+                title="Platform Overview" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                referrerpolicy="strict-origin-when-cross-origin" 
+                allowfullscreen>
+              </iframe>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+        let videoModalInstance = null;
+
+        function openVideoModal(videoUrl) {
+            // Automatically convert watch?v= format to embed/ format
+            if (videoUrl.includes('watch?v=')) {
+                videoUrl = videoUrl.replace('watch?v=', 'embed/');
+            }
+
+            const iframe = document.getElementById('modalVideoIframe');
+            if (!iframe) return;
+            iframe.src = videoUrl + "?autoplay=1";
+            
+            const modalEl = document.getElementById('videoOverviewModal');
+            if (!modalEl) return;
+            
+            // Initialize modal once
+            if (!videoModalInstance) {
+                videoModalInstance = new bootstrap.Modal(modalEl);
+                
+                // Clear video on backdrop close
+                modalEl.addEventListener('hidden.bs.modal', function () {
+                    iframe.src = "";
+                });
+            }
+            
+            videoModalInstance.show();
+        }
+
+        function closeVideoModal() {
+            const iframe = document.getElementById('modalVideoIframe');
+            if (iframe) {
+                iframe.src = "";
+            }
+        }
+    </script>
+
     <!-- Mailchimp AJAX Script -->
     <script>
         $(document).ready(function () {
@@ -92,30 +152,27 @@
                 const $input = $('#id_email_address');
                 const $btn = $form.find('.newsletter-btn');
 
-                // Show loading state
                 $btn.prop('disabled', true).text('Submitting...');
 
                 $.ajax({
-                    type: "GET", // Mailchimp uses JSONP (GET) for cross-domain requests
+                    type: "GET",
                     url: $form.attr('action').replace('/post?', '/post-json?'),
                     data: $form.serialize(),
                     cache: false,
                     dataType: 'jsonp',
-                    jsonp: 'c', // Mailchimp expects 'c' for callback
+                    jsonp: 'c',
                     contentType: "application/json; charset=utf-8",
                     success: function (data) {
                         $btn.prop('disabled', false).text('Subscribe');
                         if (data.result === 'success') {
-                            // Professional SweetAlert2 Pop-up
                             Swal.fire({
                                 title: 'Thank You!',
                                 text: 'You have successfully subscribed to our newsletter. Please check your email to confirm!',
                                 icon: 'success',
                                 confirmButtonColor: '#0f9972'
                             });
-                            $input.val(''); // Clear input
+                            $input.val('');
                         } else {
-                            // Display Mailchimp error
                             let errorMsg = data.msg || 'An error occurred. Please try again.';
                             if (errorMsg.indexOf(' - ') > 0) {
                                 errorMsg = errorMsg.substring(errorMsg.indexOf(' - ') + 3);
@@ -145,4 +202,3 @@
 
 {% include 'auction/modal_terms_and_conditions.html' with id='tandcModal' %}
 {% include 'auction/modal_privacy_policy.html' with id='privacyModal' %}
-{% include 'auction/modal_features_video.html' with id='featuresModal' %}
