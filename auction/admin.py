@@ -230,6 +230,18 @@ class AuctionAdmin(admin.ModelAdmin):
 
     negotiable_perks_display.short_description = 'Negotiable Perks Summary'
 
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+        overdue_ids = list(
+            queryset.filter(
+                active=True,
+                auctionEnd__lte=django_timezone.now(),
+            ).values_list('auctionID', flat=True)
+        )
+        for auction_id in overdue_ids:
+            scheduled_tasks.auction_closed(str(auction_id))
+        return queryset
+
     def save_model(self, request, obj, form, change):
         admin = AdminSetting.objects.first()
         existing_auction = Auction.objects.filter(pk=obj.auctionID).first()

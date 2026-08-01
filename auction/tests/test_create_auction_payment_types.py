@@ -1,12 +1,14 @@
 from datetime import timedelta
 from unittest.mock import patch
 
+from django.contrib import admin as django_admin
 from django.contrib.auth.models import User
 from django.urls import reverse
-from django.test import TestCase
+from django.test import RequestFactory, TestCase
 from django.utils import timezone
 
 from auction.forms import AuctionForm
+from auction.admin import AuctionAdmin
 from auction.models import Account, AdminSetting, Auction, Bid, PaymentType, UserType
 from auction import scheduled_tasks
 
@@ -336,7 +338,70 @@ class DualOfferSubmissionTests(TestCase):
 		self.assertEqual(response.status_code, 200)
 		self.assertTrue(response.context['can_review_offers'])
 		self.assertContains(response, 'Review Offers')
-		self.assertContains(response, 'No offers have been placed yet on this listing.')
+
+	@patch('auction.scheduled_tasks.schedule_waiting_closeout')
+	def test_expired_listing_with_offer_is_persisted_as_closed_waiting_before_review(self, schedule_waiting_closeout):
+		self.auction.auctionEnd = timezone.now() - timedelta(seconds=1)
+		self.auction.save(update_fields=['auctionEnd'])
+		Bid.objects.create(
+			auction=self.auction,
+			user=self.therapist_user,
+			amount=55,
+			offerType='Fee Split',
+			active=True,
+		)
+		self.client.force_login(self.clinic_user)
+
+		response = self.client.get(reverse('auction', args=[self.auction.auctionID]))
+
+		self.assertEqual(response.status_code, 200)
+		self.auction.refresh_from_db()
+		self.assertFalse(self.auction.active)
+		self.assertTrue(self.auction.waitingCloseout)
+		self.assertFalse(self.auction.closed)
+		self.assertTrue(response.context['can_review_offers'])
+		status_html = AuctionAdmin(Auction, django_admin.site).status_display(self.auction)
+		self.assertIn('Closed (Waiting)', str(status_html))
+		schedule_waiting_closeout.assert_called_once()
+
+	@patch('auction.scheduled_tasks.schedule_waiting_closeout')
+	def test_admin_load_reconciles_expired_listing_with_offer_to_closed_waiting(self, schedule_waiting_closeout):
+		self.auction.auctionEnd = timezone.now() - timedelta(seconds=1)
+		self.auction.save(update_fields=['auctionEnd'])
+		Bid.objects.create(
+			auction=self.auction,
+			user=self.therapist_user,
+			amount=55,
+			offerType='Fee Split',
+			active=True,
+		)
+		auction_admin = AuctionAdmin(Auction, django_admin.site)
+
+		list(auction_admin.get_queryset(RequestFactory().get('/admin/auction/auction/')))
+
+		self.auction.refresh_from_db()
+		self.assertFalse(self.auction.active)
+		self.assertTrue(self.auction.waitingCloseout)
+		self.assertFalse(self.auction.closed)
+		self.assertIn('Closed (Waiting)', str(auction_admin.status_display(self.auction)))
+		schedule_waiting_closeout.assert_called_once()
+
+	@patch('auction.scheduled_tasks.remove_cron_job')
+	def test_expired_listing_with_zero_offers_is_closed_and_cannot_review(self, remove_cron_job):
+		self.auction.auctionEnd = timezone.now() - timedelta(seconds=1)
+		self.auction.save(update_fields=['auctionEnd'])
+		self.client.force_login(self.clinic_user)
+
+		response = self.client.get(reverse('auction', args=[self.auction.auctionID]))
+
+		self.assertEqual(response.status_code, 200)
+		self.auction.refresh_from_db()
+		self.assertFalse(self.auction.active)
+		self.assertFalse(self.auction.waitingCloseout)
+		self.assertTrue(self.auction.closed)
+		self.assertFalse(response.context['can_review_offers'])
+		self.assertNotContains(response, 'id="reviewOffersButton"')
+		remove_cron_job.assert_called_once_with(f'{self.auction.auctionID}_waiting_closeout')
 
 	@patch('auction.scheduled_tasks.remove_cron_job')
 	def test_expired_listing_with_zero_offers_closes_directly(self, remove_cron_job):
