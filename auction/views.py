@@ -455,7 +455,7 @@ def contact(request):
         return render(request, "auction/contact_us.html", {'form': form, 'recaptcha_site_key':settings.GOOGLE_RECAPTCHA_SITE_KEY})
 
 def view_all_auctions(request):
-    auctions = Auction.objects.filter(Q(active=True) | Q(closed=True), deleted=False)
+    auctions = Auction.objects.filter(Q(active=True) | Q(closed=True) | Q(waitingCloseout=True), deleted=False)
     auctions = sorted(auctions, key=_effective_auction_sort_key)
     print(auctions)
     return render(request, 'auction/partials/auction_list.html', {'auction': auctions, 'length': len(auctions), 'auction_search': True})
@@ -545,9 +545,9 @@ def index(request):
     auction = ''
     now = timezone.now()
     if request.user.is_authenticated == False or str(request.user.account.userType) == 'Clinic' or request.user.is_staff:
-        auctions = Auction.objects.filter(((Q(active=True)) | (Q(closed=True))) & Q(deleted=False))
+        auctions = Auction.objects.filter((Q(active=True) | Q(closed=True) | Q(waitingCloseout=True)) & Q(deleted=False))
     elif request.user.is_authenticated == True and request.user.account.userType != 'Clinic':
-        auctions = Auction.objects.filter(((Q(active=True)) | (Q(closed=True))) & Q(type=request.user.account.userType) & Q(deleted=False))
+        auctions = Auction.objects.filter((Q(active=True) | Q(closed=True) | Q(waitingCloseout=True)) & Q(type=request.user.account.userType) & Q(deleted=False))
     auctions = sorted(auctions, key=_effective_auction_sort_key)
     cities = []
     payment_type_options = []
@@ -594,7 +594,7 @@ def test(request):
 def view_user_auctions(request):
     auctions = ''
     user_type = request.user.account.userType
-    auctions = Auction.objects.filter(Q(active=True) | Q(closed=True), type=user_type, deleted=False)
+    auctions = Auction.objects.filter(Q(active=True) | Q(closed=True) | Q(waitingCloseout=True), type=user_type, deleted=False)
     auctions = sorted(auctions, key=_effective_auction_sort_key)
     return render(request, 'auction/partials/auction_list.html', {'auction': auctions})
 
@@ -700,9 +700,9 @@ def profile(request):
         print(request.method)
         # Not closed and not deleted counts any auctions that are active or have no status selected
         now = timezone.now()
-        active_auctions_list = Auction.objects.filter(active=True, closed=False, deleted=False, clinic=request.user.account, auctionEnd__gt=now)
-        past_auctions_list = Auction.objects.filter(deleted=False, clinic=request.user.account).filter(Q(closed=True) | Q(auctionEnd__lte=now)).order_by('-auctionEnd')
-        pending_auctions_list = Auction.objects.filter(active=False, closed=False, deleted=False, clinic=request.user.account)
+        active_auctions_list = Auction.objects.filter(active=True, waitingCloseout=False, closed=False, deleted=False, clinic=request.user.account, auctionEnd__gt=now)
+        past_auctions_list = Auction.objects.filter(deleted=False, clinic=request.user.account).filter(Q(closed=True) | Q(waitingCloseout=True) | Q(auctionEnd__lte=now)).order_by('-auctionEnd')
+        pending_auctions_list = Auction.objects.filter(active=False, waitingCloseout=False, closed=False, deleted=False, clinic=request.user.account)
         num_pending = pending_auctions_list.count()
         submitted_profile = False
         submitted_auction = False
@@ -1415,6 +1415,11 @@ def get_popups(request):
     click_id = request.GET['clickID']
     if click_id == '':
         click_id = None
+
+    # Disable automatic listing-detail popups (non-click triggered).
+    if request_page == 'View_Auction' and click_id is None:
+        return JsonResponse({'title': '', 'message': ''})
+
     page = Page.objects.get(page = request_page)
     user = request.user
     message = ''
@@ -1475,7 +1480,7 @@ def set_acknowledgement(request):
     return HttpResponse(json.dumps('Success'), content_type="application/json")
 
 def get_all_auctions(request):
-    auction_list = list(Auction.objects.filter((Q(active=True) | Q(closed=True)) & Q(deleted=False)).values())
+    auction_list = list(Auction.objects.filter((Q(active=True) | Q(closed=True) | Q(waitingCloseout=True)) & Q(deleted=False)).values())
     return JsonResponse({'data': auction_list})
 
 def get_practice_types(request):
@@ -1714,6 +1719,11 @@ def create_auction(request):
 
                 if auction.active:
                     scheduled_tasks.start(auction.auctionEnd.year, auction.auctionEnd.month, auction.auctionEnd.day, auction.auctionEnd.hour, auction.auctionEnd.minute, auction.auctionEnd.second, str(auction.auctionID))
+                    if admin.sendEmails:
+                        try:
+                            scheduled_tasks.notify_all_clinicians_auction_live(str(auction.auctionID))
+                        except Exception:
+                            logger.warning('New listing broadcast failed for listing %s created as active.', auction.auctionID)
                 
                 # Reward the clinic with 5 tickets for creating a listing
                 if hasattr(request.user, 'account'):
@@ -1781,8 +1791,21 @@ def check_user_payment_type(request):
 def register(request):
     from django.db import transaction
     admin = AdminSetting.objects.first()
+    if request.user.is_authenticated:
+        return redirect('index')
+
     if request.method == 'POST':
         form = RegisterAcount(request.POST, request.FILES)
+        accepted_terms = request.POST.get('termsAgreed') == '1'
+
+        if not accepted_terms:
+            form.add_error(None, 'You must read and agree to the Terms and Conditions before creating an account.')
+            return render(request, 'auction/register.html', {
+                'form': form,
+                'user_type': form.cleaned_data.get('user_type'),
+                'keep_terms_checked': False,
+            })
+
         if form.is_valid():
             try:
                 with transaction.atomic():
@@ -1841,7 +1864,11 @@ def register(request):
                 print(f"Registration Error: Transaction failed: {e}")
                 logger.error(f"Registration Error: Transaction failed: {e}")
                 # Re-render with form errors if possible, or just re-raise
-                return render(request, 'auction/register.html', {'form': form, 'error': 'An internal error occurred. Please try again.'})
+                return render(request, 'auction/register.html', {
+                    'form': form,
+                    'error': 'An internal error occurred. Please try again.',
+                    'keep_terms_checked': True,
+                })
             
             # Recaptcha and Emails move OUTSIDE the transaction to prevent rollbacks on network issues
             recaptcha_response = request.POST.get('g-recaptcha-response')
@@ -1925,11 +1952,15 @@ def register(request):
             return redirect('index')
         else:
             print("not valid")
-            return render(request, 'auction/register.html', {'form': form, 'user_type': form.cleaned_data.get('user_type')})
+            return render(request, 'auction/register.html', {
+                'form': form,
+                'user_type': form.cleaned_data.get('user_type'),
+                'keep_terms_checked': True,
+            })
     else:
         print('outside')
         form = RegisterAcount(None)
-        return render(request, 'auction/register.html', {'form': form})
+        return render(request, 'auction/register.html', {'form': form, 'keep_terms_checked': False})
     
 # -------------- Login --------------
 def login_user(request):

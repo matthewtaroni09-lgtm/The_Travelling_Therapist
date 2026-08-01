@@ -564,7 +564,14 @@ class Auction(models.Model):
         return num_bids
 
     def has_winning_offer(self):
-        return self.winner_id is not None and self.winningPrice is not None
+        # Winning-offer display is only valid for fully closed listings.
+        if not self.closed or self.active or self.waitingCloseout:
+            return False
+
+        if self.winner_id is None or self.winningPrice is None:
+            return False
+
+        return Bid.objects.filter(auction=self).exists()
 
     def is_in_clinic_review_window(self):
         if not self.waitingCloseout or self.closed or self.deleted or self.auctionEnd is None:

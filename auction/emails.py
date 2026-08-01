@@ -135,18 +135,18 @@ def clinic_welcome(clinic_name):
 
   <ul style="padding-left: 20px; line-height: 1.8;">
     <li><a href="{create_listing_url}"><b>Create Listing</b></a>: Create a new listing and start receiving offers from qualified clinicians.</li>
-    <li><a href="{create_listing_url}"><b>Review & Accept Offers</b></a>: Review offers submitted on your listing and choose the clinician who best fits your needs — no offers?, no charge to you! Learn more here (link to zaid’s upcoming v10 what’s new video)</li>
+    <li><a href="{create_listing_url}"><b>Review & Accept Offers</b></a>: Review offers submitted on your listing and choose the clinician who best fits your needs — no offers?, no charge to you! Learn more <a href="https://www.youtube.com/watch?v=5V2ec58lGi8">here</a>.</p>
     <li><a href="{profile_url}"><b>Manage Listings</b></a>: Manage your listings, review offers, and track hiring progress.</li>
     <li><a href="{healthcare_facility_guide_url}"><b>Hiring Guides & Resources</b></a>: Explore our new healthcare hiring guides to learn best practices and optimize your recruitment process.</li>
-    <li>We’re here to help. Contact us anytime by replying to this email.</li>
-    <li>Thank You for Joining us at The Traveling Therapist</li>
   </ul>
+
+  <p>We're here to help. Contact us anytime by replying to this email.</p>
 
   <div style="text-align: center; margin: 25px 0;">
     <a href="{create_listing_url}" style="background-color: #02CA90; color: #ffffff; padding: 12px 24px; font-weight: bold; text-decoration: none; border-radius: 5px; display: inline-block;">Post a Job Listing</a>
   </div>
 
-  <p>Thanks for using The Traveling Therapist.</p>
+  <p>Thank You for Joining us at The Traveling Therapist</p>
   <br>
   <p style="font-weight: 700; margin-top: 0; line-height: 1.2;">— The Traveling Therapist Team</p>
 </section>""" + email_footer
@@ -410,7 +410,7 @@ def clinic_auction_closed_waiting_email(clinic_name, auctionID):
   <p><strong>Action Required:</strong> You currently have pending offers. You have exactly <strong>7 days</strong> to review and select a candidate.
   If no candidate is selected by the end of this period, we will assume you have decided to select no clinician from the set of offers.</p>
 
-  <p>Friendly reminder that your invoice total will be generated based on the candidate you select or decide not to select. Learn more at our <a href="{pricing_url}" style="background-color: #02CA90; color: #ffffff; padding: 12px 24px; font-weight: bold; text-decoration: none; border-radius: 5px; display: inline-block;">Pricing Page</a></p>
+  <p>Friendly reminder that your invoice total will be generated based on the candidate you select or decide not to select. Learn more at our <a href="{pricing_url}">Pricing Page</a></p> 
 
   <div style="text-align: center; margin: 25px 0;">
     <a href="{listing_url}" style="background-color: #02CA90; color: #ffffff; padding: 12px 24px; font-weight: bold; text-decoration: none; border-radius: 5px; display: inline-block;">Review Offers Now</a>

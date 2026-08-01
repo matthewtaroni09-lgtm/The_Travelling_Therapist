@@ -308,11 +308,16 @@ def auction_closed(id):
         return JsonResponse({'data': 'skipped_non_active'})
 
     auction.active = False
-    auction.waitingCloseout = True
-    auction.closed = False
-    
     bids = Bid.objects.filter(auction=auction, active=True)
     active_bid_count = bids.count()
+
+    if active_bid_count == 0:
+        auction.waitingCloseout = False
+        auction.closed = True
+    else:
+        auction.waitingCloseout = True
+        auction.closed = False
+
     auction.save()
 
     if was_active and active_bid_count == 0:
@@ -354,8 +359,12 @@ def auction_closed(id):
             except Exception as exc:
                 logger.warning('Clinic closed waiting email failed to send for auction %s: %s', auction.auctionID, exc)
 
-    finalize_run_date = timezone.now() + timedelta(seconds=get_default_closed_waiting_period_seconds())
-    schedule_waiting_closeout(auction.auctionID, finalize_run_date)
+    if active_bid_count > 0:
+        finalize_run_date = timezone.now() + timedelta(seconds=get_default_closed_waiting_period_seconds())
+        schedule_waiting_closeout(auction.auctionID, finalize_run_date)
+    else:
+        remove_cron_job(f"{auction.auctionID}_waiting_closeout")
+
     return JsonResponse({'data': "success"})
 
 
@@ -551,7 +560,8 @@ def notify_all_clinicians_auction_live(auction_id):
         time_remaining = "14 days"
 
     for user in clinicians:
-        if not user.email:
+        recipient_email = _resolve_user_email(user)
+        if not recipient_email:
             continue
         account = getattr(user, 'account', None)
         first_name = user.first_name or (account.firstName if account else '') or user.username
@@ -574,10 +584,10 @@ def notify_all_clinicians_auction_live(auction_id):
                     auctionID=auction.auctionID,
                 ),
                 from_email=settings.EMAIL_HOST_USER,
-                recipient_list=[user.email],
+                recipient_list=[recipient_email],
             )
         except Exception as exc:
-            logger.error(f"Error sending new_auction_email_to_all to {user.email}: {exc}")
+            logger.error(f"Error sending new_auction_email_to_all to {recipient_email}: {exc}")
 
 
 def remove_cron_job(id):

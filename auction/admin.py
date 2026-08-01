@@ -21,6 +21,9 @@ from The_Travelling_Therapist.settings import ENVIRONMENT, DEV_LINK, PROD_LINK
 from datetime import datetime, timedelta
 from django.utils import timezone as django_timezone
 import time
+import logging
+
+logger = logging.getLogger(__name__)
 
 class BidInline(admin.TabularInline):
     model = Bid
@@ -231,6 +234,8 @@ class AuctionAdmin(admin.ModelAdmin):
         admin = AdminSetting.objects.first()
         existing_auction = Auction.objects.filter(pk=obj.auctionID).first()
         previous_active = existing_auction.active if existing_auction is not None else False
+        previous_waiting = existing_auction.waitingCloseout if existing_auction is not None else False
+        previous_closed = existing_auction.closed if existing_auction is not None else False
 
         listing_status = form.cleaned_data.get('listing_status') if hasattr(form, 'cleaned_data') else ''
         if listing_status == 'deleted':
@@ -264,8 +269,22 @@ class AuctionAdmin(admin.ModelAdmin):
             obj.auctionStart = django_timezone.now()
             obj.auctionEnd = obj.auctionStart + timedelta(seconds=active_seconds)
 
+        active_bid_count = Bid.objects.filter(auction=obj, active=True).count()
+        entered_waiting = obj.waitingCloseout and not previous_waiting
+        entered_closed = obj.closed and not previous_closed
+
+        # A listing with zero offers should not enter Closed (Waiting).
+        # It should immediately become Closed and trigger the no-offers flow.
+        converted_waiting_to_closed_no_bids = False
+        if obj.waitingCloseout and active_bid_count == 0:
+            obj.waitingCloseout = False
+            obj.closed = True
+            entered_waiting = False
+            entered_closed = not previous_closed
+            converted_waiting_to_closed_no_bids = True
+
         waiting_closeout_job_id = f'{obj.auctionID}_waiting_closeout'
-        if listing_status == 'waiting' and obj.auctionEnd is not None:
+        if obj.waitingCloseout and obj.auctionEnd is not None:
             waiting_seconds = admin.defaultClosedWaitingPeriodLength if admin is not None else 604800
             scheduled_tasks.schedule_waiting_closeout(obj.auctionID, django_timezone.now() + timedelta(seconds=waiting_seconds))
         else:
@@ -275,11 +294,43 @@ class AuctionAdmin(admin.ModelAdmin):
         print("auction = " + str(previous_active))
         print("obj = " + str(obj.active))
 
-        # Query the user list for users that are the same type as the auction
         current_auction = auction or obj
         print(current_auction.type)
-        accounts = Account.objects.filter(userType=current_auction.type)
-        print(accounts)
+
+        if (admin is None or admin.sendEmails) and entered_waiting:
+            clinic_email = str(getattr(getattr(obj, 'clinic', None).user, 'email', '') or '').strip() if getattr(obj, 'clinic', None) and getattr(obj.clinic, 'user', None) else ''
+            if clinic_email:
+                try:
+                    send_mail(
+                        subject='Review Offers for Your Listing',
+                        message='',
+                        html_message=emails.clinic_auction_closed_waiting_email(
+                            str(obj.clinic.clinicName),
+                            obj.auctionID,
+                        ),
+                        from_email=settings.EMAIL_HOST_USER,
+                        recipient_list=(clinic_email, 'info@travelingtherapist.ca'),
+                    )
+                except Exception:
+                    logger.warning('Clinic closed waiting email failed to send from admin transition for listing %s.', obj.auctionID)
+
+        if (admin is None or admin.sendEmails) and (converted_waiting_to_closed_no_bids or (entered_closed and active_bid_count == 0 and obj.winner_id is None)):
+            clinic_email = str(getattr(getattr(obj, 'clinic', None).user, 'email', '') or '').strip() if getattr(obj, 'clinic', None) and getattr(obj.clinic, 'user', None) else ''
+            if clinic_email:
+                try:
+                    send_mail(
+                        subject='Your Listing Closed with No Offers',
+                        message='',
+                        html_message=emails.clinic_no_bids(
+                            str(obj.clinic.clinicName),
+                            obj.placementStart,
+                            obj.placementEnd,
+                        ),
+                        from_email=settings.EMAIL_HOST_USER,
+                        recipient_list=(clinic_email, 'info@travelingtherapist.ca'),
+                    )
+                except Exception:
+                    logger.warning('Clinic no-bids email failed to send from admin transition for listing %s.', obj.auctionID)
 
         if obj.active and admin.sendEmails and not previous_active:
             try:
@@ -304,55 +355,8 @@ class AuctionAdmin(admin.ModelAdmin):
             except BadHeaderError:
                     return HttpResponse('Invalid header found.')
             
-            # Email users of the auction type that there is a new auction available for bidding
-            link  = ""
-            if ENVIRONMENT == "DEV":
-                link = DEV_LINK + "/auction/" + str(current_auction.auctionID)
-            else:
-                link = PROD_LINK + "/auction/" + str(current_auction.auctionID)
-
-            clinic_city = current_auction.clinic.city or ""
-            clinic_province = current_auction.clinic.province or ""
-            clinic_location = clinic_city
-            if clinic_province:
-                clinic_location = clinic_city + ", " + clinic_province
-
-            email_count = 0
-            admin_setting = AdminSetting.objects.first()
-            batch_size = admin_setting.endAuctionEmailBatchSize
-
-            for account in accounts:
-                print(current_auction.get_payment_type_label())
-                if email_count < batch_size:
-                    try:
-                        send_mail(
-                            subject = "New Listing Available for Offers!",
-                            message = "",
-                            html_message = emails.new_auction_email_to_all(account.user.first_name, account.user.last_name, link, str(current_auction.placementStart), str(current_auction.placementEnd), current_auction.get_payment_type_label(), current_auction.clinic.clinicName, clinic_location, time_diff_from_now(current_auction.auctionEnd)),
-                            from_email = settings.EMAIL_HOST_USER,
-                            recipient_list = (account.user.email,)
-                        )
-                    except BadHeaderError:
-                            return HttpResponse('Invalid header found.')
-                    email_count += 1
-                    # time.sleep(5)
-                else:
-                    missing_email_string = ""
-                    for account in accounts[email_count:]:
-                        print(account)
-                        missing_email_string += str(account) + "<br>"
-                    try:
-                        send_mail(
-                            subject = "**ADMIM COPY** New Auction Batch Total Surpassed",
-                            message = "",
-                            html_message = "The total number of emails that can be sent has been surpassed. The total number of emails to send was " + str(len(accounts)) + " and the max that can be sent is " + str(batch_size) + ". <br><br> The following people did not get emails: <br>" + missing_email_string,
-                            from_email = settings.EMAIL_HOST_USER,
-                            # recipient_list = ('loribine@gmail.com',)
-                            recipient_list = ('info@travelingtherapist.ca',)
-                        )
-                    except BadHeaderError:
-                        return HttpResponse('Invalid header found.')
-                    break            
+            # Canonical clinician broadcast path for newly-live listings.
+            scheduled_tasks.notify_all_clinicians_auction_live(str(obj.auctionID))
         super().save_model(request, obj, form, change)
 
         if not obj.active and obj.cronID:
