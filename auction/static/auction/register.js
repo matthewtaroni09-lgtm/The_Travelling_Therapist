@@ -104,6 +104,8 @@ $(document).ready(function () {
         });
     });
     const termsActionButton = $('#termsActionButton');
+    const termsAgreedHiddenInput = document.getElementById('termsAgreedHiddenInput');
+    const keepTermsChecked = $('#keepTermsCheckedHiddenInput').val() === '1';
     let submitFromTermsModal = false;
     const registerForm = document.querySelector('form[method="post"]');
 
@@ -133,6 +135,9 @@ $(document).ready(function () {
         $(document).on('click', '#termsActionButton', function (e) {
             e.preventDefault();
             if ($('#agreementCheckBox').prop('checked') === true) {
+                if (termsAgreedHiddenInput) {
+                    termsAgreedHiddenInput.value = '1';
+                }
                 submitFromTermsModal = true;
                 const termsModalEl = document.getElementById('tandcModal');
                 if (termsModalEl) {
@@ -148,16 +153,22 @@ $(document).ready(function () {
         userTypeChange(userType);
     }
 
-    // If the mandatory fields are filled out then the user must have already completed the form and had an error that caused it to reset like a password error.
-    // Since we know they are required to check off the terms and conditions box in order to submit the original form set that box to checked so the user doesn't
-    // have to keep going back and checking it each time
-    if (userType === "Clinic" && $("#id_username").val() !== "") {
+    // Preserve terms state only when this page was re-rendered after a failed registration attempt.
+    if (keepTermsChecked && userType === "Clinic") {
         $('#agreementCheckBox').prop("checked", true);
         $('#submitButton').prop('disabled', false);
+        if (termsAgreedHiddenInput) {
+            termsAgreedHiddenInput.value = '1';
+        }
     }
-    else if (userType !== "Clinic" && userType !== "---------" && $("#id_user_type").val() !== "" && $("#id_username").val() !== "") {
+    else if (keepTermsChecked && userType !== "Clinic" && userType !== "---------") {
         $('#agreementCheckBox').prop("checked", true);
         $('#submitButton').prop('disabled', false);
+        if (termsAgreedHiddenInput) {
+            termsAgreedHiddenInput.value = '1';
+        }
+    } else if (termsAgreedHiddenInput) {
+        termsAgreedHiddenInput.value = '0';
     }
 
     $("#showPasswordCheckBox").click(function () {
@@ -239,10 +250,16 @@ $(document).ready(function () {
         if ($('#agreementCheckBox').prop("checked") === true) {
             $('#submitButton').prop('disabled', false);
             termsActionButton.prop('disabled', false);
+            if (termsAgreedHiddenInput) {
+                termsAgreedHiddenInput.value = '1';
+            }
         }
         else {
             $('#submitButton').prop('disabled', true);
             termsActionButton.prop('disabled', true);
+            if (termsAgreedHiddenInput) {
+                termsAgreedHiddenInput.value = '0';
+            }
         }
     });
 
@@ -292,6 +309,10 @@ $(document).ready(function () {
     })
 
     $('form[method="post"][enctype="multipart/form-data"]').on('submit', function (event) {
+        if (termsAgreedHiddenInput && $('#agreementCheckBox').prop('checked') !== true) {
+            termsAgreedHiddenInput.value = '0';
+        }
+
         const imageFields = [
             ['id_imageOne', 'Image 1'],
             ['id_imageTwo', 'Image 2'],

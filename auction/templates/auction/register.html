@@ -111,6 +111,7 @@
 <!-- Content Start -->
 <p id="pageTitle" class="d-none">Register</p>
 <input id="userTypeHiddenInput" class="d-none" value="{{user_type}}">
+<input id="keepTermsCheckedHiddenInput" class="d-none" value="{% if keep_terms_checked %}1{% else %}0{% endif %}">
 <h1 class="text-center mb-5">Register to Get Started With The Traveling Therapist!</h1>
 
 <!-- Register Box Start -->
@@ -181,6 +182,7 @@
 
       <div>
         <input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response">
+        <input type="hidden" id="termsAgreedHiddenInput" name="termsAgreed" value="0">
         <button type="submit" disabled id="submitButton" class="btn btn-primary combinedFields w-100">Create Account</button>
       </div>
     </form>
@@ -193,33 +195,7 @@
 <!-- Error Highlighting & Clean Password Mapping Logic -->
 <script>
   document.addEventListener('DOMContentLoaded', function () {
-
-    // 1. Persist Terms and Conditions State Across Page Reloads without modifying button appearance
-    const termsBtn = document.getElementById('termsButton');
-    const submitBtn = document.getElementById('submitButton');
-
-    function confirmTermsAgreed() {
-      if (submitBtn) submitBtn.disabled = false;
-    }
-
-    if (sessionStorage.getItem('ttt_terms_agreed') === 'true') {
-      confirmTermsAgreed();
-    }
-
-    // Listens for external scripts (like register.js) unlocking the submit button
-    if (submitBtn) {
-      const observer = new MutationObserver(function(mutations) {
-        mutations.forEach(function(mutation) {
-          if (mutation.attributeName === 'disabled' && !submitBtn.disabled) {
-            sessionStorage.setItem('ttt_terms_agreed', 'true');
-            confirmTermsAgreed();
-          }
-        });
-      });
-      observer.observe(submitBtn, { attributes: true });
-    }
-
-    // 2. Move Password Help Text into an Info-Dot Tooltip
+    // 1. Move Password Help Text into an Info-Dot Tooltip
     const pass1Hint = document.getElementById('hint_id_password1') || document.querySelector('#div_id_password1 .form-text');
     const pass1Label = document.querySelector('label[for="id_password1"]');
 
