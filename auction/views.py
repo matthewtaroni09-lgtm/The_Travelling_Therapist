@@ -872,6 +872,9 @@ def profile(request):
 def view_auction(request, auction_id):
     admin = AdminSetting.objects.first()
     auction = Auction.objects.get(pk=auction_id)
+    if auction.active and auction.auctionEnd is not None and auction.auctionEnd <= timezone.now():
+        scheduled_tasks.auction_closed(str(auction.auctionID))
+        auction.refresh_from_db()
     print(auction.comments)
     is_effectively_active = auction.is_effectively_active()
     if is_effectively_active:
