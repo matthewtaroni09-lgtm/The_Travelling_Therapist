@@ -197,7 +197,7 @@ def start(year, month, day, hour, minute, second, id):
     schedule_id = scheduler.add_job(
         auction_closed, 'cron', 
         year=year, month=month, day=day, hour=hour, minute=minute, second=second, 
-        id=id, args=(id,)
+        id=id, args=(id,), replace_existing=True,
     )
     auction = Auction.objects.get(auctionID=id)
     auction.cronID = schedule_id.id
@@ -211,7 +211,7 @@ def restart(year, month, day, hour, minute, second, id, auction_id):
     scheduler.add_job(
         auction_closed, 'cron', 
         year=year, month=month, day=day, hour=hour, minute=minute, second=second, 
-        id=id, args=(auction_id,)
+        id=id, args=(auction_id,), replace_existing=True,
     )
     auction = Auction.objects.get(auctionID=auction_id)
     auction.cronID = id
@@ -238,10 +238,22 @@ def schedule_waiting_closeout(auction_id, run_date):
 
 def finalize_waiting_closeout(auction_id):
     try:
-        auction = Auction.objects.get(auctionID=auction_id)
+        with transaction.atomic():
+            auction = Auction.objects.select_for_update().get(auctionID=auction_id)
+
+            # Persisted scheduler jobs can survive deploys and status changes.
+            # A stale finalizer must never close an active, pending, or already-closed listing.
+            if not auction.waitingCloseout or auction.active or auction.closed or auction.deleted:
+                logger.info(
+                    "Skipping stale waiting-closeout job for listing %s (active=%s, waiting=%s, closed=%s, deleted=%s).",
+                    auction.auctionID,
+                    auction.active,
+                    auction.waitingCloseout,
+                    auction.closed,
+                    auction.deleted,
+                )
+                return
         
-        # Check if the listing was actively in the decision phase and they let it timeout
-        if auction.waitingCloseout:
             bids = Bid.objects.filter(auction=auction, active=True)
             has_bids = bids.exists()
             has_selected_winner = auction.winner_id is not None
@@ -267,11 +279,11 @@ def finalize_waiting_closeout(auction_id):
                         except Exception as exc:
                             logger.error(f"Error sending automatic closeout invoice email to clinic {clinic_email}: {exc}")
 
-        auction.active = False
-        auction.waitingCloseout = False
-        auction.closed = True
-        auction.save()
-        logger.info(f"Listing {auction_id} finalized and closed.")
+            auction.active = False
+            auction.waitingCloseout = False
+            auction.closed = True
+            auction.save(update_fields=['active', 'waitingCloseout', 'closed'])
+            logger.info(f"Listing {auction_id} finalized and closed.")
     except Auction.DoesNotExist:
         logger.error(f"Auction {auction_id} not found during finalize_waiting_closeout.")
 
@@ -297,30 +309,23 @@ def auction_closed(id):
     """
     logger.warning('!!!!AUCTION END EXPIRED!!!!')
     try:
-        auction = Auction.objects.get(auctionID=id)
+        with transaction.atomic():
+            auction = Auction.objects.select_for_update().get(auctionID=id)
+
+            if not auction.active:
+                logger.info('Skipping auction_closed transition for non-active listing %s.', auction.auctionID)
+                return JsonResponse({'data': 'skipped_non_active'})
+
+            active_bid_count = Bid.objects.filter(auction=auction, active=True).count()
+            auction.active = False
+            auction.waitingCloseout = active_bid_count > 0
+            auction.closed = active_bid_count == 0
+            auction.save(update_fields=['active', 'waitingCloseout', 'closed'])
     except Auction.DoesNotExist:
         logger.error(f"Auction {id} not found in auction_closed.")
         return JsonResponse({'error': 'Auction not found'}, status=404)
 
-    was_active = auction.active
-    if not was_active:
-        logger.info('Skipping auction_closed transition for non-active listing %s.', auction.auctionID)
-        return JsonResponse({'data': 'skipped_non_active'})
-
-    auction.active = False
-    bids = Bid.objects.filter(auction=auction, active=True)
-    active_bid_count = bids.count()
-
     if active_bid_count == 0:
-        auction.waitingCloseout = False
-        auction.closed = True
-    else:
-        auction.waitingCloseout = True
-        auction.closed = False
-
-    auction.save()
-
-    if was_active and active_bid_count == 0:
         admin = AdminSetting.objects.first()
         if admin is None or admin.sendEmails:
             try:
@@ -340,7 +345,7 @@ def auction_closed(id):
             except Exception as exc:
                 logger.warning('Clinic no-bids email failed to send for auction %s: %s', auction.auctionID, exc)
                 
-    elif was_active and active_bid_count > 0:
+    else:
         admin = AdminSetting.objects.first()
         if admin is None or admin.sendEmails:
             try:
