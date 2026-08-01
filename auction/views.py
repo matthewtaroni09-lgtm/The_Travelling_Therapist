@@ -899,8 +899,10 @@ def view_auction(request, auction_id):
     can_review_offers = (
         request.user.is_authenticated
         and hasattr(request.user, 'account')
-        and request.user.account == auction.clinic
-        and (is_effectively_active or auction.is_closed_waiting() or auction.is_in_clinic_review_window())
+        and auction.clinic.user_id == request.user.id
+        and not auction.deleted
+        and not auction.closed
+        and (auction.active or auction.is_closed_waiting())
     )
     decline_all_offers_option = bool(can_review_offers and (auction.is_closed_waiting() or auction.is_in_clinic_review_window()))
     clinic_offer_rows = []
@@ -1170,8 +1172,6 @@ def view_auction(request, auction_id):
         bids_to_create = []
         submission_group = uuid.uuid4()
         previous_bid_count = Bid.objects.filter(user=request.user, auction=auction).count()
-        primary_previous_low_bid = auction.get_low_offer_amount(payment_type) or 0
-        current_lowest_bid_user = bids[0].user if len(bids) > 0 else None
         selected_offer_skills = parse_offer_selected_skills_payload(request.POST.get('offerSelectedSkillsPayload', '[]'))
 
         def parse_offer_amount(raw_value, offer_type):
@@ -1246,25 +1246,11 @@ def view_auction(request, auction_id):
                 auction.minimumBidIncrement = set_bid_increment(primary_low_bid)
                 auction_change = True
 
-            diff = auction.auctionEnd - datetime.datetime.now(pytz.timezone('America/Toronto'))
-            primary_bid_submitted = next((bid for bid in bids_to_create if bid.offerType == payment_type), None)
-            if primary_bid_submitted is not None and diff.total_seconds() < 60 and (primary_previous_low_bid == 0 or primary_bid_submitted.amount <= primary_previous_low_bid):
-                new_id = str(uuid.uuid4())
-                auction.auctionEnd = auction.auctionEnd.astimezone(pytz.timezone('America/Toronto')) + datetime.timedelta(minutes=1)
-                scheduled_tasks.print_job()
-                try:
-                    scheduled_tasks.remove_cron_job(auction.cronID)
-                except:
-                    print('fail')
-                scheduled_tasks.restart(auction.auctionEnd.year, auction.auctionEnd.month, auction.auctionEnd.day, auction.auctionEnd.hour, auction.auctionEnd.minute, auction.auctionEnd.second, new_id, str(auction.auctionID))
-                auction.cronID = new_id
-                auction_change = True
-
             if auction_change:
                 auction.save()
 
             if hasattr(request.user, 'account'):
-                request.user.account.add_tickets(5, f"Placed bid on listing {auction.auctionID}")
+                request.user.account.add_tickets(5, f"Placed offer on listing {auction.auctionID}")
                 messages.success(request, 'You have earned 5 raffle tickets for placing an offer!', extra_tags='ticket_earned')
 
             # Notify other clinicians who previously submitted offers on this listing.
