@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hiring Methods Top Nodes</title>
+    <style>
+        :root {
+            --tt-teal-dark: #2b5952;
+            --tt-teal-medium: #3a6b61;
+            --tt-teal-light: #e6efed;
+            --tt-accent-warm: #f4ece1;
+            --card-bg: #ffffff;
+            --text-main: #1f332e;
+            --border-color: #1f332e;
+            --shadow-elevation: 0 12px 32px -6px rgba(20, 45, 41, 0.18), 0 4px 12px -2px rgba(20, 45, 41, 0.08);
+            --transition-smooth: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        body {
+            margin: 0;
+            padding: 50px 20px 100px 20px;
+            background-color: var(--tt-teal-dark);
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        /* Wrapper for Top Section */
+        .top-node-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 2;
+            position: relative;
+        }
+
+        /* Top Button Style */
+        .hiring-btn {
+            background-color: var(--card-bg);
+            color: var(--text-main);
+            border: 2.5px solid var(--border-color);
+            width: 170px;
+            height: 170px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: 16px;
+            font-weight: 800;
+            letter-spacing: -0.01em;
+            cursor: pointer;
+            box-shadow: var(--shadow-elevation);
+            transition: var(--transition-smooth);
+            text-align: center;
+            padding: 16px;
+            box-sizing: border-box;
+            border-radius: 16px;
+            position: relative;
+        }
+
+        .hiring-btn:hover {
+            background-color: var(--tt-teal-light);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px -8px rgba(20, 45, 41, 0.25);
+        }
+
+        .hiring-btn:active {
+            transform: translateY(1px);
+        }
+
+        /* Container for revealed content */
+        .content-container {
+            display: none;
+            opacity: 0;
+            transform: translateY(15px);
+            transition: opacity 0.4s ease, transform 0.4s ease;
+            width: 100%;
+            max-width: 1400px;
+            position: relative;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .content-container.active {
+            display: flex;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Prominent Instruction Banner Style */
+        .instruction-banner {
+            background-color: rgba(255, 255, 255, 0.12);
+            border: 1.5px solid rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(8px);
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: 700;
+            padding: 12px 28px;
+            border-radius: 30px;
+            margin-top: 35px;
+            text-align: center;
+            letter-spacing: -0.01em;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            z-index: 2;
+        }
+
+        /* SVG Overlay */
+        .arrow-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Columns layout */
+        .flow-columns {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            width: 100%;
+            margin-top: 45px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .flow-column {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+        }
+
+        /* Node Styles */
+        .node {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 14px;
+            font-weight: 700;
+            line-height: 1.35;
+            text-align: center;
+            border-radius: 12px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+            box-sizing: border-box;
+            padding: 16px;
+            border: 2.5px solid var(--border-color);
+            text-decoration: none;
+            transition: var(--transition-smooth);
+        }
+
+        .node.blue {
+            background-color: var(--tt-teal-light);
+            color: var(--tt-teal-dark);
+        }
+
+        .node.blue:hover {
+            background-color: #d1e2df;
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-elevation);
+        }
+
+        .node.pink {
+            background-color: var(--tt-accent-warm);
+            color: #5c4731;
+        }
+
+        .node.pink:hover {
+            background-color: #ede0cc;
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-elevation);
+        }
+
+        .node:active {
+            transform: translateY(1px);
+        }
+
+        /* Bottom Corner Toggle Button */
+        .bottom-toggle-btn {
+            display: none;
+            position: fixed;
+            bottom: 28px;
+            right: 28px;
+            background-color: var(--card-bg);
+            color: var(--text-main);
+            border: 2px solid var(--border-color);
+            padding: 12px 22px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: var(--shadow-elevation);
+            border-radius: 10px;
+            z-index: 100;
+            transition: var(--transition-smooth);
+        }
+
+        .bottom-toggle-btn.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .bottom-toggle-btn:hover {
+            background-color: var(--tt-teal-light);
+            transform: translateY(-2px);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Section Wrapper -->
+    <div class="top-node-wrapper">
+        <button class="hiring-btn" id="topBtn">Hiring Method</button>
+    </div>
+
+    <!-- Revealed Section -->
+    <div class="content-container" id="contentSection">
+        <svg class="arrow-overlay" id="arrowSvg"></svg>
+
+        <!-- Prominent Instruction Banner -->
+        <div class="instruction-banner">Click a box to see a tree diagram on how that method works</div>
+
+        <div class="flow-columns" id="columnsWrapper">
+            <!-- Column 1 -->
+            <div class="flow-column">
+                <a href="http://127.0.0.1:8000/tree-traveling-therapist/" class="node blue">The Travelling Therapist</a>
+            </div>
+
+            <!-- Column 2 -->
+            <div class="flow-column">
+                <a href="http://127.0.0.1:8000/tree-hybrid/" class="node pink">Hybrid / Internal Temp Pools</a>
+            </div>
+
+            <!-- Column 3 -->
+            <div class="flow-column">
+                <a href="http://127.0.0.1:8000/test" class="node pink">Job Boards</a>
+            </div>
+
+            <!-- Column 4 -->
+            <div class="flow-column">
+                <a href="http://127.0.0.1:8000/tree-direct-connection/" class="node pink">Direct-Connection Platforms</a>
+            </div>
+
+            <!-- Column 5 -->
+            <div class="flow-column">
+                <a href="http://127.0.0.1:8000/tree-headhunters-recruiters/" class="node pink">Headhunters / Recruiters</a>
+            </div>
+
+            <!-- Column 6 -->
+            <div class="flow-column">
+                <a href="http://127.0.0.1:8000/tree-traditional-staffing/" class="node pink">Traditional Staffing Agencies</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Corner Button -->
+    <button class="bottom-toggle-btn" id="bottomToggleBtn">Hide View</button>
+
+    <script>
+        const topBtn = document.getElementById('topBtn');
+        const bottomToggleBtn = document.getElementById('bottomToggleBtn');
+        const contentSection = document.getElementById('contentSection');
+        const arrowSvg = document.getElementById('arrowSvg');
+        const columnsWrapper = document.getElementById('columnsWrapper');
+
+        function drawArrows() {
+            arrowSvg.innerHTML = '';
+            const columns = columnsWrapper.querySelectorAll('.flow-column');
+            const containerRect = contentSection.getBoundingClientRect();
+            const topBtnRect = topBtn.getBoundingClientRect();
+            
+            const startX = (topBtnRect.left + topBtnRect.width / 2) - containerRect.left;
+            const startY = (topBtnRect.bottom) - containerRect.top;
+
+            columns.forEach(col => {
+                const colRect = col.getBoundingClientRect();
+                const targetX = (colRect.left + colRect.width / 2) - containerRect.left;
+                const targetY = (colRect.top) - containerRect.top;
+
+                const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                const midY = startY + 45;
+                const d = `M ${startX} ${startY} L ${startX} ${midY} L ${targetX} ${midY} L ${targetX} ${targetY}`;
+                
+                path.setAttribute('d', d);
+                path.setAttribute('stroke', '#a3b8b2');
+                path.setAttribute('stroke-width', '2.5');
+                path.setAttribute('stroke-linecap', 'round');
+                path.setAttribute('stroke-linejoin', 'round');
+                path.setAttribute('fill', 'none');
+                arrowSvg.appendChild(path);
+
+                const polygon = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+                polygon.setAttribute('points', `${targetX},${targetY} ${targetX-5},${targetY-10} ${targetX+5},${targetY-10}`);
+                polygon.setAttribute('fill', '#a3b8b2');
+                arrowSvg.appendChild(polygon);
+            });
+        }
+
+        topBtn.addEventListener('click', () => {
+            contentSection.classList.add('active');
+            bottomToggleBtn.classList.add('active');
+            setTimeout(drawArrows, 10);
+        });
+
+        bottomToggleBtn.addEventListener('click', () => {
+            contentSection.classList.remove('active');
+            bottomToggleBtn.classList.remove('active');
+        });
+
+        window.addEventListener('resize', () => {
+            if (contentSection.classList.contains('active')) {
+                drawArrows();
+            }
+        });
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('open') === 'true') {
+                contentSection.classList.add('active');
+                bottomToggleBtn.classList.add('active');
+                setTimeout(drawArrows, 10);
+            }
+        });
+    </script>
+
+</body>
+</html>
