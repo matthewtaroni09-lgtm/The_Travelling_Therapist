@@ -1,0 +1,167 @@
+<style> 
+  .dropdown-submenu {
+      position: relative;
+  }
+
+  /* Default: open to the right */
+  .dropdown-submenu > .dropdown-menu {
+      top: 0;
+      left: 100%;
+      right: auto;
+      margin-top: -5px; 
+      border-radius: 0.375rem; 
+  }
+
+  .dropdown-item {
+      transition: background-color 0.15s ease-in-out;
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Automatically check if nested dropdowns overflow the right side of the window and flip them left
+    const submenus = document.querySelectorAll('.dropdown-submenu');
+    submenus.forEach(submenu => {
+      submenu.addEventListener('mouseenter', function () {
+        const menu = this.querySelector('.dropdown-menu');
+        if (!menu) return;
+        
+        // Reset to default right-opening view
+        menu.style.left = '100%';
+        menu.style.right = 'auto';
+        
+        // Check if it goes off-screen
+        const rect = menu.getBoundingClientRect();
+        if (rect.right > window.innerWidth) {
+          menu.style.left = 'auto';
+          menu.style.right = '100%';
+        }
+      });
+    });
+  });
+</script>
+<nav class="navbar navbar-expand-lg navbar-light bg-light main-nav shadow-sm">
+    <div class="container">
+        <a class="navbar-brand" href="{% url 'index' %}">
+            <img src="/media/images/TTT_LOGO.png" alt="Traveling Therapist Logo" class="img-fluid banner-logo">
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02"
+            aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
+                
+                <!-- Facebook Icon -->
+                <li class="nav-item">
+                    <a class="nav-link p-0 me-lg-3 mb-3 mb-lg-0" href="https://www.facebook.com/profile.php?id=61589753374110#" target="_blank">
+                        <img src="/media/images/facebook_logo.svg" alt="Facebook" style="width: 38px; height: auto;">
+                    </a>
+                </li>
+                
+                <!-- Home -->
+                <li class="nav-item">
+                    <a class="nav-link text-weight-normal {% if path == 'home' %}active{% endif %}" aria-current="page" href="{% url 'index' %}">Home</a>
+                </li>
+
+                <!-- NEW: Tree Diagram top-level link -->
+                <li class="nav-item">
+                    <a class="nav-link text-weight-normal {% if path == 'job-boards' %}active{% endif %}" href="{% url 'job-boards' %}">Tree Diagram</a>
+                </li>
+                
+                <!-- About Dropdown (Highlighted if any child page is active) -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle text-weight-normal {% if path == 'what-is-TTT' or path == 'how-it-works' or path == 'pricing' or path == 'mission-vision' %}active{% endif %}" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">About</a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item {% if path == 'what-is-TTT' %}active{% endif %}" href="{% url 'what-is-TTT' %}">What's The Traveling Therapist?</a></li>
+                        <li><a class="dropdown-item {% if path == 'how-it-works' %}active{% endif %}" href="{% url 'how-it-works' %}">How it Works</a></li>
+                        <li><a class="dropdown-item text-weight-light {% if path == 'pricing' %}active{% endif %}" href="{% url 'pricing' %}">Pricing at The Traveling Therapist</a></li>
+                        <li><a class="dropdown-item {% if path == 'mission-vision' %}active{% endif %}" href="{% url 'mission-vision' %}">Company Mission & Vision</a></li>
+                    </ul>
+                </li>
+                
+                <!-- For Clinicians Dropdown (Highlighted if any child page is active) -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle text-weight-normal {% if path == 'clinician-guide' or path == 'maternity' or path == 'hiring-healthcare-worker' or path == 'casual-work' %}active{% endif %}" href="#" id="navbarDropdownClinicians" role="button" data-bs-toggle="dropdown" aria-expanded="false">For Clinicians</a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownClinicians">
+                        <li><a class="dropdown-item {% if path == 'clinician-guide' %}active{% endif %}" href="{% url 'clinician-guide' %}">Clinician Hiring Guide</a></li>
+                        <li><a class="dropdown-item text-weight-light {% if path == 'maternity' %}active{% endif %}" href="{% url 'maternity' %}">Maternity &amp; Parental Leave Guide</a></li>
+                        <li><a class="dropdown-item {% if path == 'hiring-healthcare-worker' %}active{% endif %}" href="{% url 'hiring-healthcare-worker' %}">Getting Hired With The Traveling Therapist</a></li>
+                        <li><a class="dropdown-item {% if path == 'casual-work' %}active{% endif %}" href="{% url 'casual-work' %}">Casual Work for Retired Practitioners</a></li>
+                        <!-- ADDED: Tree Diagram under For Clinicians -->
+                        <li><a class="dropdown-item {% if path == 'job-boards' %}active{% endif %}" href="{% url 'job-boards' %}">Tree Diagram</a></li>
+                    </ul>
+                </li>
+                
+                <!-- For Healthcare Facilities Dropdown (Highlighted if any child page is active) -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle text-weight-normal {% if path == 'facility-how-to' or path == 'healthcare-facility-guide' or path == 'agency-comparison' or path == 'hospital-guide' %}active{% endif %}" href="#" id="navbarDropdownFacilities" role="button" data-bs-toggle="dropdown" aria-expanded="false">For Healthcare Facilities</a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownFacilities">
+                        <li><a class="dropdown-item text-weight-light {% if path == 'facility-how-to' %}active{% endif %}" href="{% url 'facility-how-to' %}">How Can Clinics Use The Traveling Therapist?</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        
+                        <!-- Submenu 1 -->
+                        <li class="dropdown-submenu">
+                            <a class="dropdown-item dropdown-toggle text-weight-normal d-flex justify-content-between align-items-center" href="#">Hire Clinicians Now</a>
+                            <ul class="dropdown-menu shadow-sm">
+                                <li><a class="dropdown-item text-weight-light {% if path == 'healthcare-facility-guide' %}active{% endif %}" href="{% url 'healthcare-facility-guide' %}">Healthcare Facility Guide</a></li>
+                                <li><a class="dropdown-item text-weight-light {% if path == 'agency-comparison' %}active{% endif %}" href="{% url 'agency-comparison' %}">Agency Healthcare Hiring Comparison</a></li>
+                                <li><a class="dropdown-item text-weight-light {% if path == 'hospital-guide' %}active{% endif %}" href="{% url 'hospital-guide' %}">Hospital Hiring Guide</a></li>
+                                <li><a class="dropdown-item text-weight-light {% if path == 'LTC-guide' %}active{% endif %}" href="{% url 'LTC-guide' %}">Long-Term Care Hiring Guide</a></li>
+                                <li><a class="dropdown-item text-weight-light {% if path == 'non-traditional-hiring' %}active{% endif %}" href="{% url 'non-traditional-hiring' %}">Non Traditional Hiring</a></li>
+                                <li><a class="dropdown-item text-weight-light {% if path == 'private-clinic-hiring-guide' %}active{% endif %}" href="{% url 'private-clinic-hiring-guide' %}">Private Clinic Hiring Guide</a></li>
+                            </ul>
+                        </li>
+                        
+                        <!-- Submenu 2 -->
+                        <li class="dropdown-submenu">
+                            <a class="dropdown-item dropdown-toggle text-weight-normal d-flex justify-content-between align-items-center" href="#">I'm Hiring With</a>
+                            <ul class="dropdown-menu shadow-sm">
+                                <li><a class="dropdown-item text-weight-light {% if path == 'headhunter_recruitment' %}active{% endif %}" href="{% url 'headhunter_recruitment' %}">A Headhunter</a></li>
+                                <li><a class="dropdown-item text-weight-light {% if path == 'direct-employer-recruitment' %}active{% endif %}" href="{% url 'direct-employer-recruitment' %}">Direct Employer Recruitment</a></li>
+                                <li><a class="dropdown-item text-weight-light {% if path == 'job-boards' %}active{% endif %}" href="{% url 'job-boards' %}">Job Boards</a></li>
+                                <li><a class="dropdown-item text-weight-light {% if path == 'referrals-and-networks' %}active{% endif %}" href="{% url 'referrals-and-networks' %}">Referrals and Networks</a></li>
+                                <li><a class="dropdown-item text-weight-light {% if path == 'hiring-with-the-traveling-therapist' %}active{% endif %}" href="{% url 'hiring-with-the-traveling-therapist' %}">Hiring With The Traveling Therapist</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                
+                <!-- Authenticated User Links -->
+                {% if user.is_authenticated %}
+                    {% if user.account.get_split_user_type == 'Clinic' %}
+                    <li class="nav-item">
+                        <a class="nav-link text-weight-normal {% if path == 'create-auction' %}active{% endif %}" href="{% url 'create-auction' %}">Create Listing</a>
+                    </li>
+                    {% endif %}
+                    
+                    {% if user.is_staff %}
+                    <li class="nav-item">
+                        <a class="nav-link text-weight-normal {% if path == 'admin-raffle-management' %}active{% endif %}" href="{% url 'admin-raffle-management' %}">Raffle Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-weight-normal {% if path == 'admin-summary' %}active{% endif %}" href="{% url 'admin-summary' %}">Admin Summary</a>
+                    </li>
+                    {% endif %}
+                    
+                    <li class="nav-item">
+                        <a class="nav-link text-weight-normal {% if path == 'profile' %}active{% endif %}" href="{% url 'profile' %}">Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-weight-normal" href="{% url 'logout' %}">Logout</a>
+                    </li>
+                    
+                <!-- Guest Links -->
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link text-weight-normal {% if path == 'login' %}active{% endif %}" href="{% url 'login' %}">Login</a>
+                    </li>
+                    <li class="nav-item ms-lg-2 mt-2 mt-lg-0">
+                        <a class="btn btn-primary px-4 fw-semibold {% if path == 'register' %}active{% endif %}" href="{% url 'register' %}">Sign Up Free</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>

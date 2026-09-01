@@ -2338,3 +2338,9 @@ def update_v6_1(request):
 
 def update_v6_0(request):
     return render(request, 'auction/updates/v6_0.html')
+
+def tree_hiring_method(request):
+    return render(request, 'auction/tree_hiring_method.html')
+
+def direct_connection_view(request):
+    return render(request, 'auction/direct_connection.html')

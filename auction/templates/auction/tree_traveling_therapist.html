@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Traveling Therapist Workflow Diagram</title>
+    <style>
+        /* CSS Variables: Central color palette configuration */
+        :root {
+            --bg-sage-dark: #66958b;
+            --bg-sage-light: #8cb6aa;
+            
+            --node-blue-bg: #e3f2fd;
+            --node-blue-border: #1565c0;
+
+            --node-cyan-bg: #b2ebf2;
+            --node-cyan-border: #00838f;
+            
+            --node-yellow-bg: #fff59d;
+            --node-yellow-border: #fbc02d;
+            
+            --node-green-bg: #c8e6c9;
+            --node-green-border: #388e3c;
+            
+            --text-dark: #2c3e50;
+            --text-muted: #5a6b7c;
+            --btn-blue: #1565c0;
+            --btn-gray: #4f5b66;
+        }
+
+        /* Global Reset */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Body Styling */
+        body {
+            background: linear-gradient(135deg, var(--bg-sage-dark) 0%, var(--bg-sage-light) 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 20px;
+        }
+
+        /* Outer Card Wrapper */
+        .page-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 1100px;
+            background: rgba(223, 237, 233, 0.7);
+            backdrop-filter: blur(8px);
+            border-radius: 28px;
+            padding: 35px 25px;
+            overflow: hidden;
+            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.12);
+        }
+
+        /* Decorative Background Waves */
+        .wave-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.6;
+        }
+
+        /* Header Section */
+        .header-container {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header-container h1 {
+            font-size: 2.1rem;
+            font-weight: 500;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .header-container p {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+        }
+
+        /* Canvas Container */
+        .main-panel {
+            position: relative;
+            z-index: 1;
+            width: 1000px;
+            height: 540px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+        }
+
+        /* SVG Line Overlay */
+        .svg-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Keyframe Animations */
+        @keyframes animBluePath {
+            0% { opacity: 0; transform: translateY(10px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes animYellowWarn {
+            0% { opacity: 0; transform: scale(0.75); }
+            60% { transform: scale(1.12); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes animDiamondSpin {
+            0% { opacity: 0; transform: rotate(-30deg) scale(0.5); }
+            100% { opacity: 1; transform: rotate(0deg) scale(1); }
+        }
+
+        @keyframes animGreenSlideFade {
+            0% { opacity: 0; transform: translateX(-18px) scale(0.96); box-shadow: 0 0 0 rgba(56, 142, 60, 0); }
+            70% { opacity: 0.9; transform: translateX(4px) scale(1.01); box-shadow: 0 4px 14px rgba(56, 142, 60, 0.2); }
+            100% { opacity: 1; transform: translateX(0) scale(1); box-shadow: 0 2px 8px rgba(56, 142, 60, 0.15); }
+        }
+
+        /* Diagram Node Base Styles */
+        .node {
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.8rem;
+            color: var(--text-dark);
+            z-index: 2;
+            text-align: center;
+            padding: 6px 8px;
+            border-radius: 6px;
+            opacity: 0; 
+        }
+
+        .rect {
+            width: 115px;
+            height: 52px;
+            border: 2px solid;
+            box-sizing: border-box;
+        }
+
+        .start-rect {
+            width: 130px;
+            height: 110px;
+            font-size: 0.95rem;
+            border: 2px solid var(--node-blue-border);
+            box-sizing: border-box;
+            box-shadow: 0 4px 14px rgba(21, 101, 192, 0.18);
+            text-decoration: none;
+        }
+
+        .pill {
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-weight: bold;
+            font-size: 0.8rem;
+            white-space: nowrap;
+        }
+
+        .benefit-rect {
+            width: 155px;
+            height: 100px;
+            border-radius: 8px;
+            font-size: 0.65rem;
+            line-height: 1.25;
+            padding: 10px;
+        }
+
+        .fee-pill {
+            width: 165px;
+            height: 85px;
+            border-radius: 20px;
+            font-size: 0.68rem;
+            line-height: 1.2;
+            padding: 10px;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .clickable {
+            cursor: pointer;
+            user-select: none;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .clickable:hover {
+            transform: scale(1.04);
+            box-shadow: 0 6px 16px rgba(21, 101, 192, 0.25);
+        }
+
+        .blue-node {
+            background-color: var(--node-blue-bg);
+            border-color: var(--node-blue-border);
+            animation: animBluePath 0.35s ease-out forwards;
+        }
+
+        .cyan-node {
+            background-color: var(--node-cyan-bg);
+            border-color: var(--node-cyan-border);
+            animation: animBluePath 0.35s ease-out forwards;
+        }
+
+        .yellow-node {
+            background-color: var(--node-yellow-bg);
+            border-color: var(--node-yellow-border);
+            animation: animYellowWarn 0.8s ease-out forwards;
+        }
+
+        .green-node {
+            background-color: var(--node-green-bg);
+            border-color: var(--node-green-border);
+            animation: animGreenSlideFade 0.45s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+
+        /* Diamond Container & Shape */
+        .diamond-container {
+            position: absolute;
+            width: 120px;
+            height: 95px;
+            z-index: 2;
+            opacity: 0;
+            animation: animDiamondSpin 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            cursor: pointer;
+        }
+
+        .diamond-outer {
+            width: 100%;
+            height: 100%;
+            background-color: var(--node-cyan-border);
+            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.15s ease;
+        }
+
+        .diamond-container:hover .diamond-outer {
+            transform: scale(1.05);
+        }
+
+        .diamond-inner {
+            width: calc(100% - 4px);
+            height: calc(100% - 4px);
+            background-color: var(--node-cyan-bg);
+            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        .diamond-inner span {
+            color: var(--text-dark);
+            font-weight: bold;
+            font-size: 0.55rem;
+            line-height: 1.1;
+        }
+
+        .custom-tooltip {
+            position: absolute;
+            bottom: 110%;
+            left: 50%;
+            transform: translateX(-50%) translateY(4px);
+            background-color: #ffffff;
+            color: var(--text-dark);
+            border: 2px solid var(--node-cyan-border);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.65rem;
+            font-weight: bold;
+            line-height: 1.3;
+            text-align: center;
+            white-space: nowrap;
+            box-shadow: 0 4px 16px rgba(0, 131, 143, 0.25);
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: auto;
+            transition: all 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+            z-index: 10;
+        }
+
+        .custom-tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 6px;
+            border-style: solid;
+            border-color: var(--node-cyan-border) transparent transparent transparent;
+        }
+
+        .diamond-container:hover .custom-tooltip {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* Tooltip styling specifically for Start node wrapper */
+        .start-pill-wrapper {
+            position: absolute;
+            top: 215px;
+            left: 30px;
+            z-index: 2;
+            padding-bottom: 10px;
+        }
+
+        .start-tooltip {
+            position: absolute;
+            bottom: 100%;
+            left: 20px;
+            transform: translateY(4px);
+            background-color: #ffffff;
+            color: var(--text-dark);
+            border: 2px solid var(--node-blue-border);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.65rem;
+            font-weight: bold;
+            line-height: 1.3;
+            text-align: center;
+            white-space: nowrap;
+            box-shadow: 0 4px 16px rgba(21, 101, 192, 0.25);
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: auto;
+            transition: all 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+            z-index: 10;
+        }
+
+        .start-tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 30px;
+            border-width: 6px;
+            border-style: solid;
+            border-color: var(--node-blue-border) transparent transparent transparent;
+        }
+
+        .start-pill-wrapper:hover .start-tooltip {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(-4px);
+        }
+
+        /* Tooltip styling for Offers node */
+        .bids-pill-wrapper {
+            position: absolute;
+            top: 360px;
+            left: 275px;
+            z-index: 2;
+        }
+
+        .bids-tooltip {
+            position: absolute;
+            top: 110%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-4px);
+            background-color: #ffffff;
+            color: var(--text-dark);
+            border: 2px solid var(--node-yellow-border);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.65rem;
+            font-weight: bold;
+            line-height: 1.3;
+            text-align: center;
+            white-space: nowrap;
+            box-shadow: 0 4px 16px rgba(251, 192, 45, 0.25);
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: auto;
+            transition: all 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+            z-index: 10;
+        }
+
+        .bids-tooltip::after {
+            content: '';
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 6px;
+            border-style: solid;
+            border-color: transparent transparent var(--node-yellow-border) transparent;
+        }
+
+        .bids-pill-wrapper:hover .bids-tooltip {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* Tooltip styling for green pricing node */
+        .fee-pill-wrapper {
+            position: absolute;
+            top: 325px;
+            left: 835px;
+            z-index: 2;
+            padding-bottom: 10px;
+        }
+
+        .fee-tooltip {
+            position: absolute;
+            bottom: 100%;
+            right: 0;
+            transform: translateY(4px);
+            background-color: #ffffff;
+            color: var(--text-dark);
+            border: 2px solid var(--node-green-border);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.65rem;
+            font-weight: bold;
+            line-height: 1.3;
+            text-align: center;
+            white-space: nowrap;
+            box-shadow: 0 4px 16px rgba(56, 142, 60, 0.25);
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: auto;
+            transition: all 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+            z-index: 10;
+        }
+
+        .fee-tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            right: 25px;
+            border-width: 6px;
+            border-style: solid;
+            border-color: var(--node-green-border) transparent transparent transparent;
+        }
+
+        .fee-pill-wrapper:hover .fee-tooltip {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(-4px);
+        }
+
+        /* Action Buttons */
+        .action-btn {
+            position: absolute;
+            z-index: 3;
+            background-color: #ffffff;
+            color: var(--btn-blue);
+            border: 1px solid #d0d0d0;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.6rem;
+            line-height: 1.2;
+            text-align: center;
+            cursor: pointer;
+            padding: 4px 8px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+            transition: all 0.15s ease;
+        }
+
+        .action-btn:hover {
+            background-color: #f0f4f8;
+            border-color: var(--btn-blue);
+            transform: translateX(-50%) scale(1.06);
+        }
+
+        .btn-centered {
+            transform: translateX(-50%);
+        }
+
+        /* Navigation Controls Panel */
+        .controls-container {
+            position: absolute;
+            bottom: 14px;
+            right: 16px;
+            z-index: 10;
+            display: flex;
+            gap: 8px;
+        }
+
+        .control-btn {
+            background-color: #ffffff;
+            color: var(--btn-gray);
+            border: 1px solid #cccccc;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 6px 14px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+            transition: all 0.15s ease;
+        }
+
+        .control-btn:hover {
+            background-color: #f4f5f7;
+            color: #172b4d;
+            border-color: #b3bac5;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="page-wrapper">
+        
+        <!-- Decorative Background Wave Paths -->
+        <svg class="wave-bg" preserveAspectRatio="none" viewBox="0 0 1000 540" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0,140 C280,260 380,30 700,160 C900,220 950,80 1000,70 L1000,0 L0,0 Z" fill="#ffffff" opacity="0.3"></path>
+            <path d="M0,280 C180,160 450,380 750,230 C900,150 950,260 1000,280 L1000,540 L0,540 Z" fill="#ffffff" opacity="0.25"></path>
+        </svg>
+
+        <!-- Page Header -->
+        <div class="header-container">
+            <h1>The Traveling Therapist Workflow</h1>
+            <p>This is an illustrative tree diagram showing hiring with The Traveling Therapist. Click the first box to reveal the next step.</p>
+        </div>
+
+        <!-- Diagram Work Area -->
+        <div class="main-panel">
+            
+            <!-- SVG Connectors & Arrow Markers -->
+            <svg class="svg-canvas">
+                <defs>
+                    <marker id="arrow-blue" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#1565c0" />
+                    </marker>
+                    <marker id="arrow-yellow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#fbc02d" />
+                    </marker>
+                    <marker id="arrow-green" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#388e3c" />
+                    </marker>
+                </defs>
+
+                <!-- Connection Lines -->
+                <line id="arr-start-post" class="hidden" x1="160" y1="270" x2="180" y2="270" stroke="#1565c0" stroke-width="2" marker-end="url(#arrow-blue)" />
+                <line id="arr-post-auction" class="hidden" x1="295" y1="270" x2="325" y2="270" stroke="#1565c0" stroke-width="2" marker-end="url(#arrow-blue)" />
+                
+                <!-- Node Downward Branch to Offers -->
+                <path id="arr-auction-bids" class="hidden" d="M 395 296 L 395 360" fill="none" stroke="#fbc02d" stroke-width="2" marker-end="url(#arrow-yellow)" />
+
+                <!-- Node to Healthcare facilities select a candidate -->
+                <line id="arr-auction-match" class="hidden" x1="465" y1="270" x2="475" y2="270" stroke="#1565c0" stroke-width="2" marker-end="url(#arrow-blue)" />
+
+                <!-- Healthcare facilities select a candidate Upward Branch to Benefit Node -->
+                <line id="arr-match-cheapest" class="hidden" x1="535" y1="222" x2="535" y2="122" stroke="#388e3c" stroke-width="2" marker-end="url(#arrow-green)" />
+
+                <!-- Healthcare facilities select a candidate to Contact Info Given -->
+                <line id="arr-match-contact" class="hidden" x1="595" y1="270" x2="615" y2="270" stroke="#1565c0" stroke-width="2" marker-end="url(#arrow-blue)" />
+
+                <!-- Contact Info Given to Clinician Starts -->
+                <line id="arr-contact-starts" class="hidden" x1="730" y1="270" x2="745" y2="270" stroke="#1565c0" stroke-width="2" marker-end="url(#arrow-blue)" />
+
+                <!-- Clinician Starts Upward Branch to 14 Days Avg -->
+                <path id="arr-starts-days" class="hidden" d="M 802 244 L 802 190 L 835 190" fill="none" stroke="#fbc02d" stroke-width="2" marker-end="url(#arrow-yellow)" />
+
+                <!-- Clinician Starts Downward Branch to Fee Node -->
+                <path id="arr-starts-invoice" class="hidden" d="M 802 296 L 802 360 L 835 360" fill="none" stroke="#388e3c" stroke-width="2" marker-end="url(#arrow-green)" />
+            </svg>
+
+            <!-- HTML Diagram Components -->
+
+            <!-- Step 0: Starting Node with Custom Hover Tooltip Pop-up -->
+            <div id="node-start-wrapper" class="start-pill-wrapper">
+                <div class="start-tooltip">
+                    Learn about hiring with The Traveling Therapist here:<br>
+                    <a href="https://travelingtherapist.ca/hiring_with_the_traveling_therapist" target="_blank" style="color: var(--btn-blue); text-decoration: underline;">
+                        travelingtherapist.ca/hiring_with_the_traveling_therapist
+                    </a>
+                </div>
+                <a id="node-start" href="https://travelingtherapist.ca/hiring_with_the_traveling_therapist" target="_blank" class="node start-rect blue-node clickable" style="position: relative; top: 0; left: 0; display: flex;" onclick="handleStartClick(event)">
+                    The Traveling<br>Therapist
+                </a>
+            </div>
+
+            <!-- Step 1: Post a Job Listing -->
+            <div id="node-post" class="node rect blue-node hidden" style="top: 244px; left: 180px;">Post a Job Listing</div>
+            <button id="btn-next1" class="action-btn btn-centered hidden" style="top: 306px; left: 237px;" onclick="revealStep(2)">click to view<br>next step</button>
+
+            <!-- Step 2: Job Listings are live for 14 days -->
+            <div id="node-auction" class="node blue-node hidden" style="top: 234px; left: 325px; width: 140px; height: 72px; font-size: 0.72rem; line-height: 1.2; border: 2px solid var(--node-blue-border); text-align: center; padding: 6px;">Job Listings are live for 14 days</div>
+            <button id="btn-view-bids" class="action-btn btn-centered hidden" style="top: 316px; left: 395px;" onclick="showWarning('bids')">see more</button>
+            <button id="btn-next2" class="action-btn btn-centered hidden" style="top: 316px; left: 395px;" onclick="revealStep(3)">click to view<br>next step</button>
+
+            <!-- Step 2 Branch: Clinicians make offers anytime on your listing -->
+            <div id="node-bids-wrapper" class="bids-pill-wrapper hidden">
+                <div class="bids-tooltip">
+                    Clinicians make offers anytime on your listing<br>
+                    Review your offers in real time
+                </div>
+                <div id="node-bids" class="node pill yellow-node" style="position: relative; top: 0; left: 0; border: 2px solid var(--node-yellow-border); display: flex;">Clinicians make offers anytime on your listing</div>
+            </div>
+
+            <!-- Step 3: Healthcare facilities select a candidate with Hover Tooltip Pop-up -->
+            <div id="node-match" class="diamond-container hidden" style="top: 222px; left: 475px;">
+                <div class="custom-tooltip">Choose any candidate based on their rate,<br>skills, experience, and qualifications</div>
+                <div class="diamond-outer">
+                    <div class="diamond-inner">
+                        <span>Healthcare facilities select a candidate</span>
+                    </div>
+                </div>
+            </div>
+            <button id="btn-view-cheapest" class="action-btn btn-centered hidden" style="top: 325px; left: 535px;" onclick="showWarning('cheapest')">see match<br>criterion</button>
+            <button id="btn-next3" class="action-btn btn-centered hidden" style="top: 325px; left: 535px;" onclick="revealStep(4)">click to view<br>next step</button>
+
+            <!-- Step 3 Branch: Benefit Rectangle Card -->
+            <div id="node-cheapest" class="node benefit-rect green-node hidden" style="top: 22px; left: 457.5px; border: 2px solid var(--node-green-border);">Save on the time, cost and inefficiencies of job boards, agencies, or personal referrals</div>
+
+            <!-- Step 4: Contact Info Given (Rectangular Node) -->
+            <div id="node-contact" class="node rect green-node hidden" style="top: 244px; left: 615px; border: 2px solid var(--node-green-border);">Contact Info Given</div>
+            <button id="btn-next4" class="action-btn btn-centered hidden" style="top: 306px; left: 672.5px;" onclick="revealStep(5)">click to view<br>next step</button>
+
+            <!-- Step 5: Clinician Starts -->
+            <div id="node-starts" class="node rect blue-node hidden" style="top: 244px; left: 745px;">Clinician Starts</div>
+            <button id="btn-view-details" class="action-btn btn-centered hidden" style="top: 306px; left: 802px;" onclick="showWarning('details')">see outcome<br>details</button>
+
+            <!-- Step 5 Branch Top: 14 Days avg -->
+            <div id="node-days" class="node pill yellow-node hidden" style="top: 170px; left: 835px; border: 2px solid var(--node-yellow-border);">14 Days avg</div>
+
+            <!-- Step 5 Branch Bottom: Updated Fee Note with Clickable Tooltip Link -->
+            <div id="node-invoice-wrapper" class="fee-pill-wrapper hidden">
+                <div class="fee-tooltip">
+                    Learn more about our pricing here:<br>
+                    <a href="https://travelingtherapist.ca/pricing" target="_blank" style="color: var(--node-green-border); text-decoration: underline;">
+                        travelingtherapist.ca/pricing
+                    </a>
+                </div>
+                <a id="node-invoice" href="https://travelingtherapist.ca/pricing" target="_blank" class="node fee-pill green-node clickable" style="position: relative; top: 0; left: 0; border: 2px solid var(--node-green-border); display: flex;">Small daily rate or fixed % match fee after you've selected a candidate</a>
+            </div>
+
+            <!-- Diagram Controls: Global Navigation Panel -->
+            <div id="controls-panel" class="controls-container hidden">
+                <button id="btn-back" class="control-btn" onclick="goBackOneStep()">Go back 1 step</button>
+                <button id="btn-close" class="control-btn" onclick="closeDiagram()">Close Diagram</button>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        const allDynamicIds = [
+            'node-post', 'arr-start-post', 'btn-next1',
+            'node-auction', 'arr-post-auction', 'btn-view-bids', 'btn-next2',
+            'node-bids-wrapper', 'arr-auction-bids',
+            'node-match', 'arr-auction-match', 'btn-view-cheapest', 'btn-next3',
+            'node-cheapest', 'arr-match-cheapest',
+            'node-contact', 'arr-match-contact', 'btn-next4',
+            'node-starts', 'arr-contact-starts', 'btn-view-details',
+            'node-days', 'arr-starts-days',
+            'node-invoice-wrapper', 'arr-starts-invoice'
+        ];
+
+        let historyStack = [];
+        let diagramStarted = false;
+
+        function showElement(id) {
+            const el = document.getElementById(id);
+            if (el) el.classList.remove('hidden');
+        }
+
+        function hideElement(id) {
+            const el = document.getElementById(id);
+            if (el) el.classList.add('hidden');
+        }
+
+        function handleStartClick(event) {
+            if (!diagramStarted) {
+                event.preventDefault();
+                diagramStarted = true;
+                revealStep(1);
+            }
+        }
+
+        function showWarning(type) {
+            historyStack.push({ type: 'warning', target: type });
+            if (type === 'bids') {
+                hideElement('btn-view-bids');
+                showElement('node-bids-wrapper');
+                showElement('arr-auction-bids');
+                showElement('btn-next2');
+            } else if (type === 'cheapest') {
+                hideElement('btn-view-cheapest');
+                showElement('node-cheapest');
+                showElement('arr-match-cheapest');
+                showElement('btn-next3');
+            } else if (type === 'details') {
+                hideElement('btn-view-details');
+                showElement('node-days');
+                showElement('arr-starts-days');
+                showElement('node-invoice-wrapper');
+                showElement('arr-starts-invoice');
+            }
+            updateControlsVisibility();
+        }
+
+        function revealStep(step) {
+            historyStack.push({ type: 'step', step: step });
+            switch(step) {
+                case 1:
+                    showElement('node-post');
+                    showElement('arr-start-post');
+                    showElement('btn-next1');
+                    break;
+                case 2:
+                    hideElement('btn-next1');
+                    showElement('node-auction');
+                    showElement('arr-post-auction');
+                    showElement('btn-view-bids');
+                    break;
+                case 3:
+                    hideElement('btn-next2');
+                    showElement('node-match');
+                    showElement('arr-auction-match');
+                    showElement('btn-view-cheapest');
+                    break;
+                case 4:
+                    hideElement('btn-next3');
+                    showElement('node-contact');
+                    showElement('arr-match-contact');
+                    showElement('btn-next4');
+                    break;
+                case 5:
+                    hideElement('btn-next4');
+                    showElement('node-starts');
+                    showElement('arr-contact-starts');
+                    showElement('btn-view-details');
+                    break;
+            }
+            updateControlsVisibility();
+        }
+
+        function goBackOneStep() {
+            if (historyStack.length === 0) return;
+            const lastAction = historyStack.pop();
+
+            if (lastAction.type === 'warning') {
+                if (lastAction.target === 'bids') {
+                    hideElement('node-bids-wrapper');
+                    hideElement('arr-auction-bids');
+                    hideElement('btn-next2');
+                    showElement('btn-view-bids');
+                } else if (lastAction.target === 'cheapest') {
+                    hideElement('node-cheapest');
+                    hideElement('arr-match-cheapest');
+                    hideElement('btn-next3');
+                    showElement('btn-view-cheapest');
+                } else if (lastAction.target === 'details') {
+                    hideElement('node-days');
+                    hideElement('arr-starts-days');
+                    hideElement('node-invoice-wrapper');
+                    hideElement('arr-starts-invoice');
+                    showElement('btn-view-details');
+                }
+            } else if (lastAction.type === 'step') {
+                switch(lastAction.step) {
+                    case 1:
+                        hideElement('node-post');
+                        hideElement('arr-start-post');
+                        hideElement('btn-next1');
+                        diagramStarted = false;
+                        break;
+                    case 2:
+                        hideElement('node-auction');
+                        hideElement('arr-post-auction');
+                        hideElement('btn-view-bids');
+                        showElement('btn-next1');
+                        break;
+                    case 3:
+                        hideElement('node-match');
+                        hideElement('arr-auction-match');
+                        hideElement('btn-view-cheapest');
+                        showElement('btn-next2');
+                        break;
+                    case 4:
+                        hideElement('node-contact');
+                        hideElement('arr-match-contact');
+                        hideElement('btn-next4');
+                        showElement('btn-next3');
+                        break;
+                    case 5:
+                        hideElement('node-starts');
+                        hideElement('arr-contact-starts');
+                        hideElement('btn-view-details');
+                        showElement('btn-next4');
+                        break;
+                }
+            }
+            updateControlsVisibility();
+        }
+
+        function updateControlsVisibility() {
+            if (historyStack.length > 0) {
+                showElement('controls-panel');
+            } else {
+                hideElement('controls-panel');
+            }
+        }
+
+        function closeDiagram() {
+            window.location.href = 'http://127.0.0.1:8000/tree-hiring-method/?open=true';
+        }
+    </script>
+</body>
+</html>

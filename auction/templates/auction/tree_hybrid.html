@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hybrid / Internal Temp Pools</title>
+    <style>
+        /* CSS Variables: Central color palette configuration */
+        :root {
+            --bg-sage-dark: #66958b;
+            --bg-sage-light: #8cb6aa;
+            --container-teal-bg: #d2e7e1;
+            
+            --node-blue-bg: #e3f2fd;
+            --node-blue-border: #1565c0;
+            
+            --node-yellow-bg: #fff59d;
+            --node-yellow-border: #fbc02d;
+            
+            --node-red-bg: #ffebee;
+            --node-red-border: #c62828;
+            
+            --node-green-bg: #c8e6c9;
+            --node-green-border: #388e3c;
+            
+            --node-failed-bg: #e53935;
+            --node-failed-border: #a61c1c;
+            --text-dark: #2c3e50;
+            --text-muted: #5a6b7c;
+            --btn-blue: #1565c0;
+            --btn-gray: #4f5b66;
+        }
+
+        /* Global Reset */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Body Styling */
+        body {
+            background: linear-gradient(135deg, var(--bg-sage-dark) 0%, var(--bg-sage-light) 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 20px;
+        }
+
+        /* Outer Card Wrapper */
+        .page-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 1100px;
+            background: rgba(223, 237, 233, 0.7);
+            backdrop-filter: blur(8px);
+            border-radius: 28px;
+            padding: 35px 25px;
+            overflow: hidden;
+            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.12);
+        }
+
+        /* Decorative Background Waves */
+        .wave-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.6;
+        }
+
+        /* Header Section */
+        .header-container {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header-container h1 {
+            font-size: 2.1rem;
+            font-weight: 500;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .header-container p {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+        }
+
+        /* Canvas Container */
+        .main-panel {
+            position: relative;
+            z-index: 1;
+            width: 1000px;
+            height: 540px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+        }
+
+        /* SVG Line Overlay */
+        .svg-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Utility Class */
+        .hidden {
+            display: none !important;
+        }
+
+        /* Keyframe Animations */
+        @keyframes animBluePath {
+            0% { opacity: 0; transform: translateY(10px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes animYellowWarn {
+            0% { opacity: 0; transform: scale(0.75); }
+            60% { transform: scale(1.12); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes animRedBad {
+            0% { opacity: 0; transform: translateX(-12px); }
+            20% { transform: translateX(12px); }
+            40% { transform: translateX(-8px); }
+            60% { transform: translateX(8px); }
+            80% { transform: translateX(-4px); }
+            100% { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Diagram Node Base Styles */
+        .node {
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.8rem;
+            color: var(--text-dark);
+            z-index: 2;
+            text-align: center;
+            padding: 6px 8px;
+            border-radius: 6px;
+        }
+
+        /* Rectangular Node Sizes */
+        .rect {
+            width: 110px;
+            height: 50px;
+            border: 2px solid;
+            box-sizing: border-box;
+        }
+
+        .lg-rect {
+            width: 125px;
+            height: 55px;
+            font-size: 0.84rem;
+            border: 2px solid;
+            box-sizing: border-box;
+        }
+
+        /* Pill Node Shape with explicit border */
+        .pill {
+            border-radius: 16px;
+            padding: 5px 14px;
+            font-weight: bold;
+            font-size: 0.75rem;
+            border: 2px solid;
+            box-sizing: border-box;
+        }
+
+        /* Interactive Click States */
+        .clickable {
+            cursor: pointer;
+            user-select: none;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .clickable:hover {
+            transform: scale(1.04);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+        }
+
+        /* Theme Color Modifiers */
+        .blue-node {
+            background-color: var(--node-blue-bg);
+            border-color: var(--node-blue-border);
+            animation: animBluePath 0.35s ease-out forwards;
+        }
+
+        .yellow-node {
+            background-color: var(--node-yellow-bg);
+            border-color: var(--node-yellow-border);
+            animation: animYellowWarn 0.8s ease-out forwards;
+        }
+
+        .red-node {
+            background-color: var(--node-red-bg);
+            border-color: var(--node-red-border);
+            animation: animRedBad 0.8s ease-out forwards;
+        }
+
+        .green-node {
+            background-color: var(--node-green-bg);
+            border-color: var(--node-green-border);
+            animation: animBluePath 0.35s ease-out forwards;
+        }
+
+        /* Diamond Outer Container */
+        .diamond-container {
+            position: absolute;
+            width: 105px;
+            height: 80px;
+            z-index: 2;
+            filter: drop-shadow(1.5px 0 0 var(--node-failed-border)) 
+                    drop-shadow(-1.5px 0 0 var(--node-failed-border)) 
+                    drop-shadow(0 1.5px 0 var(--node-failed-border)) 
+                    drop-shadow(0 -1.5px 0 var(--node-failed-border));
+            animation: animRedBad 0.8s ease-out forwards;
+        }
+
+        /* Diamond Polygon Shape */
+        .diamond {
+            width: 100%;
+            height: 100%;
+            background-color: var(--node-failed-bg);
+            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 8px;
+        }
+
+        .diamond span {
+            color: #ffffff;
+            font-weight: bold;
+            font-size: 0.55rem;
+            line-height: 1.1;
+        }
+
+        /* Interactive Action Buttons */
+        .action-btn {
+            position: absolute;
+            z-index: 3;
+            background-color: #ffffff;
+            color: var(--btn-blue);
+            border: 1px solid #d0d0d0;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.6rem;
+            line-height: 1.2;
+            text-align: center;
+            cursor: pointer;
+            padding: 4px 8px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+            transition: all 0.15s ease;
+            white-space: normal;
+        }
+
+        .action-btn:hover {
+            background-color: #f0f4f8;
+            border-color: var(--btn-blue);
+            transform: translateX(-50%) scale(1.06);
+        }
+
+        .btn-centered {
+            transform: translateX(-50%);
+        }
+
+        /* Navigation Controls Panel */
+        .controls-container {
+            position: absolute;
+            bottom: 14px;
+            right: 16px;
+            z-index: 10;
+            display: flex;
+            gap: 8px;
+        }
+
+        .control-btn {
+            background-color: #ffffff;
+            color: var(--btn-gray);
+            border: 1px solid #cccccc;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 6px 14px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+            transition: all 0.15s ease;
+        }
+
+        .control-btn:hover {
+            background-color: #f4f5f7;
+            color: #172b4d;
+            border-color: #b3bac5;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="page-wrapper">
+        <svg class="wave-bg" preserveAspectRatio="none" viewBox="0 0 1000 540" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0,140 C280,260 380,30 700,160 C900,220 950,80 1000,70 L1000,0 L0,0 Z" fill="#ffffff" opacity="0.3"></path>
+            <path d="M0,280 C180,160 450,380 750,230 C900,150 950,260 1000,280 L1000,540 L0,540 Z" fill="#ffffff" opacity="0.25"></path>
+        </svg>
+
+        <div class="header-container">
+            <h1>Hybrid / Internal Temp Pools</h1>
+            <p>This is an illustrative tree diagram showing hybrid/internal temp pools. Click the first box to reveal the next step.</p>
+        </div>
+
+        <div class="main-panel">
+            <svg class="svg-canvas">
+                <defs>
+                    <marker id="arrow-blue" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#1565c0" />
+                    </marker>
+                    <marker id="arrow-yellow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#fbc02d" />
+                    </marker>
+                    <marker id="arrow-red" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#c62828" />
+                    </marker>
+                </defs>
+
+                <!-- Connection Lines -->
+                <line id="arr-job-post" class="hidden" x1="150" y1="265" x2="170" y2="265" stroke="#1565c0" stroke-width="2" marker-end="url(#arrow-blue)" />
+                <line id="arr-post-high" class="hidden" x1="280" y1="265" x2="310" y2="265" stroke="#1565c0" stroke-width="2" marker-end="url(#arrow-blue)" />
+                <line id="arr-high-screen" class="hidden" x1="420" y1="265" x2="450" y2="265" stroke="#1565c0" stroke-width="2" marker-end="url(#arrow-blue)" />
+                <line id="arr-screen-cred" class="hidden" x1="560" y1="265" x2="590" y2="265" stroke="#1565c0" stroke-width="2" marker-end="url(#arrow-blue)" />
+                <line id="arr-cred-int" class="hidden" x1="700" y1="265" x2="730" y2="265" stroke="#1565c0" stroke-width="2" marker-end="url(#arrow-blue)" />
+                <line id="arr-int-hire" class="hidden" x1="840" y1="265" x2="870" y2="265" stroke="#1565c0" stroke-width="2" marker-end="url(#arrow-blue)" />
+
+                <!-- Extended downward to touch the top of Maintain Roster (y1 changed from 235 to 240) -->
+                <line id="arr-dia1-post" class="hidden" x1="225" y1="240" x2="225" y2="175" stroke="#c62828" stroke-width="2" marker-end="url(#arrow-red)" />
+                <line id="arr-screen-dia2" class="hidden" x1="365" y1="290" x2="365" y2="355" stroke="#c62828" stroke-width="2" marker-end="url(#arrow-red)" />
+                <line id="arr-nohire-avg" class="hidden" x1="785" y1="290" x2="785" y2="385" stroke="#fbc02d" stroke-width="2" marker-end="url(#arrow-yellow)" />
+            </svg>
+
+            <!-- HTML Diagram Nodes -->
+            <div id="node-job" class="node lg-rect blue-node clickable" style="top: 238px; left: 25px;" onclick="revealStep(1)">
+                Hybrid / Internal Temp Pools
+            </div>
+
+            <div id="node-post" class="node rect blue-node hidden" style="top: 240px; left: 170px;">Maintain Roster</div>
+            <button id="btn-view1" class="action-btn btn-centered hidden" style="top: 300px; left: 225px;" onclick="showWarning(1)">see where<br>this goes wrong</button>
+            <button id="btn-next1" class="action-btn btn-centered hidden" style="top: 300px; left: 225px;" onclick="revealStep(2)">click to view<br>next step</button>
+
+            <div id="node-dia1" class="diamond-container hidden" style="top: 90px; left: 172.5px;">
+                <div class="diamond">
+                    <span>Burden of Maintaining Roster</span>
+                </div>
+            </div>
+
+            <div id="node-high" class="node rect blue-node hidden" style="top: 240px; left: 310px;">Outreach to Roster</div>
+            <button id="btn-view3" class="action-btn btn-centered hidden" style="top: 300px; left: 365px;" onclick="showWarning(3)">see where<br>this goes wrong</button>
+            <button id="btn-next3" class="action-btn btn-centered hidden" style="top: 300px; left: 365px;" onclick="revealStep(3)">click to view<br>next step</button>
+
+            <div id="node-dia2" class="diamond-container hidden" style="top: 355px; left: 313px;">
+                <div class="diamond">
+                    <span>Breaks If Roster Stales</span>
+                </div>
+            </div>
+
+            <div id="node-screen" class="node rect blue-node hidden" style="top: 240px; left: 450px;">Confirm Availability</div>
+            <button id="btn-view5" class="action-btn btn-centered hidden" style="top: 300px; left: 505px;" onclick="showWarning(5)">see where<br>this goes wrong</button>
+            <button id="btn-next5" class="action-btn btn-centered hidden" style="top: 300px; left: 505px;" onclick="revealStep(5)">click to view<br>next step</button>
+
+            <!-- High Admin Touches Warning Pill -->
+            <div id="node-admin" class="node pill yellow-node hidden" style="top: 200px; left: 436px;">High Admin Touches</div>
+
+            <div id="node-cred" class="node rect blue-node hidden" style="top: 240px; left: 590px;">Short Term Fill</div>
+            <button id="btn-next7" class="action-btn btn-centered hidden" style="top: 300px; left: 645px;" onclick="revealStep(7)">click to view<br>next step</button>
+
+            <div id="node-int" class="node rect blue-node hidden" style="top: 240px; left: 730px;">Onboarding</div>
+            <button id="btn-view8" class="action-btn btn-centered hidden" style="top: 300px; left: 785px;" onclick="showWarning(8)">see where<br>this goes wrong</button>
+            <button id="btn-next8" class="action-btn btn-centered hidden" style="top: 300px; left: 785px;" onclick="revealStep(8)">click to view<br>next step</button>
+
+            <div id="node-hire" class="node rect green-node hidden" style="top: 240px; left: 870px;">Start</div>
+
+            <div id="node-avg" class="node pill yellow-node hidden" style="top: 385px; left: 740px;">5-20 Days avg</div>
+
+            <div id="controls-panel" class="controls-container hidden">
+                <button id="btn-back" class="control-btn" onclick="goBackOneStep()">Go back 1 step</button>
+                <button id="btn-close" class="control-btn" onclick="closeDiagram()">Close Diagram</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const allDynamicIds = [
+            'node-post', 'btn-view1', 'btn-next1', 'arr-job-post',
+            'node-dia1', 'arr-dia1-post',
+            'node-high', 'btn-view3', 'btn-next3', 'arr-post-high',
+            'node-dia2', 'arr-screen-dia2',
+            'node-screen', 'btn-view5', 'btn-next5', 'arr-high-screen',
+            'node-admin',
+            'node-cred', 'btn-next7', 'arr-screen-cred',
+            'node-int', 'btn-view8', 'btn-next8', 'arr-cred-int',
+            'node-hire', 'arr-int-hire',
+            'node-avg', 'arr-nohire-avg'
+        ];
+
+        let historyStack = [];
+
+        function showElement(id) {
+            const el = document.getElementById(id);
+            if (el) el.classList.remove('hidden');
+        }
+
+        function hideElement(id) {
+            const el = document.getElementById(id);
+            if (el) el.classList.add('hidden');
+        }
+
+        function disableClick(id) {
+            const el = document.getElementById(id);
+            if (el) {
+                el.classList.remove('clickable');
+                el.onclick = null;
+            }
+        }
+
+        function enableClick(id, handler) {
+            const el = document.getElementById(id);
+            if (el) {
+                el.classList.add('clickable');
+                el.onclick = handler;
+            }
+        }
+
+        function showWarning(step) {
+            historyStack.push({ type: 'warning', step: step });
+
+            if (step === 1) {
+                hideElement('btn-view1');
+                showElement('node-dia1');
+                showElement('arr-dia1-post');
+                showElement('btn-next1');
+            } else if (step === 3) {
+                hideElement('btn-view3');
+                showElement('node-dia2');
+                showElement('arr-screen-dia2');
+                showElement('btn-next3');
+            } else if (step === 5) {
+                hideElement('btn-view5');
+                showElement('node-admin');
+                showElement('btn-next5');
+            } else if (step === 8) {
+                hideElement('btn-view8');
+                showElement('node-avg');
+                showElement('arr-nohire-avg');
+                showElement('btn-next8');
+            }
+            updateControlsVisibility();
+        }
+
+        function revealStep(step) {
+            historyStack.push({ type: 'step', step: step });
+
+            switch(step) {
+                case 1:
+                    disableClick('node-job');
+                    showElement('node-post');
+                    showElement('arr-job-post');
+                    showElement('btn-view1');
+                    break;
+                case 2:
+                    hideElement('btn-next1');
+                    showElement('node-high');
+                    showElement('arr-post-high');
+                    showElement('btn-view3');
+                    break;
+                case 3:
+                    hideElement('btn-next3');
+                    showElement('node-screen');
+                    showElement('arr-high-screen');
+                    showElement('btn-view5');
+                    break;
+                case 5:
+                    hideElement('btn-next5');
+                    showElement('node-cred');
+                    showElement('arr-screen-cred');
+                    showElement('btn-next7');
+                    break;
+                case 7:
+                    hideElement('btn-next7');
+                    showElement('node-int');
+                    showElement('arr-cred-int');
+                    showElement('btn-view8');
+                    break;
+                case 8:
+                    hideElement('btn-next8');
+                    showElement('node-hire');
+                    showElement('arr-int-hire');
+                    break;
+            }
+            updateControlsVisibility();
+        }
+
+        function goBackOneStep() {
+            if (historyStack.length === 0) return;
+
+            const lastAction = historyStack.pop();
+
+            if (lastAction.type === 'warning') {
+                const step = lastAction.step;
+                if (step === 1) {
+                    hideElement('node-dia1');
+                    hideElement('arr-dia1-post');
+                    hideElement('btn-next1');
+                    showElement('btn-view1');
+                } else if (step === 3) {
+                    hideElement('node-dia2');
+                    hideElement('arr-screen-dia2');
+                    hideElement('btn-next3');
+                    showElement('btn-view3');
+                } else if (step === 5) {
+                    hideElement('node-admin');
+                    hideElement('btn-next5');
+                    showElement('btn-view5');
+                } else if (step === 8) {
+                    hideElement('node-avg');
+                    hideElement('arr-nohire-avg');
+                    hideElement('btn-next8');
+                    showElement('btn-view8');
+                }
+            } else if (lastAction.type === 'step') {
+                const step = lastAction.step;
+                switch(step) {
+                    case 1:
+                        hideElement('node-post');
+                        hideElement('arr-job-post');
+                        hideElement('btn-view1');
+                        hideElement('btn-next1');
+                        enableClick('node-job', () => revealStep(1));
+                        break;
+                    case 2:
+                        hideElement('node-high');
+                        hideElement('arr-post-high');
+                        hideElement('btn-view3');
+                        hideElement('btn-next3');
+                        showElement('btn-view1');
+                        break;
+                    case 3:
+                        hideElement('node-screen');
+                        hideElement('arr-high-screen');
+                        hideElement('btn-view5');
+                        hideElement('btn-next5');
+                        if (document.getElementById('node-dia2').classList.contains('hidden')) {
+                            showElement('btn-view3');
+                        } else {
+                            showElement('btn-next3');
+                        }
+                        break;
+                    case 5:
+                        hideElement('node-cred');
+                        hideElement('arr-screen-cred');
+                        hideElement('btn-next7');
+                        if (document.getElementById('node-admin').classList.contains('hidden')) {
+                            showElement('btn-view5');
+                        } else {
+                            showElement('btn-next5');
+                        }
+                        break;
+                    case 7:
+                        hideElement('node-int');
+                        hideElement('arr-cred-int');
+                        hideElement('btn-view8');
+                        hideElement('btn-next8');
+                        showElement('btn-next7');
+                        break;
+                    case 8:
+                        hideElement('node-hire');
+                        hideElement('arr-int-hire');
+                        if (document.getElementById('node-avg').classList.contains('hidden')) {
+                            showElement('btn-view8');
+                        } else {
+                            showElement('btn-next8');
+                        }
+                        break;
+                }
+            }
+            updateControlsVisibility();
+        }
+
+        function updateControlsVisibility() {
+            if (historyStack.length > 0) {
+                showElement('controls-panel');
+            } else {
+                hideElement('controls-panel');
+            }
+        }
+
+        function closeDiagram() {
+            window.location.href = "http://127.0.0.1:8000/tree-hiring-method/?open=true";
+        }
+    </script>
+</body>
+</html>

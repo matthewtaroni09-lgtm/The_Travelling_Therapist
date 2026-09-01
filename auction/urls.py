@@ -79,7 +79,12 @@ urlpatterns = [
     path("auction/data/admin_raffle_api", views.admin_raffle_api, name="admin-raffle-api"), 
     
     path("password_reset", views.password_reset_request, name="password_reset"),
-    path("password", PasswordsChangeView.as_view(template_name="auction/registration/change_password.html"), name="change-password")
+    path("password", PasswordsChangeView.as_view(template_name="auction/registration/change_password.html"), name="change-password"),
+
+    path('tree-hiring-method/', views.tree_hiring_method, name='tree_hiring_method'),
+    path('direct-connection/', views.direct_connection_view, name='direct_connection'),
+    
+    path('', views.index, name='index'),
 ]
 
 if settings.DEBUG: 

@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Direct-Connection Platforms</title>
+    <style>
+        /* Color theme variables */
+        :root {
+            --bg-sage-dark: #66958b;
+            --bg-sage-light: #8cb6aa;
+            --container-teal-bg: #d2e7e1;
+            
+            --node-blue-bg: #e3f2fd;
+            --node-blue-border: #1565c0;
+            
+            --node-yellow-bg: #fff59d;
+            --node-yellow-border: #fbc02d;
+            
+            --node-red-bg: #ffebee;
+            --node-red-border: #c62828;
+            
+            --node-green-bg: #c8e6c9;
+            --node-green-border: #388e3c;
+            
+            --node-failed-bg: #e53935;
+            --node-failed-border: #a61c1c;
+
+            --quote-bg: #ffffff;
+            --quote-border: #000000;
+            --quote-text: #000000;
+
+            --text-dark: #2c3e50;
+            --text-muted: #5a6b7c;
+            --btn-blue: #1565c0;
+            --btn-gray: #4f5b66;
+        }
+
+        /* Page reset */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Main body layout */
+        body {
+            background: linear-gradient(135deg, var(--bg-sage-dark) 0%, var(--bg-sage-light) 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* Main outer wrapper card */
+        .page-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 1140px;
+            background: rgba(223, 237, 233, 0.7);
+            backdrop-filter: blur(8px);
+            border-radius: 28px;
+            padding: 35px 25px;
+            overflow: hidden;
+            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.12);
+        }
+
+        /* Background wave graphics */
+        .wave-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.6;
+        }
+
+        /* Header styling */
+        .header-container {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header-container h1 {
+            font-size: 2.1rem;
+            font-weight: 500;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .header-container p {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+        }
+
+        /* Diagram container panel */
+        .main-panel {
+            position: relative;
+            z-index: 1;
+            width: 1040px;
+            height: 520px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+        }
+
+        /* SVG overlay for connecting lines */
+        .svg-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Utility helper to hide elements */
+        .hidden {
+            display: none !important;
+        }
+
+        /* Animations for elements appearing */
+        @keyframes animBluePath {
+            0% { opacity: 0; transform: translateY(10px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes animYellowWarn {
+            0% { opacity: 0; transform: scale(0.75); }
+            60% { transform: scale(1.12); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes animRedBad {
+            0% { opacity: 0; transform: translateX(-12px); }
+            20% { transform: translateX(12px); }
+            40% { transform: translateX(-8px); }
+            60% { transform: translateX(8px); }
+            80% { transform: translateX(-4px); }
+            100% { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Node base styles */
+        .node {
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.78rem;
+            color: var(--text-dark);
+            z-index: 3;
+            text-align: center;
+            padding: 4px 6px;
+            border-radius: 6px;
+        }
+
+        .rect {
+            width: 98px;
+            height: 48px;
+            border: 2px solid;
+            box-sizing: border-box;
+        }
+
+        .lg-rect {
+            width: 125px;
+            height: 72px;
+            font-size: 0.92rem;
+            border: 2px solid;
+            box-sizing: border-box;
+        }
+
+        .oval {
+            width: 85px;
+            height: 44px;
+            border-radius: 50%;
+            border: 2px solid;
+            box-sizing: border-box;
+            font-size: 0.7rem;
+            background-color: var(--node-blue-bg);
+            z-index: 2;
+        }
+
+        .pill {
+            border-radius: 16px;
+            padding: 6px 12px;
+            font-weight: bold;
+            font-size: 0.72rem;
+            line-height: 1.25;
+            text-align: center;
+            z-index: 4;
+        }
+
+        .clickable {
+            cursor: pointer;
+            user-select: none;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .clickable:hover {
+            transform: scale(1.04);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+        }
+
+        .blue-node {
+            background-color: var(--node-blue-bg);
+            border-color: var(--node-blue-border);
+            animation: animBluePath 0.35s ease-out forwards;
+        }
+
+        .yellow-node {
+            background-color: var(--node-yellow-bg);
+            border-color: var(--node-yellow-border);
+            animation: animYellowWarn 0.8s ease-out forwards;
+        }
+
+        .red-node {
+            background-color: var(--node-red-bg);
+            border-color: var(--node-red-border);
+            animation: animRedBad 0.8s ease-out forwards;
+        }
+
+        .green-node {
+            background-color: var(--node-green-bg);
+            border-color: var(--node-green-border);
+            animation: animBluePath 0.35s ease-out forwards;
+        }
+
+        .diamond-container {
+            position: absolute;
+            width: 132px;
+            height: 116px;
+            z-index: 2;
+            filter: drop-shadow(1.5px 0 0 var(--node-failed-border)) 
+                    drop-shadow(-1.5px 0 0 var(--node-failed-border)) 
+                    drop-shadow(0 1.5px 0 var(--node-failed-border)) 
+                    drop-shadow(0 -1.5px 0 var(--node-failed-border));
+            animation: animRedBad 0.8s ease-out forwards;
+        }
+
+        .diamond {
+            width: 100%;
+            height: 100%;
+            background-color: var(--node-failed-bg);
+            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 16px;
+        }
+
+        .diamond span {
+            color: #ffffff;
+            font-weight: bold;
+            font-size: 0.65rem;
+            line-height: 1.2;
+        }
+
+        .quote-bubble {
+            position: absolute;
+            background-color: var(--quote-bg);
+            border: 2px solid var(--quote-border);
+            border-radius: 12px;
+            padding: 6px 10px;
+            font-size: 0.65rem;
+            font-weight: bold;
+            color: var(--quote-text);
+            z-index: 4;
+            max-width: 145px;
+            text-align: center;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            animation: animYellowWarn 0.8s ease-out forwards;
+        }
+
+        .quote-bubble::before {
+            content: '';
+            position: absolute;
+            bottom: -9px;
+            right: 12px;
+            border-width: 10px 10px 0 0;
+            border-style: solid;
+            border-color: var(--quote-border) transparent;
+            display: block;
+            width: 0;
+        }
+
+        .quote-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            right: 13px;
+            border-width: 8px 8px 0 0;
+            border-style: solid;
+            border-color: var(--quote-bg) transparent;
+            display: block;
+            width: 0;
+        }
+
+        .action-btn {
+            position: absolute;
+            z-index: 5;
+            background-color: #ffffff;
+            color: var(--btn-blue);
+            border: 1px solid #d0d0d0;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.58rem;
+            line-height: 1.2;
+            text-align: center;
+            cursor: pointer;
+            padding: 3px 6px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+            transition: all 0.15s ease;
+            white-space: normal;
+        }
+
+        .action-btn:hover {
+            background-color: #f0f4f8;
+            border-color: var(--btn-blue);
+            transform: translateX(-50%) scale(1.06);
+        }
+
+        .btn-centered {
+            transform: translateX(-50%);
+        }
+
+        .controls-container {
+            position: absolute;
+            bottom: 12px;
+            right: 16px;
+            z-index: 10;
+            display: flex;
+            gap: 8px;
+        }
+
+        .control-btn {
+            background-color: #ffffff;
+            color: var(--btn-gray);
+            border: 1px solid #cccccc;
+            border-radius: 4px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 5px 12px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+            transition: all 0.15s ease;
+        }
+
+        .control-btn:hover {
+            background-color: #f4f5f7;
+            color: #172b4d;
+            border-color: #b3bac5;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="page-wrapper">
+        
+        <!-- Background graphics -->
+        <svg class="wave-bg" preserveAspectRatio="none" viewBox="0 0 1040 520" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0,140 C280,260 380,30 700,160 C900,220 950,80 1040,70 L1040,0 L0,0 Z" fill="#ffffff" opacity="0.3"></path>
+            <path d="M0,280 C180,160 450,380 750,230 C900,150 950,260 1040,280 L1040,520 L0,520 Z" fill="#ffffff" opacity="0.25"></path>
+        </svg>
+
+        <!-- Header container -->
+        <div class="header-container">
+            <h1>Direct-Connection Platforms</h1>
+            <p>This is an illustrative tree diagram showing a direct employer outreach workflow. Click the first box to reveal the next step.</p>
+        </div>
+
+        <!-- Main panel container -->
+        <div class="main-panel">
+            
+            <!-- SVG canvas -->
+            <svg class="svg-canvas">
+                <defs>
+                    <marker id="arrow-blue" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#1565c0" />
+                    </marker>
+                    <marker id="arrow-yellow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#fbc02d" />
+                    </marker>
+                    <marker id="arrow-red" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#c62828" />
+                    </marker>
+                </defs>
+
+                <line id="arr-outreach-contacts" class="hidden" x1="145" y1="260" x2="175" y2="260" stroke="#1565c0" stroke-width="2" marker-end="url(#arrow-blue)" />
+                <line id="arr-contacts-email" class="hidden" x1="273" y1="260" x2="310" y2="260" stroke="#1565c0" stroke-width="2" marker-end="url(#arrow-blue)" />
+                <path id="arr-email-resp" class="hidden" d="M 359 236 L 359 140 L 440 140" fill="none" stroke="#1565c0" stroke-width="2" marker-end="url(#arrow-blue)" />
+                <path id="arr-email-noresp" class="hidden" d="M 359 284 L 359 398 L 440 398" fill="none" stroke="#1565c0" stroke-width="2" marker-end="url(#arrow-blue)" />
+                <path id="arr-noresp-email" class="hidden" d="M 477 420 L 340 420 L 340 284" fill="none" stroke="#1565c0" stroke-width="2" marker-end="url(#arrow-blue)" />
+                <path id="arr-resp-manual" class="hidden" d="M 515 140 L 585 140 L 585 260 L 615 260" fill="none" stroke="#1565c0" stroke-width="2" marker-end="url(#arrow-blue)" />
+                <path id="arr-noresp-manual" class="hidden" d="M 477 376 L 585 376 L 585 260 L 615 260" fill="none" stroke="#1565c0" stroke-width="2" marker-end="url(#arrow-blue)" />
+                <path id="arr-manual-noresp" class="hidden" d="M 664 284 L 664 398 L 515 398" fill="none" stroke="#1565c0" stroke-width="2" marker-end="url(#arrow-blue)" />
+                <line id="arr-manual-neg" class="hidden" x1="713" y1="260" x2="730" y2="260" stroke="#1565c0" stroke-width="2" marker-end="url(#arrow-blue)" />
+                <path id="arr-neg-hire" class="hidden" d="M 828 260 L 850 190 L 870 190" fill="none" stroke="#1565c0" stroke-width="2" marker-end="url(#arrow-blue)" />
+                <path id="arr-neg-nohire" class="hidden" d="M 828 260 L 850 330 L 870 330" fill="none" stroke="#1565c0" stroke-width="2" marker-end="url(#arrow-blue)" />
+                <path id="arr-nohire-loop" class="hidden" d="M 919 354 L 919 455 L 224 455 L 224 284" fill="none" stroke="#c62828" stroke-width="2" marker-end="url(#arrow-red)" />
+                <path id="arr-hire-avg" class="hidden" d="M 919 166 L 919 138" fill="none" stroke="#fbc02d" stroke-width="2" marker-end="url(#arrow-yellow)" />
+            </svg>
+
+            <!-- Start node block -->
+            <div id="node-outreach" class="node lg-rect blue-node clickable" style="top: 224px; left: 20px;" onclick="revealStep(1)">
+                Direct Employer Outreach
+            </div>
+
+            <!-- Identify contacts block -->
+            <div id="node-contacts" class="node rect blue-node hidden" style="top: 236px; left: 175px;">Identify Contacts</div>
+            <button id="btn-next1" class="action-btn btn-centered hidden" style="top: 294px; left: 224px;" onclick="revealStep(2)">click to view<br>next step</button>
+
+            <!-- Email outreach block -->
+            <div id="node-email" class="node rect blue-node hidden" style="top: 236px; left: 310px;">Email/DM Outreach</div>
+            <button id="btn-view2" class="action-btn btn-centered hidden" style="top: 294px; left: 359px;" onclick="showWarning(2)">see where<br>this goes wrong</button>
+            <button id="btn-next2" class="action-btn btn-centered hidden" style="top: 294px; left: 359px;" onclick="revealStep(3)">click to view<br>next step</button>
+
+            <!-- Warning quote block -->
+            <div id="node-quote" class="quote-bubble hidden" style="top: 170px; left: 230px;">
+                "Emailed 25 clinicians, 3 people replied"
+            </div>
+            
+            <!-- Diamond block shifted left from 438px to 415px -->
+            <div id="node-dia-low" class="diamond-container hidden" style="top: 202px; left: 415px;">
+                <div class="diamond">
+                    <span>LOW RESPONSE RATE</span>
+                </div>
+            </div>
+
+            <!-- Response and No Response blocks -->
+            <div id="node-resp" class="node oval blue-node hidden" style="top: 118px; left: 440px;">Response</div>
+            <div id="node-noresp" class="node oval blue-node hidden" style="top: 376px; left: 440px;">No Response</div>
+
+            <!-- Manual follow-up block -->
+            <div id="node-manual" class="node rect blue-node hidden" style="top: 236px; left: 615px;">Manual Follow-up</div>
+            
+            <!-- Back and forth conversation warning pill -->
+            <div id="node-convo-warn" class="node pill yellow-node hidden" style="top: 48px; left: 480px; border: 2px solid var(--node-yellow-border); max-width: 220px; white-space: normal;">Back and forth email conversation<br>takes multiple days</div>
+            
+            <button id="btn-view5" class="action-btn btn-centered hidden" style="top: 294px; left: 664px;" onclick="showWarning(5)">see where<br>this goes wrong</button>
+            <button id="btn-next5" class="action-btn btn-centered hidden" style="top: 294px; left: 664px;" onclick="revealStep(6)">click to view<br>next step</button>
+
+            <!-- Negotiation block -->
+            <div id="node-neg" class="node rect blue-node hidden" style="top: 236px; left: 730px;">Negotiation</div>
+            <button id="btn-next6" class="action-btn btn-centered hidden" style="top: 294px; left: 779px;" onclick="revealStep(7)">click to view<br>next step</button>
+
+            <!-- Final outcomes (Hire / No Hire) blocks -->
+            <div id="node-hire" class="node rect green-node hidden" style="top: 166px; left: 870px;">Hire</div>
+            <div id="node-nohire" class="node rect red-node hidden" style="top: 306px; left: 870px;">No Hire</div>
+            <button id="btn-view-hire" class="action-btn btn-centered hidden" style="top: 118px; left: 919px;" onclick="showWarning('hire')">see duration</button>
+            
+            <div id="node-avg" class="node pill yellow-node hidden" style="top: 103px; left: 850px; border: 2px solid var(--node-yellow-border);">42–70 days avg</div>
+
+            <!-- Navigation controls block -->
+            <div id="controls-panel" class="controls-container hidden">
+                <button id="btn-back" class="control-btn" onclick="goBackOneStep()">Go back 1 step</button>
+                <button id="btn-close" class="control-btn" onclick="closeDiagram()">Close Diagram</button>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+        const allDynamicIds = [
+            'node-contacts', 'btn-next1', 'arr-outreach-contacts',
+            'node-email', 'btn-view2', 'btn-next2', 'arr-contacts-email',
+            'node-quote', 'node-dia-low',
+            'node-resp', 'node-noresp', 'arr-email-resp', 'arr-email-noresp', 'arr-noresp-email',
+            'node-manual', 'node-convo-warn', 'btn-view5', 'btn-next5', 'arr-resp-manual', 'arr-noresp-manual', 'arr-manual-noresp',
+            'node-neg', 'btn-next6', 'arr-manual-neg',
+            'node-hire', 'node-nohire', 'btn-view-hire', 'arr-neg-hire', 'arr-neg-nohire', 'arr-nohire-loop',
+            'node-avg', 'arr-hire-avg'
+        ];
+
+        let historyStack = [];
+
+        function showElement(id) {
+            const el = document.getElementById(id);
+            if (el) el.classList.remove('hidden');
+        }
+
+        function hideElement(id) {
+            const el = document.getElementById(id);
+            if (el) el.classList.add('hidden');
+        }
+
+        function disableClick(id) {
+            const el = document.getElementById(id);
+            if (el) {
+                el.classList.remove('clickable');
+                el.onclick = null;
+            }
+        }
+
+        function enableClick(id, handler) {
+            const el = document.getElementById(id);
+            if (el) {
+                el.classList.add('clickable');
+                el.onclick = handler;
+            }
+        }
+
+        function showWarning(step) {
+            const action = { type: 'warning', step: step };
+            historyStack.push(action);
+
+            if (step === 2) {
+                hideElement('btn-view2');
+                showElement('node-quote');
+                showElement('node-dia-low');
+                showElement('btn-next2');
+            } else if (step === 5) {
+                hideElement('btn-view5');
+                showElement('node-convo-warn');
+                showElement('btn-next5');
+            } else if (step === 'hire') {
+                hideElement('btn-view-hire');
+                showElement('node-avg');
+                showElement('arr-hire-avg');
+            }
+            updateControlsVisibility();
+        }
+
+        function revealStep(step) {
+            const action = { type: 'step', step: step };
+            historyStack.push(action);
+
+            switch(step) {
+                case 1:
+                    disableClick('node-outreach');
+                    showElement('node-contacts');
+                    showElement('arr-outreach-contacts');
+                    showElement('btn-next1');
+                    break;
+                case 2:
+                    hideElement('btn-next1');
+                    showElement('node-email');
+                    showElement('arr-contacts-email');
+                    showElement('btn-view2');
+                    break;
+                case 3:
+                    hideElement('btn-next2');
+                    showElement('node-resp');
+                    showElement('node-noresp');
+                    showElement('arr-email-resp');
+                    showElement('arr-email-noresp');
+                    showElement('arr-noresp-email');
+
+                    showElement('node-manual');
+                    showElement('arr-resp-manual');
+                    showElement('arr-noresp-manual');
+                    showElement('arr-manual-noresp');
+                    showElement('btn-view5');
+                    break;
+                case 6:
+                    hideElement('btn-next5');
+                    showElement('node-neg');
+                    showElement('arr-manual-neg');
+                    showElement('btn-next6');
+                    break;
+                case 7:
+                    hideElement('btn-next6');
+                    showElement('node-hire');
+                    showElement('node-nohire');
+                    showElement('arr-neg-hire');
+                    showElement('arr-neg-nohire');
+                    showElement('arr-nohire-loop');
+                    showElement('btn-view-hire');
+                    break;
+            }
+            updateControlsVisibility();
+        }
+
+        function goBackOneStep() {
+            if (historyStack.length === 0) return;
+
+            const lastAction = historyStack.pop();
+
+            if (lastAction.type === 'warning') {
+                const step = lastAction.step;
+                if (step === 2) {
+                    hideElement('node-quote');
+                    hideElement('node-dia-low');
+                    hideElement('btn-next2');
+                    showElement('btn-view2');
+                } else if (step === 5) {
+                    hideElement('node-convo-warn');
+                    hideElement('btn-next5');
+                    showElement('btn-view5');
+                } else if (step === 'hire') {
+                    hideElement('node-avg');
+                    hideElement('arr-hire-avg');
+                    showElement('btn-view-hire');
+                }
+            } else if (lastAction.type === 'step') {
+                const step = lastAction.step;
+                switch(step) {
+                    case 1:
+                        hideElement('node-contacts');
+                        hideElement('arr-outreach-contacts');
+                        hideElement('btn-next1');
+                        enableClick('node-outreach', () => revealStep(1));
+                        break;
+                    case 2:
+                        hideElement('node-email');
+                        hideElement('arr-contacts-email');
+                        hideElement('btn-view2');
+                        showElement('btn-next1');
+                        break;
+                    case 3:
+                        hideElement('node-resp');
+                        hideElement('node-noresp');
+                        hideElement('arr-email-resp');
+                        hideElement('arr-email-noresp');
+                        hideElement('arr-noresp-email');
+
+                        hideElement('node-manual');
+                        hideElement('node-convo-warn');
+                        hideElement('arr-resp-manual');
+                        hideElement('arr-noresp-manual');
+                        hideElement('arr-manual-noresp');
+                        hideElement('btn-view5');
+
+                        if (document.getElementById('node-dia-low').classList.contains('hidden')) {
+                            showElement('btn-view2');
+                        } else {
+                            showElement('btn-next2');
+                        }
+                        break;
+                    case 6:
+                        hideElement('node-neg');
+                        hideElement('arr-manual-neg');
+                        hideElement('btn-next6');
+
+                        if (document.getElementById('node-convo-warn').classList.contains('hidden')) {
+                            showElement('btn-view5');
+                        } else {
+                            showElement('btn-next5');
+                        }
+                        break;
+                    case 7:
+                        hideElement('node-hire');
+                        hideElement('node-nohire');
+                        hideElement('arr-neg-hire');
+                        hideElement('arr-neg-nohire');
+                        hideElement('arr-nohire-loop');
+                        hideElement('btn-view-hire');
+                        showElement('btn-next6');
+                        break;
+                }
+            }
+            updateControlsVisibility();
+        }
+
+        function updateControlsVisibility() {
+            if (historyStack.length > 0) {
+                showElement('controls-panel');
+            } else {
+                hideElement('controls-panel');
+            }
+        }
+
+        function closeDiagram() {
+            window.location.href = "http://127.0.0.1:8000/tree-hiring-method/?open=true";
+        }
+    </script>
+</body>
+</html>
