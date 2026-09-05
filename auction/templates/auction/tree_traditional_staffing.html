@@ -16,7 +16,7 @@
             
             /* Warning / Alert Elements */
             --yellow-bg: #fff59d;
-            --yellow-border: #f57f17;
+            --yellow-border: #fbc02d;
             
             --red-bg: #ff5722;
             --red-border: #e64a19;
@@ -199,6 +199,13 @@
             animation: animFadeIn 0.35s ease-out forwards;
         }
 
+        .node-yellow {
+            background-color: var(--yellow-bg) !important;
+            border-color: var(--yellow-border) !important;
+            font-weight: bold !important;
+            animation: animPopIn 0.8s ease-out forwards !important;
+        }
+
         .box-large { width: 115px; height: 110px; font-weight: bold; }
         .box-medium { width: 100px; height: 70px; font-size: 0.8rem; }
         .box-long-text { 
@@ -215,6 +222,7 @@
             border-color: var(--green-border);
             width: 95px;
             height: 50px;
+            font-weight: bold;
         }
 
         .box-red-rect {
@@ -276,18 +284,48 @@
 
         .speech-bubble {
             position: absolute;
-            background-color: var(--blue-bubble-bg);
-            border: 2px solid var(--blue-bubble-border);
-            color: #000000;
+            background-color: #ffffff;
+            border: 2px solid #000000;
+            color: var(--text-dark);
             font-size: 0.7rem;
-            line-height: 1.3;
-            width: 170px;
-            padding: 8px 10px;
-            border-radius: 12px;
+            line-height: 1.35;
+            font-style: italic;
+            font-weight: bold;
+            width: 175px;
+            padding: 10px 12px;
+            border-radius: 6px;
             z-index: 2;
             text-align: center;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.08);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
             animation: animFadeIn 0.35s ease-out forwards;
+        }
+
+        /* Classic comic book style speech bubble tail pointing downwards to the left */
+        .speech-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 20px;
+            width: 0;
+            height: 0;
+            border: 8px solid transparent;
+            border-top-color: #000000;
+            border-bottom: 0;
+            margin-left: -4px;
+        }
+
+        .speech-bubble::before {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 20px;
+            width: 0;
+            height: 0;
+            border: 7px solid transparent;
+            border-top-color: #ffffff;
+            border-bottom: 0;
+            margin-left: -4px;
+            z-index: 1;
         }
 
         .clickable {
@@ -365,8 +403,8 @@
         </svg>
 
         <div class="header-container">
-            <h1>Traditional Staffing Agencies</h1>
-            <p>This is an illustrative tree diagram showing hiring with traditional staffing agencies. Click the first box to reveal the next step.</p>
+            <h1>Hiring with Staffing Agencies</h1>
+            <p>Click the first box to reveal the next step.</p>
         </div>
 
         <div class="main-panel">
@@ -377,7 +415,7 @@
                         <path d="M 0 0 L 10 5 L 0 10 z" fill="#1976d2" />
                     </marker>
                     <marker id="arrow-yellow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#f57f17" />
+                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#fbc02d" />
                     </marker>
                     <marker id="arrow-red" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
                         <path d="M 0 0 L 10 5 L 0 10 z" fill="#e64a19" />
@@ -393,12 +431,11 @@
                     </marker>
                 </defs>
 
-                <!-- Connectors -->
                 <line id="arr-start-req" class="hidden" x1="145" y1="230" x2="180" y2="230" stroke="#1976d2" stroke-width="2" marker-end="url(#arrow)" />
                 <line id="arr-req-ops" class="hidden" x1="275" y1="230" x2="310" y2="230" stroke="#1976d2" stroke-width="2" marker-end="url(#arrow)" />
                 
-                <path id="arr-ops-yellow" class="hidden" d="M 367,187 L 367,142" fill="none" stroke="#f57f17" stroke-width="2" marker-end="url(#arrow-yellow)" />
-                <path id="arr-ops-bubble" class="hidden" d="M 415,187 L 455,115" fill="none" stroke="#000000" stroke-width="2" marker-end="url(#arrow-black)" />
+                <path id="arr-ops-yellow" class="hidden" d="M 367,187 L 367,142" fill="none" stroke="#fbc02d" stroke-width="2" marker-end="url(#arrow-yellow)" />
+                <path id="arr-ops-bubble" class="hidden" d="M 385,187 C 390,130 410,110 445,110" fill="none" stroke="#000000" stroke-width="2" marker-end="url(#arrow-black)" />
                 
                 <path id="arr-ops-overload-link" class="hidden" d="M 367,273 L 367,370 L 510,370" fill="none" stroke="#e64a19" stroke-width="2" marker-end="url(#arrow-red)" />
 
@@ -406,25 +443,20 @@
 
                 <path id="arr-disp-overload-link" class="hidden" d="M 495,260 L 495,330 L 515,350" fill="none" stroke="#e64a19" stroke-width="2" marker-end="url(#arrow-red)" />
 
-                <!-- Curved path from On-Shift Issues up and right into the No-Show diamond -->
-                <path id="arr-issues-noshow" class="hidden" d="M 625,200 L 625,150 C 625,135 635,135 650,135 L 670,135" fill="none" stroke="#ff5722" stroke-width="2.5" marker-end="url(#arrow-red)" />
+                <path id="arr-issues-noshow" class="hidden" d="M 625,200 L 625,150 C 625,135 635,135 650,135 L 670,135" fill="none" stroke="#e64a19" stroke-width="2.5" marker-end="url(#arrow-red)" />
 
-                <path id="arr-issues-overload-link" class="hidden" d="M 625,260 L 625,330 L 590,350" fill="none" stroke="#e64a19" stroke-width="2" marker-end="url(#arrow-red)" />
+                <path id="arr-issues-overload-link" class="hidden" d="M 625,260 L 625,330 L 605,350" fill="none" stroke="#e64a19" stroke-width="2" marker-end="url(#arrow-red)" />
                 
-                <!-- Flipped and mirrored to match the exact geometry/flow of arr-ops-overload-link -->
                 <path id="arr-backforth-overload-link" class="hidden" d="M 795,255 L 795,370 L 605,370" fill="none" stroke="#e64a19" stroke-width="2" marker-end="url(#arrow-red)" />
 
-                <!-- Updated elbow connector starting from bottom tip of diamond to left edge of Agency Ops Back & Forth box -->
-                <path id="arr-noshow-backforth" class="hidden" d="M 715,173 L 715,210 C 715,220 725,220 735,220 L 745,220" fill="none" stroke="#1976d2" stroke-width="2" marker-end="url(#arrow-blue)" />
+                <path id="arr-noshow-backforth" class="hidden" d="M 715,173 L 715,210 C 715,220 725,220 735,220 L 745,220" fill="none" stroke="#fbc02d" stroke-width="2" marker-end="url(#arrow-yellow)" />
 
-                <!-- Lines exactly touching the right border (x=845) of Agency Ops Back & Forth (left: 745 + width: 100) -->
                 <path id="arr-backforth-res" class="hidden" d="M 845,205 L 870,185" fill="none" stroke="#059669" stroke-width="2" marker-end="url(#arrow-green)" />
                 <path id="arr-backforth-repost" class="hidden" d="M 845,235 L 870,258" fill="none" stroke="#e64a19" stroke-width="2" marker-end="url(#arrow-red)" />
 
-                <path id="arr-res-avg" class="hidden" d="M 917,155 L 917,97" fill="none" stroke="#f57f17" stroke-width="2" marker-end="url(#arrow-yellow)" />
+                <path id="arr-res-avg" class="hidden" d="M 917,155 L 917,97" fill="none" stroke="#fbc02d" stroke-width="2" marker-end="url(#arrow-yellow)" />
             </svg>
 
-            <!-- Nodes -->
             <div id="node-start" class="node box-large clickable" style="top: 175px; left: 30px;" onclick="revealStep(2)">
                 Traditional<br>Staffing<br>Agencies
             </div>
@@ -438,36 +470,33 @@
             <button id="btn-view-ops" class="action-btn hidden" style="top: 282.5px; left: 367px; width: 85px;" onclick="showWarning('ops-warn')">see where<br>this goes wrong</button>
             <button id="btn-next2" class="action-btn hidden" style="top: 282.5px; left: 367px;" onclick="revealStep(4)">click to<br>view next</button>
 
-            <div id="node-note1" class="note-box hidden" style="top: 95px; left: 315px;">Could take up<br>to weeks</div>
+            <div id="node-note1" class="note-box hidden" style="top: 95px; left: 315px;">Could take<br>weeks</div>
 
-            <div id="node-bubble" class="speech-bubble hidden" style="top: 35px; left: 455px;">
-                "booked through an agency; they arrived with no insurance and clinic absorbed compliance headaches"
+            <div id="node-bubble" class="speech-bubble hidden" style="top: 25px; left: 445px;">
+                "We booked through an agency; they arrived with expired insurance and clinic dealt with the headaches"
             </div>
 
             <div id="node-disp" class="node box-small hidden" style="top: 200px; left: 450px;">Clinician Dispatch</div>
             <button id="btn-view-disp" class="action-btn hidden" style="top: 270px; left: 495px; width: 85px;" onclick="showWarning('disp-warn')">see where<br>this goes wrong</button>
             <button id="btn-next3" class="action-btn hidden" style="top: 270px; left: 495px;" onclick="revealStep(5)">click to<br>view next</button>
 
-            <div id="node-issues" class="node box-small hidden" style="top: 200px; left: 580px;">On-Shift Issues</div>
+            <div id="node-issues" class="node box-small node-yellow hidden" style="top: 200px; left: 580px;">On the job Issues</div>
             <button id="btn-view-noshow" class="action-btn hidden" style="top: 270px; left: 625px; width: 85px;" onclick="showWarning('noshow')">see where<br>this goes wrong</button>
             <button id="btn-next4" class="action-btn hidden" style="top: 270px; left: 625px;" onclick="revealStep(6)">click to<br>view next</button>
 
-            <!-- Possible No-Show Warning Diamond Node -->
             <div id="node-noshow-dia" class="box-warning-square-container hidden" style="top: 98px; left: 668px;">
                 <div class="box-warning-square">
                     <span>Possible<br>No Show</span>
                 </div>
             </div>
 
-            <!-- Agency Ops Overload Diamond Node (Smaller Size) -->
             <div id="node-overload-dia" class="diamond-container hidden" style="top: 325px; left: 510px;">
                 <div class="diamond">
                     Agency Ops<br>Overload
                 </div>
             </div>
 
-            <!-- Agency Ops Back & Forth Box -->
-            <div id="node-backforth" class="node box-medium hidden" style="top: 185px; left: 745px; font-size: 0.72rem;">
+            <div id="node-backforth" class="node box-medium node-yellow hidden" style="top: 185px; left: 745px; font-size: 0.72rem;">
                 Agency Ops<br>Back & Forth
             </div>
             <button id="btn-view-touches" class="action-btn hidden" style="top: 265px; left: 795px; width: 85px;" onclick="showWarning('touches')">see where<br>this goes wrong</button>
@@ -475,13 +504,12 @@
 
             <div id="node-note-touches" class="note-box hidden" style="top: 330px; left: 785px;">6-10 Admin Touches</div>
 
-            <!-- Resolution & Reposting shifted further right -->
             <div id="node-res" class="node box-green hidden" style="top: 155px; left: 870px;">Resolution</div>
             <button id="btn-view-avg" class="action-btn hidden" style="top: 215px; left: 917px; width: 85px;" onclick="showWarning('avg')">see where<br>this goes wrong</button>
 
-            <div id="node-repost" class="node box-red-rect hidden" style="top: 245px; left: 870px;">Reposting</div>
+            <div id="node-repost" class="node box-red-rect hidden" style="top: 245px; left: 870px;">Try again</div>
 
-            <div id="node-note-avg" class="note-box hidden" style="top: 65px; left: 875px;">14-28 Days avg</div>
+            <div id="node-note-avg" class="note-box hidden" style="top: 65px; left: 875px;">14-28 Day average</div>
 
             <div id="controls-panel" class="controls-container hidden">
                 <button id="btn-back" class="control-btn" onclick="goBackOneStep()">Go back 1 step</button>
@@ -501,7 +529,7 @@
             'node-req', 'btn-next1', 'node-ops', 'btn-view-ops', 'btn-next2', 
             'node-note1', 'node-bubble', 'node-disp', 'btn-view-disp', 'btn-next3', 'node-issues', 
             'btn-view-noshow', 'btn-next4', 'node-noshow-dia', 'node-overload-dia', 
-            'node-backforth', 'btn-view-touches', 'btn-next6', 'node-note-touches', 
+            'node-backforth', 'btn-view-touches', 'btn-next6', 'node-note-touches',
             'node-res', 'btn-view-avg', 'node-repost', 'node-note-avg'
         ];
 
@@ -554,7 +582,6 @@
                 hideElement('btn-view-noshow');
                 showElement('node-noshow-dia');
                 showElement('arr-issues-noshow');
-                showElement('arr-noshow-backforth');
                 showElement('arr-issues-overload-link');
                 showElement('node-overload-dia');
                 showElement('btn-next4');
@@ -602,6 +629,7 @@
                 case 6:
                     hideElement('btn-next4');
                     showElement('node-backforth');
+                    showElement('arr-noshow-backforth');
                     showElement('btn-view-touches');
                     break;
                 case 7:
@@ -638,9 +666,8 @@
                 } else if (wType === 'noshow') {
                     hideElement('node-noshow-dia');
                     hideElement('arr-issues-noshow');
-                    hideElement('arr-noshow-backforth');
-                    hideElement('arr-issues-overload-link');
                     hideElement('btn-next4');
+                    hideElement('arr-issues-overload-link');
                     showElement('btn-view-noshow');
                 } else if (wType === 'touches') {
                     hideElement('node-note-touches');
@@ -685,10 +712,14 @@
                         hideElement('node-issues');
                         hideElement('btn-view-noshow');
                         hideElement('btn-next4');
+                        hideElement('node-noshow-dia');
+                        hideElement('arr-issues-noshow');
+                        hideElement('arr-issues-overload-link');
                         showElement('btn-next3');
                         break;
                     case 6:
                         hideElement('node-backforth');
+                        hideElement('arr-noshow-backforth');
                         hideElement('btn-view-touches');
                         hideElement('btn-next6');
                         showElement('btn-next4');

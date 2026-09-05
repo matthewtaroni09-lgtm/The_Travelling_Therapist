@@ -157,7 +157,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: bold;
+            font-weight: normal;
             font-size: 0.78rem;
             color: var(--text-dark);
             z-index: 3;
@@ -177,6 +177,7 @@
             width: 125px;
             height: 72px;
             font-size: 0.92rem;
+            font-weight: bold;
             border: 2px solid;
             box-sizing: border-box;
         }
@@ -188,6 +189,7 @@
             border: 2px solid;
             box-sizing: border-box;
             font-size: 0.7rem;
+            font-weight: bold;
             background-color: var(--node-blue-bg);
             z-index: 2;
         }
@@ -275,6 +277,7 @@
             border-radius: 12px;
             padding: 6px 10px;
             font-size: 0.65rem;
+            font-style: italic;
             font-weight: bold;
             color: var(--quote-text);
             z-index: 4;
@@ -369,101 +372,94 @@
 
     <div class="page-wrapper">
         
-        <!-- Background graphics -->
         <svg class="wave-bg" preserveAspectRatio="none" viewBox="0 0 1040 520" xmlns="http://www.w3.org/2000/svg">
             <path d="M0,140 C280,260 380,30 700,160 C900,220 950,80 1040,70 L1040,0 L0,0 Z" fill="#ffffff" opacity="0.3"></path>
             <path d="M0,280 C180,160 450,380 750,230 C900,150 950,260 1040,280 L1040,520 L0,520 Z" fill="#ffffff" opacity="0.25"></path>
         </svg>
 
-        <!-- Header container -->
         <div class="header-container">
-            <h1>Direct-Connection Platforms</h1>
-            <p>This is an illustrative tree diagram showing a direct employer outreach workflow. Click the first box to reveal the next step.</p>
+            <h1>Hiring with Personal Referrals</h1>
+            <p>Click the first box to reveal the next step.</p>
         </div>
 
-        <!-- Main panel container -->
         <div class="main-panel">
             
-            <!-- SVG canvas -->
             <svg class="svg-canvas">
                 <defs>
                     <marker id="arrow-blue" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
                         <path d="M 0 0 L 10 5 L 0 10 z" fill="#1565c0" />
                     </marker>
-                    <marker id="arrow-yellow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                    <marker id="arrow-green" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#388e3c" />
+                    </marker>
+                    <marker id="arrow-red-marker" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#c62828" />
+                    </marker>
+                    <marker id="arrow-yellow-up" viewBox="0 0 10 10" refX="2" refY="5" markerWidth="6" markerHeight="6" orient="270">
                         <path d="M 0 0 L 10 5 L 0 10 z" fill="#fbc02d" />
                     </marker>
-                    <marker id="arrow-red" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#c62828" />
+                    <marker id="arrow-yellow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#fbc02d" />
                     </marker>
                 </defs>
 
                 <line id="arr-outreach-contacts" class="hidden" x1="145" y1="260" x2="175" y2="260" stroke="#1565c0" stroke-width="2" marker-end="url(#arrow-blue)" />
                 <line id="arr-contacts-email" class="hidden" x1="273" y1="260" x2="310" y2="260" stroke="#1565c0" stroke-width="2" marker-end="url(#arrow-blue)" />
                 <path id="arr-email-resp" class="hidden" d="M 359 236 L 359 140 L 440 140" fill="none" stroke="#1565c0" stroke-width="2" marker-end="url(#arrow-blue)" />
-                <path id="arr-email-noresp" class="hidden" d="M 359 284 L 359 398 L 440 398" fill="none" stroke="#1565c0" stroke-width="2" marker-end="url(#arrow-blue)" />
+                <path id="arr-email-noresp" class="hidden" d="M 359 284 L 359 398 L 440 398" fill="none" stroke="#fbc02d" stroke-width="2" marker-end="url(#arrow-yellow)" />
                 <path id="arr-noresp-email" class="hidden" d="M 477 420 L 340 420 L 340 284" fill="none" stroke="#1565c0" stroke-width="2" marker-end="url(#arrow-blue)" />
-                <path id="arr-resp-manual" class="hidden" d="M 515 140 L 585 140 L 585 260 L 615 260" fill="none" stroke="#1565c0" stroke-width="2" marker-end="url(#arrow-blue)" />
-                <path id="arr-noresp-manual" class="hidden" d="M 477 376 L 585 376 L 585 260 L 615 260" fill="none" stroke="#1565c0" stroke-width="2" marker-end="url(#arrow-blue)" />
-                <path id="arr-manual-noresp" class="hidden" d="M 664 284 L 664 398 L 515 398" fill="none" stroke="#1565c0" stroke-width="2" marker-end="url(#arrow-blue)" />
+                <path id="arr-resp-manual" class="hidden" d="M 515 140 L 555 140 L 555 260 L 615 260" fill="none" stroke="#fbc02d" stroke-width="2" marker-end="url(#arrow-yellow)" />
+                <path id="arr-noresp-manual" class="hidden" d="M 477 376 L 555 376 L 555 260 L 615 260" fill="none" stroke="#fbc02d" stroke-width="2" marker-end="url(#arrow-yellow)" />
+                <path id="arr-manual-noresp" class="hidden" d="M 664 284 L 664 398 L 526 398" fill="none" stroke="#fbc02d" stroke-width="2" marker-end="url(#arrow-yellow)" />
                 <line id="arr-manual-neg" class="hidden" x1="713" y1="260" x2="730" y2="260" stroke="#1565c0" stroke-width="2" marker-end="url(#arrow-blue)" />
-                <path id="arr-neg-hire" class="hidden" d="M 828 260 L 850 190 L 870 190" fill="none" stroke="#1565c0" stroke-width="2" marker-end="url(#arrow-blue)" />
-                <path id="arr-neg-nohire" class="hidden" d="M 828 260 L 850 330 L 870 330" fill="none" stroke="#1565c0" stroke-width="2" marker-end="url(#arrow-blue)" />
-                <path id="arr-nohire-loop" class="hidden" d="M 919 354 L 919 455 L 224 455 L 224 284" fill="none" stroke="#c62828" stroke-width="2" marker-end="url(#arrow-red)" />
+                <path id="arr-neg-hire" class="hidden" d="M 828 260 L 850 190 L 870 190" fill="none" stroke="#388e3c" stroke-width="2" marker-end="url(#arrow-green)" />
+                <path id="arr-neg-nohire" class="hidden" d="M 828 260 L 850 330 L 870 330" fill="none" stroke="#c62828" stroke-width="2" marker-end="url(#arrow-red-marker)" />
+                <path id="arr-nohire-loop" class="hidden" d="M 919 354 L 919 455 L 224 455 L 224 284" fill="none" stroke="#1565c0" stroke-width="2" marker-end="url(#arrow-blue)" />
                 <path id="arr-hire-avg" class="hidden" d="M 919 166 L 919 138" fill="none" stroke="#fbc02d" stroke-width="2" marker-end="url(#arrow-yellow)" />
+                
+                <line id="arr-warn-manual" class="hidden" x1="664" y1="236" x2="664" y2="145" stroke="#fbc02d" stroke-width="2" marker-end="url(#arrow-yellow-up)" />
             </svg>
 
-            <!-- Start node block -->
             <div id="node-outreach" class="node lg-rect blue-node clickable" style="top: 224px; left: 20px;" onclick="revealStep(1)">
-                Direct Employer Outreach
+                Personal Referrals &amp; Direct Outreach
             </div>
 
-            <!-- Identify contacts block -->
             <div id="node-contacts" class="node rect blue-node hidden" style="top: 236px; left: 175px;">Identify Contacts</div>
             <button id="btn-next1" class="action-btn btn-centered hidden" style="top: 294px; left: 224px;" onclick="revealStep(2)">click to view<br>next step</button>
 
-            <!-- Email outreach block -->
             <div id="node-email" class="node rect blue-node hidden" style="top: 236px; left: 310px;">Email/DM Outreach</div>
             <button id="btn-view2" class="action-btn btn-centered hidden" style="top: 294px; left: 359px;" onclick="showWarning(2)">see where<br>this goes wrong</button>
             <button id="btn-next2" class="action-btn btn-centered hidden" style="top: 294px; left: 359px;" onclick="revealStep(3)">click to view<br>next step</button>
 
-            <!-- Warning quote block -->
             <div id="node-quote" class="quote-bubble hidden" style="top: 170px; left: 230px;">
-                "Emailed 25 clinicians, 3 people replied"
+                &quot;We emailed 25 clinicians, 3 people replied&quot;
             </div>
             
-            <!-- Diamond block shifted left from 438px to 415px -->
             <div id="node-dia-low" class="diamond-container hidden" style="top: 202px; left: 415px;">
                 <div class="diamond">
                     <span>LOW RESPONSE RATE</span>
                 </div>
             </div>
 
-            <!-- Response and No Response blocks -->
             <div id="node-resp" class="node oval blue-node hidden" style="top: 118px; left: 440px;">Response</div>
-            <div id="node-noresp" class="node oval blue-node hidden" style="top: 376px; left: 440px;">No Response</div>
+            <div id="node-noresp" class="node oval yellow-node hidden" style="top: 376px; left: 440px; border-color: var(--node-yellow-border); font-weight: bold;">No Response</div>
 
-            <!-- Manual follow-up block -->
-            <div id="node-manual" class="node rect blue-node hidden" style="top: 236px; left: 615px;">Manual Follow-up</div>
+            <div id="node-manual" class="node rect yellow-node hidden" style="top: 236px; left: 615px; border-color: var(--node-yellow-border); font-weight: bold;">Manual Follow-up</div>
             
-            <!-- Back and forth conversation warning pill -->
-            <div id="node-convo-warn" class="node pill yellow-node hidden" style="top: 48px; left: 480px; border: 2px solid var(--node-yellow-border); max-width: 220px; white-space: normal;">Back and forth email conversation<br>takes multiple days</div>
+            <div id="node-convo-warn" class="node pill yellow-node hidden" style="top: 80px; left: 564px; border: 2px solid var(--node-yellow-border); max-width: 200px; white-space: normal;">Back and forth email conversation takes multiple days</div>
             
             <button id="btn-view5" class="action-btn btn-centered hidden" style="top: 294px; left: 664px;" onclick="showWarning(5)">see where<br>this goes wrong</button>
             <button id="btn-next5" class="action-btn btn-centered hidden" style="top: 294px; left: 664px;" onclick="revealStep(6)">click to view<br>next step</button>
 
-            <!-- Negotiation block -->
             <div id="node-neg" class="node rect blue-node hidden" style="top: 236px; left: 730px;">Negotiation</div>
             <button id="btn-next6" class="action-btn btn-centered hidden" style="top: 294px; left: 779px;" onclick="revealStep(7)">click to view<br>next step</button>
 
-            <!-- Final outcomes (Hire / No Hire) blocks -->
-            <div id="node-hire" class="node rect green-node hidden" style="top: 166px; left: 870px;">Hire</div>
-            <div id="node-nohire" class="node rect red-node hidden" style="top: 306px; left: 870px;">No Hire</div>
+            <div id="node-hire" class="node rect green-node hidden" style="top: 166px; left: 870px; font-weight: bold;">Hire</div>
+            <div id="node-nohire" class="node rect red-node hidden" style="top: 306px; left: 870px; font-weight: bold;">No Hire</div>
             <button id="btn-view-hire" class="action-btn btn-centered hidden" style="top: 118px; left: 919px;" onclick="showWarning('hire')">see duration</button>
             
-            <div id="node-avg" class="node pill yellow-node hidden" style="top: 103px; left: 850px; border: 2px solid var(--node-yellow-border);">42–70 days avg</div>
+            <div id="node-avg" class="node pill yellow-node hidden" style="top: 103px; left: 850px; border: 2px solid var(--node-yellow-border);">42–70 day average</div>
 
-            <!-- Navigation controls block -->
             <div id="controls-panel" class="controls-container hidden">
                 <button id="btn-back" class="control-btn" onclick="goBackOneStep()">Go back 1 step</button>
                 <button id="btn-close" class="control-btn" onclick="closeDiagram()">Close Diagram</button>
@@ -479,7 +475,7 @@
             'node-email', 'btn-view2', 'btn-next2', 'arr-contacts-email',
             'node-quote', 'node-dia-low',
             'node-resp', 'node-noresp', 'arr-email-resp', 'arr-email-noresp', 'arr-noresp-email',
-            'node-manual', 'node-convo-warn', 'btn-view5', 'btn-next5', 'arr-resp-manual', 'arr-noresp-manual', 'arr-manual-noresp',
+            'node-manual', 'node-convo-warn', 'arr-warn-manual', 'btn-view5', 'btn-next5', 'arr-resp-manual', 'arr-noresp-manual', 'arr-manual-noresp',
             'node-neg', 'btn-next6', 'arr-manual-neg',
             'node-hire', 'node-nohire', 'btn-view-hire', 'arr-neg-hire', 'arr-neg-nohire', 'arr-nohire-loop',
             'node-avg', 'arr-hire-avg'
@@ -525,6 +521,7 @@
             } else if (step === 5) {
                 hideElement('btn-view5');
                 showElement('node-convo-warn');
+                showElement('arr-warn-manual');
                 showElement('btn-next5');
             } else if (step === 'hire') {
                 hideElement('btn-view-hire');
@@ -598,6 +595,7 @@
                     showElement('btn-view2');
                 } else if (step === 5) {
                     hideElement('node-convo-warn');
+                    hideElement('arr-warn-manual');
                     hideElement('btn-next5');
                     showElement('btn-view5');
                 } else if (step === 'hire') {
@@ -629,6 +627,7 @@
 
                         hideElement('node-manual');
                         hideElement('node-convo-warn');
+                        hideElement('arr-warn-manual');
                         hideElement('arr-resp-manual');
                         hideElement('arr-noresp-manual');
                         hideElement('arr-manual-noresp');

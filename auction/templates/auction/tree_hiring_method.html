@@ -50,7 +50,7 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            font-size: 16px;
+            font-size: 20px; /* Increased font size */
             font-weight: 800;
             letter-spacing: -0.01em;
             cursor: pointer;
@@ -145,7 +145,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 14px;
+            font-size: 17px; /* Increased font size */
             font-weight: 700;
             line-height: 1.35;
             text-align: center;
@@ -158,17 +158,6 @@
             transition: var(--transition-smooth);
         }
 
-        .node.blue {
-            background-color: var(--tt-teal-light);
-            color: var(--tt-teal-dark);
-        }
-
-        .node.blue:hover {
-            background-color: #d1e2df;
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-elevation);
-        }
-
         .node.pink {
             background-color: var(--tt-accent-warm);
             color: #5c4731;
@@ -176,6 +165,39 @@
 
         .node.pink:hover {
             background-color: #ede0cc;
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-elevation);
+        }
+
+        /* Traveling Therapist Node */
+        .node.traveling-therapist-node {
+            background-color: var(--tt-teal-light);
+            color: var(--tt-teal-dark);
+            position: relative;
+            flex-direction: column;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .node.traveling-therapist-node img.bg-logo {
+            position: absolute;
+            width: 55%;
+            height: auto;
+            opacity: 0.25;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .node.traveling-therapist-node span {
+            position: relative;
+            z-index: 2;
+            background-color: rgba(230, 239, 237, 0.85);
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        .node.traveling-therapist-node:hover {
+            background-color: #d1e2df;
             transform: translateY(-4px);
             box-shadow: var(--shadow-elevation);
         }
@@ -221,52 +243,45 @@
 </head>
 <body>
 
-    <!-- Top Section Wrapper -->
     <div class="top-node-wrapper">
         <button class="hiring-btn" id="topBtn">Hiring Method</button>
     </div>
 
-    <!-- Revealed Section -->
     <div class="content-container" id="contentSection">
         <svg class="arrow-overlay" id="arrowSvg"></svg>
 
-        <!-- Prominent Instruction Banner -->
-        <div class="instruction-banner">Click a box to see a tree diagram on how that method works</div>
+        <div class="instruction-banner">Click any box to see how that hiring method works</div>
 
         <div class="flow-columns" id="columnsWrapper">
-            <!-- Column 1 -->
-            <div class="flow-column">
-                <a href="http://127.0.0.1:8000/tree-traveling-therapist/" class="node blue">The Travelling Therapist</a>
-            </div>
-
-            <!-- Column 2 -->
-            <div class="flow-column">
-                <a href="http://127.0.0.1:8000/tree-hybrid/" class="node pink">Hybrid / Internal Temp Pools</a>
-            </div>
-
-            <!-- Column 3 -->
             <div class="flow-column">
                 <a href="http://127.0.0.1:8000/test" class="node pink">Job Boards</a>
             </div>
 
-            <!-- Column 4 -->
             <div class="flow-column">
-                <a href="http://127.0.0.1:8000/tree-direct-connection/" class="node pink">Direct-Connection Platforms</a>
+                <a href="http://127.0.0.1:8000/tree-direct-connection/" class="node pink">Personal Referrals & Direct Outreach</a>
             </div>
 
-            <!-- Column 5 -->
             <div class="flow-column">
-                <a href="http://127.0.0.1:8000/tree-headhunters-recruiters/" class="node pink">Headhunters / Recruiters</a>
+                <a href="http://127.0.0.1:8000/tree-headhunters-recruiters/" class="node pink">Headhunters & Recruiters</a>
             </div>
 
-            <!-- Column 6 -->
             <div class="flow-column">
                 <a href="http://127.0.0.1:8000/tree-traditional-staffing/" class="node pink">Traditional Staffing Agencies</a>
+            </div>
+
+            <div class="flow-column">
+                <a href="http://127.0.0.1:8000/tree-hybrid/" class="node pink">Hybrid / Internal Temp Pools</a>
+            </div>
+
+            <div class="flow-column">
+                <a href="http://127.0.0.1:8000/tree-traveling-therapist/" class="node traveling-therapist-node">
+                    <img src="Image20260904145717_3.png" class="bg-logo" alt="Logo">
+                    <span>The Traveling Therapist</span>
+                </a>
             </div>
         </div>
     </div>
 
-    <!-- Bottom Corner Button -->
     <button class="bottom-toggle-btn" id="bottomToggleBtn">Hide View</button>
 
     <script>

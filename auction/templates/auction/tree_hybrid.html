@@ -167,12 +167,14 @@
             height: 50px;
             border: 2px solid;
             box-sizing: border-box;
+            font-weight: bold;
         }
 
         .lg-rect {
             width: 125px;
             height: 55px;
             font-size: 0.84rem;
+            font-weight: bold;
             border: 2px solid;
             box-sizing: border-box;
         }
@@ -206,6 +208,16 @@
             animation: animBluePath 0.35s ease-out forwards;
         }
 
+        /* The very first blue box has explicit bolding handled globally or reinforced here */
+        #node-job {
+            font-weight: bold;
+        }
+
+        /* Subsequent blue boxes are NOT bold */
+        .rect.blue-node:not(#node-job) {
+            font-weight: normal;
+        }
+
         .yellow-node {
             background-color: var(--node-yellow-bg);
             border-color: var(--node-yellow-border);
@@ -222,13 +234,14 @@
             background-color: var(--node-green-bg);
             border-color: var(--node-green-border);
             animation: animBluePath 0.35s ease-out forwards;
+            font-weight: bold;
         }
 
-        /* Diamond Outer Container */
+        /* Diamond Outer Container (Made slightly bigger) */
         .diamond-container {
             position: absolute;
-            width: 105px;
-            height: 80px;
+            width: 120px;
+            height: 90px;
             z-index: 2;
             filter: drop-shadow(1.5px 0 0 var(--node-failed-border)) 
                     drop-shadow(-1.5px 0 0 var(--node-failed-border)) 
@@ -247,14 +260,14 @@
             align-items: center;
             justify-content: center;
             text-align: center;
-            padding: 8px;
+            padding: 10px;
         }
 
         .diamond span {
             color: #ffffff;
             font-weight: bold;
-            font-size: 0.55rem;
-            line-height: 1.1;
+            font-size: 0.63rem;
+            line-height: 1.15;
         }
 
         /* Interactive Action Buttons */
@@ -325,8 +338,8 @@
         </svg>
 
         <div class="header-container">
-            <h1>Hybrid / Internal Temp Pools</h1>
-            <p>This is an illustrative tree diagram showing hybrid/internal temp pools. Click the first box to reveal the next step.</p>
+            <h1>Hiring with Hybrid / Internal Temp Pools</h1>
+            <p>Click the first box to reveal the next step.</p>
         </div>
 
         <div class="main-panel">
@@ -341,6 +354,9 @@
                     <marker id="arrow-red" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
                         <path d="M 0 0 L 10 5 L 0 10 z" fill="#c62828" />
                     </marker>
+                    <marker id="arrow-green" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#388e3c" />
+                    </marker>
                 </defs>
 
                 <!-- Connection Lines -->
@@ -349,11 +365,11 @@
                 <line id="arr-high-screen" class="hidden" x1="420" y1="265" x2="450" y2="265" stroke="#1565c0" stroke-width="2" marker-end="url(#arrow-blue)" />
                 <line id="arr-screen-cred" class="hidden" x1="560" y1="265" x2="590" y2="265" stroke="#1565c0" stroke-width="2" marker-end="url(#arrow-blue)" />
                 <line id="arr-cred-int" class="hidden" x1="700" y1="265" x2="730" y2="265" stroke="#1565c0" stroke-width="2" marker-end="url(#arrow-blue)" />
-                <line id="arr-int-hire" class="hidden" x1="840" y1="265" x2="870" y2="265" stroke="#1565c0" stroke-width="2" marker-end="url(#arrow-blue)" />
+                <line id="arr-int-hire" class="hidden" x1="840" y1="265" x2="870" y2="265" stroke="#388e3c" stroke-width="2" marker-end="url(#arrow-green)" />
 
-                <!-- Extended downward to touch the top of Maintain Roster (y1 changed from 235 to 240) -->
-                <line id="arr-dia1-post" class="hidden" x1="225" y1="240" x2="225" y2="175" stroke="#c62828" stroke-width="2" marker-end="url(#arrow-red)" />
-                <line id="arr-screen-dia2" class="hidden" x1="365" y1="290" x2="365" y2="355" stroke="#c62828" stroke-width="2" marker-end="url(#arrow-red)" />
+                <!-- Extended downward/upward to match shifted diamond heights -->
+                <line id="arr-dia1-post" class="hidden" x1="225" y1="240" x2="225" y2="160" stroke="#c62828" stroke-width="2" marker-end="url(#arrow-red)" />
+                <line id="arr-screen-dia2" class="hidden" x1="365" y1="290" x2="365" y2="350" stroke="#c62828" stroke-width="2" marker-end="url(#arrow-red)" />
                 <line id="arr-nohire-avg" class="hidden" x1="785" y1="290" x2="785" y2="385" stroke="#fbc02d" stroke-width="2" marker-end="url(#arrow-yellow)" />
             </svg>
 
@@ -366,9 +382,10 @@
             <button id="btn-view1" class="action-btn btn-centered hidden" style="top: 300px; left: 225px;" onclick="showWarning(1)">see where<br>this goes wrong</button>
             <button id="btn-next1" class="action-btn btn-centered hidden" style="top: 300px; left: 225px;" onclick="revealStep(2)">click to view<br>next step</button>
 
-            <div id="node-dia1" class="diamond-container hidden" style="top: 90px; left: 172.5px;">
+            <!-- First Diamond slightly bigger & repositioned -->
+            <div id="node-dia1" class="diamond-container hidden" style="top: 70px; left: 165px;">
                 <div class="diamond">
-                    <span>Burden of Maintaining Roster</span>
+                    <span><b>Burden of Maintaining Roster</b></span>
                 </div>
             </div>
 
@@ -376,9 +393,10 @@
             <button id="btn-view3" class="action-btn btn-centered hidden" style="top: 300px; left: 365px;" onclick="showWarning(3)">see where<br>this goes wrong</button>
             <button id="btn-next3" class="action-btn btn-centered hidden" style="top: 300px; left: 365px;" onclick="revealStep(3)">click to view<br>next step</button>
 
-            <div id="node-dia2" class="diamond-container hidden" style="top: 355px; left: 313px;">
+            <!-- Second Diamond slightly bigger & repositioned -->
+            <div id="node-dia2" class="diamond-container hidden" style="top: 350px; left: 305px;">
                 <div class="diamond">
-                    <span>Breaks If Roster Stales</span>
+                    <span><b>Breaks If Roster Stalls</b></span>
                 </div>
             </div>
 
@@ -398,7 +416,7 @@
 
             <div id="node-hire" class="node rect green-node hidden" style="top: 240px; left: 870px;">Start</div>
 
-            <div id="node-avg" class="node pill yellow-node hidden" style="top: 385px; left: 740px;">5-20 Days avg</div>
+            <div id="node-avg" class="node pill yellow-node hidden" style="top: 385px; left: 740px;">5-20 Day average</div>
 
             <div id="controls-panel" class="controls-container hidden">
                 <button id="btn-back" class="control-btn" onclick="goBackOneStep()">Go back 1 step</button>

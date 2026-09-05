@@ -83,7 +83,12 @@ urlpatterns = [
 
     path('tree-hiring-method/', views.tree_hiring_method, name='tree_hiring_method'),
     path('direct-connection/', views.direct_connection_view, name='direct_connection'),
-    
+    path('tree-traditional-staffing/', views.traditional_staffing, name='traditional_staffing'),
+    path('tree-headhunters-recruiters/', views.headhunters_recruiters, name='headhunters_recruiters'),
+    path('tree-direct-connection/', views.direct_connection, name='direct_connection'),
+    path('tree-traveling-therapist/', views.traveling_therapist, name='traveling_therapist'),
+    path('tree-hybrid/', views.hybrid_temp_pools, name='tree_hybrid'),
+
     path('', views.index, name='index'),
 ]
 

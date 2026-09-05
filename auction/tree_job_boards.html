@@ -152,7 +152,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: normal;
+            font-weight: bold;
             font-size: 0.8rem;
             color: var(--text-dark);
             z-index: 2;
@@ -170,10 +170,9 @@
         }
 
         .lg-rect {
-            width: 110px;
-            height: 64px;
-            font-size: 0.82rem;
-            font-weight: bold;
+            width: 135px;
+            height: 60px;
+            font-size: 0.88rem;
             border: 2px solid;
             box-sizing: border-box;
         }
@@ -246,19 +245,14 @@
             align-items: center;
             justify-content: center;
             text-align: center;
-            padding: 8px;
+            padding: 10px;
         }
 
         .diamond span {
             color: #ffffff;
             font-weight: bold;
-            font-size: 0.67rem;
-            line-height: 1.15;
-        }
-
-        /* Larger text specifically for the Delays diamond */
-        .diamond.delay-diamond span {
-            font-size: 0.85rem;
+            font-size: 0.58rem;
+            line-height: 1.1;
         }
 
         /* Interactive Action Buttons: Small step-trigger buttons placed along paths */
@@ -342,105 +336,122 @@
 </head>
 <body>
 
+    <!-- Main Page Wrapper -->
     <div class="page-wrapper">
        
+        <!-- Decorative Background Wave Paths -->
         <svg class="wave-bg" preserveAspectRatio="none" viewBox="0 0 1000 540" xmlns="http://www.w3.org/2000/svg">
             <path d="M0,140 C280,260 380,30 700,160 C900,220 950,80 1000,70 L1000,0 L0,0 Z" fill="#ffffff" opacity="0.3"></path>
             <path d="M0,280 C180,160 450,380 750,230 C900,150 950,260 1000,280 L1000,540 L0,540 Z" fill="#ffffff" opacity="0.25"></path>
         </svg>
 
+        <!-- Page Header -->
         <div class="header-container">
-            <h1>Hiring with Job Boards</h1>
-            <p>Click the first box to reveal the next step.</p>
+            <h1>Job Board Workflow</h1>
+            <p>This is an illustrative tree diagram showing a simple job-board flow. Click the first box to reveal the next step.</p>
         </div>
 
+        <!-- Diagram Work Area -->
         <div class="main-panel">
            
+            <!-- SVG Connectors & Arrow Markers -->
             <svg class="svg-canvas">
+                <!-- SVG Arrowhead Reusable Definitions -->
                 <defs>
                     <marker id="arrow-blue" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
                         <path d="M 0 0 L 10 5 L 0 10 z" fill="#1565c0" />
                     </marker>
-                    <marker id="arrow-green" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#388e3c" />
+                    <marker id="arrow-yellow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#fbc02d" />
                     </marker>
                     <marker id="arrow-red" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
                         <path d="M 0 0 L 10 5 L 0 10 z" fill="#c62828" />
                     </marker>
-                    <marker id="arrow-yellow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#fbc02d" />
-                    </marker>
-                    <marker id="arrow-yellow-forward" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#fbc02d" />
-                    </marker>
-                    <marker id="arrow-yellow-left" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#fbc02d" />
-                    </marker>
                 </defs>
 
-                <line id="arr-job-post" class="hidden" x1="140" y1="270" x2="185" y2="270" stroke="#1565c0" stroke-width="2" marker-end="url(#arrow-blue)" />
+                <!-- Connection Lines: Main Horizontal Workflow -->
+                <line id="arr-job-post" class="hidden" x1="165" y1="270" x2="185" y2="270" stroke="#1565c0" stroke-width="2" marker-end="url(#arrow-blue)" />
                 <line id="arr-post-high" class="hidden" x1="300" y1="270" x2="340" y2="270" stroke="#1565c0" stroke-width="2" marker-end="url(#arrow-blue)" />
                
-                <path id="arr-high-admin" class="hidden" d="M 397 244 L 397 45 L 500 45" fill="none" stroke="#fbc02d" stroke-width="2" marker-end="url(#arrow-yellow-forward)" />
+                <!-- Connection Lines: Top Admin Detour Paths -->
+                <path id="arr-high-admin" class="hidden" d="M 397 244 L 397 45 L 515 45" fill="none" stroke="#fbc02d" stroke-width="2" marker-end="url(#arrow-yellow)" />
+                <path id="arr-admin-cont" class="hidden" d="M 628 45 L 742 45 L 742 244" fill="none" stroke="#fbc02d" stroke-width="2" marker-end="url(#arrow-yellow)" />
 
+                <!-- Connection Lines: Middle Branching Paths -->
                 <path id="arr-high-screen" class="hidden" d="M 455 270 L 483 180 L 512 180" fill="none" stroke="#1565c0" stroke-width="2" marker-end="url(#arrow-blue)" />
                 <path id="arr-high-cred" class="hidden" d="M 455 270 L 483 360 L 512 360" fill="none" stroke="#1565c0" stroke-width="2" marker-end="url(#arrow-blue)" />
 
+                <!-- Connection Line: Screening Issue Pointer -->
                 <line id="arr-screen-dia1" class="hidden" x1="570" y1="154" x2="627" y2="119" stroke="#c62828" stroke-width="2" marker-end="url(#arrow-red)" />
                
+                <!-- Connection Lines: Interview Convergence Paths -->
                 <path id="arr-screen-int" class="hidden" d="M 627 180 L 656 180 L 656 270 L 685 270" fill="none" stroke="#1565c0" stroke-width="2" marker-end="url(#arrow-blue)" />
                 <path id="arr-cred-int" class="hidden" d="M 627 360 L 656 360 L 656 270 L 685 270" fill="none" stroke="#1565c0" stroke-width="2" marker-end="url(#arrow-blue)" />
                
+                <!-- Connection Line: Interview Delay Pointer -->
                 <line id="arr-int-dia2" class="hidden" x1="742" y1="296" x2="742" y2="365" stroke="#c62828" stroke-width="2" marker-end="url(#arrow-red)" />
                
-                <path id="arr-int-admin" class="hidden" d="M 742 244 L 742 45 L 598 45" fill="none" stroke="#fbc02d" stroke-width="2" marker-end="url(#arrow-yellow-left)" />
-
-                <path id="arr-int-hire" class="hidden" d="M 800 270 L 825 180 L 845 180" fill="none" stroke="#388e3c" stroke-width="2" marker-end="url(#arrow-green)" />
-                <path id="arr-int-nohire" class="hidden" d="M 800 270 L 825 350 L 845 350" fill="none" stroke="#c62828" stroke-width="2" marker-end="url(#arrow-red)" />
+                <!-- Connection Lines: Final Outcome Branches -->
+                <path id="arr-int-hire" class="hidden" d="M 800 270 L 825 180 L 845 180" fill="none" stroke="#1565c0" stroke-width="2" marker-end="url(#arrow-blue)" />
+                <path id="arr-int-nohire" class="hidden" d="M 800 270 L 825 350 L 845 350" fill="none" stroke="#1565c0" stroke-width="2" marker-end="url(#arrow-blue)" />
                 <line id="arr-nohire-avg" class="hidden" x1="902" y1="376" x2="902" y2="420" stroke="#fbc02d" stroke-width="2" marker-end="url(#arrow-yellow)" />
             </svg>
 
-            <div id="node-job" class="node lg-rect blue-node clickable" style="top: 238px; left: 30px;" onclick="revealStep(1)">
+            <!-- HTML Diagram Components -->
+
+            <!-- Diagram Step 0: Starting Node -->
+            <div id="node-job" class="node lg-rect blue-node clickable" style="top: 240px; left: 30px;" onclick="revealStep(1)">
                 Job Boards
             </div>
 
+            <!-- Diagram Step 1: Job Posting Node and Action Button -->
             <div id="node-post" class="node rect blue-node hidden" style="top: 244px; left: 185px;">Post Job</div>
             <button id="btn-next1" class="action-btn btn-centered hidden" style="top: 306px; left: 242px;" onclick="revealStep(2)">click to view<br>next step</button>
 
+            <!-- Diagram Step 2: High Volume Applications Node and Buttons -->
             <div id="node-high" class="node rect blue-node hidden" style="top: 244px; left: 340px;">High-Volume Applications</div>
             <button id="btn-view2" class="action-btn btn-centered hidden" style="top: 306px; left: 397px;" onclick="showWarning(2)">see where<br>this goes wrong</button>
             <button id="btn-next2" class="action-btn btn-centered hidden" style="top: 306px; left: 397px;" onclick="revealStep(3)">click to view<br>next step</button>
 
-            <div id="node-admin" class="node pill yellow-node hidden" style="top: 30px; left: 500px; border: 2px solid var(--node-yellow-border);">High Admin Hrs</div>
+            <!-- Diagram Step 3: Admin Hours Warning Tag -->
+            <div id="node-admin" class="node pill yellow-node hidden" style="top: 30px; left: 515px; border: 2px solid var(--node-yellow-border);">High Admin Hrs</div>
 
+            <!-- Diagram Step 4: Resume Screening Node and Warning Trigger -->
             <div id="node-screen" class="node rect blue-node hidden" style="top: 154px; left: 512px;">Manual Resume Screening</div>
             <button id="btn-view4" class="action-btn btn-centered hidden" style="top: 216px; left: 569px;" onclick="showWarning(4)">see where<br>this goes wrong</button>
 
+            <!-- Diagram Step 5: Signal-to-Noise Ratio Diamond Warning -->
             <div id="node-dia1" class="diamond-container hidden" style="top: 60px; left: 600px;">
                 <div class="diamond">
-                    <span>Too many<br>unqualified<br>applicants</span>
+                    <span>Low S/N ratio<br>(Too many unqualified applicants)</span>
                 </div>
             </div>
 
+            <!-- Diagram Step 6: Credential Verification Node and Action Button -->
             <div id="node-cred" class="node rect blue-node hidden" style="top: 334px; left: 512px;">Credential Verification</div>
             <button id="btn-next6" class="action-btn btn-centered hidden" style="top: 396px; left: 569px;" onclick="revealStep(6)">click to view<br>next step</button>
 
+            <!-- Diagram Step 7: Interview Scheduling Node and Action Buttons -->
             <div id="node-int" class="node rect blue-node hidden" style="top: 244px; left: 685px;">Interview Scheduling</div>
             <button id="btn-view7" class="action-btn btn-centered hidden" style="top: 306px; left: 742px;" onclick="showWarning(7)">see where<br>this goes wrong</button>
             <button id="btn-next7" class="action-btn btn-centered hidden" style="top: 306px; left: 742px;" onclick="revealStep(7)">click to view<br>next step</button>
 
+            <!-- Diagram Step 8: Scheduling Delays Diamond Warning -->
             <div id="node-dia2" class="diamond-container hidden" style="top: 365px; left: 692px;">
-                <div class="diamond delay-diamond">
-                    <span>Delays</span>
+                <div class="diamond">
+                    <span>Delays in scheduling</span>
                 </div>
             </div>
 
+            <!-- Diagram Step 9: Final Hiring Outcomes -->
             <div id="node-hire" class="node rect green-node hidden" style="top: 154px; left: 845px;">Hire</div>
             <div id="node-nohire" class="node rect red-node hidden" style="top: 324px; left: 845px;">No Hire</div>
             <button id="btn-view-nohire" class="action-btn btn-centered hidden" style="top: 386px; left: 902px;" onclick="showWarning('nohire')">see where<br>this goes wrong</button>
 
-            <div id="node-avg" class="node pill yellow-node hidden" style="top: 420px; left: 832px; border: 2px solid var(--node-yellow-border);">28–42 day average</div>
+            <!-- Diagram Step 10: Duration Warning Tag -->
+            <div id="node-avg" class="node pill yellow-node hidden" style="top: 420px; left: 832px; border: 2px solid var(--node-yellow-border);">28–42 days avg</div>
 
+            <!-- Diagram Controls: Global Navigation Panel -->
             <div id="controls-panel" class="controls-container hidden">
                 <button id="btn-back" class="control-btn" onclick="goBackOneStep()">Go back 1 step</button>
                 <button id="btn-close" class="control-btn" onclick="closeDiagram()">Close Diagram</button>
@@ -450,18 +461,18 @@
 
     </div>
 
+    <!-- JavaScript Application Logic -->
     <script>
         // List of all dynamic SVG and HTML IDs managed by state functions
         const allDynamicIds = [
             'node-post', 'btn-next1', 'arr-job-post',
             'node-high', 'btn-view2', 'btn-next2', 'arr-post-high',
-            'node-admin', 'arr-high-admin',
+            'node-admin', 'arr-high-admin', 'arr-admin-cont',
             'node-screen', 'btn-view4', 'arr-high-screen',
             'node-dia1', 'arr-screen-dia1',
             'node-cred', 'btn-next6', 'arr-high-cred',
             'node-int', 'btn-view7', 'btn-next7', 'arr-screen-int', 'arr-cred-int',
             'node-dia2', 'arr-int-dia2',
-            'arr-int-admin',
             'node-hire', 'node-nohire', 'btn-view-nohire', 'arr-int-hire', 'arr-int-nohire',
             'node-avg', 'arr-nohire-avg'
         ];
@@ -517,8 +528,6 @@
                 hideElement('btn-view7');
                 showElement('node-dia2');
                 showElement('arr-int-dia2');
-                showElement('node-admin');
-                showElement('arr-int-admin');
                 showElement('btn-next7');
             } else if (step === 'nohire') {
                 hideElement('btn-view-nohire');
@@ -562,6 +571,10 @@
                     showElement('arr-screen-int');
                     showElement('arr-cred-int');
                    
+                    if (!document.getElementById('node-admin').classList.contains('hidden')) {
+                        showElement('arr-admin-cont');
+                    }
+                   
                     showElement('btn-view7');
                     break;
                 case 7:
@@ -596,12 +609,8 @@
                 } else if (step === 7) {
                     hideElement('node-dia2');
                     hideElement('arr-int-dia2');
-                    hideElement('arr-int-admin');
-                    showElement('btn-next7');
+                    hideElement('btn-next7');
                     showElement('btn-view7');
-                    if (document.getElementById('arr-high-admin').classList.contains('hidden')) {
-                        hideElement('node-admin');
-                    }
                 } else if (step === 'nohire') {
                     hideElement('node-avg');
                     hideElement('arr-nohire-avg');
@@ -640,6 +649,7 @@
                         hideElement('node-int');
                         hideElement('arr-screen-int');
                         hideElement('arr-cred-int');
+                        hideElement('arr-admin-cont');
                         hideElement('btn-view7');
                         showElement('btn-next6');
                         break;
@@ -672,7 +682,10 @@
 
         // Action Function: Resets the entire diagram canvas to its initial starting state
         function closeDiagram() {
-            window.location.href = "http://127.0.0.1:8000/tree-hiring-method/?open=true";
+            allDynamicIds.forEach(id => hideElement(id));
+            historyStack = [];
+            updateControlsVisibility();
+            enableClick('node-job', () => revealStep(1));
         }
     </script>
 </body>

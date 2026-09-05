@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Headhunters & Recruiters Diagram</title>
+    <title>Headhunters &amp; Recruiters Diagram</title>
     <style>
         /* CSS Variables: Central color palette configuration */
         :root {
@@ -155,7 +155,6 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: bold;
             font-size: 0.8rem;
             color: var(--text-dark);
             z-index: 2;
@@ -169,6 +168,7 @@
             height: 52px;
             border: 2px solid;
             box-sizing: border-box;
+            font-weight: normal;
         }
 
         .sm-rect {
@@ -177,6 +177,7 @@
             font-size: 0.7rem;
             border: 2px solid;
             box-sizing: border-box;
+            font-weight: bold;
         }
 
         .lg-rect {
@@ -185,6 +186,7 @@
             font-size: 0.85rem;
             border: 2px solid;
             box-sizing: border-box;
+            font-weight: bold;
         }
 
         .pill {
@@ -202,6 +204,7 @@
             border-radius: 20px;
             padding: 12px 16px;
             font-weight: bold;
+            font-style: italic;
             font-size: 0.75rem;
             text-align: center;
             z-index: 2;
@@ -270,6 +273,7 @@
             background-color: var(--node-green-bg);
             border-color: var(--node-green-border);
             animation: animPath 0.35s ease-out forwards;
+            font-weight: bold;
         }
 
         /* Diamond Outer Container */
@@ -366,26 +370,25 @@
 
     <div class="page-wrapper">
         
-        <!-- Decorative Background Wave Paths -->
         <svg class="wave-bg" preserveAspectRatio="none" viewBox="0 0 1080 540" xmlns="http://www.w3.org/2000/svg">
             <path d="M0,140 C300,260 400,30 750,160 C970,220 1020,80 1080,70 L1080,0 L0,0 Z" fill="#ffffff" opacity="0.3"></path>
             <path d="M0,280 C190,160 480,380 810,230 C970,150 1020,260 1080,280 L1080,540 L0,540 Z" fill="#ffffff" opacity="0.25"></path>
         </svg>
 
-        <!-- Page Header -->
         <div class="header-container">
-            <h1>Headhunters &amp; Recruiters Workflow</h1>
-            <p>Illustrative tree diagram showing recruitment flow. Click the first box to reveal the next step.</p>
+            <h1>Hiring with Headhunters &amp; Recruiters</h1>
+            <p>Click the first box to reveal the next step.</p>
         </div>
 
-        <!-- Diagram Work Area -->
         <div class="main-panel">
             
-            <!-- SVG Connectors & Arrow Markers -->
             <svg class="svg-canvas">
                 <defs>
                     <marker id="arrow-blue" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
                         <path d="M 0 0 L 10 5 L 0 10 z" fill="#0288d1" />
+                    </marker>
+                    <marker id="arrow-green" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#388e3c" />
                     </marker>
                     <marker id="arrow-yellow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
                         <path d="M 0 0 L 10 5 L 0 10 z" fill="#fbc02d" />
@@ -398,90 +401,72 @@
                     </marker>
                 </defs>
 
-                <!-- Main Flow Connectors -->
                 <line id="arr-start-brief" class="hidden" x1="160" y1="230" x2="190" y2="230" stroke="#0288d1" stroke-width="2" marker-end="url(#arrow-blue)" />
                 <line id="arr-brief-search" class="hidden" x1="300" y1="230" x2="330" y2="230" stroke="#0288d1" stroke-width="2" marker-end="url(#arrow-blue)" />
                 <line id="arr-search-interviews" class="hidden" x1="440" y1="230" x2="470" y2="230" stroke="#0288d1" stroke-width="2" marker-end="url(#arrow-blue)" />
                 <line id="arr-interviews-employer" class="hidden" x1="580" y1="230" x2="610" y2="230" stroke="#0288d1" stroke-width="2" marker-end="url(#arrow-blue)" />
                 <line id="arr-employer-onboard" class="hidden" x1="720" y1="230" x2="750" y2="230" stroke="#0288d1" stroke-width="2" marker-end="url(#arrow-blue)" />
-                <line id="arr-onboard-hire" class="hidden" x1="860" y1="230" x2="885" y2="230" stroke="#0288d1" stroke-width="2" marker-end="url(#arrow-blue)" />
+                <line id="arr-onboard-hire" class="hidden" x1="860" y1="230" x2="885" y2="230" stroke="#388e3c" stroke-width="2" marker-end="url(#arrow-green)" />
 
-                <!-- Upward Sourcing Warning Path -->
                 <path id="arr-search-warning" class="hidden" d="M 375 204 L 375 128" fill="none" stroke="#fbc02d" stroke-width="2" marker-end="url(#arrow-yellow)" />
 
-                <!-- Cyan Quote Connection Path -->
                 <path id="arr-search-quote" class="hidden" d="M 420 204 L 420 55 L 569 55" fill="none" stroke="#000000" stroke-width="2" marker-end="url(#arrow-black)" />
 
-                <!-- Hire to Invoice Path -->
                 <path id="arr-hire-invoice" class="hidden" d="M 940 204 L 975 178" fill="none" stroke="#c62828" stroke-width="2" marker-end="url(#arrow-red)" />
 
-                <!-- Hire to Duration Warning Path -->
                 <path id="arr-hire-duration" class="hidden" d="M 940 256 L 940 310" fill="none" stroke="#fbc02d" stroke-width="2" marker-end="url(#arrow-yellow)" />
 
-                <!-- Second Quote Path -->
                 <path id="arr-quote-invoice" class="hidden" d="M 735 42 L 950 42 L 950 134" fill="none" stroke="#000000" stroke-width="2" marker-end="url(#arrow-black)" />
             </svg>
 
-            <!-- HTML Diagram Components -->
-
-            <!-- Step 0: Starting Node -->
             <div id="node-start" class="node lg-rect blue-node clickable" style="top: 190px; left: 30px;" onclick="revealStep(1)">
-                Headhunters<br>/<br>Recruiters
+                Headhunters<br>&amp;<br>Recruiters
             </div>
 
-            <!-- Step 1: Briefing Node & Next Button -->
-            <div id="node-brief" class="node rect blue-node hidden" style="top: 204px; left: 190px;">Briefing</div>
+            <div id="node-brief" class="node rect blue-node hidden" style="top: 204px; left: 190px;">Briefing &amp; onboarding</div>
             <button id="btn-next1" class="action-btn btn-centered hidden" style="top: 266px; left: 245px;" onclick="revealStep(2)">click to view<br>next step</button>
 
-            <!-- Step 2: Search & Shortlist Node & Action Buttons -->
-            <div id="node-search" class="node rect blue-node hidden" style="top: 204px; left: 330px;">Search &amp; Shortlist</div>
+            <div id="node-search" class="node rect blue-node hidden" style="top: 204px; left: 330px;">Candidate search &amp; Shortlist</div>
             <button id="btn-view2" class="action-btn btn-centered hidden" style="top: 266px; left: 385px;" onclick="showWarning(2)">see where<br>this goes wrong</button>
             <button id="btn-next2" class="action-btn btn-centered hidden" style="top: 266px; left: 385px;" onclick="revealStep(3)">click to view<br>next step</button>
 
-            <!-- Step 3: Sourcing Warning Pill -->
-            <div id="node-warning" class="node pill yellow-node hidden" style="top: 76px; left: 300px; border: 2px solid var(--node-yellow-border);">Dependent on<br>recruiter sourcing.</div>
+            <div id="node-warning" class="node pill yellow-node hidden" style="top: 76px; left: 300px; border: 2px solid var(--node-yellow-border);">Dependent on<br>recruiter sourcing and network.</div>
 
-            <!-- Misaligned Incentives Diamond -->
-            <div id="node-diamond1" class="diamond-container hidden" style="top: 310px; left: 395px;">
-                <div class="diamond">
-                    <span>Misaligned<br>Incentives</span>
-                </div>
+            <div id="node-diamond1" class="node redish-node hidden" style="top: 275px; left: 210px; width: 330px; height: 135px; padding: 12px; text-align: left; display: block; font-size: 0.65rem; line-height: 1.35; border: 2px solid var(--node-redish-border); border-radius: 6px; box-sizing: border-box;">
+                <strong style="display: block; text-align: center; margin-bottom: 6px; font-size: 0.75rem;">Misaligned Incentives</strong>
+                <ul style="margin-left: 15px; padding-left: 0;">
+                    <li style="margin-bottom: 4px;">Headhunters &amp; Recruiters have a limited talent pool</li>
+                    <li style="margin-bottom: 4px;">Clinicians are employed by the recruiter not you</li>
+                    <li>Healthcare facilities like you are blind to the salary or fee split given to the clinician</li>
+                </ul>
             </div>
 
-            <!-- Quote Speech Bubble -->
             <div id="node-quote" class="speech-bubble hidden" style="top: 25px; left: 575px;">
-                promised a shortlist...<br>25% placement fee
+                &ldquo;We were promised a shortlist &amp; 25% placement fee BUT...&rdquo;
             </div>
 
-            <!-- Step 4: Interviews Node & Action Button -->
             <div id="node-interviews" class="node rect blue-node hidden" style="top: 204px; left: 470px;">Interviews</div>
             <button id="btn-next4" class="action-btn btn-centered hidden" style="top: 266px; left: 525px;" onclick="revealStep(4)">click to view<br>next step</button>
 
-            <!-- Step 5: Employer Selection Node & Action Button -->
             <div id="node-employer" class="node rect blue-node hidden" style="top: 204px; left: 610px;">Employer<br>Selection</div>
             <button id="btn-next5" class="action-btn btn-centered hidden" style="top: 266px; left: 665px;" onclick="revealStep(5)">click to view<br>next step</button>
 
-            <!-- Cost Diamond -->
             <div id="node-diamond2" class="diamond-container hidden" style="top: 60px; left: 820px;">
                 <div class="diamond">
                     <span>COST: 15-30%<br>Placement Fee<br>or High<br>Retainer</span>
                 </div>
             </div>
 
-            <!-- Step 6: Onboarding Node -->
             <div id="node-onboard" class="node rect blue-node hidden" style="top: 204px; left: 750px;">Onboarding</div>
+            <button id="btn-next6" class="action-btn btn-centered hidden" style="top: 266px; left: 805px;" onclick="revealStep(6)">click to view<br>next step</button>
 
-            <!-- Step 7: Hire Node & Action Button -->
             <div id="node-hire" class="node rect green-node hidden" style="top: 204px; left: 885px;" onclick="showWarning(7)">Hire</div>
             <button id="btn-view7" class="action-btn btn-centered hidden" style="top: 266px; left: 940px;" onclick="showWarning(7)">see where<br>this goes wrong</button>
 
-            <!-- Step 8: Duration Pill -->
-            <div id="node-duration" class="node pill yellow-node hidden" style="top: 320px; left: 925px; border: 2px solid var(--node-yellow-border);">21–35 days avg</div>
+            <div id="node-duration" class="node pill yellow-node hidden" style="top: 320px; left: 925px; border: 2px solid var(--node-yellow-border);">21–35 day average</div>
 
-            <!-- Placement Fee Invoice Node -->
             <div id="node-invoice" class="node sm-rect redish-node hidden" style="top: 134px; left: 950px;">Placement Fee<br>Invoice</div>
 
-            <!-- Diagram Controls: Global Navigation Panel -->
             <div id="controls-panel" class="controls-container hidden">
                 <button id="btn-back" class="control-btn" onclick="goBackOneStep()">Go back 1 step</button>
                 <button id="btn-close" class="control-btn" onclick="closeDiagram()">Close Diagram</button>
@@ -491,7 +476,6 @@
 
     </div>
 
-    <!-- JavaScript Application Logic -->
     <script>
         const allDynamicIds = [
             'node-brief', 'btn-next1', 'arr-start-brief',
@@ -499,7 +483,7 @@
             'node-warning', 'arr-search-warning', 'node-diamond1', 'node-quote', 'arr-search-quote',
             'node-interviews', 'btn-next4', 'arr-search-interviews',
             'node-employer', 'btn-next5', 'arr-interviews-employer', 'node-diamond2',
-            'node-onboard', 'arr-employer-onboard',
+            'node-onboard', 'btn-next6', 'arr-employer-onboard',
             'node-hire', 'btn-view7', 'arr-onboard-hire',
             'node-invoice', 'arr-hire-invoice',
             'node-duration', 'arr-hire-duration',
@@ -591,6 +575,10 @@
                     hideElement('btn-next5');
                     showElement('node-onboard');
                     showElement('arr-employer-onboard');
+                    showElement('btn-next6');
+                    break;
+                case 6:
+                    hideElement('btn-next6');
                     showElement('node-hire');
                     showElement('arr-onboard-hire');
                     showElement('btn-view7');
@@ -656,10 +644,14 @@
                     case 5:
                         hideElement('node-onboard');
                         hideElement('arr-employer-onboard');
+                        hideElement('btn-next6');
+                        showElement('btn-next5');
+                        break;
+                    case 6:
                         hideElement('node-hire');
                         hideElement('arr-onboard-hire');
                         hideElement('btn-view7');
-                        showElement('btn-next5');
+                        showElement('btn-next6');
                         break;
                 }
             }

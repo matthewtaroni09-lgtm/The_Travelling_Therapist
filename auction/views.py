@@ -2344,3 +2344,21 @@ def tree_hiring_method(request):
 
 def direct_connection_view(request):
     return render(request, 'auction/direct_connection.html')
+
+def tree_hiring_method(request):
+    return render(request, 'auction/tree_hiring_method.html', {'path': 'tree-hiring-method'})
+
+def traditional_staffing(request):
+    return render(request, 'auction/tree_traditional_staffing.html')
+
+def headhunters_recruiters(request):
+    return render(request, 'auction/tree_headhunters_recruiters.html')
+
+def direct_connection(request):
+    return render(request, 'auction/tree_direct_connection.html')
+
+def traveling_therapist(request):
+    return render(request, 'auction/tree_traveling_therapist.html')
+
+def hybrid_temp_pools(request):
+    return render(request, 'auction/tree_hybrid.html')

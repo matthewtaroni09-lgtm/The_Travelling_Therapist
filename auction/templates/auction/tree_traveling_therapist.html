@@ -150,7 +150,6 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: bold;
             font-size: 0.8rem;
             color: var(--text-dark);
             z-index: 2;
@@ -158,6 +157,14 @@
             padding: 6px 8px;
             border-radius: 6px;
             opacity: 0; 
+        }
+
+        .bold-node {
+            font-weight: bold;
+        }
+
+        .unbold-node {
+            font-weight: normal;
         }
 
         .rect {
@@ -180,7 +187,6 @@
         .pill {
             border-radius: 20px;
             padding: 8px 16px;
-            font-weight: bold;
             font-size: 0.8rem;
             white-space: nowrap;
         }
@@ -282,8 +288,8 @@
         .diamond-inner span {
             color: var(--text-dark);
             font-weight: bold;
-            font-size: 0.55rem;
-            line-height: 1.1;
+            font-size: 0.64rem;
+            line-height: 1.15;
         }
 
         .custom-tooltip {
@@ -532,26 +538,25 @@
 
     <div class="page-wrapper">
         
-        <!-- Decorative Background Wave Paths -->
         <svg class="wave-bg" preserveAspectRatio="none" viewBox="0 0 1000 540" xmlns="http://www.w3.org/2000/svg">
             <path d="M0,140 C280,260 380,30 700,160 C900,220 950,80 1000,70 L1000,0 L0,0 Z" fill="#ffffff" opacity="0.3"></path>
             <path d="M0,280 C180,160 450,380 750,230 C900,150 950,260 1000,280 L1000,540 L0,540 Z" fill="#ffffff" opacity="0.25"></path>
         </svg>
 
-        <!-- Page Header -->
         <div class="header-container">
-            <h1>The Traveling Therapist Workflow</h1>
-            <p>This is an illustrative tree diagram showing hiring with The Traveling Therapist. Click the first box to reveal the next step.</p>
+            <h1>Hiring with The Traveling Therapist</h1>
+            <p>Click the first box to reveal the next step.</p>
         </div>
 
-        <!-- Diagram Work Area -->
         <div class="main-panel">
             
-            <!-- SVG Connectors & Arrow Markers -->
             <svg class="svg-canvas">
                 <defs>
                     <marker id="arrow-blue" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
                         <path d="M 0 0 L 10 5 L 0 10 z" fill="#1565c0" />
+                    </marker>
+                    <marker id="arrow-cyan" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#00838f" />
                     </marker>
                     <marker id="arrow-yellow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
                         <path d="M 0 0 L 10 5 L 0 10 z" fill="#fbc02d" />
@@ -561,103 +566,77 @@
                     </marker>
                 </defs>
 
-                <!-- Connection Lines -->
                 <line id="arr-start-post" class="hidden" x1="160" y1="270" x2="180" y2="270" stroke="#1565c0" stroke-width="2" marker-end="url(#arrow-blue)" />
+                
                 <line id="arr-post-auction" class="hidden" x1="295" y1="270" x2="325" y2="270" stroke="#1565c0" stroke-width="2" marker-end="url(#arrow-blue)" />
                 
-                <!-- Node Downward Branch to Offers -->
-                <path id="arr-auction-bids" class="hidden" d="M 395 296 L 395 360" fill="none" stroke="#fbc02d" stroke-width="2" marker-end="url(#arrow-yellow)" />
+                <path id="arr-auction-bids" class="hidden" d="M 382.5 296 L 382.5 360" fill="none" stroke="#fbc02d" stroke-width="2" marker-end="url(#arrow-yellow)" />
 
-                <!-- Node to Healthcare facilities select a candidate -->
-                <line id="arr-auction-match" class="hidden" x1="465" y1="270" x2="475" y2="270" stroke="#1565c0" stroke-width="2" marker-end="url(#arrow-blue)" />
+                <line id="arr-auction-match" class="hidden" x1="440" y1="270" x2="475" y2="270" stroke="#00838f" stroke-width="2" marker-end="url(#arrow-cyan)" />
 
-                <!-- Healthcare facilities select a candidate Upward Branch to Benefit Node -->
                 <line id="arr-match-cheapest" class="hidden" x1="535" y1="222" x2="535" y2="122" stroke="#388e3c" stroke-width="2" marker-end="url(#arrow-green)" />
 
-                <!-- Healthcare facilities select a candidate to Contact Info Given -->
-                <line id="arr-match-contact" class="hidden" x1="595" y1="270" x2="615" y2="270" stroke="#1565c0" stroke-width="2" marker-end="url(#arrow-blue)" />
+                <line id="arr-match-contact" class="hidden" x1="595" y1="270" x2="615" y2="270" stroke="#388e3c" stroke-width="2" marker-end="url(#arrow-green)" />
 
-                <!-- Contact Info Given to Clinician Starts -->
                 <line id="arr-contact-starts" class="hidden" x1="730" y1="270" x2="745" y2="270" stroke="#1565c0" stroke-width="2" marker-end="url(#arrow-blue)" />
 
-                <!-- Clinician Starts Upward Branch to 14 Days Avg -->
                 <path id="arr-starts-days" class="hidden" d="M 802 244 L 802 190 L 835 190" fill="none" stroke="#fbc02d" stroke-width="2" marker-end="url(#arrow-yellow)" />
 
-                <!-- Clinician Starts Downward Branch to Fee Node -->
                 <path id="arr-starts-invoice" class="hidden" d="M 802 296 L 802 360 L 835 360" fill="none" stroke="#388e3c" stroke-width="2" marker-end="url(#arrow-green)" />
             </svg>
 
-            <!-- HTML Diagram Components -->
-
-            <!-- Step 0: Starting Node with Custom Hover Tooltip Pop-up -->
             <div id="node-start-wrapper" class="start-pill-wrapper">
                 <div class="start-tooltip">
-                    Learn about hiring with The Traveling Therapist here:<br>
-                    <a href="https://travelingtherapist.ca/hiring_with_the_traveling_therapist" target="_blank" style="color: var(--btn-blue); text-decoration: underline;">
-                        travelingtherapist.ca/hiring_with_the_traveling_therapist
-                    </a>
+                    Learn about hiring with The Traveling Therapist <a href="https://travelingtherapist.ca/hiring_with_the_traveling_therapist" target="_blank" style="color: var(--node-blue-border); text-decoration: underline;">here</a>
                 </div>
-                <a id="node-start" href="https://travelingtherapist.ca/hiring_with_the_traveling_therapist" target="_blank" class="node start-rect blue-node clickable" style="position: relative; top: 0; left: 0; display: flex;" onclick="handleStartClick(event)">
+                <a id="node-start" href="https://travelingtherapist.ca/hiring_with_the_traveling_therapist" target="_blank" class="node bold-node start-rect blue-node clickable" style="position: relative; top: 0; left: 0; display: flex;" onclick="handleStartClick(event)">
                     The Traveling<br>Therapist
                 </a>
             </div>
 
-            <!-- Step 1: Post a Job Listing -->
-            <div id="node-post" class="node rect blue-node hidden" style="top: 244px; left: 180px;">Post a Job Listing</div>
+            <div id="node-post" class="node rect blue-node unbold-node hidden" style="top: 244px; left: 180px;">Post a Job Listing</div>
             <button id="btn-next1" class="action-btn btn-centered hidden" style="top: 306px; left: 237px;" onclick="revealStep(2)">click to view<br>next step</button>
 
-            <!-- Step 2: Job Listings are live for 14 days -->
-            <div id="node-auction" class="node blue-node hidden" style="top: 234px; left: 325px; width: 140px; height: 72px; font-size: 0.72rem; line-height: 1.2; border: 2px solid var(--node-blue-border); text-align: center; padding: 6px;">Job Listings are live for 14 days</div>
-            <button id="btn-view-bids" class="action-btn btn-centered hidden" style="top: 316px; left: 395px;" onclick="showWarning('bids')">see more</button>
-            <button id="btn-next2" class="action-btn btn-centered hidden" style="top: 316px; left: 395px;" onclick="revealStep(3)">click to view<br>next step</button>
+            <div id="node-auction" class="node rect blue-node unbold-node hidden" style="top: 244px; left: 325px; font-size: 0.72rem; line-height: 1.2;">Listings are live for 14 days</div>
+            <button id="btn-view-bids" class="action-btn btn-centered hidden" style="top: 306px; left: 382.5px;" onclick="showWarning('bids')">see more</button>
+            <button id="btn-next2" class="action-btn btn-centered hidden" style="top: 306px; left: 382.5px;" onclick="revealStep(3)">click to view<br>next step</button>
 
-            <!-- Step 2 Branch: Clinicians make offers anytime on your listing -->
             <div id="node-bids-wrapper" class="bids-pill-wrapper hidden">
                 <div class="bids-tooltip">
-                    Clinicians make offers anytime on your listing<br>
+                    Clinicians make offers anytime<br>
                     Review your offers in real time
                 </div>
-                <div id="node-bids" class="node pill yellow-node" style="position: relative; top: 0; left: 0; border: 2px solid var(--node-yellow-border); display: flex;">Clinicians make offers anytime on your listing</div>
+                <div id="node-bids" class="node pill yellow-node bold-node" style="position: relative; top: 0; left: 0; border: 2px solid var(--node-yellow-border); display: flex;">Clinicians make offers anytime</div>
             </div>
 
-            <!-- Step 3: Healthcare facilities select a candidate with Hover Tooltip Pop-up -->
             <div id="node-match" class="diamond-container hidden" style="top: 222px; left: 475px;">
                 <div class="custom-tooltip">Choose any candidate based on their rate,<br>skills, experience, and qualifications</div>
                 <div class="diamond-outer">
                     <div class="diamond-inner">
-                        <span>Healthcare facilities select a candidate</span>
+                        <span class="bold-node">Healthcare facilities select a candidate</span>
                     </div>
                 </div>
             </div>
             <button id="btn-view-cheapest" class="action-btn btn-centered hidden" style="top: 325px; left: 535px;" onclick="showWarning('cheapest')">see match<br>criterion</button>
             <button id="btn-next3" class="action-btn btn-centered hidden" style="top: 325px; left: 535px;" onclick="revealStep(4)">click to view<br>next step</button>
 
-            <!-- Step 3 Branch: Benefit Rectangle Card -->
-            <div id="node-cheapest" class="node benefit-rect green-node hidden" style="top: 22px; left: 457.5px; border: 2px solid var(--node-green-border);">Save on the time, cost and inefficiencies of job boards, agencies, or personal referrals</div>
+            <div id="node-cheapest" class="node benefit-rect green-node bold-node hidden" style="top: 22px; left: 457.5px; border: 2px solid var(--node-green-border);">Save on the time, cost and inefficiencies of job boards, agencies, or personal referrals</div>
 
-            <!-- Step 4: Contact Info Given (Rectangular Node) -->
-            <div id="node-contact" class="node rect green-node hidden" style="top: 244px; left: 615px; border: 2px solid var(--node-green-border);">Contact Info Given</div>
+            <div id="node-contact" class="node rect green-node bold-node hidden" style="top: 244px; left: 615px; border: 2px solid var(--node-green-border);">Contact Info Given</div>
             <button id="btn-next4" class="action-btn btn-centered hidden" style="top: 306px; left: 672.5px;" onclick="revealStep(5)">click to view<br>next step</button>
 
-            <!-- Step 5: Clinician Starts -->
-            <div id="node-starts" class="node rect blue-node hidden" style="top: 244px; left: 745px;">Clinician Starts</div>
+            <div id="node-starts" class="node rect blue-node unbold-node hidden" style="top: 244px; left: 745px;">Clinician Starts</div>
             <button id="btn-view-details" class="action-btn btn-centered hidden" style="top: 306px; left: 802px;" onclick="showWarning('details')">see outcome<br>details</button>
 
-            <!-- Step 5 Branch Top: 14 Days avg -->
-            <div id="node-days" class="node pill yellow-node hidden" style="top: 170px; left: 835px; border: 2px solid var(--node-yellow-border);">14 Days avg</div>
+            <div id="node-days" class="node pill yellow-node bold-node hidden" style="top: 170px; left: 835px; border: 2px solid var(--node-yellow-border);">14 Day average</div>
 
-            <!-- Step 5 Branch Bottom: Updated Fee Note with Clickable Tooltip Link -->
             <div id="node-invoice-wrapper" class="fee-pill-wrapper hidden">
                 <div class="fee-tooltip">
-                    Learn more about our pricing here:<br>
-                    <a href="https://travelingtherapist.ca/pricing" target="_blank" style="color: var(--node-green-border); text-decoration: underline;">
-                        travelingtherapist.ca/pricing
-                    </a>
+                    Learn more about our pricing <a href="https://travelingtherapist.ca/pricing" target="_blank" style="color: var(--node-green-border); text-decoration: underline;">here</a>
                 </div>
-                <a id="node-invoice" href="https://travelingtherapist.ca/pricing" target="_blank" class="node fee-pill green-node clickable" style="position: relative; top: 0; left: 0; border: 2px solid var(--node-green-border); display: flex;">Small daily rate or fixed % match fee after you've selected a candidate</a>
+                <a id="node-invoice" href="https://travelingtherapist.ca/pricing" target="_blank" class="node fee-pill green-node bold-node clickable" style="position: relative; top: 0; left: 0; border: 2px solid var(--node-green-border); display: flex;">Small daily rate or fixed % match fee after you've selected a candidate</a>
             </div>
 
-            <!-- Diagram Controls: Global Navigation Panel -->
             <div id="controls-panel" class="controls-container hidden">
                 <button id="btn-back" class="control-btn" onclick="goBackOneStep()">Go back 1 step</button>
                 <button id="btn-close" class="control-btn" onclick="closeDiagram()">Close Diagram</button>
@@ -667,7 +646,6 @@
 
     </div>
 
-    <!-- JavaScript Application Logic -->
     <script>
         const allDynamicIds = [
             'node-post', 'arr-start-post', 'btn-next1',
